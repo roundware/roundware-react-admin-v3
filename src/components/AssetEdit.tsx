@@ -12,11 +12,12 @@ import {
   DateTimeInput,
   FileInput,
   FileField,
+  EditProps
 } from "react-admin";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 
-const AssetEdit = (props) => {
+const AssetEdit = (props: EditProps) => {
   return (
     <Edit title="Edit an asset" {...props}>
       <SimpleForm>
@@ -69,7 +70,7 @@ const AssetEdit = (props) => {
           label="Audio Length(s)"
           source="audio_length_in_seconds"
         />
-        <Divider fullWidth />
+        <Divider  />
         <ReferenceArrayInput
           source="description_loc_ids"
           reference="localizedstrings"

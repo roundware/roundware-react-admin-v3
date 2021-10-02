@@ -12,10 +12,11 @@ import {
   ChipField,
   EditButton,
   DeleteButton,
+  ListProps
 } from "react-admin";
 import AudioPlayerField from "./AudioPlayerField";
 
-const AssetList = (props) => {
+const AssetList = (props: ListProps) => {
   return <List {...props}>
     <Datagrid>
       <TextField source="id" />

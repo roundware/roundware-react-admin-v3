@@ -9,12 +9,13 @@ import {
   ReferenceInput,
   ReferenceArrayInput,
   SelectArrayInput,
-  DateTimeInput
+  DateTimeInput,
+   EditProps
 } from "react-admin";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 
-const AssetEdit = (props) => {
+const AssetEdit = (props: EditProps) => {
   return (
     <Edit title="Edit an asset" {...props}>
       <SimpleForm>
@@ -48,7 +49,7 @@ const AssetEdit = (props) => {
         ]} />
         <BooleanInput source="listen_questions_dynamic" />
         <BooleanInput source="speak_questions_dynamic" />
-        <Divider fullWidth />
+        <Divider  />
         <Typography variant={"h6"} gutterBottom>
           Secondary Settings
         </Typography>

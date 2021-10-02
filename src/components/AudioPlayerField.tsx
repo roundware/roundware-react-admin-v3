@@ -1,8 +1,10 @@
 import * as React from "react";
 import PropTypes from 'prop-types';
 import { useRecordContext } from 'react-admin';
-
-const AudioPlayerField = (props) => {
+interface PropTypes { 
+  source: string;
+}
+const AudioPlayerField = (props: PropTypes) => {
     const { source } = props;
     const record = useRecordContext(props);
     return (

@@ -6,10 +6,11 @@ import {
   DateField,
   NumberField,
   EditButton,
-  DeleteButton
+  DeleteButton,
+  ListProps,
 } from "react-admin";
 
-const ProjectList = (props) => {
+const ProjectList = (props: ListProps) => {
   return <List {...props}>
     <Datagrid>
       <TextField source='id' />
