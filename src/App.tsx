@@ -13,6 +13,7 @@ import AssetEdit from "./components/AssetEdit";
 import adminTheme from "./styles";
 import CustomLayout from "./components/Layout";
 import { IProject, useProjects } from "./providers/ProjectsContext";
+import Dashboard from "./components/Layout/Dashboard";
 
 const authProvider = tokenAuthProvider({
   obtainAuthTokenUrl: `${process.env.REACT_APP_SERVER_URL}/api/2/login/`,
@@ -38,6 +39,7 @@ const customDataProvider: DataProvider = {
 
 function App() {
 
+  const { selectedProject } = useProjects()
   
 
   return (
@@ -47,27 +49,25 @@ function App() {
       title="Roundware Admin"
       dataProvider={customDataProvider}
       authProvider={authProvider}
+      // @ts-ignore
+      dashboard={selectedProject && Dashboard}
     >
-      <Resource
+      {!selectedProject ? <Resource
         name="projects"
         list={ProjectList}
         create={ProjectCreate}
         edit={ProjectEdit}
-      />
-      {/* 
+      /> : <><Resource
+      name="assets"
+      list={AssetList}
+      create={AssetCreate}
+      edit={AssetEdit}
+    />
+    <Resource name="tags" />
+    <Resource name="languages" />
+    <Resource name="localizedstrings" />
+    <Resource name="users" /></>}
       
-      
-      <Resource
-          name="assets"
-          list={AssetList}
-          create={AssetCreate}
-          edit={AssetEdit}
-        />
-        <Resource name="tags" />
-        <Resource name="languages" />
-        <Resource name="localizedstrings" />
-        <Resource name="users" />
-       */}
     </Admin>
   );
 }
