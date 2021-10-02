@@ -5,6 +5,9 @@ const adminTheme = createMuiTheme({
 		secondary: {
 			main:"#6b96d8"
 		},
+		error: {
+			main: "#dc004e"
+		}
     },
 });
 
