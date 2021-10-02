@@ -11,11 +11,12 @@ import {
   SelectArrayInput,
   DateTimeInput,
   required,
+  CreateProps,
 } from "react-admin";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 
-const ProjectCreate = (props) => {
+const ProjectCreate = (props: CreateProps) => {
   return (
     <Create title="Create a new project" {...props}>
       <SimpleForm>
@@ -56,7 +57,7 @@ const ProjectCreate = (props) => {
         />
         <BooleanInput source="listen_questions_dynamic" />
         <BooleanInput source="speak_questions_dynamic" />
-        <Divider fullWidth />
+        <Divider  />
         <Typography variant={"h6"} gutterBottom>
           Secondary Settings
         </Typography>
