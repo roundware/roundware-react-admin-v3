@@ -17,7 +17,7 @@ import {
 import AudioPlayerField from "./AudioPlayerField";
 
 const AssetList = (props: ListProps) => {
-  return <List {...props}>
+  return <List {...props} filter={{project_id: 1}}>
     <Datagrid>
       <TextField source="id" />
       <BooleanField source="submitted" />
