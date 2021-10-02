@@ -18,7 +18,8 @@ import { useProjects } from "../../providers/ProjectsContext";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    minWidth: 120,
+    minWidth: 140,
+      
     borderColor: "rgba(255,255,255,0.8)",
   },
   select: {
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     }
 ,
     toolbar: {
-        flexGrow: 1
+        flexGrow: 1,
     }
     
 }));
@@ -55,24 +56,23 @@ const CustomAppBar = (props: AppBarProps) => {
   return (
       <AppBar {...props} className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
-              <InputLabel className={classes.label}>Project: </InputLabel>
+              <InputLabel variant="standard"  className={classes.label}>Project: </InputLabel>
       <FormControl className={classes.formControl}>
               
               <Select
-                
-                      defaultValue={selectedProject?.id || ""}
+                      defaultValue={selectedProject?.id || "none"}
                       id="grouped-select"
                       className={classes.select}
-                      value={selectedProject?.id || ""}
+                      value={selectedProject?.id || "none"}
                       onChange={handleOnChange}
               >
-                  <MenuItem value="" disabled>
+                  <MenuItem value="none" >
             <em>None</em>
           </MenuItem>
-          <MenuItem value={"create"}>Create New Project</MenuItem>
+          <MenuItem value={"create"}>Create New Project</MenuItem>            
           {Array.isArray(projectsList) && projectsList.length > 0 && <ListSubheader>Recent</ListSubheader>}
           {projectsList?.map((p) => (<MenuItem  value={p?.id}>{p?.name}</MenuItem>))}
-
+          
                       
         </Select>
                       
