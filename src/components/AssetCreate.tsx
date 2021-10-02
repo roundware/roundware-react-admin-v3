@@ -9,7 +9,8 @@ import {
   ReferenceInput,
   ReferenceArrayInput,
   SelectArrayInput,
-  DateTimeInput,
+  DateInput,
+
    EditProps
 } from "react-admin";
 import Divider from "@material-ui/core/Divider";
@@ -24,7 +25,7 @@ const AssetEdit = (props: EditProps) => {
         <TextInput multiline source="description" fullWidth />
         <NumberInput source="latitude" />
         <NumberInput source="longitude" />
-        <DateTimeInput source="pub_date" />
+        <DateInput source="pub_date" />
         <BooleanInput source="auto_submit" />
         <NumberInput source="max_recording_length" />
         <TextInput source="sharing_url" fullWidth />
