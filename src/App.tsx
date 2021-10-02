@@ -8,8 +8,8 @@ import AssetList from "./components/AssetList";
 import AssetCreate from "./components/AssetCreate";
 import AssetEdit from "./components/AssetEdit";
 
-const authProvider = tokenAuthProvider({ "obtainAuthTokenUrl": "http://localhost:8888/api/2/login/" });
-const dataProvider = drfProvider("http://localhost:8888/api/2", fetchJsonWithAuthToken);
+const authProvider = tokenAuthProvider({ "obtainAuthTokenUrl": `${process.env.SERVER_URL}/api/2/login/` });
+const dataProvider = drfProvider(`${process.env.SERVER_URL}/api/2`, fetchJsonWithAuthToken);
 
 function App() {
   return (
