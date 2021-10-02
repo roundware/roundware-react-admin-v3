@@ -38,14 +38,7 @@ const customDataProvider: DataProvider = {
 
 function App() {
 
-  const { setProjectsList, projectsList, selectedProject } = useProjects();
-
-  useEffect(() => {
-  // @ts-ignore
-    customDataProvider.getList<IProject>(`projects`).then((project) => {
-    setProjectsList(project.data)
-  });
-}, [])
+  
 
   return (
     <Admin
