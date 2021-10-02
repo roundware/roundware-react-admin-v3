@@ -1,0 +1,90 @@
+import {
+  Layout,
+  AppBar,
+  MenuItemLink,
+  UserMenu,
+  AppBarProps,
+  LayoutProps,
+} from "react-admin";
+import { forwardRef, useCallback } from "react";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import { FormHelperText, TextField, Toolbar } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { useProjects } from "../../providers/ProjectsContext";
+
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    minWidth: 120,
+    borderColor: "rgba(255,255,255,0.8)",
+  },
+  select: {
+      
+    },
+    label: {
+        marginRight: theme.spacing(1)
+    },
+    appBar: {
+        
+        
+    }
+,
+    toolbar: {
+        flexGrow: 1
+    }
+    
+}));
+const CustomAppBar = (props: AppBarProps) => {
+  const classes = useStyles();
+    const { projectsList, selectedProject, selectProject } = useProjects();
+    
+
+    const handleOnChange = (event: React.ChangeEvent<{
+        name?: string | undefined;
+        value: unknown;
+    }>, child: React.ReactNode) => {
+        const { value } = event.target;
+        if (!value) return;
+        if (value === 'create') return;
+        selectProject(projectsList?.find(p => p?.id === value) || null);
+    }
+
+  return (
+      <AppBar {...props} className={classes.appBar}>
+          <Toolbar className={classes.toolbar}>
+              <InputLabel className={classes.label}>Project: </InputLabel>
+      <FormControl className={classes.formControl}>
+              
+              <Select
+                
+                      defaultValue={selectedProject?.id || ""}
+                      id="grouped-select"
+                      className={classes.select}
+                      value={selectedProject?.id || ""}
+                      onChange={handleOnChange}
+              >
+                  <MenuItem value="" disabled>
+            <em>None</em>
+          </MenuItem>
+          <MenuItem value={"create"}>Create New Project</MenuItem>
+          {Array.isArray(projectsList) && projectsList.length > 0 && <ListSubheader>Recent</ListSubheader>}
+          {projectsList?.map((p) => (<MenuItem  value={p?.id}>{p?.name}</MenuItem>))}
+
+                      
+        </Select>
+                      
+      </FormControl>
+          </Toolbar>
+          
+    </AppBar>
+  );
+};
+
+const CustomLayout = (props: LayoutProps) => (
+  <Layout {...props} appBar={CustomAppBar} />
+);
+
+export default CustomLayout;
