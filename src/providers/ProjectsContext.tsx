@@ -1,3 +1,4 @@
+import { useRedirect } from "ra-core";
 import React, { useState, useEffect } from "react";
 export interface IProject {
   id: number;
@@ -36,7 +37,7 @@ export interface IProject {
 export interface IProjectsContext {
   selectedProject: IProject | null;
   projectsList: IProject[] | null;
-  selectProject: React.Dispatch<React.SetStateAction<IProject | null>>;
+  selectProject: (project: IProject | null) => void;
   setProjectsList: React.Dispatch<React.SetStateAction<IProject[] | null>>;
 }
 const ProjectsContext = React.createContext<IProjectsContext>(undefined!);
@@ -53,13 +54,18 @@ export const ProjectsProvider = ({
   const [project, setProject] = useState<IProject | null>(null);
 
   const [projectsList, setProjectsList] = useState<IProject[] | null>(null);
+  
+  const selectProject = (project: IProject | null) => {
+    
+    setProject(project);
+  }
 
   return (
     <ProjectsContext.Provider
       value={{
         selectedProject: project,
         projectsList,
-        selectProject: setProject,
+        selectProject,
         setProjectsList,
       }}
     >
