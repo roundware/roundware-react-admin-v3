@@ -52,22 +52,25 @@ function App() {
       // @ts-ignore
       dashboard={selectedProject && Dashboard}
     >
-      {!selectedProject ? <Resource
-        name="projects"
-        list={ProjectList}
-        create={ProjectCreate}
-        edit={ProjectEdit}
-      /> : <><Resource
-      name="assets"
-      list={AssetList}
-      create={AssetCreate}
-      edit={AssetEdit}
+      <Resource
+          name="projects"
+          list={ProjectList}
+          create={ProjectCreate}
+          edit={ProjectEdit}
+      />
+      
+        <Resource
+        name="assets"
+        list={AssetList}
+        create={AssetCreate}
+        edit={AssetEdit}
     />
     <Resource name="tags" />
     <Resource name="languages" />
     <Resource name="localizedstrings" />
-    <Resource name="users" /></>}
+        <Resource name="users" />
       
+        
     </Admin>
   );
 }
