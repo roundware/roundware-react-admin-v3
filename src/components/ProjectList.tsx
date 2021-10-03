@@ -20,22 +20,17 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/DeleteRounded';
 const ProjectList = (props: ListProps) => {
 
-  const { setProjectsList, projectsList, selectedProject } = useProjects();
-  const { authenticated } = useAuthState();
-  const dataProvider = useDataProvider();
-  useEffect(() => {
-    if (!authenticated) return;
-  // @ts-ignore
-  dataProvider.getList<IProject>(`projects`).then((project) => {
-      setProjectsList(project.data)
-    })
-  }, [authenticated]);
+  
+  
 
-  return <List hasCreate={false} hasEdit={false} hasShow={false} bulkActionButtons={false} pagination={false} component={ProjectCardWrapper}  {...props} >
+  return <List hasCreate={false} hasEdit={false} hasShow={false} bulkActionButtons={false} pagination={false} component={ProjectListWrapper}  {...props} >
     <ProjectCard />
   </List>
 }
 
+const ProjectListWrapper = ({ children }: {children: React.ReactNode}) => {
+  return (<><ProjectCardWrapper>{children}</ProjectCardWrapper></>)
+}
 
 const useCardStyles = makeStyles(theme => ({
   root: {
@@ -71,12 +66,18 @@ const ProjectCard = () => {
   const { data } = useListContext<IProject>();
   const redirect = useRedirect();
   const classes = useCardStyles();
-  const { selectProject } = useProjects();
+  const { selectProject, setProjectsList } = useProjects();
 
   const handleOnProjectSelect = (p: IProject) => {
     selectProject(p);
     redirect(`list`, `/`)
   }
+
+  useEffect(() => {
+    if (Array.isArray(Object.values(data))) {
+      setProjectsList(Object.values(data))
+    }
+  }, [data])
   return (<>
       <Grid item>
       <CreateProjectCard />
@@ -103,7 +104,8 @@ const ProjectCard = () => {
 
 const CreateProjectCard = () => {
   const classes = useCardStyles();
-  return <Card className={classes.root}>
+  const redirect = useRedirect();
+  return <Card className={classes.root} onClick={()=>redirect(`create`, `/projects`)}>
     <CardActionArea className={classes.createContent}>
       
       
