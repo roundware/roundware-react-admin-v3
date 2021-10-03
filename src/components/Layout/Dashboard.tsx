@@ -14,10 +14,6 @@ const useStyles = makeStyles((theme) => ({
 const Dashboard = (props: Props) => {
     const classes = useStyles();
     const { selectedProject } = useProjects();
-    const redirect = useRedirect();
-    useEffect(() => {
-        if (!selectedProject) redirect(`list`, `/projects`);
-    }, [selectedProject])
 
     return (
         <Container className={classes.container} >
