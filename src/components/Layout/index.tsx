@@ -6,9 +6,10 @@ import {
   AppBarProps,
   LayoutProps,
   Sidebar,
-  SidebarProps
+  SidebarProps,
+  useRedirect
 } from "react-admin";
-import { ComponentType, forwardRef, useCallback } from "react";
+import { ComponentType, forwardRef, useCallback, useEffect } from "react";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import ListSubheader from "@material-ui/core/ListSubheader";
@@ -90,7 +91,11 @@ const CustomSidebar = (props: SidebarProps) => {
 
 
 const CustomLayout = (props: LayoutProps) => {
-  
+  const { selectedProject } = useProjects();
+    const redirect = useRedirect();
+    useEffect(() => {
+        if (!selectedProject) redirect(`list`, `/projects`);
+    }, [selectedProject]);
   return (<Layout {...props}   appBar={CustomAppBar}
     // @ts-ignore
     sidebar={CustomSidebar}
