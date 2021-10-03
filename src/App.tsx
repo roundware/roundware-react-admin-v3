@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { Admin, Resource, DataProvider } from "react-admin";
+import { Admin, Resource, DataProvider, GetListParams, GetManyReferenceParams, GetListResult } from "react-admin";
 import drfProvider, {
   tokenAuthProvider,
   fetchJsonWithAuthToken,
-} from "ra-data-django-rest-framework";
+  CustomDataProvider,
+} from "ra-data-roundware-drf";
 import ProjectList from "./components/ProjectList";
 import ProjectCreate from "./components/ProjectCreate";
 import ProjectEdit from "./components/ProjectEdit";
@@ -23,54 +24,44 @@ const dataProvider = drfProvider(
   fetchJsonWithAuthToken
 );
 
-const customDataProvider: DataProvider = {
+const customDataProvider: CustomDataProvider = {
   ...dataProvider,
   getList: async (resource, params) => {
-    if (resource === 'projects') {
-      const {json}= await fetchJsonWithAuthToken(`${process.env.REACT_APP_SERVER_URL}/api/2/projects`, {});
-      return {
-        data: json,
-        total: json?.length
-      }
-    }
-    return dataProvider.getList(resource, params);
-  }
-} 
+    if (resource === "assets") return await dataProvider.getList(resource, params, true);
+    return await dataProvider.getList(resource, params);
+  },
+};
 
 function App() {
-
-  const { selectedProject } = useProjects()
-  
+  const { selectedProject } = useProjects();
 
   return (
     <Admin
       theme={adminTheme}
       layout={CustomLayout}
       title="Roundware Admin"
+      // @ts-ignore
       dataProvider={customDataProvider}
       authProvider={authProvider}
-      // @ts-ignore
-      dashboard={selectedProject && Dashboard}
+      dashboard={Dashboard}
     >
       <Resource
-          name="projects"
-          list={ProjectList}
-          create={ProjectCreate}
-          edit={ProjectEdit}
+        name="projects"
+        list={ProjectList}
+        create={ProjectCreate}
+        edit={ProjectEdit}
       />
-      
-        <Resource
+
+      <Resource
         name="assets"
         list={AssetList}
         create={AssetCreate}
         edit={AssetEdit}
-    />
-    <Resource name="tags" />
-    <Resource name="languages" />
-    <Resource name="localizedstrings" />
-        <Resource name="users" />
-      
-        
+      />
+      <Resource name="tags" />
+      <Resource name="languages" />
+      <Resource name="localizedstrings" />
+      <Resource name="users" />
     </Admin>
   );
 }
