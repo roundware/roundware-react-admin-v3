@@ -1,5 +1,6 @@
 import { makeStyles, Container, Typography, TextField, FormControl, FormControlLabel,  } from '@material-ui/core'
-import React from 'react'
+import { useRedirect } from 'ra-core';
+import React, { useEffect} from 'react'
 import { useProjects } from '../../providers/ProjectsContext';
 
 interface Props {
@@ -13,9 +14,14 @@ const useStyles = makeStyles((theme) => ({
 const Dashboard = (props: Props) => {
     const classes = useStyles();
     const { selectedProject } = useProjects();
+    const redirect = useRedirect();
+    useEffect(() => {
+        if (!selectedProject) redirect(`list`, `/projects`);
+    }, [selectedProject])
+
     return (
         <Container className={classes.container} >
-            <Typography variant="h4" gutterBottom>{selectedProject?.name}</Typography>
+            <Typography variant="h4" gutterBottom>{selectedProject?.name}</Typography> 
             
         </Container>
     )
