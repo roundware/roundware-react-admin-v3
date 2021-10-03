@@ -18,7 +18,7 @@ import Card from '@material-ui/core/Card';
 import { CardActionArea, CardContent, CardMedia, Button, makeStyles, Typography, CardHeader, Grid } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/DeleteRounded';
-const ProjectShow = (props: ListProps) => {
+const ProjectList = (props: ListProps) => {
 
   const { setProjectsList, projectsList, selectedProject } = useProjects();
   const { authenticated } = useAuthState();
@@ -64,7 +64,7 @@ const useCardStyles = makeStyles(theme => ({
     padding: theme.spacing(2)
   }
 }));
-const ProjectCardWrapper = ({ children }: {children: React.ReactNode}) => {
+const ProjectCardWrapper = ({ children }: { children: React.ReactNode }) => {
   return <Grid alignContent="center" justify="center" container spacing={2}>{children}</Grid>
 }
 const ProjectCard = () => {
@@ -81,7 +81,7 @@ const ProjectCard = () => {
       <Grid item>
       <CreateProjectCard />
       </Grid>
-      {Array.isArray(Object.values(data)) && Object.values(data).map((p) => <Grid item><Card onClick={()=>handleOnProjectSelect(p)} key={p?.id} className={classes.root}>
+    {Array.isArray(Object.values(data)) && Object.values(data).map((p) => <Grid key={p?.id} item><Card onClick={()=>handleOnProjectSelect(p)} key={p?.id} className={classes.root}>
 
       <CardActionArea className={classes.cardContent}>
         
@@ -119,4 +119,4 @@ const CreateProjectCard = () => {
 </Card>
 }
 
-export default ProjectShow;
+export default ProjectList;
