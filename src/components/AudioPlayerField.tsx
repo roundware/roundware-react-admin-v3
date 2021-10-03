@@ -8,8 +8,8 @@ const AudioPlayerField = (props: PropTypes) => {
     const { source } = props;
     const record = useRecordContext(props);
     return (
-      <audio controls>
-        <source src={`http://localhost:8888${record.file}`} type="audio/mpeg" />
+      <audio controls crossOrigin="anonymous">
+        <source src={record.file} type="audio/mpeg"  />
         Your browser does not support the audio tag.
       </audio>
     );
