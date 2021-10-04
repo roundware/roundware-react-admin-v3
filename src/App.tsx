@@ -28,7 +28,16 @@ import {
   Label,
   TagFaces,
   PeopleAlt,
+  Audiotrack,
+  Speaker,
+  Email,
+  Event,
+  Hearing,
+  AccessTime,
+  Build,
+  FeaturedPlayList,
 } from "@material-ui/icons";
+import ProjectShow from "./components/Project/ProjectShow";
 const authProvider = tokenAuthProvider({
   obtainAuthTokenUrl: `${process.env.REACT_APP_SERVER_URL}/api/2/login/`,
 });
@@ -52,7 +61,7 @@ function App() {
         list={ProjectList}
         create={ProjectCreate}
         edit={ProjectEdit}
-        show={ShowGuesser}
+        show={ProjectShow}
       />
 
       <Resource
@@ -63,8 +72,74 @@ function App() {
         options={{ label: "Assets" }}
         icon={WebAsset}
       />
+
       <Resource
-        name="tagcategories"
+        name="audiotracks"
+        list={ListGuesser}
+        edit={EditGuesser}
+        icon={Audiotrack}
+        options={{ label: "Audio Tracks" }}
+      />
+
+      <Resource
+        name="envelopes"
+        list={ListGuesser}
+        edit={EditGuesser}
+        icon={Email}
+      />
+      <Resource
+        name="Events"
+        list={ListGuesser}
+        edit={EditGuesser}
+        icon={Event}
+      />
+
+      <Resource
+        name="listenevents"
+        list={ListGuesser}
+        edit={EditGuesser}
+        icon={Hearing}
+        options={{ label: "Listen Events" }}
+      />
+
+      <Resource
+        name="sessions"
+        list={ListGuesser}
+        edit={EditGuesser}
+        icon={AccessTime}
+      />
+
+      <Resource
+        name="speakers"
+        list={ListGuesser}
+        edit={EditGuesser}
+        icon={Speaker}
+      />
+
+      <Resource
+        name="uigroups"
+        list={ListGuesser}
+        edit={EditGuesser}
+        icon={Build}
+        options={{ label: "UI Groups" }}
+      />
+
+      <Resource
+        name="uiitems"
+        list={ListGuesser}
+        edit={EditGuesser}
+        icon={FeaturedPlayList}
+        options={{ label: "UI Items" }}
+      />
+
+      <Resource
+        name="tags"
+        list={ListGuesser}
+        edit={EditGuesser}
+        icon={TagFaces}
+      />
+      <Resource
+        name="tag_categories"
         options={{
           label: "Tag Categories",
         }}
