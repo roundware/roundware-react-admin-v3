@@ -7,13 +7,25 @@ import {
   NumberField,
   BooleanField,
   ReferenceArrayField,
+  useRedirect,
+  useShowController,
 } from "react-admin";
 import React from "react";
 import { Typography } from "@material-ui/core";
+import { useProjects } from "../../providers/ProjectsContext";
 
 interface Props extends ShowProps {}
 
 const ProjectShow = (props: Props) => {
+  const { selectedProject } = useProjects();
+  const redirect = useRedirect();
+  const { record } = useShowController(props);
+  React.useEffect(() => {
+    if (record?.id !== selectedProject?.id) {
+      redirect(`/projects/${selectedProject?.id}/show`);
+    }
+  }, [selectedProject]);
+
   return (
     <Show {...props} title="Project Details">
       <SimpleShowLayout>

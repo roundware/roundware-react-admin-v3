@@ -88,7 +88,7 @@ function App() {
         icon={Email}
       />
       <Resource
-        name="Events"
+        name="events"
         list={ListGuesser}
         edit={EditGuesser}
         icon={Event}
