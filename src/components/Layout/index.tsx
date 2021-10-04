@@ -7,7 +7,7 @@ import {
   LayoutProps,
   Sidebar,
   SidebarProps,
-  useRedirect
+  useRedirect,
 } from "react-admin";
 import { ComponentType, forwardRef, useCallback, useEffect } from "react";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -18,6 +18,7 @@ import Select from "@material-ui/core/Select";
 import { FormHelperText, TextField, Toolbar } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useProjects } from "../../providers/ProjectsContext";
+import { Menu } from "./Menu";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -29,9 +30,7 @@ const useStyles = makeStyles((theme) => ({
   label: {
     marginRight: theme.spacing(1),
   },
-  appBar: {
-
-  },
+  appBar: {},
   toolbar: {
     flexGrow: 1,
   },
@@ -86,20 +85,24 @@ const CustomAppBar = (props: AppBarProps) => {
 const CustomSidebar = (props: SidebarProps) => {
   const { selectedProject } = useProjects();
   if (!selectedProject) return null;
-  return <Sidebar {...props}  />
-}
-
+  return <Sidebar {...props} />;
+};
 
 const CustomLayout = (props: LayoutProps) => {
   const { selectedProject } = useProjects();
-    const redirect = useRedirect();
-    useEffect(() => {
-        if (!selectedProject) redirect(`list`, `/projects`);
-    }, [selectedProject]);
-  return (<Layout {...props}   appBar={CustomAppBar}
-    // @ts-ignore
-    sidebar={CustomSidebar}
-  />);
-}
+  const redirect = useRedirect();
+  useEffect(() => {
+    if (!selectedProject) redirect(`list`, `/projects`);
+  }, [selectedProject]);
+  return (
+    <Layout
+      {...props}
+      appBar={CustomAppBar}
+      // @ts-ignore
+      sidebar={CustomSidebar}
+      menu={Menu}
+    />
+  );
+};
 
 export default CustomLayout;
