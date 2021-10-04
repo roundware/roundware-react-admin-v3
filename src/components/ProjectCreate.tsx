@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Create,
   SimpleForm,
@@ -9,14 +9,22 @@ import {
   ReferenceInput,
   ReferenceArrayInput,
   SelectArrayInput,
-  DateTimeInput,
   required,
   CreateProps,
+  DateInput
 } from "react-admin";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
+import { FormControl, FormHelperText, TextField } from "@material-ui/core";
 
 const ProjectCreate = (props: CreateProps) => {
+
+  const dateFormatter = (v: string) => {
+    return new Date(v).toISOString();
+  }
+
+  const [date, setDate] = useState<string>("");
+
   return (
     <Create title="Create a new project" {...props}>
       <SimpleForm>
@@ -24,7 +32,10 @@ const ProjectCreate = (props: CreateProps) => {
         <TextInput multiline source="description" fullWidth />
         <NumberInput source="latitude" validate={required()} />
         <NumberInput source="longitude" validate={required()} />
-        <DateTimeInput source="pub_date" validate={required()} />
+        
+        <DateInput source="pub_date" helperText={new Date(date).toDateString()} defaultValue={new Date()} style={{marginBottom: 0}}  onChange={e => setDate(e.target.value)}  format={dateFormatter} label="Publish Date"  />
+          
+          
         <BooleanInput source="auto_submit" />
         <NumberInput source="max_recording_length" validate={required()} />
         <TextInput source="sharing_url" fullWidth validate={required()} />
