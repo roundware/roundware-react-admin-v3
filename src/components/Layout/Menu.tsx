@@ -12,7 +12,7 @@ import {
 import DefaultIcon from "@material-ui/icons/ViewList";
 import LabelIcon from "@material-ui/icons/Label";
 import { useProjects } from "../../providers/ProjectsContext";
-
+import { AccountTree } from "@material-ui/icons";
 const useStyles = makeStyles((theme) => ({
   raMenu: {
     paddingTop: "30px",
@@ -25,6 +25,7 @@ export const Menu = (props: MenuProps) => {
   const { selectedProject } = useProjects();
   return (
     <RAMenu {...props} className={classes.raMenu}>
+      {selectedProject && <DashboardMenuItem />}
       {/* @ts-ignore */}
       <MenuItemLink
         key={"projects"}
@@ -33,7 +34,8 @@ export const Menu = (props: MenuProps) => {
             selectedProject ? `projects/${selectedProject.id}/show` : `projects`
           }`,
         }}
-        primaryText={selectedProject ? `Project Overview` : `All Projects`}
+        primaryText={selectedProject ? `Project` : `All Projects`}
+        leftIcon={<AccountTree />}
       />
       {selectedProject &&
         resources
