@@ -91,7 +91,7 @@ const ProjectCard = () => {
 
   const handleOnProjectSelect = (p: IProject) => {
     selectProject(p);
-    redirect(`projects/${p.id}/show`);
+    redirect(`/`);
   };
 
   useEffect(() => {
