@@ -247,10 +247,11 @@ const SessionsChart = ({ sessions }: Props) => {
                 }
                 active={true}
               />
-
+              <Legend verticalAlign="top" height={30} />
               <Area
                 type="monotone"
                 dataKey="total"
+                name="Sessions"
                 stroke="#8884d8"
                 strokeWidth={2}
                 fill="url(#colorTotal)"
