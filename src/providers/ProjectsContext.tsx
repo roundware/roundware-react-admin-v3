@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 export interface IProject {
   id: number;
   name: string;
+  description?: string;
   latitude: number;
   longitude: number;
   pub_date: string;
@@ -50,15 +51,13 @@ interface SelectedProjectProviderProps {
 export const ProjectsProvider = ({
   children,
 }: SelectedProjectProviderProps) => {
-
   const [project, setProject] = useState<IProject | null>(null);
 
   const [projectsList, setProjectsList] = useState<IProject[] | null>(null);
-  
+
   const selectProject = (project: IProject | null) => {
-    
     setProject(project);
-  }
+  };
 
   return (
     <ProjectsContext.Provider
