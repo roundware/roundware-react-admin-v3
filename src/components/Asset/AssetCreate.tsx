@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  Edit,
+  Create,
   SimpleForm,
   TextInput,
   NumberInput,
@@ -10,71 +10,84 @@ import {
   ReferenceArrayInput,
   SelectArrayInput,
   DateInput,
-
-   EditProps
+  FileInput,
+  FileField,
+  DateTimeInput,
+  CreateProps,
 } from "react-admin";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
+import { dateFormatter } from "../../utils";
 
-const AssetEdit = (props: EditProps) => {
+const AssetCreate = (props: CreateProps) => {
   return (
-    <Edit title="Edit an asset" {...props}>
+    <Create title="Create an asset" {...props}>
       <SimpleForm>
         <TextInput source="id" disabled />
-        <TextInput source="name" fullWidth />
+        <ReferenceInput
+          label="Project"
+          source="project_id"
+          reference="projects"
+        >
+          <SelectInput source="name" />
+        </ReferenceInput>
+        <ReferenceInput label="User" source="user.id" reference="users">
+          <SelectInput source="user.username" />
+        </ReferenceInput>
+        <FileInput source="file" label="Asset File" accept="audio/mpeg">
+          <FileField source="file" title="title" />
+        </FileInput>
+        <NumberInput source="session_id" />
         <TextInput multiline source="description" fullWidth />
         <NumberInput source="latitude" />
         <NumberInput source="longitude" />
-        <DateInput source="pub_date" />
-        <BooleanInput source="auto_submit" />
-        <NumberInput source="max_recording_length" />
-        <TextInput source="sharing_url" fullWidth />
-        <NumberInput source="recording_radius" />
-        <BooleanInput source="listen_enabled" />
-        <BooleanInput source="geo_listen_enabled" />
-        <BooleanInput source="speak_enabled" />
-        <BooleanInput source="geo_speak_enabled" />
-        <BooleanInput source="reset_tag_defaults_on_startup" />
-        <BooleanInput source="timed_asset_priority" />
-        <ReferenceArrayInput source="language_ids" reference="languages">
-          <SelectArrayInput optionText="name" />
+        <DateTimeInput source="created" />
+        <DateTimeInput source="updated" />
+        <BooleanInput source="submitted" />
+        <NumberInput source="volume" />
+        <NumberInput source="weight" />
+        <NumberInput source="start_time" />
+        <NumberInput source="end_time" />
+        <ReferenceInput
+          label="Language"
+          source="language_id"
+          reference="languages"
+        >
+          <SelectInput source="name" />
+        </ReferenceInput>
+        <ReferenceArrayInput source="tag_ids" reference="tags" fullWidth>
+          <SelectArrayInput optionText="description" />
         </ReferenceArrayInput>
-        <SelectInput source="repeat_mode" choices={[
-          { id: "stop", name: "stop" },
-          { id: "continuous", name: "continuous" },
-        ]} />
-        <SelectInput source="ordering" choices={[
-          { id: "by_like", name: "by_like" },
-          { id: "by_weight", name: "by_weight" },
-          { id: "random", name: "random" },
-        ]} />
-        <BooleanInput source="listen_questions_dynamic" />
-        <BooleanInput source="speak_questions_dynamic" />
-        <Divider  />
-        <Typography variant={"h6"} gutterBottom>
-          Secondary Settings
-        </Typography>
-        <NumberInput source="out_of_range_distance" />
-        <TextInput source="out_of_range_url" fullWidth />
-        <BooleanInput source="demo_stream_enabled" />
-        <TextInput source="demo_stream_message" fullWidth />
-        <TextInput source="demo_stream_url" fullWidth />
-        <TextInput source="audio_format" />
-        <TextInput source="files_url" fullWidth />
-        <SelectInput source="audio_stream_bitrate" choices={[
-          { id: "64", name: "64" },
-          { id: "96", name: "96" },
-          { id: "112", name: "112" },
-          { id: "128", name: "128" },
-          { id: "160", name: "160" },
-          { id: "192", name: "192" },
-          { id: "256", name: "256" },
-          { id: "320", name: "320" },
-        ]} />
+
+        <SelectInput
+          source="media_type"
+          choices={[
+            { id: "audio", name: "audio" },
+            { id: "photo", name: "photo" },
+            { id: "text", name: "text" },
+            { id: "video", name: "video" },
+          ]}
+        />
+        <NumberInput label="Audio Length(s)" source="audio_length_in_seconds" />
+        <Divider />
+        <ReferenceArrayInput
+          source="description_loc_ids"
+          reference="localizedstrings"
+          fullWidth
+        >
+          <SelectArrayInput optionText="text" />
+        </ReferenceArrayInput>
+        <ReferenceArrayInput
+          source="alt_text_loc_ids"
+          reference="localizedstrings"
+          fullWidth
+        >
+          <SelectArrayInput optionText="text" />
+        </ReferenceArrayInput>
+        <NumberInput source="envelope_ids" disabled />
       </SimpleForm>
-    </Edit>
+    </Create>
+  );
+};
 
-  )
-}
-
-export default AssetEdit;
+export default AssetCreate;
