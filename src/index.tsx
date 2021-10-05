@@ -3,12 +3,15 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import { ProjectsProvider } from "./providers/ProjectsContext";
-
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 ReactDOM.render(
   <React.StrictMode>
-    <ProjectsProvider>
-      <App />
-    </ProjectsProvider>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <ProjectsProvider>
+        <App />
+      </ProjectsProvider>
+    </MuiPickersUtilsProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
