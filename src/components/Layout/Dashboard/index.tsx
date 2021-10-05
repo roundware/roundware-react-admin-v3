@@ -16,6 +16,7 @@ import CardWithIcon from "./CardWithIcon";
 import { Hearing } from "@material-ui/icons";
 
 import DashboardContent from "./DashboardContent";
+import ProjectDetails from "./ProjectDetails";
 interface Props {}
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -93,10 +94,8 @@ const Dashboard = (props: Props) => {
   }, []);
 
   return (
-    <Container className={classes.container}>
-      <Typography variant="h4" gutterBottom>
-        {selectedProject?.name}
-      </Typography>
+    <div className={classes.container}>
+      <ProjectDetails />
       {loading ? (
         <Grid container spacing={3}>
           {[1, 2, 3, 4].map((e) => (
@@ -114,7 +113,7 @@ const Dashboard = (props: Props) => {
           listenEvents={listenEvents!}
         />
       )}
-    </Container>
+    </div>
   );
 };
 
