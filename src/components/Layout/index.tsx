@@ -93,6 +93,7 @@ const CustomLayout = (props: LayoutProps) => {
   const redirect = useRedirect();
   useEffect(() => {
     if (!selectedProject) redirect(`list`, `/projects`);
+    else redirect(`/projects/${selectedProject.id}/show`);
   }, [selectedProject]);
   return (
     <Layout
