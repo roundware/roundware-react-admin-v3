@@ -36,8 +36,15 @@ import {
   AccessTime,
   Build,
   FeaturedPlayList,
+  AccountTree,
 } from "@material-ui/icons";
 import ProjectShow from "./components/Project/ProjectShow";
+import {
+  ListenEventsCreate,
+  ListenEventsEdit,
+  ListenEventsList,
+} from "./components/ListenEvents";
+import { SessionCreate, SessionEdit, SessionList } from "./components/Session";
 const authProvider = tokenAuthProvider({
   obtainAuthTokenUrl: `${process.env.REACT_APP_SERVER_URL}/api/2/login/`,
 });
@@ -46,6 +53,16 @@ const dataProvider = drfProvider(
   fetchJsonWithAuthToken
 );
 
+const customDataProvider = {
+  ...dataProvider,
+  // @ts-ignore
+  getOne: async (resource, params, query) => {
+    console.log(`getOne called`, resource, params, query);
+    // @ts-ignore
+    return dataProvider.getOne(resource, params, query);
+  },
+};
+
 function App() {
   return (
     <Admin
@@ -53,8 +70,9 @@ function App() {
       layout={CustomLayout}
       title="Roundware Admin"
       // @ts-ignore
-      dataProvider={dataProvider}
+      dataProvider={customDataProvider}
       authProvider={authProvider}
+      dashboard={Dashboard}
     >
       <Resource
         name="projects"
@@ -62,6 +80,7 @@ function App() {
         create={ProjectCreate}
         edit={ProjectEdit}
         show={ProjectShow}
+        icon={AccountTree}
       />
 
       <Resource
@@ -96,16 +115,18 @@ function App() {
 
       <Resource
         name="listenevents"
-        list={ListGuesser}
-        edit={EditGuesser}
+        list={ListenEventsList}
+        edit={ListenEventsEdit}
+        create={ListenEventsCreate}
         icon={Hearing}
         options={{ label: "Listen Events" }}
       />
 
       <Resource
         name="sessions"
-        list={ListGuesser}
-        edit={EditGuesser}
+        list={SessionList}
+        edit={SessionEdit}
+        create={SessionCreate}
         icon={AccessTime}
       />
 
