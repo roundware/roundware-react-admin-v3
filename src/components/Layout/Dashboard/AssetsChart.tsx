@@ -22,13 +22,15 @@ import {
 } from "date-fns";
 import {
   ResponsiveContainer,
-  AreaChart,
+  ComposedChart,
   Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Label,
+  Bar,
+  Line,
 } from "recharts";
 
 import {
@@ -88,6 +90,7 @@ const getSanitizedList = (
   assets: { id: number; created: string }[]
 ): { created: Date; id: number }[] => [
   ...assets
+    .filter((a) => ![1].includes(a.id))
     .map((s) => ({ created: new Date(s?.created), id: s?.id }))
     .sort((a, b) => (a.created > b.created ? 1 : -1)),
 ];
@@ -97,6 +100,7 @@ const AssetsChart = ({ assets }: Props) => {
   const [range, setRange] = useState([new Date(), new Date()]);
 
   const handleOnSelectChange = (value: string) => {
+    if (!assets?.data?.length) return;
     if (value === "custom") {
       setCustomRange(true);
       return;
@@ -127,7 +131,7 @@ const AssetsChart = ({ assets }: Props) => {
     getSanitizedList(
       // @ts-ignore
       assets.data
-    )[0].created
+    )?.[0]?.created || new Date()
   );
   const [endDate, setEndDate] = useState(new Date());
 
@@ -145,7 +149,7 @@ const AssetsChart = ({ assets }: Props) => {
             </Typography>
 
             <div>
-              <FormControl style={{ width: 200 }}>
+              <FormControl style={{ width: 120 }}>
                 <InputLabel>Range</InputLabel>
                 <Select
                   defaultValue="total"
@@ -203,7 +207,7 @@ const AssetsChart = ({ assets }: Props) => {
         )}
         <div style={{ width: "100%", height: 300 }}>
           <ResponsiveContainer>
-            <AreaChart
+            <ComposedChart
               data={getRecordingsPerDay(
                 /* @ts-ignore */
                 assets.data,
@@ -220,23 +224,14 @@ const AssetsChart = ({ assets }: Props) => {
                 dataKey="date"
                 type="number"
                 name="Date"
-                domain={[range[0].getTime(), range[1].getTime()]}
+                scale="time"
+                domain={["dataMin", "dataMax"]}
+                allowDataOverflow
                 tickFormatter={(date) => new Date(date).toLocaleDateString()}
               >
                 <Label value="Day" offset={0} position="insideBottom" />
               </XAxis>
-              <YAxis
-                dataKey="total"
-                name="Recordings"
-                domain={[0, assets.data.length]}
-              >
-                <Label
-                  value="Number of Recordings"
-                  offset={-5}
-                  angle={-90}
-                  position="inside"
-                />
-              </YAxis>
+              <YAxis dataKey="total" name="Recordings"></YAxis>
               <CartesianGrid strokeDasharray="3 3" />
 
               <Tooltip
@@ -247,14 +242,21 @@ const AssetsChart = ({ assets }: Props) => {
                 }
                 active
               />
-              <Area
+              {/* <Area
                 type="monotone"
                 dataKey="total"
                 stroke="#8884d8"
                 strokeWidth={2}
                 fill="url(#colorUv)"
+              /> */}
+              <Bar dataKey="total" fill="#413ea0" />
+              <Line
+                type="monotone"
+                dataKey="total"
+                tooltipType="none"
+                stroke="#ff7300"
               />
-            </AreaChart>
+            </ComposedChart>
           </ResponsiveContainer>
         </div>
       </CardContent>
