@@ -20,6 +20,8 @@ import { GetListResult, Record } from "react-admin";
 import SessionsChart from "./SessionsChart";
 import AssetsChart from "./AssetsChart";
 import ClientTypeChart from "./ClientTypeChart";
+import BrowsersChart from "./BrowsersChart";
+import ListenEventsChart from "./ListenEventsChart";
 
 interface Props {
   selectedProject: IProject;
@@ -38,7 +40,7 @@ const DashboardContent = (props: Props) => {
           <Grid item md={2} xs={6}>
             <CardWithIcon
               icon={Hearing}
-              title="Total Listens"
+              title="Listens"
               subtitle={listenEvents.total}
               to="/listenevents"
             />
@@ -47,7 +49,7 @@ const DashboardContent = (props: Props) => {
           <Grid item md={2} xs={6}>
             <CardWithIcon
               icon={RecordVoiceOver}
-              title="Total Recordings"
+              title="Recordings"
               subtitle={assets.total}
               to="/assets"
             />
@@ -56,26 +58,35 @@ const DashboardContent = (props: Props) => {
           <Grid item md={2} xs={12}>
             <CardWithIcon
               icon={WatchLater}
-              title="Total Sessions"
+              title="Sessions"
               subtitle={sessions.total}
               to="/sessions"
             />
           </Grid>
-          <Grid container item xs={6} md={4}>
+          <Grid container item xs={6} md={3}>
             <div style={{ width: "100%", margin: 4 }}>
-              <Typography style={{ textAlign: "center" }}>
-                Types of Clients
-              </Typography>
+              <Typography style={{ textAlign: "center" }}>Platforms</Typography>
             </div>
             <ClientTypeChart sessions={sessions} />
+          </Grid>
+
+          <Grid container item xs={6} md={3}>
+            <div style={{ width: "100%", margin: 4 }}>
+              <Typography style={{ textAlign: "center" }}>Browsers</Typography>
+            </div>
+            <BrowsersChart sessions={sessions} />
           </Grid>
         </Grid>
 
         <Grid container item xs={12} md={12} spacing={3}>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={6} lg={8}>
+            <ListenEventsChart events={listenEvents} />
+          </Grid>
+          <Grid item xs={12} md={6} lg={4}>
             <SessionsChart sessions={sessions} />
           </Grid>
-          <Grid item xs={12} md={6}>
+
+          <Grid item xs={12} md={6} lg={4}>
             <AssetsChart assets={assets} />
           </Grid>
         </Grid>
