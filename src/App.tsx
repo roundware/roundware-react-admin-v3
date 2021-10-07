@@ -53,16 +53,6 @@ const dataProvider = drfProvider(
   fetchJsonWithAuthToken
 );
 
-const customDataProvider = {
-  ...dataProvider,
-  // @ts-ignore
-  getOne: async (resource, params, query) => {
-    console.log(`getOne called`, resource, params, query);
-    // @ts-ignore
-    return dataProvider.getOne(resource, params, query);
-  },
-};
-
 function App() {
   return (
     <Admin
@@ -70,7 +60,7 @@ function App() {
       layout={CustomLayout}
       title="Roundware Admin"
       // @ts-ignore
-      dataProvider={customDataProvider}
+      dataProvider={dataProvider}
       authProvider={authProvider}
       dashboard={Dashboard}
     >
