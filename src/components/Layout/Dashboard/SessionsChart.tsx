@@ -30,6 +30,11 @@ import {
   Tooltip,
   Label,
   Legend,
+  BarChart,
+  Bar,
+  ReferenceLine,
+  Brush,
+  ComposedChart,
 } from "recharts";
 
 import {
@@ -89,6 +94,7 @@ const getSanitizedList = (
   sessions: { id: number; starttime: string }[]
 ): { starttime: Date; id: number }[] => [
   ...sessions
+    .filter((s) => ![1, 2].includes(s.id))
     .map((s) => ({ starttime: new Date(s?.starttime), id: s?.id }))
     .sort((a, b) => (a.starttime > b.starttime ? 1 : -1)),
 ];
@@ -98,6 +104,7 @@ const SessionsChart = ({ sessions }: Props) => {
   const [range, setRange] = useState([new Date(), new Date()]);
 
   const handleOnSelectChange = (value: string) => {
+    if (!sessions?.data?.length) return;
     if (value === "custom") {
       setCustomRange(true);
       return;
@@ -108,7 +115,7 @@ const SessionsChart = ({ sessions }: Props) => {
       setRange([
         getSanitizedList(
           // @ts-ignore
-          sessions.data
+          sessions.data || []
         )[0].starttime,
         new Date(),
       ]);
@@ -127,8 +134,8 @@ const SessionsChart = ({ sessions }: Props) => {
   const [startDate, setStartDate] = useState(
     getSanitizedList(
       // @ts-ignore
-      sessions.data
-    )[0].starttime
+      sessions.data || []
+    )?.[0]?.starttime || new Date()
   );
   const [endDate, setEndDate] = useState(new Date());
 
@@ -146,10 +153,10 @@ const SessionsChart = ({ sessions }: Props) => {
             </Typography>
 
             <div>
-              <FormControl style={{ width: 200 }}>
+              <FormControl style={{ width: 150 }}>
                 <InputLabel>Range</InputLabel>
                 <Select
-                  defaultValue="total"
+                  defaultValue={7}
                   // @ts-ignore
                   onChange={(e) => handleOnSelectChange(e!.target!.value)}
                 >
@@ -203,35 +210,36 @@ const SessionsChart = ({ sessions }: Props) => {
           </>
         )}
         <div style={{ width: "100%", height: 300 }}>
+          here the X-axis is like a timeline with equal intervals. It includes
+          the days with 0 sessions too. Thats why most of the space is empty.
+          For other example see graph below which excludes the empty days.
           <ResponsiveContainer>
-            <AreaChart
+            <BarChart
               data={getSessionsPerDay(
                 /* @ts-ignore */
-                sessions.data,
+                sessions.data || [],
                 range
               )}
             >
-              <defs>
+              {/* <defs>
                 <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+                  <stop offset="5%" stopColor=" #413ea0 " stopOpacity={0.8} />
                   <stop offset="95%" stopColor="#1a1a20" stopOpacity={0} />
                 </linearGradient>
-              </defs>
+              </defs> */}
               <XAxis
                 dataKey="date"
                 type="number"
                 name="Date"
+                scale="time"
                 interval={0}
-                domain={[range[0].getTime(), range[1].getTime()]}
+                domain={[`dataMin`, `dataMax`]}
+                allowDataOverflow
                 tickFormatter={(date) => new Date(date).toLocaleDateString()}
               >
                 <Label value="Day" offset={0} position="insideBottom" />
               </XAxis>
-              <YAxis
-                dataKey="total"
-                name="Sessions"
-                domain={[0, sessions.data.length]}
-              >
+              <YAxis dataKey="total" name="Sessions">
                 <Label
                   value="Number of Sessions"
                   offset={-5}
@@ -248,15 +256,80 @@ const SessionsChart = ({ sessions }: Props) => {
                 active={true}
               />
               <Legend verticalAlign="top" height={30} />
-              <Area
-                type="monotone"
-                dataKey="total"
-                name="Sessions"
-                stroke="#8884d8"
-                strokeWidth={2}
-                fill="url(#colorTotal)"
+              <Brush
+                dataKey="date"
+                stroke=" #413ea0 "
+                type="number"
+                scale="time"
+                tickFormatter={(time) => new Date(time).toLocaleDateString()}
               />
-            </AreaChart>
+              <Bar
+                dataKey="total"
+                strokeWidth={3}
+                name="Sessions"
+                fill=" #413ea0 "
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div
+          style={{
+            width: "100%",
+            height: 300,
+            marginTop: 200,
+            marginBottom: 50,
+          }}
+        >
+          Bar Chart with empty days skipped. Set range to total
+          <ResponsiveContainer>
+            <BarChart
+              data={getSessionsPerDay(
+                /* @ts-ignore */
+                sessions.data || [],
+                range
+              )}
+            >
+              {/* <defs>
+                <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor=" #413ea0 " stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#1a1a20" stopOpacity={0} />
+                </linearGradient>
+              </defs> */}
+              <XAxis
+                dataKey="date"
+                // type="number"
+                name="Date"
+                // interval={0}
+                // domain={[range[0].getTime(), range[1].getTime()]}
+                tickFormatter={(date) => new Date(date).toLocaleDateString()}
+              >
+                <Label value="Day" offset={0} position="insideBottom" />
+              </XAxis>
+              <YAxis dataKey="total" name="Sessions">
+                <Label
+                  value="Number of Sessions"
+                  offset={-5}
+                  angle={-90}
+                  position="inside"
+                />
+              </YAxis>
+              <CartesianGrid strokeDasharray="3 3" />
+              <Tooltip
+                formatter={(value: number) => `${value} Sessions`}
+                labelFormatter={(label: any) =>
+                  new Date(label).toLocaleDateString()
+                }
+                active={true}
+              />
+              <Legend verticalAlign="top" height={30} />
+              <Brush
+                dataKey="date"
+                stroke=" #413ea0 "
+                tickFormatter={(time) => new Date(time).toLocaleDateString()}
+              />
+              <Bar dataKey="total" name="Sessions" fill=" #413ea0 " />
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </CardContent>
