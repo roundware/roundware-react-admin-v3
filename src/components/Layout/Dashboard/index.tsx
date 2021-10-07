@@ -17,12 +17,18 @@ import { Hearing } from "@material-ui/icons";
 
 import DashboardContent from "./DashboardContent";
 import ProjectDetails from "./ProjectDetails";
+import drfProvider, { fetchJsonWithAuthToken } from "ra-data-roundware-drf";
 interface Props {}
 const useStyles = makeStyles((theme) => ({
   container: {
     marginTop: theme.spacing(4),
   },
 }));
+
+const dataProvider = drfProvider(
+  `${process.env.REACT_APP_SERVER_URL}/api/2`,
+  fetchJsonWithAuthToken
+);
 const Dashboard = (props: Props) => {
   const classes = useStyles();
   const { selectedProject } = useProjects();
@@ -35,9 +41,10 @@ const Dashboard = (props: Props) => {
   const [assets, setAssets] = useState<GetListResult<Record> | null>(null);
   const [users, setUsers] = useState<GetListResult<Record> | null>(null);
 
-  const dataProvider = useDataProvider();
+  // const dataProvider = useDataProvider();
 
   useEffect(() => {
+    setLoading(true);
     const params = {
       filter: {
         project_id: selectedProject?.id,
@@ -74,7 +81,8 @@ const Dashboard = (props: Props) => {
         .getList(
           `assets`,
           // @ts-ignore
-          params
+          params,
+          false
         )
         .then((data) => {
           setAssets(data);
@@ -91,7 +99,7 @@ const Dashboard = (props: Props) => {
     ];
 
     Promise.all(promises).then(() => setLoading(false));
-  }, []);
+  }, [selectedProject]);
 
   return (
     <div className={classes.container}>
