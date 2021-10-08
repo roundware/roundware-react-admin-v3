@@ -21,10 +21,12 @@ import {
   EditButton,
   DeleteButton,
 } from "react-admin";
+import { useProjects } from "../providers/ProjectsContext";
 
 export const SessionList = (props: ListProps) => {
+  const { selectedProject } = useProjects();
   return (
-    <List {...props}>
+    <List {...props} filter={{ project_id: selectedProject?.id }}>
       <Datagrid>
         <NumberField source="id" />
         <TextField source="device_id" />
