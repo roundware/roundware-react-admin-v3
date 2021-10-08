@@ -11,6 +11,8 @@ import {
   FormControl,
   Typography,
   Grid,
+  Checkbox,
+  FormControlLabel,
 } from "@material-ui/core";
 import {
   format,
@@ -83,7 +85,7 @@ const getListensPerDay = (
       total: val,
     });
   });
-  console.log(chartData);
+
   return chartData.sort((s1, s2) => (s1.date > s2.date ? 1 : -1));
 };
 
@@ -139,6 +141,8 @@ const ListenEventsChart = ({ events }: Props) => {
     setRange([startDate, endDate]);
   }, [startDate, endDate]);
 
+  const [showLine, setShowLine] = useState(false);
+
   return (
     <Card>
       <CardHeader
@@ -149,6 +153,16 @@ const ListenEventsChart = ({ events }: Props) => {
             </Typography>
 
             <div>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    //   @ts-ignore
+                    defaultValue={showLine}
+                    onChange={(e) => setShowLine(e?.target?.checked)}
+                  />
+                }
+                label="Show Line"
+              />
               <FormControl style={{ width: 120 }}>
                 <InputLabel>Range</InputLabel>
                 <Select
@@ -248,12 +262,14 @@ const ListenEventsChart = ({ events }: Props) => {
                 tickFormatter={(time) => new Date(time).toLocaleDateString()}
               />
               <Bar dataKey="total" fill="#413ea0" />
-              <Line
-                type="monotone"
-                dataKey="total"
-                tooltipType="none"
-                stroke="#ff7300"
-              />
+              {showLine && (
+                <Line
+                  type="monotone"
+                  dataKey="total"
+                  tooltipType="none"
+                  stroke="#ff7300"
+                />
+              )}
             </ComposedChart>
           </ResponsiveContainer>
         </div>
