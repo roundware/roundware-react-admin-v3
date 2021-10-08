@@ -25,7 +25,7 @@ import { dateFormatter } from "../utils";
 
 export const ListenEventsList = (props: ListProps) => {
   return (
-    <List {...props} actions={<ShowButton />}>
+    <List {...props}>
       <Datagrid>
         <NumberField source="id" />
         <NumberField source="duration_in_seconds" />
