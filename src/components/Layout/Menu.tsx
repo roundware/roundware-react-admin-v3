@@ -47,7 +47,9 @@ export const Menu = (props: MenuProps) => {
               key={resource.name}
               to={{
                 pathname: `/${resource.name}`,
-                search: `filter=project_id=${selectedProject.id}`,
+                search: `filter=${JSON.stringify({
+                  project_id: selectedProject.id,
+                })}`,
               }}
               primaryText={
                 (resource.options && resource.options.label) ||
