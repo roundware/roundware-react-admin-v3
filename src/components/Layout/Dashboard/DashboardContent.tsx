@@ -41,7 +41,7 @@ const DashboardContent = (props: Props) => {
             <CardWithIcon
               icon={Hearing}
               title="Listens"
-              subtitle={listenEvents.total}
+              subtitle={listenEvents.total || `0`}
               to="/listenevents"
             />
           </Grid>
@@ -50,7 +50,7 @@ const DashboardContent = (props: Props) => {
             <CardWithIcon
               icon={RecordVoiceOver}
               title="Recordings"
-              subtitle={assets.total}
+              subtitle={assets.total || `0`}
               to="/assets"
             />
           </Grid>
@@ -59,7 +59,7 @@ const DashboardContent = (props: Props) => {
             <CardWithIcon
               icon={WatchLater}
               title="Sessions"
-              subtitle={sessions.total}
+              subtitle={sessions.total || `0`}
               to="/sessions"
             />
           </Grid>
