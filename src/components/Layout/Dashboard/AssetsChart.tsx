@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { GetListResult, Record } from "react-admin";
+import { GetListResult, Record, useRedirect } from "react-admin";
 import {
   Card,
   CardHeader,
@@ -11,6 +11,8 @@ import {
   FormControl,
   Typography,
   Grid,
+  FormControlLabel,
+  Checkbox,
 } from "@material-ui/core";
 import {
   format,
@@ -31,6 +33,7 @@ import {
   Label,
   Bar,
   Line,
+  Brush,
 } from "recharts";
 
 import {
@@ -138,33 +141,59 @@ const AssetsChart = ({ assets }: Props) => {
   useEffect(() => {
     setRange([startDate, endDate]);
   }, [startDate, endDate]);
+  const [showLine, setShowLine] = useState(false);
+
+  const redirect = useRedirect();
+
+  const handleOnBarClick = (e: any) => {
+    redirect(
+      `list`,
+      `assets?filter=${JSON.stringify({
+        created__gte: new Date(e?.date).toISOString(),
+        created__lte: addDays(new Date(e?.date), 1).toISOString(),
+      })}`
+    );
+  };
 
   return (
     <Card>
       <CardHeader
         title={
-          <Toolbar>
-            <Typography variant="h5" style={{ flexGrow: 1 }}>
-              Recordings
-            </Typography>
+          <>
+            <Toolbar>
+              <Typography variant="h5" style={{ flexGrow: 1 }}>
+                Recordings
+              </Typography>
 
-            <div>
-              <FormControl style={{ width: 120 }}>
-                <InputLabel>Range</InputLabel>
-                <Select
-                  defaultValue="total"
-                  // @ts-ignore
-                  onChange={(e) => handleOnSelectChange(e!.target!.value)}
-                >
-                  <MenuItem value={7}>Last 7 Days</MenuItem>
-                  <MenuItem value={30}>Last 30 Days</MenuItem>
-                  <MenuItem value={365}>Last Year</MenuItem>
-                  <MenuItem value="total">Total</MenuItem>
-                  <MenuItem value="custom">Custom Range</MenuItem>
-                </Select>
-              </FormControl>
-            </div>
-          </Toolbar>
+              <div>
+                <FormControl style={{ width: 120 }}>
+                  <InputLabel>Range</InputLabel>
+                  <Select
+                    defaultValue="total"
+                    // @ts-ignore
+                    onChange={(e) => handleOnSelectChange(e!.target!.value)}
+                  >
+                    <MenuItem value={7}>Last 7 Days</MenuItem>
+                    <MenuItem value={30}>Last 30 Days</MenuItem>
+                    <MenuItem value={365}>Last Year</MenuItem>
+                    <MenuItem value="total">Total</MenuItem>
+                    <MenuItem value="custom">Custom Range</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+            </Toolbar>
+            <Toolbar>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    onChange={(e) => setShowLine(e.target.checked)}
+                    checked={showLine}
+                  />
+                }
+                label="Show Line"
+              />
+            </Toolbar>
+          </>
         }
       />
 
@@ -242,20 +271,20 @@ const AssetsChart = ({ assets }: Props) => {
                 }
                 active
               />
-              {/* <Area
-                type="monotone"
-                dataKey="total"
-                stroke="#8884d8"
-                strokeWidth={2}
-                fill="url(#colorUv)"
-              /> */}
-              <Bar dataKey="total" fill="#413ea0" />
-              <Line
-                type="monotone"
-                dataKey="total"
-                tooltipType="none"
-                stroke="#ff7300"
+              <Brush
+                dataKey="date"
+                stroke=" #413ea0 "
+                tickFormatter={(time) => new Date(time).toLocaleDateString()}
               />
+              <Bar dataKey="total" fill="#8884d8" onClick={handleOnBarClick} />
+              {showLine && (
+                <Line
+                  type="monotone"
+                  dataKey="total"
+                  tooltipType="none"
+                  stroke="#ff7300"
+                />
+              )}
             </ComposedChart>
           </ResponsiveContainer>
         </div>
