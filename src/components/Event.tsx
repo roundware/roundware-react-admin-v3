@@ -10,10 +10,11 @@ import {
   SimpleForm,
   TextInput,
 } from "react-admin";
-
+import { useProjects } from "../providers/ProjectsContext";
 export const EventsList = (props: ListProps) => {
+  const { selectedProject } = useProjects();
   return (
-    <List {...props}>
+    <List {...props} filter={{ project_id: selectedProject?.id }}>
       <Datagrid></Datagrid>
     </List>
   );
