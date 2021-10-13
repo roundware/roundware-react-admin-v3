@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { GetListResult, Record } from "react-admin";
+import { GetListResult, Record, useRedirect } from "react-admin";
 import {
   Card,
   CardHeader,
@@ -143,6 +143,17 @@ const ListenEventsChart = ({ events }: Props) => {
 
   const [showLine, setShowLine] = useState(false);
 
+  const redirect = useRedirect();
+
+  const handleOnBarClick = (e: any) => {
+    redirect(
+      `list`,
+      `listenevents?filter=${JSON.stringify({
+        start_time__gte: new Date(e?.date).toISOString(),
+        start_time__lte: addDays(new Date(e?.date), 1).toISOString(),
+      })}`
+    );
+  };
   return (
     <Card>
       <CardHeader
@@ -261,7 +272,7 @@ const ListenEventsChart = ({ events }: Props) => {
                 stroke=" #413ea0 "
                 tickFormatter={(time) => new Date(time).toLocaleDateString()}
               />
-              <Bar dataKey="total" fill="#413ea0" />
+              <Bar dataKey="total" fill="#413ea0" onClick={handleOnBarClick} />
               {showLine && (
                 <Line
                   type="monotone"
