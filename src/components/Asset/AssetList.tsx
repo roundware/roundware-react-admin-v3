@@ -13,12 +13,22 @@ import {
   EditButton,
   DeleteButton,
   ListProps,
+  DateTimeInput,
 } from "react-admin";
+import { useProjects } from "../../providers/ProjectsContext";
 import AudioPlayerField from "../AudioPlayerField";
 
-const AssetList = (props: ListProps) => {
+export const AssetList = (props: ListProps) => {
+  const { selectedProject } = useProjects();
   return (
-    <List {...props} filter={{ project_id: 1 }}>
+    <List
+      {...props}
+      filter={{ project_id: selectedProject?.id }}
+      filters={[
+        <DateTimeInput label="Created After" source="created__gte" />,
+        <DateTimeInput label="Created Before" source="created__lte" />,
+      ]}
+    >
       <Datagrid>
         <TextField source="id" />
         <BooleanField source="submitted" />

@@ -21,11 +21,20 @@ import {
   DeleteButton,
   ShowButton,
 } from "react-admin";
+import { useProjects } from "../providers/ProjectsContext";
 import { dateFormatter } from "../utils";
 
 export const ListenEventsList = (props: ListProps) => {
+  const { selectedProject } = useProjects();
   return (
-    <List {...props}>
+    <List
+      {...props}
+      filter={{ project_id: selectedProject?.id }}
+      filters={[
+        <DateTimeInput source="start_time__gte" label="Started After" />,
+        <DateTimeInput source="start_time__lte" label="Started Before" />,
+      ]}
+    >
       <Datagrid>
         <NumberField source="id" />
         <NumberField source="duration_in_seconds" />
