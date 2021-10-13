@@ -99,19 +99,6 @@ const Dashboard = (props: Props) => {
     });
   }, [selectedProject]);
 
-  useEffect(() => {
-    if (Array.isArray(listenEvents?.data) && Array.isArray(assets?.data)) {
-      setListenEvents((prev) => {
-        const events = { ...prev };
-        events.data = events.data?.filter((e) =>
-          assets?.data.some((a) => a.id === e.asset_id)
-        )!;
-        events.total = events.data?.length || 0;
-        return events as GetListResult<Record>;
-      });
-    }
-  }, [loading]);
-
   return (
     <div className={classes.container}>
       <ProjectDetails />
