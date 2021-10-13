@@ -22,6 +22,7 @@ import AssetsChart from "./AssetsChart";
 import ClientTypeChart from "./ClientTypeChart";
 import BrowsersChart from "./BrowsersChart";
 import ListenEventsChart from "./ListenEventsChart";
+import AssetMediaTypesChart from "./AssetMediaTypesChart";
 
 interface Props {
   selectedProject: IProject;
@@ -79,15 +80,20 @@ const DashboardContent = (props: Props) => {
         </Grid>
 
         <Grid container item xs={12} md={12} spacing={3}>
-          <Grid item xs={12} md={6} lg={8}>
+          <Grid item xs={12} md={12} lg={12}>
             <ListenEventsChart events={listenEvents} />
           </Grid>
-          <Grid item xs={12} md={6} lg={4}>
+
+          <Grid item xs={12} md={6} lg={6}>
+            <AssetsChart assets={assets} />
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={6}>
             <SessionsChart sessions={sessions} />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4}>
-            <AssetsChart assets={assets} />
+          <Grid item xs={12} md={6} lg={6}>
+            <AssetMediaTypesChart assets={assets} />
           </Grid>
         </Grid>
       </Grid>
