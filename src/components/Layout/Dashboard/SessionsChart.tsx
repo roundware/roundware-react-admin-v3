@@ -1,48 +1,34 @@
-import React, { useState, useEffect } from "react";
-import { GetListResult, Record } from "react-admin";
 import {
   Card,
-  CardHeader,
   CardContent,
-  Toolbar,
-  InputLabel,
-  Select,
-  MenuItem,
+  CardHeader,
+  Checkbox,
   FormControl,
-  Typography,
+  FormControlLabel,
   Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Toolbar,
+  Typography,
 } from "@material-ui/core";
+import { DatePicker } from "@material-ui/pickers";
+import { addDays, isAfter, isBefore, subDays } from "date-fns";
+import React, { useEffect, useState } from "react";
+import { GetListResult, Record, useRedirect } from "react-admin";
 import {
-  format,
-  subDays,
-  addDays,
-  isBefore,
-  isAfter,
-  differenceInCalendarDays,
-} from "date-fns";
-import {
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
+  Bar,
+  Brush,
   CartesianGrid,
-  Tooltip,
+  ComposedChart,
   Label,
   Legend,
-  BarChart,
-  Bar,
-  ReferenceLine,
-  Brush,
-  ComposedChart,
+  Line,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
-
-import {
-  DatePicker,
-  TimePicker,
-  DateTimePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
 
 interface Props {
   sessions: GetListResult<Record>;
@@ -143,20 +129,35 @@ const SessionsChart = ({ sessions }: Props) => {
     setRange([startDate, endDate]);
   }, [startDate, endDate]);
 
+  const [skipNoActivity, setSkipNoActivity] = useState(false);
+  const [showLine, setShowLine] = useState(false);
+
+  const redirect = useRedirect();
+
+  const handleOnBarClick = (e: any) => {
+    redirect(
+      `list`,
+      `sessions?filter=${JSON.stringify({
+        start_time__gte: new Date(e?.date).toISOString(),
+        start_time__lte: addDays(new Date(e?.date), 1).toISOString(),
+      })}`
+    );
+  };
+
   return (
     <Card>
       <CardHeader
         title={
-          <Toolbar>
-            <Typography variant="h5" style={{ flexGrow: 1 }}>
-              Sessions
-            </Typography>
+          <>
+            <Toolbar>
+              <Typography variant="h5" style={{ flexGrow: 1 }}>
+                Sessions
+              </Typography>
 
-            <div>
               <FormControl style={{ width: 150 }}>
                 <InputLabel>Range</InputLabel>
                 <Select
-                  defaultValue={7}
+                  defaultValue={"total"}
                   // @ts-ignore
                   onChange={(e) => handleOnSelectChange(e!.target!.value)}
                 >
@@ -167,8 +168,29 @@ const SessionsChart = ({ sessions }: Props) => {
                   <MenuItem value="custom">Custom Range</MenuItem>
                 </Select>
               </FormControl>
-            </div>
-          </Toolbar>
+            </Toolbar>
+            <Toolbar style={{ paddingBottom: 0 }}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    onChange={(e) => setShowLine(e.target.checked)}
+                    value={showLine}
+                  />
+                }
+                label="Show Line"
+              />
+
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    onChange={(e) => setSkipNoActivity(e.target.checked)}
+                    value={skipNoActivity}
+                  />
+                }
+                label="Skip No Activity"
+              />
+            </Toolbar>
+          </>
         }
       />
 
@@ -210,29 +232,20 @@ const SessionsChart = ({ sessions }: Props) => {
           </>
         )}
         <div style={{ width: "100%", height: 300 }}>
-          here the X-axis is like a timeline with equal intervals. It includes
-          the days with 0 sessions too. Thats why most of the space is empty.
-          For other example see graph below which excludes the empty days.
           <ResponsiveContainer>
-            <BarChart
+            <ComposedChart
               data={getSessionsPerDay(
                 /* @ts-ignore */
                 sessions.data || [],
                 range
               )}
             >
-              {/* <defs>
-                <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor=" #413ea0 " stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="#1a1a20" stopOpacity={0} />
-                </linearGradient>
-              </defs> */}
               <XAxis
                 dataKey="date"
-                type="number"
+                type={skipNoActivity ? undefined : "number"}
                 name="Date"
-                scale="time"
-                interval={0}
+                scale={skipNoActivity ? undefined : "time"}
+                interval={skipNoActivity ? undefined : 0}
                 domain={[`dataMin`, `dataMax`]}
                 allowDataOverflow
                 tickFormatter={(date) => new Date(date).toLocaleDateString()}
@@ -263,73 +276,23 @@ const SessionsChart = ({ sessions }: Props) => {
                 scale="time"
                 tickFormatter={(time) => new Date(time).toLocaleDateString()}
               />
+
               <Bar
                 dataKey="total"
                 strokeWidth={3}
                 name="Sessions"
                 fill=" #413ea0 "
+                onClick={handleOnBarClick}
               />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div
-          style={{
-            width: "100%",
-            height: 300,
-            marginTop: 200,
-            marginBottom: 50,
-          }}
-        >
-          Bar Chart with empty days skipped. Set range to total
-          <ResponsiveContainer>
-            <BarChart
-              data={getSessionsPerDay(
-                /* @ts-ignore */
-                sessions.data || [],
-                range
-              )}
-            >
-              {/* <defs>
-                <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor=" #413ea0 " stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="#1a1a20" stopOpacity={0} />
-                </linearGradient>
-              </defs> */}
-              <XAxis
-                dataKey="date"
-                // type="number"
-                name="Date"
-                // interval={0}
-                // domain={[range[0].getTime(), range[1].getTime()]}
-                tickFormatter={(date) => new Date(date).toLocaleDateString()}
-              >
-                <Label value="Day" offset={0} position="insideBottom" />
-              </XAxis>
-              <YAxis dataKey="total" name="Sessions">
-                <Label
-                  value="Number of Sessions"
-                  offset={-5}
-                  angle={-90}
-                  position="inside"
+              {showLine && (
+                <Line
+                  type="monotone"
+                  dataKey="total"
+                  tooltipType="none"
+                  stroke="#ff7300"
                 />
-              </YAxis>
-              <CartesianGrid strokeDasharray="3 3" />
-              <Tooltip
-                formatter={(value: number) => `${value} Sessions`}
-                labelFormatter={(label: any) =>
-                  new Date(label).toLocaleDateString()
-                }
-                active={true}
-              />
-              <Legend verticalAlign="top" height={30} />
-              <Brush
-                dataKey="date"
-                stroke=" #413ea0 "
-                tickFormatter={(time) => new Date(time).toLocaleDateString()}
-              />
-              <Bar dataKey="total" name="Sessions" fill=" #413ea0 " />
-            </BarChart>
+              )}
+            </ComposedChart>
           </ResponsiveContainer>
         </div>
       </CardContent>
