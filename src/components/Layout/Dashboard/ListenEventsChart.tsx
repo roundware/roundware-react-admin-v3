@@ -13,6 +13,7 @@ import {
   Grid,
   Checkbox,
   FormControlLabel,
+  CircularProgress,
 } from "@material-ui/core";
 import {
   format,
@@ -44,7 +45,7 @@ import {
 } from "@material-ui/pickers";
 
 interface Props {
-  events: GetListResult<Record>;
+  events: GetListResult<Record> | null;
 }
 
 export const isWithinRange = (date: Date, range: Date[]) => {
@@ -101,7 +102,7 @@ const ListenEventsChart = ({ events }: Props) => {
   const [customRange, setCustomRange] = useState(false);
   const [range, setRange] = useState([new Date(), new Date()]);
 
-  const handleOnSelectChange = (value: string) => {
+  const handleOnSelectChange = (value: string | number) => {
     if (!events?.data?.length) return;
     if (value === "custom") {
       setCustomRange(true);
@@ -113,7 +114,7 @@ const ListenEventsChart = ({ events }: Props) => {
       setRange([
         getSanitizedList(
           // @ts-ignore
-          events.data
+          events?.data
         )[0].start_time,
         new Date(),
       ]);
@@ -126,13 +127,13 @@ const ListenEventsChart = ({ events }: Props) => {
   };
 
   useEffect(() => {
-    handleOnSelectChange(`total`);
-  }, []);
+    handleOnSelectChange(30);
+  }, [events]);
 
   const [startDate, setStartDate] = useState(
     getSanitizedList(
       // @ts-ignore
-      events.data
+      events?.data || []
     )?.[0]?.start_time || new Date()
   );
   const [endDate, setEndDate] = useState(new Date());
@@ -177,7 +178,7 @@ const ListenEventsChart = ({ events }: Props) => {
               <FormControl style={{ width: 120 }}>
                 <InputLabel>Range</InputLabel>
                 <Select
-                  defaultValue="total"
+                  defaultValue={30}
                   // @ts-ignore
                   onChange={(e) => handleOnSelectChange(e!.target!.value)}
                 >
@@ -230,60 +231,73 @@ const ListenEventsChart = ({ events }: Props) => {
             </Grid>
           </>
         )}
-        <div style={{ width: "100%", height: 300 }}>
-          <ResponsiveContainer>
-            <ComposedChart
-              data={getListensPerDay(
-                /* @ts-ignore */
-                events.data,
-                range
-              )}
-            >
-              <defs>
-                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                  <stop stopColor="#8884d8" stopOpacity={1} />
-                  <stop stopColor="#1a1a20" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <XAxis
-                dataKey="date"
-                type="number"
-                name="Date"
-                scale="time"
-                domain={["dataMin", "dataMax"]}
-                allowDataOverflow
-                tickFormatter={(date) => new Date(date).toLocaleDateString()}
+        {!events ? (
+          <CircularProgress />
+        ) : (
+          <div style={{ width: "100%", height: 300 }}>
+            <ResponsiveContainer>
+              <ComposedChart
+                data={getListensPerDay(
+                  /* @ts-ignore */
+                  events.data,
+                  range
+                )}
               >
-                <Label value="Day" offset={0} position="insideBottom" />
-              </XAxis>
-              <YAxis dataKey="total" name="Listens"></YAxis>
-              <CartesianGrid strokeDasharray="3 3" />
+                <defs>
+                  <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                    <stop stopColor="#8884d8" stopOpacity={1} />
+                    <stop stopColor="#1a1a20" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis
+                  dataKey="date"
+                  type="number"
+                  name="Date"
+                  scale="time"
+                  domain={["dataMin", "dataMax"]}
+                  allowDataOverflow
+                  tickFormatter={(date) => new Date(date).toLocaleDateString()}
+                  angle={45}
+                  dx={15}
+                  dy={20}
+                  height={70}
+                  minTickGap={-200}
+                >
+                  <Label value="Day" offset={0} position="insideBottom" />
+                </XAxis>
+                <YAxis dataKey="total" name="Listens"></YAxis>
+                <CartesianGrid strokeDasharray="3 3" />
 
-              <Tooltip
-                cursor={{ strokeDasharray: "3 3" }}
-                formatter={(value: number) => `${value} Listens`}
-                labelFormatter={(label: any) =>
-                  new Date(label).toLocaleDateString()
-                }
-                active
-              />
-              <Brush
-                dataKey="date"
-                stroke=" #413ea0 "
-                tickFormatter={(time) => new Date(time).toLocaleDateString()}
-              />
-              <Bar dataKey="total" fill="#413ea0" onClick={handleOnBarClick} />
-              {showLine && (
-                <Line
-                  type="monotone"
-                  dataKey="total"
-                  tooltipType="none"
-                  stroke="#ff7300"
+                <Tooltip
+                  cursor={{ strokeDasharray: "3 3" }}
+                  formatter={(value: number) => `${value} Listens`}
+                  labelFormatter={(label: any) =>
+                    new Date(label).toLocaleDateString()
+                  }
+                  active
                 />
-              )}
-            </ComposedChart>
-          </ResponsiveContainer>
-        </div>
+                <Brush
+                  dataKey="date"
+                  stroke=" #413ea0 "
+                  tickFormatter={(time) => new Date(time).toLocaleDateString()}
+                />
+                <Bar
+                  dataKey="total"
+                  fill="#413ea0"
+                  onClick={handleOnBarClick}
+                />
+                {showLine && (
+                  <Line
+                    type="monotone"
+                    dataKey="total"
+                    tooltipType="none"
+                    stroke="#ff7300"
+                  />
+                )}
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

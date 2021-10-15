@@ -25,15 +25,14 @@ import ListenEventsChart from "./ListenEventsChart";
 import AssetMediaTypesChart from "./AssetMediaTypesChart";
 
 interface Props {
-  selectedProject: IProject;
-  sessions: GetListResult<Record>;
-  assets: GetListResult<Record>;
-  listenEvents: GetListResult<Record>;
-  users: GetListResult<Record>;
+  sessions: GetListResult<Record> | null;
+  assets: GetListResult<Record> | null;
+  listenEvents: GetListResult<Record> | null;
+  ranges: { [resrouce: string]: string };
 }
 
 const DashboardContent = (props: Props) => {
-  const { selectedProject, assets, listenEvents, users, sessions } = props;
+  const { ranges, assets, listenEvents, sessions } = props;
   return (
     <div>
       <Grid container spacing={4}>
@@ -42,8 +41,11 @@ const DashboardContent = (props: Props) => {
             <CardWithIcon
               icon={Hearing}
               title="Listens"
-              subtitle={listenEvents.total || `0`}
+              subtitle={
+                listenEvents === null ? `Loading..` : listenEvents?.total || `0`
+              }
               to="/listenevents"
+              helperText={ranges[`listenEvents`]}
             />
           </Grid>
 
@@ -51,8 +53,9 @@ const DashboardContent = (props: Props) => {
             <CardWithIcon
               icon={RecordVoiceOver}
               title="Recordings"
-              subtitle={assets.total || `0`}
+              subtitle={assets === null ? `Loading..` : assets?.total || `0`}
               to="/assets"
+              helperText={ranges[`assets`]}
             />
           </Grid>
 
@@ -60,40 +63,38 @@ const DashboardContent = (props: Props) => {
             <CardWithIcon
               icon={WatchLater}
               title="Sessions"
-              subtitle={sessions.total || `0`}
+              subtitle={
+                sessions === null ? `Loading..` : sessions?.total || `0`
+              }
               to="/sessions"
+              helperText={ranges[`sessions`]}
             />
-          </Grid>
-          <Grid container item xs={6} md={3}>
-            <div style={{ width: "100%", margin: 4 }}>
-              <Typography style={{ textAlign: "center" }}>Platforms</Typography>
-            </div>
-            <ClientTypeChart sessions={sessions} />
-          </Grid>
-
-          <Grid container item xs={6} md={3}>
-            <div style={{ width: "100%", margin: 4 }}>
-              <Typography style={{ textAlign: "center" }}>Browsers</Typography>
-            </div>
-            <BrowsersChart sessions={sessions} />
           </Grid>
         </Grid>
 
         <Grid container item xs={12} md={12} spacing={3}>
+          <Grid item xs={12} md={4} lg={4}>
+            <AssetMediaTypesChart assets={assets} />
+          </Grid>
+
+          <Grid container item xs={4} md={4}>
+            <ClientTypeChart sessions={sessions} />
+          </Grid>
+
+          <Grid container item xs={4} md={4}>
+            <BrowsersChart sessions={sessions} />
+          </Grid>
+
           <Grid item xs={12} md={12} lg={12}>
             <ListenEventsChart events={listenEvents} />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={6}>
-            <AssetsChart assets={assets} />
+          <Grid item xs={12} md={12} lg={12}>
+            {assets && <AssetsChart assets={assets} />}
           </Grid>
 
-          <Grid item xs={12} md={6} lg={6}>
+          <Grid item xs={12} md={12} lg={12}>
             <SessionsChart sessions={sessions} />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={6}>
-            <AssetMediaTypesChart assets={assets} />
           </Grid>
         </Grid>
       </Grid>

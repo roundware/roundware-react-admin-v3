@@ -2,6 +2,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  CircularProgress,
   Toolbar,
   Typography,
 } from "@material-ui/core";
@@ -17,7 +18,7 @@ import {
 } from "recharts";
 
 interface Props {
-  assets: GetListResult<Record>;
+  assets: GetListResult<Record> | null;
 }
 const getMediaTypes = (assets: GetListResult<Record>) => {
   const chartDataMap = new Map<string, number>();
@@ -91,7 +92,7 @@ const AssetMediaTypesChart = ({ assets }: Props) => {
           <>
             <Toolbar>
               <Typography variant="h5" style={{ flexGrow: 1 }}>
-                Meida Types
+                Media Types
               </Typography>
             </Toolbar>
           </>
@@ -99,41 +100,45 @@ const AssetMediaTypesChart = ({ assets }: Props) => {
       />
 
       <CardContent>
-        <div style={{ width: "100%", height: 300 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart width={400} height={400}>
-              <Pie
-                data={getMediaTypes(assets)}
-                cx="50%"
-                cy="50%"
-                dataKey="total"
-                nameKey="media_type"
-                label={renderCustomizedLabel}
-                outerRadius={80}
-                fill="#8884d8"
-                width={400}
-                height={400}
-                labelLine
-                onClick={handleOnClick}
-              >
-                {getMediaTypes(assets).map((entry: any, index: number) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    name={entry.name}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend
-                verticalAlign="top"
-                formatter={(value: any, name: any) => {
-                  return `${name?.payload?.media_type} (${name?.payload?.total})`;
-                }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
+        {!assets ? (
+          <CircularProgress />
+        ) : (
+          <div style={{ width: "100%", height: 300 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart width={400} height={400}>
+                <Pie
+                  data={getMediaTypes(assets)}
+                  cx="50%"
+                  cy="50%"
+                  dataKey="total"
+                  nameKey="media_type"
+                  label={renderCustomizedLabel}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  width={400}
+                  height={400}
+                  labelLine
+                  onClick={handleOnClick}
+                >
+                  {getMediaTypes(assets).map((entry: any, index: number) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      name={entry.name}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend
+                  verticalAlign="top"
+                  formatter={(value: any, name: any) => {
+                    return `${name?.payload?.media_type} (${name?.payload?.total})`;
+                  }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

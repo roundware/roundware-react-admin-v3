@@ -1,5 +1,10 @@
 import React from "react";
-import { Card, CardContent } from "@material-ui/core";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CircularProgress,
+} from "@material-ui/core";
 import { GetListResult, Record } from "react-admin";
 import {
   PieChart,
@@ -11,8 +16,11 @@ import {
   Sector,
   Label,
 } from "recharts";
+// @ts-ignore
+import randomMC from "random-material-color";
+
 interface Props {
-  sessions: GetListResult<Record>;
+  sessions: GetListResult<Record> | null;
 }
 
 const getclientSystemData = (sessions: { client_system: string }[]) => {
@@ -51,7 +59,7 @@ const renderCustomizedLabel = ({
   payload,
   fill,
 }: any) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 1.5;
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
@@ -70,36 +78,52 @@ const renderCustomizedLabel = ({
 
 const BrowsersChart = (props: Props) => {
   return (
-    <div style={{ width: "100%", height: 120 }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie
-            // @ts-ignore
-            data={getclientSystemData(props.sessions.data)}
-            dataKey="total"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            outerRadius={50}
-            fill="#8884d8"
-            width={400}
-            height={400}
-            labelLine
-            label={renderCustomizedLabel}
-          >
-            {/* @ts-ignore */}
-            {getclientSystemData(props.sessions.data).map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                name={entry.name}
-                fill={COLORS[index % COLORS.length]}
-              ></Cell>
-            ))}
-          </Pie>
-          <Tooltip />
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
+    <Card style={{ width: "100%" }}>
+      <CardHeader title="Browsers" />
+      <CardContent>
+        {props.sessions ? (
+          <div style={{ width: "100%", height: 200 }}>
+            <ResponsiveContainer height="100%" width="100%">
+              <PieChart>
+                <Pie
+                  // @ts-ignore
+                  data={getclientSystemData(props.sessions.data)}
+                  dataKey="total"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  height={150}
+                  fill="#8884d8"
+                  labelLine
+                >
+                  {/* @ts-ignore */}
+                  {getclientSystemData(props.sessions.data).map(
+                    (entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        name={entry.name}
+                        fill={randomMC.getColor()}
+                      ></Cell>
+                    )
+                  )}
+                </Pie>
+                <Tooltip />
+                <Legend
+                  height={50}
+                  overflow="scroll"
+                  verticalAlign="bottom"
+                  formatter={(value: any, name: any) => {
+                    return `${name?.payload?.name} (${name?.payload?.total})`;
+                  }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
+          <CircularProgress />
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

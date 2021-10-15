@@ -3,6 +3,7 @@ import {
   CardContent,
   CardHeader,
   Checkbox,
+  CircularProgress,
   FormControl,
   FormControlLabel,
   Grid,
@@ -31,7 +32,7 @@ import {
 } from "recharts";
 
 interface Props {
-  sessions: GetListResult<Record>;
+  sessions: GetListResult<Record> | null;
 }
 
 export const isWithinRange = (date: Date, range: Date[]) => {
@@ -89,7 +90,7 @@ const SessionsChart = ({ sessions }: Props) => {
   const [customRange, setCustomRange] = useState(false);
   const [range, setRange] = useState([new Date(), new Date()]);
 
-  const handleOnSelectChange = (value: string) => {
+  const handleOnSelectChange = (value: string | number) => {
     if (!sessions?.data?.length) return;
     if (value === "custom") {
       setCustomRange(true);
@@ -114,13 +115,13 @@ const SessionsChart = ({ sessions }: Props) => {
   };
 
   useEffect(() => {
-    handleOnSelectChange(`total`);
-  }, []);
+    handleOnSelectChange(30);
+  }, [sessions]);
 
   const [startDate, setStartDate] = useState(
     getSanitizedList(
       // @ts-ignore
-      sessions.data || []
+      sessions?.data || []
     )?.[0]?.starttime || new Date()
   );
   const [endDate, setEndDate] = useState(new Date());
@@ -157,7 +158,7 @@ const SessionsChart = ({ sessions }: Props) => {
               <FormControl style={{ width: 150 }}>
                 <InputLabel>Range</InputLabel>
                 <Select
-                  defaultValue={"total"}
+                  defaultValue={30}
                   // @ts-ignore
                   onChange={(e) => handleOnSelectChange(e!.target!.value)}
                 >
@@ -231,70 +232,83 @@ const SessionsChart = ({ sessions }: Props) => {
             </Grid>
           </>
         )}
-        <div style={{ width: "100%", height: 300 }}>
-          <ResponsiveContainer>
-            <ComposedChart
-              data={getSessionsPerDay(
-                /* @ts-ignore */
-                sessions.data || [],
-                range
-              )}
-            >
-              <XAxis
-                dataKey="date"
-                type={skipNoActivity ? undefined : "number"}
-                name="Date"
-                scale={skipNoActivity ? undefined : "time"}
-                interval={skipNoActivity ? undefined : 0}
-                domain={[`dataMin`, `dataMax`]}
-                allowDataOverflow
-                tickFormatter={(date) => new Date(date).toLocaleDateString()}
+        {!sessions ? (
+          <CircularProgress />
+        ) : (
+          <div style={{ width: "100%", height: 300 }}>
+            <ResponsiveContainer>
+              <ComposedChart
+                data={getSessionsPerDay(
+                  /* @ts-ignore */
+                  sessions.data || [],
+                  range
+                )}
+                height={200}
               >
-                <Label value="Day" offset={0} position="insideBottom" />
-              </XAxis>
-              <YAxis dataKey="total" name="Sessions">
-                <Label
-                  value="Number of Sessions"
-                  offset={-5}
-                  angle={-90}
-                  position="inside"
+                <XAxis
+                  dataKey="date"
+                  type={skipNoActivity ? undefined : "number"}
+                  name="Date"
+                  scale={skipNoActivity ? undefined : "time"}
+                  interval={skipNoActivity ? undefined : 0}
+                  domain={[`dataMin`, `dataMax`]}
+                  allowDataOverflow
+                  tickFormatter={(date) => new Date(date).toLocaleDateString()}
+                  angle={45}
+                  dx={15}
+                  dy={20}
+                  height={70}
+                  minTickGap={-200}
+                >
+                  <Label value="Day" offset={80} />
+                </XAxis>
+                <YAxis dataKey="total" name="Sessions">
+                  <Label
+                    value="Number of Sessions"
+                    offset={-5}
+                    angle={-90}
+                    position="inside"
+                  />
+                </YAxis>
+                <CartesianGrid strokeDasharray="3 3" />
+                <Tooltip
+                  formatter={(value: number) => `${value} Sessions`}
+                  labelFormatter={(label: any) =>
+                    new Date(label).toLocaleDateString()
+                  }
+                  active={true}
                 />
-              </YAxis>
-              <CartesianGrid strokeDasharray="3 3" />
-              <Tooltip
-                formatter={(value: number) => `${value} Sessions`}
-                labelFormatter={(label: any) =>
-                  new Date(label).toLocaleDateString()
-                }
-                active={true}
-              />
-              <Legend verticalAlign="top" height={30} />
-              <Brush
-                dataKey="date"
-                stroke=" #413ea0 "
-                type="number"
-                scale="time"
-                tickFormatter={(time) => new Date(time).toLocaleDateString()}
-              />
+                <Legend verticalAlign="top" height={30} />
+                <Brush
+                  dataKey="date"
+                  stroke=" #413ea0 "
+                  type="number"
+                  scale="time"
+                  padding={{
+                    top: 30,
+                  }}
+                  tickFormatter={(time) => new Date(time).toLocaleDateString()}
+                />
 
-              <Bar
-                dataKey="total"
-                strokeWidth={3}
-                name="Sessions"
-                fill=" #413ea0 "
-                onClick={handleOnBarClick}
-              />
-              {showLine && (
-                <Line
-                  type="monotone"
+                <Bar
                   dataKey="total"
-                  tooltipType="none"
-                  stroke="#ff7300"
+                  strokeWidth={3}
+                  name="Sessions"
+                  fill=" #413ea0 "
+                  onClick={handleOnBarClick}
                 />
-              )}
-            </ComposedChart>
-          </ResponsiveContainer>
-        </div>
+                {showLine && (
+                  <Line
+                    type="monotone"
+                    dataKey="total"
+                    tooltipType="none"
+                    stroke="#ff7300"
+                  />
+                )}
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

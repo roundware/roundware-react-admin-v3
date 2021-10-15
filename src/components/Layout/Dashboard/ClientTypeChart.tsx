@@ -1,5 +1,10 @@
 import React from "react";
-import { Card, CardContent } from "@material-ui/core";
+import {
+  Card,
+  CardContent,
+  CircularProgress,
+  CardHeader,
+} from "@material-ui/core";
 import { GetListResult, Record } from "react-admin";
 import {
   PieChart,
@@ -11,8 +16,12 @@ import {
   Sector,
   Label,
 } from "recharts";
+
+// @ts-ignore
+import randomMC from "random-material-color";
+
 interface Props {
-  sessions: GetListResult<Record>;
+  sessions: GetListResult<Record> | null;
 }
 
 const getClientTypeData = (sessions: { client_type: string }[]) => {
@@ -68,36 +77,51 @@ const renderCustomizedLabel = ({
 
 const ClientTypeChart = (props: Props) => {
   return (
-    <div style={{ width: "100%", height: 120 }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie
-            // @ts-ignore
-            data={getClientTypeData(props.sessions.data)}
-            dataKey="total"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            outerRadius={50}
-            fill="#8884d8"
-            width={400}
-            height={400}
-            labelLine
-            label={renderCustomizedLabel}
-          >
-            {/* @ts-ignore */}
-            {getClientTypeData(props.sessions.data).map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                name={entry.name}
-                fill={COLORS[index % COLORS.length]}
-              ></Cell>
-            ))}
-          </Pie>
-          <Tooltip />
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
+    <Card style={{ width: "100%" }}>
+      <CardHeader title="Platforms" />
+      <CardContent>
+        {props.sessions ? (
+          <div style={{ width: "100%", height: 200 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  // @ts-ignore
+                  data={getClientTypeData(props.sessions.data)}
+                  dataKey="total"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  fill="#8884d8"
+                  height={150}
+                  labelLine
+                >
+                  {/* @ts-ignore */}
+                  {getClientTypeData(props.sessions.data).map(
+                    (entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        name={entry.name}
+                        fill={randomMC.getColor()}
+                      ></Cell>
+                    )
+                  )}
+                </Pie>
+                <Tooltip />
+                <Legend
+                  height={50}
+                  verticalAlign="bottom"
+                  formatter={(value: any, name: any) => {
+                    return `${name?.payload?.name} (${name?.payload?.total})`;
+                  }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
+          <CircularProgress />
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

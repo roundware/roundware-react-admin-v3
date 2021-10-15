@@ -10,6 +10,7 @@ interface Props {
   to: string;
   title?: string;
   subtitle?: string | number;
+  helperText?: string;
   children?: ReactNode;
   bgColor?: string;
 }
@@ -40,7 +41,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CardWithIcon = (props: Props) => {
-  const { icon, title, subtitle, to, children, bgColor = "#ffffff" } = props;
+  const {
+    icon,
+    title,
+    subtitle,
+    to,
+    children,
+    bgColor = "#ffffff",
+    helperText,
+  } = props;
   const classes = useStyles(props);
   return (
     <Card className={classes.card} style={{ backgroundColor: bgColor }}>
@@ -59,6 +68,13 @@ const CardWithIcon = (props: Props) => {
           </Box>
         </div>
       </Link>
+
+      {helperText && (
+        <Typography variant="subtitle1" align="center" color="textSecondary">
+          {helperText}
+        </Typography>
+      )}
+
       {children && <Divider />}
       {children}
     </Card>
