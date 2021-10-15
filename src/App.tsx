@@ -1,7 +1,7 @@
-import drfProvider, {
-  CustomDataProvider,
+import {
   fetchJsonWithAuthToken,
   tokenAuthProvider,
+  RoundwareDataProvider,
 } from "ra-data-roundware-drf";
 import React from "react";
 import {
@@ -48,7 +48,7 @@ import { SessionCreate, SessionEdit, SessionList } from "./components/Session";
 const authProvider = tokenAuthProvider({
   obtainAuthTokenUrl: `${process.env.REACT_APP_SERVER_URL}/api/2/login/`,
 });
-const dataProvider = drfProvider(
+const dataProvider = new RoundwareDataProvider(
   `${process.env.REACT_APP_SERVER_URL}/api/2`,
   fetchJsonWithAuthToken
 );
