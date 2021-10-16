@@ -53,7 +53,143 @@ const dataProvider = new RoundwareDataProvider(
   fetchJsonWithAuthToken
 );
 
+const resourceLookup: { [index: string]: React.ReactNode } = {
+  assets: (
+    <Resource
+      name="assets"
+      list={AssetList}
+      create={AssetCreate}
+      edit={AssetEdit}
+      options={{ label: "Assets" }}
+      icon={WebAsset}
+    />
+  ),
+  audiotracks: (
+    <Resource
+      name="audiotracks"
+      list={ListGuesser}
+      edit={EditGuesser}
+      icon={Audiotrack}
+      options={{ label: "Audio Tracks" }}
+    />
+  ),
+  envelopes: (
+    <Resource
+      name="envelopes"
+      list={ListGuesser}
+      edit={EditGuesser}
+      icon={Email}
+    />
+  ),
+  events: (
+    <Resource
+      name="events"
+      list={ListGuesser}
+      edit={EditGuesser}
+      icon={Event}
+    />
+  ),
+
+  listenevents: (
+    <Resource
+      name="listenevents"
+      list={ListenEventsList}
+      edit={ListenEventsEdit}
+      create={ListenEventsCreate}
+      icon={Hearing}
+      options={{ label: "Listen Events" }}
+    />
+  ),
+
+  sessions: (
+    <Resource
+      name="sessions"
+      list={SessionList}
+      edit={SessionEdit}
+      create={SessionCreate}
+      icon={AccessTime}
+    />
+  ),
+
+  speakers: (
+    <Resource
+      name="speakers"
+      list={ListGuesser}
+      edit={EditGuesser}
+      icon={Speaker}
+    />
+  ),
+
+  uigroups: (
+    <Resource
+      name="uigroups"
+      list={ListGuesser}
+      edit={EditGuesser}
+      icon={Build}
+      options={{ label: "UI Groups" }}
+    />
+  ),
+
+  uiitems: (
+    <Resource
+      name="uiitems"
+      list={ListGuesser}
+      edit={EditGuesser}
+      icon={FeaturedPlayList}
+      options={{ label: "UI Items" }}
+    />
+  ),
+
+  tags: (
+    <Resource
+      name="tags"
+      list={ListGuesser}
+      edit={EditGuesser}
+      icon={TagFaces}
+    />
+  ),
+  tag_categories: (
+    <Resource
+      name="tag_categories"
+      options={{
+        label: "Tag Categories",
+      }}
+      list={ListGuesser}
+      edit={EditGuesser}
+      icon={Label}
+    />
+  ),
+  languages: (
+    <Resource
+      name="languages"
+      list={ListGuesser}
+      edit={EditGuesser}
+      icon={Language}
+    />
+  ),
+  localizedstrings: (
+    <Resource
+      name="localizedstrings"
+      options={{
+        label: "Localized Strings",
+      }}
+      list={ListGuesser}
+      edit={EditGuesser}
+      icon={Translate}
+    />
+  ),
+  users: (
+    <Resource
+      name="users"
+      list={ListGuesser}
+      edit={EditGuesser}
+      icon={PeopleAlt}
+    />
+  ),
+};
+
 function App() {
+  const { selectedProject } = useProjects();
   return (
     <Admin
       theme={adminTheme}
@@ -62,124 +198,24 @@ function App() {
       // @ts-ignore
       dataProvider={dataProvider}
       authProvider={authProvider}
-      dashboard={Dashboard}
-    >
-      <Resource
-        name="projects"
-        list={ProjectList}
-        create={ProjectCreate}
-        edit={ProjectEdit}
-        show={ProjectShow}
-        icon={AccountTree}
-      />
-
-      <Resource
-        name="assets"
-        list={AssetList}
-        create={AssetCreate}
-        edit={AssetEdit}
-        options={{ label: "Assets" }}
-        icon={WebAsset}
-      />
-
-      <Resource
-        name="audiotracks"
-        list={ListGuesser}
-        edit={EditGuesser}
-        icon={Audiotrack}
-        options={{ label: "Audio Tracks" }}
-      />
-
-      <Resource
-        name="envelopes"
-        list={ListGuesser}
-        edit={EditGuesser}
-        icon={Email}
-      />
-      <Resource
-        name="events"
-        list={ListGuesser}
-        edit={EditGuesser}
-        icon={Event}
-      />
-
-      <Resource
-        name="listenevents"
-        list={ListenEventsList}
-        edit={ListenEventsEdit}
-        create={ListenEventsCreate}
-        icon={Hearing}
-        options={{ label: "Listen Events" }}
-      />
-
-      <Resource
-        name="sessions"
-        list={SessionList}
-        edit={SessionEdit}
-        create={SessionCreate}
-        icon={AccessTime}
-      />
-
-      <Resource
-        name="speakers"
-        list={ListGuesser}
-        edit={EditGuesser}
-        icon={Speaker}
-      />
-
-      <Resource
-        name="uigroups"
-        list={ListGuesser}
-        edit={EditGuesser}
-        icon={Build}
-        options={{ label: "UI Groups" }}
-      />
-
-      <Resource
-        name="uiitems"
-        list={ListGuesser}
-        edit={EditGuesser}
-        icon={FeaturedPlayList}
-        options={{ label: "UI Items" }}
-      />
-
-      <Resource
-        name="tags"
-        list={ListGuesser}
-        edit={EditGuesser}
-        icon={TagFaces}
-      />
-      <Resource
-        name="tag_categories"
-        options={{
-          label: "Tag Categories",
-        }}
-        list={ListGuesser}
-        edit={EditGuesser}
-        icon={Label}
-      />
-      <Resource
-        name="languages"
-        list={ListGuesser}
-        edit={EditGuesser}
-        icon={Language}
-      />
-      <Resource
-        name="localizedstrings"
-        options={{
-          label: "Localized Strings",
-        }}
-        list={ListGuesser}
-        edit={EditGuesser}
-        icon={Translate}
-      />
-      <Resource
-        name="users"
-        list={ListGuesser}
-        edit={EditGuesser}
-        icon={PeopleAlt}
-      />
-    </Admin>
+      // @ts-ignore
+      dashboard={selectedProject && Dashboard}
+      children={[
+        <Resource
+          name="projects"
+          list={ProjectList}
+          create={ProjectCreate}
+          edit={ProjectEdit}
+          show={ProjectShow}
+          icon={AccountTree}
+        />,
+        ...(process.env.REACT_APP_INCLUDE_TABS === "all"
+          ? Object.values(resourceLookup)
+          : process.env.REACT_APP_INCLUDE_TABS?.split(`,`)
+              ?.filter((r) => Object.keys(resourceLookup).includes(r))
+              .map((r) => resourceLookup[r]) || []),
+      ]}
+    />
   );
 }
 
