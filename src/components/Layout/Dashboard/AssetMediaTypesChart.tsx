@@ -87,17 +87,7 @@ const AssetMediaTypesChart = ({ assets }: Props) => {
   };
   return (
     <Card>
-      <CardHeader
-        title={
-          <>
-            <Toolbar>
-              <Typography variant="h5" style={{ flexGrow: 1 }}>
-                Media Types
-              </Typography>
-            </Toolbar>
-          </>
-        }
-      />
+      <CardHeader title="Media Types" />
 
       <CardContent>
         {!assets ? (
@@ -130,7 +120,7 @@ const AssetMediaTypesChart = ({ assets }: Props) => {
                 </Pie>
                 <Tooltip />
                 <Legend
-                  verticalAlign="top"
+                  verticalAlign="bottom"
                   formatter={(value: any, name: any) => {
                     return `${name?.payload?.media_type} (${name?.payload?.total})`;
                   }}
