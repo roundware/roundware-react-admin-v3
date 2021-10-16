@@ -107,6 +107,10 @@ const Dashboard = (props: Props) => {
           dataProvider
             .getList(`listenevents`, {
               ...params,
+              filter: {
+                ...params.filter,
+                start_time__gte: subDays(30, new Date()).toISOString(),
+              },
             })
             .then((data: GetListResult<Record>) => {
               setListenEvents((prev) => ({

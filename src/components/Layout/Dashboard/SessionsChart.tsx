@@ -180,7 +180,7 @@ const SessionsChart = ({ sessions }: Props) => {
                 }
                 label="Show Line"
               />
-
+              {/* 
               <FormControlLabel
                 control={
                   <Checkbox
@@ -189,7 +189,7 @@ const SessionsChart = ({ sessions }: Props) => {
                   />
                 }
                 label="Skip No Activity"
-              />
+              /> */}
             </Toolbar>
           </>
         }
@@ -250,7 +250,6 @@ const SessionsChart = ({ sessions }: Props) => {
                   type={skipNoActivity ? undefined : "number"}
                   name="Date"
                   scale={skipNoActivity ? undefined : "time"}
-                  interval={skipNoActivity ? undefined : 0}
                   domain={[`dataMin`, `dataMax`]}
                   allowDataOverflow
                   tickFormatter={(date) => new Date(date).toLocaleDateString()}
@@ -258,9 +257,9 @@ const SessionsChart = ({ sessions }: Props) => {
                   dx={15}
                   dy={20}
                   height={70}
-                  minTickGap={-200}
+                  minTickGap={0.1}
                 >
-                  <Label value="Day" offset={80} />
+                  <Label value="Date" />
                 </XAxis>
                 <YAxis dataKey="total" name="Sessions">
                   <Label

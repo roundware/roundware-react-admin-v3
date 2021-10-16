@@ -56,6 +56,7 @@ export const ProjectsProvider = ({
   const [projectsList, setProjectsList] = useState<IProject[] | null>(null);
 
   const selectProject = (project: IProject | null) => {
+    setProject(null); // this will trigger an unmount for previos project dashboard
     setProject(project);
   };
 

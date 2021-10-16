@@ -261,7 +261,7 @@ const ListenEventsChart = ({ events }: Props) => {
                   dx={15}
                   dy={20}
                   height={70}
-                  minTickGap={-200}
+                  minTickGap={0.5}
                 >
                   <Label value="Day" offset={0} position="insideBottom" />
                 </XAxis>

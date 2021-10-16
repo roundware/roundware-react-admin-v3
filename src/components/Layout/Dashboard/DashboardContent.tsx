@@ -90,7 +90,7 @@ const DashboardContent = (props: Props) => {
           </Grid>
 
           <Grid item xs={12} md={12} lg={12}>
-            {assets && <AssetsChart assets={assets} />}
+            <AssetsChart assets={assets} />
           </Grid>
 
           <Grid item xs={12} md={12} lg={12}>
@@ -102,4 +102,4 @@ const DashboardContent = (props: Props) => {
   );
 };
 
-export default DashboardContent;
+export default React.memo(DashboardContent);
