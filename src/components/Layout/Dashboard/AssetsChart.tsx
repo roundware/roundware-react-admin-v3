@@ -159,13 +159,13 @@ const AssetsChart = ({ assets }: Props) => {
   };
 
   useEffect(() => {
-    handleOnSelectChange(30);
+    if (assets) handleOnSelectChange(30);
   }, [assets]);
 
   const [startDate, setStartDate] = useState(
     getSanitizedList(
       // @ts-ignore
-      assets.data
+      assets?.data || []
     )?.[0]?.created || new Date()
   );
   const [endDate, setEndDate] = useState(new Date());
@@ -310,7 +310,7 @@ const AssetsChart = ({ assets }: Props) => {
                   dx={15}
                   dy={20}
                   height={70}
-                  minTickGap={-200}
+                  minTickGap={0.5}
                 >
                   <Label value="Day" offset={0} position="insideBottom" />
                 </XAxis>
