@@ -87,7 +87,7 @@ const ProjectCard = () => {
   const { data } = useListContext<IProject>();
   const redirect = useRedirect();
   const classes = useCardStyles();
-  const { selectProject, setProjectsList } = useProjects();
+  const { selectProject, setProjectsList, projectsList } = useProjects();
 
   const handleOnProjectSelect = (p: IProject) => {
     selectProject(p);
@@ -96,7 +96,15 @@ const ProjectCard = () => {
 
   useEffect(() => {
     if (Array.isArray(Object.values(data))) {
-      setProjectsList(Object.values(data));
+      setProjectsList(
+        Object.values(data)?.filter((p) =>
+          process.env.REACT_APP_INCLUDE_PROJECT_IDS === `all`
+            ? true
+            : process.env.REACT_APP_INCLUDE_PROJECT_IDS?.split(`,`).includes(
+                p?.id?.toString()
+              )
+        )
+      );
     }
   }, [data]);
   return (
@@ -104,8 +112,8 @@ const ProjectCard = () => {
       <Grid item>
         <CreateProjectCard />
       </Grid>
-      {Array.isArray(Object.values(data)) &&
-        Object.values(data).map((p) => (
+      {Array.isArray(projectsList) &&
+        projectsList.map((p) => (
           <Grid key={p?.id} item>
             <Card
               onClick={() => handleOnProjectSelect(p)}
