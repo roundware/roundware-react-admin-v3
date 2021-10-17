@@ -30,7 +30,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-
+import { ResourceList } from "../../../App";
 interface Props {
   sessions: GetListResult<Record> | null;
 }
@@ -136,13 +136,14 @@ const SessionsChart = ({ sessions }: Props) => {
   const redirect = useRedirect();
 
   const handleOnBarClick = (e: any) => {
-    redirect(
-      `list`,
-      `sessions?filter=${JSON.stringify({
-        start_time__gte: new Date(e?.date).toISOString(),
-        start_time__lte: addDays(new Date(e?.date), 1).toISOString(),
-      })}`
-    );
+    if (ResourceList.includes(`sessions`))
+      redirect(
+        `list`,
+        `sessions?filter=${JSON.stringify({
+          start_time__gte: new Date(e?.date).toISOString(),
+          start_time__lte: addDays(new Date(e?.date), 1).toISOString(),
+        })}`
+      );
   };
 
   return (

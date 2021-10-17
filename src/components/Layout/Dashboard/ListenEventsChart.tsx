@@ -43,7 +43,7 @@ import {
   DateTimePicker,
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
-
+import { ResourceList } from "../../../App";
 interface Props {
   events: GetListResult<Record> | null;
 }
@@ -147,13 +147,14 @@ const ListenEventsChart = ({ events }: Props) => {
   const redirect = useRedirect();
 
   const handleOnBarClick = (e: any) => {
-    redirect(
-      `list`,
-      `listenevents?filter=${JSON.stringify({
-        start_time__gte: new Date(e?.date).toISOString(),
-        start_time__lte: addDays(new Date(e?.date), 1).toISOString(),
-      })}`
-    );
+    if (ResourceList?.includes(`listenevents`))
+      redirect(
+        `list`,
+        `listenevents?filter=${JSON.stringify({
+          start_time__gte: new Date(e?.date).toISOString(),
+          start_time__lte: addDays(new Date(e?.date), 1).toISOString(),
+        })}`
+      );
   };
   return (
     <Card>

@@ -44,7 +44,7 @@ import {
   DateTimePicker,
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
-
+import { ResourceList } from "../../../App";
 interface Props {
   assets: GetListResult<Record> | null;
 }
@@ -178,13 +178,14 @@ const AssetsChart = ({ assets }: Props) => {
   const redirect = useRedirect();
 
   const handleOnBarClick = (e: any) => {
-    redirect(
-      `list`,
-      `assets?filter=${JSON.stringify({
-        created__gte: new Date(e?.date).toISOString(),
-        created__lte: addDays(new Date(e?.date), 1).toISOString(),
-      })}`
-    );
+    if (ResourceList.includes(`assets`))
+      redirect(
+        `list`,
+        `assets?filter=${JSON.stringify({
+          created__gte: new Date(e?.date).toISOString(),
+          created__lte: addDays(new Date(e?.date), 1).toISOString(),
+        })}`
+      );
   };
 
   return (

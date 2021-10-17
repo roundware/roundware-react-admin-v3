@@ -16,7 +16,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-
+import { ResourceList } from "../../../App";
 interface Props {
   assets: GetListResult<Record> | null;
 }
@@ -78,12 +78,13 @@ const AssetMediaTypesChart = ({ assets }: Props) => {
   const redirect = useRedirect();
 
   const handleOnClick = (payload: any) => {
-    redirect(
-      `list`,
-      `assets?filter=${JSON.stringify({
-        media_type: payload?.media_type,
-      })}`
-    );
+    if (ResourceList.includes(`assets`))
+      redirect(
+        `list`,
+        `assets?filter=${JSON.stringify({
+          media_type: payload?.media_type,
+        })}`
+      );
   };
   return (
     <Card>
