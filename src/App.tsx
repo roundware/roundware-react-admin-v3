@@ -188,6 +188,15 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
   ),
 };
 
+export const ResourceList = [
+  `projects`,
+  ...(process.env.REACT_APP_INCLUDE_TABS === "all"
+    ? Object.keys(resourceLookup)
+    : process.env.REACT_APP_INCLUDE_TABS?.split(`,`)?.filter((r) =>
+        Object.keys(resourceLookup).includes(r)
+      ) || []),
+];
+
 function App() {
   const { selectedProject } = useProjects();
   return (
