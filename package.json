@@ -7,20 +7,18 @@
     "@material-ui/core": "^4.11.4",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@material-ui/pickers": "^3.3.10",
-    "@testing-library/jest-dom": "^5.13.0",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
+    
     "date-fns": "^2.25.0",
     "moment": "^2.29.1",
     "patch-package": "^6.4.7",
-    "ra-data-roundware-drf": "file:../ra-data-roundware-drf",
+    "ra-data-roundware-drf": "https://github.com/shreyas-jadhav/ra-data-roundware-drf/raw/main/ra-data-roundware-drf-0.1.6.tgz",
     "random-material-color": "^1.0.5",
     "react": "^17.0.2",
     "react-admin": "^3.18.3",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
     "recharts": "^2.1.4",
-    "typescript": "^4.3.2",
+    
     "wavesurfer-react": "^2.0.9",
     "wavesurfer.js": "^4.6.0",
     "web-vitals": "^1.1.2"
@@ -53,6 +51,10 @@
   "devDependencies": {
     "@types/react-dom": "^17.0.9",
     "@types/react-router-dom": "^5.3.0",
-    "@types/wavesurfer.js": "^5.2.2"
+    "@types/wavesurfer.js": "^5.2.2",
+    "typescript": "^4.3.2",
+    "@testing-library/jest-dom": "^5.13.0",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3"
   }
 }
