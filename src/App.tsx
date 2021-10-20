@@ -4,13 +4,7 @@ import {
   RoundwareDataProvider,
 } from "ra-data-roundware-drf";
 import React from "react";
-import {
-  Admin,
-  Resource,
-  ShowGuesser,
-  ListGuesser,
-  EditGuesser,
-} from "react-admin";
+import { Admin, Resource, ListGuesser, EditGuesser } from "react-admin";
 import AssetCreate from "./components/Asset/AssetCreate";
 import AssetEdit from "./components/Asset/AssetEdit";
 import AssetList from "./components/Asset/AssetList";
@@ -199,6 +193,7 @@ export const ResourceList = [
 
 function App() {
   const { selectedProject } = useProjects();
+
   return (
     <Admin
       theme={adminTheme}
