@@ -24,6 +24,7 @@ const ProjectList = (props: ListProps) => {
       hasEdit={false}
       hasShow
       pagination={false}
+      perPage={0}
       bulkActionButtons={false}
       component={ProjectListWrapper}
       filters={[
