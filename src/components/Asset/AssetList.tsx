@@ -28,6 +28,7 @@ export const AssetList = (props: ListProps) => {
         <DateTimeInput label="Created After" source="created__gte" />,
         <DateTimeInput label="Created Before" source="created__lte" />,
       ]}
+      perPage={30}
     >
       <Datagrid>
         <TextField source="id" />
