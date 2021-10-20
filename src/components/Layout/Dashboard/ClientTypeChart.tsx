@@ -20,6 +20,7 @@ import {
 // @ts-ignore
 import randomMC from "random-material-color";
 import { COLORS } from "./BrowsersChart";
+import { CenteredLoading } from ".";
 
 interface Props {
   sessions: GetListResult<Record> | null;
@@ -139,7 +140,7 @@ const ClientTypeChart = (props: Props) => {
             </ResponsiveContainer>
           </div>
         ) : (
-          <CircularProgress />
+          <CenteredLoading />
         )}
       </CardContent>
     </Card>

@@ -4,10 +4,10 @@ import { Card, Box, Typography, Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import { ReactNode } from "react";
-
+import { useRedirect } from "react-admin";
 interface Props {
   icon: FC<any>;
-  to: string;
+  to?: string | boolean;
   title?: string;
   subtitle?: string | number;
   helperText?: string;
@@ -51,23 +51,28 @@ const CardWithIcon = (props: Props) => {
     helperText,
   } = props;
   const classes = useStyles(props);
+
+  const redirect = useRedirect();
+
+  const handleClick = () => {
+    if (!to) return;
+    redirect(to);
+  };
   return (
     <Card className={classes.card} style={{ backgroundColor: bgColor }}>
-      <Link to={to}>
-        <div className={classes.main}>
-          <Box width="3em" className="icon">
-            {createElement(icon, { fontSize: "large" })}
-          </Box>
-          <Box textAlign="right">
-            <Typography className={classes.title} color="textSecondary">
-              {title}
-            </Typography>
-            <Typography variant="h5" component="h2">
-              {subtitle || " "}
-            </Typography>
-          </Box>
-        </div>
-      </Link>
+      <div className={classes.main} onClick={handleClick}>
+        <Box width="3em" className="icon">
+          {createElement(icon, { fontSize: "large" })}
+        </Box>
+        <Box textAlign="right">
+          <Typography className={classes.title} color="textSecondary">
+            {title}
+          </Typography>
+          <Typography variant="h5" component="h2">
+            {subtitle || " "}
+          </Typography>
+        </Box>
+      </div>
 
       {helperText && (
         <Typography variant="subtitle1" align="center" color="textSecondary">

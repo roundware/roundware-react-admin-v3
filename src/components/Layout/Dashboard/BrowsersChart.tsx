@@ -18,6 +18,7 @@ import {
 } from "recharts";
 // @ts-ignore
 import randomMC from "random-material-color";
+import { CenteredLoading } from ".";
 
 interface Props {
   sessions: GetListResult<Record> | null;
@@ -139,7 +140,7 @@ const BrowsersChart = (props: Props) => {
             </ResponsiveContainer>
           </div>
         ) : (
-          <CircularProgress />
+          <CenteredLoading />
         )}
       </CardContent>
     </Card>

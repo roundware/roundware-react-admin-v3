@@ -7,6 +7,8 @@ import {
   FormControlLabel,
   Divider,
   Grid,
+  Box,
+  CircularProgress,
 } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import { useDataProvider, GetListResult, Record } from "react-admin";
@@ -56,16 +58,6 @@ const Dashboard = (props: Props) => {
 
   const [busy, setBusy] = useState(false);
   const [lastProjectId, setLastProjectId] = useState(selectedProject?.id);
-  useEffect(() => {
-    if (!selectedProject) return;
-    const controller = new AbortController();
-    try {
-      updateData(controller.signal);
-    } catch (e) {
-      console.log(e);
-    }
-    return () => controller.abort();
-  }, [selectedProject]);
 
   const updateData = useCallback(
     (signal: AbortController[`signal`]) => {
@@ -75,6 +67,8 @@ const Dashboard = (props: Props) => {
           reject("Aborted");
         };
         signal?.addEventListener("abort", abortHandler);
+
+        if (!selectedProject) return;
 
         setLoading(true);
         setSession(null);
@@ -147,6 +141,19 @@ const Dashboard = (props: Props) => {
     },
     [selectedProject?.id]
   );
+
+  useEffect(() => {
+    if (!selectedProject) return;
+    const controller = new AbortController();
+    try {
+      updateData(controller.signal);
+      console.log(`Refetching`);
+    } catch (e) {
+      console.log(e);
+    }
+    return () => controller.abort();
+  }, [selectedProject]);
+
   return (
     <div className={classes.container}>
       <ProjectDetails />
@@ -172,3 +179,9 @@ const Dashboard = (props: Props) => {
 };
 
 export default Dashboard;
+
+export const CenteredLoading = () => (
+  <Box display="flex" justifyContent="center" alignItems="center">
+    <CircularProgress />
+  </Box>
+);

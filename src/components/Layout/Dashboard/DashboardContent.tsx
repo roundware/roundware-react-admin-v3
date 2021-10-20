@@ -16,7 +16,7 @@ import {
 import { IProject } from "../../../providers/ProjectsContext";
 import CardWithIcon from "./CardWithIcon";
 import { GetListResult, Record } from "react-admin";
-
+import { ResourceList } from "../../../App";
 import SessionsChart from "./SessionsChart";
 import AssetsChart from "./AssetsChart";
 import ClientTypeChart from "./ClientTypeChart";
@@ -44,7 +44,7 @@ const DashboardContent = (props: Props) => {
               subtitle={
                 listenEvents === null ? `Loading..` : listenEvents?.total || `0`
               }
-              to="/listenevents"
+              to={ResourceList.includes(`listenevents`) && "listenevents"}
               helperText={ranges[`listenEvents`]}
             />
           </Grid>
@@ -54,7 +54,7 @@ const DashboardContent = (props: Props) => {
               icon={RecordVoiceOver}
               title="Recordings"
               subtitle={assets === null ? `Loading..` : assets?.total || `0`}
-              to="/assets"
+              to={ResourceList.includes(`assets`) && "assets"}
               helperText={ranges[`assets`]}
             />
           </Grid>
@@ -66,7 +66,7 @@ const DashboardContent = (props: Props) => {
               subtitle={
                 sessions === null ? `Loading..` : sessions?.total || `0`
               }
-              to="/sessions"
+              to={ResourceList.includes(`sessions`) && "sessions"}
               helperText={ranges[`sessions`]}
             />
           </Grid>
@@ -86,15 +86,15 @@ const DashboardContent = (props: Props) => {
           </Grid>
 
           <Grid item xs={12} md={12} lg={12}>
-            <ListenEventsChart events={listenEvents} />
-          </Grid>
-
-          <Grid item xs={12} md={12} lg={12}>
             <AssetsChart assets={assets} />
           </Grid>
 
           <Grid item xs={12} md={12} lg={12}>
             <SessionsChart sessions={sessions} />
+          </Grid>
+
+          <Grid item xs={12} md={12} lg={12}>
+            <ListenEventsChart events={listenEvents} />
           </Grid>
         </Grid>
       </Grid>

@@ -44,6 +44,7 @@ import {
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import { ResourceList } from "../../../App";
+import { CenteredLoading } from ".";
 interface Props {
   events: GetListResult<Record> | null;
 }
@@ -233,7 +234,7 @@ const ListenEventsChart = ({ events }: Props) => {
           </>
         )}
         {!events ? (
-          <CircularProgress />
+          <CenteredLoading />
         ) : (
           <div style={{ width: "100%", height: 300 }}>
             <ResponsiveContainer>

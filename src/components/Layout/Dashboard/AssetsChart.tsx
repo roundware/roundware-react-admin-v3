@@ -45,11 +45,12 @@ import {
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import { ResourceList } from "../../../App";
+import { CenteredLoading } from ".";
 interface Props {
   assets: GetListResult<Record> | null;
 }
 
-const mediaTypes = [`audio`, `photo`, `text`, `video`];
+const mediaTypes = [`audio`, `photo`, `text`];
 const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 type IAsset = {
   id: number;
@@ -61,7 +62,7 @@ type BarChartData = {
   audio: number;
   photo: number;
   text: number;
-  video: number;
+
   date?: number;
   [index: string]: number | undefined;
 };
@@ -89,7 +90,6 @@ const getRecordingsPerDay = (assets: IAsset[], range: Date[]) => {
     audio: 0,
     text: 0,
     photo: 0,
-    video: 0,
   };
   assetsWithDate.forEach((s) => {
     let keyName = s.created.toDateString();
@@ -282,7 +282,7 @@ const AssetsChart = ({ assets }: Props) => {
           </>
         )}
         {!assets ? (
-          <CircularProgress />
+          <CenteredLoading />
         ) : (
           <div style={{ width: "100%", height: 300 }}>
             <ResponsiveContainer>
@@ -320,7 +320,7 @@ const AssetsChart = ({ assets }: Props) => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <Tooltip
                   cursor={{ strokeDasharray: "3 3" }}
-                  formatter={(value: number) => `${value} Recordings`}
+                  formatter={(value: number) => `${value} Assets`}
                   labelFormatter={(label: any) =>
                     new Date(label).toLocaleDateString()
                   }
@@ -337,6 +337,7 @@ const AssetsChart = ({ assets }: Props) => {
                     dataKey={m}
                     fill={colors[index]}
                     stackId={"a"}
+                    key={m}
                     onClick={handleOnBarClick}
                   />
                 ))}

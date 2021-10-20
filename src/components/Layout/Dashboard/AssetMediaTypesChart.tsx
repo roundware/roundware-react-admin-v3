@@ -16,6 +16,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
+import { CenteredLoading } from ".";
 import { ResourceList } from "../../../App";
 interface Props {
   assets: GetListResult<Record> | null;
@@ -92,7 +93,7 @@ const AssetMediaTypesChart = ({ assets }: Props) => {
 
       <CardContent>
         {!assets ? (
-          <CircularProgress />
+          <CenteredLoading />
         ) : (
           <div style={{ width: "100%", height: 300 }}>
             <ResponsiveContainer width="100%" height="100%">
