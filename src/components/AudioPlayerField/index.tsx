@@ -16,9 +16,11 @@ const plugins = [
 
 interface PropTypes {
   source: string;
+  size?: "small" | "medium";
+  buttons?: React.ReactNode[];
 }
 
-const AudioPlayerField = (props: PropTypes) => {
+const AudioPlayerField = ({ size = "small", buttons, ...props }: PropTypes) => {
   const { source } = props;
   const { file, ...record } = useRecordContext(props);
 
@@ -26,7 +28,9 @@ const AudioPlayerField = (props: PropTypes) => {
   const handleMount = React.useCallback((waveSurfer: any) => {
     wavesurferRef.current = waveSurfer;
     if (wavesurferRef.current) {
-      if (file) wavesurferRef.current.load(file);
+      if (file) {
+        wavesurferRef.current.load(file);
+      }
 
       // wavesurferRef.current.on("region-created", regionCreatedHandler);
 
@@ -56,7 +60,7 @@ const AudioPlayerField = (props: PropTypes) => {
 
   if (!file) return null;
   return (
-    <div style={{ width: "300px" }}>
+    <div style={{ width: size === "small" ? "280px" : "360px" }}>
       <Grid container spacing={2} direction="column">
         <Grid item>
           <WaveSurfer plugins={plugins} onMount={handleMount}>
@@ -64,6 +68,8 @@ const AudioPlayerField = (props: PropTypes) => {
               id={"waveform-" + record.id}
               fillParent={true}
               mediaControls={true}
+              height={size === "small" ? 64 : 128}
+              // maxCanvasWidth={size === "small" ? 4000 : 6000}
             >
               <Region start={record.start_time} end={record.end_time} />
             </WaveForm>
@@ -73,11 +79,15 @@ const AudioPlayerField = (props: PropTypes) => {
           item
           justifyContent="center"
           alignItems="center"
-          direction="column"
+          direction="row"
+          container
         >
-          <IconButton onClick={handlePlay}>
-            {playing ? <PauseIcon /> : <PlayArrowIcon />}
-          </IconButton>
+          <Grid item>
+            <IconButton onClick={handlePlay} size={size}>
+              {playing ? <PauseIcon /> : <PlayArrowIcon />}
+            </IconButton>
+            {buttons}
+          </Grid>
         </Grid>
       </Grid>
     </div>
