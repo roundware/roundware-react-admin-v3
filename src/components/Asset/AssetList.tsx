@@ -34,16 +34,16 @@ export const AssetList = (props: ListProps) => {
         <TextField source="id" />
         <BooleanField source="submitted" />
         <DateField source="created" />
-        <ReferenceField
+        {/* <ReferenceField
           label="Project"
           source="project_id"
           reference="projects"
         >
           <TextField source="name" />
-        </ReferenceField>
-        <ReferenceField label="User" source="user.id" reference="users">
+        </ReferenceField> */}
+        {/* <ReferenceField label="User" source="user.id" reference="users">
           <TextField source="username" />
-        </ReferenceField>
+        </ReferenceField> */}
         <NumberField source="latitude" options={{ maximumFractionDigits: 8 }} />
         <NumberField
           source="longitude"
