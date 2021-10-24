@@ -4,7 +4,7 @@ import { WaveSurfer, WaveForm, Region } from "wavesurfer-react";
 // @ts-ignore
 import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions";
 import { useRecordContext } from "react-admin";
-import { IconButton, Grid } from "@material-ui/core";
+import { IconButton, Grid, CircularProgress } from "@material-ui/core";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import PauseIcon from "@material-ui/icons/Pause";
 const plugins = [
@@ -23,7 +23,7 @@ interface PropTypes {
 const AudioPlayerField = ({ size = "small", buttons, ...props }: PropTypes) => {
   const { source } = props;
   const { file, ...record } = useRecordContext(props);
-
+  const [loading, setLoading] = useState(true);
   const wavesurferRef = React.useRef<any>();
   const handleMount = React.useCallback((waveSurfer: any) => {
     wavesurferRef.current = waveSurfer;
@@ -35,7 +35,7 @@ const AudioPlayerField = ({ size = "small", buttons, ...props }: PropTypes) => {
       // wavesurferRef.current.on("region-created", regionCreatedHandler);
 
       wavesurferRef.current.on("ready", () => {
-        console.log("WaveSurfer is ready");
+        setLoading(false);
       });
 
       // wavesurferRef.current.on("region-removed", (region) => {
@@ -82,12 +82,20 @@ const AudioPlayerField = ({ size = "small", buttons, ...props }: PropTypes) => {
           direction="row"
           container
         >
-          <Grid item>
-            <IconButton onClick={handlePlay} size={size}>
-              {playing ? <PauseIcon /> : <PlayArrowIcon />}
-            </IconButton>
-            {buttons}
-          </Grid>
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <>
+              <Grid item>
+                <IconButton onClick={handlePlay} size={size}>
+                  {playing ? <PauseIcon /> : <PlayArrowIcon />}
+                </IconButton>
+              </Grid>
+              {buttons?.map((b) => (
+                <Grid item>{b}</Grid>
+              ))}
+            </>
+          )}
         </Grid>
       </Grid>
     </div>

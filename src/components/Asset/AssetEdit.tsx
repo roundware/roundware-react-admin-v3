@@ -25,7 +25,7 @@ import Button from "@material-ui/core/Button";
 import makeStyles from "@material-ui/styles/makeStyles";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { IAsset } from "../../types";
-import { FormLabel } from "@material-ui/core";
+import { FormLabel, Grid } from "@material-ui/core";
 const AssetEdit = (props: EditProps) => {
   const { record } = useEditController(props);
 
@@ -69,7 +69,7 @@ const AssetEdit = (props: EditProps) => {
             { id: "audio", name: "audio" },
             { id: "photo", name: "photo" },
             { id: "text", name: "text" },
-            { id: "video", name: "video" },
+            // { id: "video", name: "video" },
           ]}
           fullWidth
         />
@@ -134,26 +134,71 @@ const FileEdit = (props: EditProps) => {
   } = useField(`file`);
   const handleDelete = () => onChange({ target: { value: null } });
 
+  const {
+    input: { value: mediaType },
+  } = useField(`media_type`);
+
+  console.log(mediaType);
+
   return (
     <div style={{ width: "100%" }}>
-      <FormLabel>Asset File</FormLabel>
-
-      <AudioEdit
-        size="medium"
-        buttons={[
-          <IconButton style={{ color: "#dc004e" }} onClick={handleDelete}>
-            <DeleteIcon />
-          </IconButton>,
-        ]}
-      />
-      <FileInput
-        source="file"
-        multiple={false}
-        label="Upload"
-        accept="audio/mpeg"
-      >
-        <FileField source="src" title="title" fullWidth />
-      </FileInput>
+      <FormLabel>File</FormLabel>
+      <Grid container>
+        <Grid item style={{ marginRight: 16 }}>
+          {mediaType === "audio" && (
+            <AudioEdit
+              size="medium"
+              buttons={[
+                <IconButton style={{ color: "#dc004e" }} onClick={handleDelete}>
+                  <DeleteIcon />
+                </IconButton>,
+              ]}
+            />
+          )}
+          {mediaType}
+          {mediaType === "photo" && (
+            <>
+              Photo
+              <img
+                alt="photo"
+                height="30px"
+                width="30px"
+                src={value?.src ? value.src : value}
+              />
+            </>
+          )}
+        </Grid>
+        <Grid item>
+          <FileInput
+            source="file"
+            multiple={false}
+            label={`Upload ${getFileExtensions(mediaType).reduce(
+              (acc, el) => (acc += el + ","),
+              ""
+            )}`}
+            accept={getFileExtensions(mediaType).reduce(
+              (acc, el) => (acc += acc + "," + el),
+              ""
+            )}
+          >
+            <FileField source="src" title="title" fullWidth />
+          </FileInput>
+        </Grid>
+      </Grid>
     </div>
   );
+};
+
+export const getFileExtensions = (mediaType: string) => {
+  switch (mediaType) {
+    case "audio":
+      return [`.mp3`, `.wav`];
+    case `photo`:
+      return [`.jpg`, `.png`, `.gif`];
+    case `text`:
+      return [`.txt`];
+    default:
+      return [];
+      break;
+  }
 };

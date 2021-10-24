@@ -5,7 +5,7 @@ import { useField } from "react-final-form";
 // @ts-ignore
 import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions";
 import { useRecordContext } from "react-admin";
-import { IconButton, Grid } from "@material-ui/core";
+import { IconButton, Grid, CircularProgress } from "@material-ui/core";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import PauseIcon from "@material-ui/icons/Pause";
 const plugins = [
@@ -35,7 +35,7 @@ const AudioEditField = ({ size = "medium", buttons, ...props }: PropTypes) => {
   } = useField(`id`);
 
   const audioSrc = typeof value?.src === "string" ? value.src : value;
-
+  const [loading, setLoading] = useState(true);
   const wavesurferRef = React.useRef<any>();
   const handleMount = React.useCallback(
     (waveSurfer: any) => {
@@ -47,9 +47,9 @@ const AudioEditField = ({ size = "medium", buttons, ...props }: PropTypes) => {
 
         // wavesurferRef.current.on("region-created", regionCreatedHandler);
 
-        // wavesurferRef.current.on("ready", () => {
-        //   console.log("WaveSurfer is ready");
-        // });
+        wavesurferRef.current.on("ready", () => {
+          setLoading(false);
+        });
 
         // wavesurferRef.current.on("region-removed", (region) => {
         //   console.log("region-removed --> ", region);
@@ -96,6 +96,7 @@ const AudioEditField = ({ size = "medium", buttons, ...props }: PropTypes) => {
             </WaveForm>
           </WaveSurfer>
         </Grid>
+
         <Grid
           item
           justifyContent="center"
@@ -103,12 +104,20 @@ const AudioEditField = ({ size = "medium", buttons, ...props }: PropTypes) => {
           direction="row"
           container
         >
-          <Grid item>
-            <IconButton onClick={handlePlay} size={size}>
-              {playing ? <PauseIcon /> : <PlayArrowIcon />}
-            </IconButton>
-            {buttons}
-          </Grid>
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <>
+              <Grid item>
+                <IconButton onClick={handlePlay} size={size}>
+                  {playing ? <PauseIcon /> : <PlayArrowIcon />}
+                </IconButton>
+              </Grid>
+              {buttons?.map((b) => (
+                <Grid item>{b}</Grid>
+              ))}
+            </>
+          )}
         </Grid>
       </Grid>
     </div>
