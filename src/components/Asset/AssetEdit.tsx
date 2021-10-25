@@ -29,8 +29,7 @@ import { FormLabel, Grid } from "@material-ui/core";
 const AssetEdit = (props: EditProps) => {
   const { record } = useEditController(props);
 
-  const transform = (data: Partial<IAsset>) => {
-    console.log(data.file);
+  const transform = async (data: Partial<IAsset>) => {
     if (!data.file) {
       // wants to remove file
       data.file = null;
@@ -39,7 +38,19 @@ const AssetEdit = (props: EditProps) => {
       delete data.file;
     } else {
       // pass the file blob
+      // @ts-ignore
+      if (data.file?.src) {
+        // @ts-ignore
+        data.file = data.file?.rawFile;
+        // @ts-ignore
+        data.filename = data.file?.name;
+      }
     }
+    if (data?.user) {
+      data.user_id = data?.user?.id;
+      delete data.user;
+    }
+
     return data;
   };
   return (
@@ -48,7 +59,6 @@ const AssetEdit = (props: EditProps) => {
       {...props}
       // @ts-ignore
       transform={transform}
-      r
     >
       <SimpleForm redirect={false}>
         <TextInput source="id" disabled fullWidth />
@@ -58,9 +68,6 @@ const AssetEdit = (props: EditProps) => {
           reference="projects"
         >
           <SelectInput source="name" fullWidth />
-        </ReferenceInput>
-        <ReferenceInput label="User" source="user.id" reference="users">
-          <SelectInput source="user.username" fullWidth />
         </ReferenceInput>
 
         <SelectInput
@@ -79,6 +86,9 @@ const AssetEdit = (props: EditProps) => {
         <TextInput source="start_time" fullWidth />
         <TextInput source="end_time" fullWidth />
         <NumberInput source="session_id" fullWidth />
+        <ReferenceInput label="User" source="user.id" reference="users">
+          <SelectInput source="user.username" fullWidth />
+        </ReferenceInput>
         <TextInput multiline source="description" fullWidth />
         <NumberInput source="latitude" fullWidth />
         <NumberInput source="longitude" fullWidth />
@@ -128,7 +138,7 @@ const AssetEdit = (props: EditProps) => {
 
 export default AssetEdit;
 
-const FileEdit = (props: EditProps) => {
+export const FileEdit = (props: EditProps) => {
   const {
     input: { onChange, value },
   } = useField(`file`);
@@ -137,8 +147,6 @@ const FileEdit = (props: EditProps) => {
   const {
     input: { value: mediaType },
   } = useField(`media_type`);
-
-  console.log(mediaType);
 
   return (
     <div style={{ width: "100%" }}>
@@ -155,14 +163,14 @@ const FileEdit = (props: EditProps) => {
               ]}
             />
           )}
-          {mediaType}
+
           {mediaType === "photo" && (
             <>
-              Photo
               <img
-                alt="photo"
-                height="30px"
-                width="30px"
+                alt="No Photo selected"
+                height="300px"
+                width="300px"
+                style={{ objectFit: "contain" }}
                 src={value?.src ? value.src : value}
               />
             </>
