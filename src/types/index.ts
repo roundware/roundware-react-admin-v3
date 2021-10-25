@@ -5,7 +5,7 @@ export interface IAsset {
   longitude: number;
   shape: null;
   filename: string;
-  file: string | Blob | null;
+  file: string | { src: string } | Blob | null ;
   volume: number;
   submitted: true;
   created: string;
@@ -19,4 +19,8 @@ export interface IAsset {
   tag_ids: number[];
   session_id: 1;
   envelope_ids: number[];
+  user_id?: number;
+  user?: {
+    id: number;
+  }
 }
