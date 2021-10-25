@@ -14,6 +14,9 @@ import {
   DeleteButton,
   ListProps,
   DateTimeInput,
+  useListContext,
+  useRecordContext,
+  FieldProps,
 } from "react-admin";
 import { useProjects } from "../../providers/ProjectsContext";
 import AudioPlayerField from "../AudioPlayerField";
@@ -33,6 +36,7 @@ export const AssetList = (props: ListProps) => {
       <Datagrid>
         <TextField source="id" />
         <BooleanField source="submitted" />
+        <AssetPreview source="file" />
         <DateField source="created" />
         {/* <ReferenceField
           label="Project"
@@ -49,7 +53,8 @@ export const AssetList = (props: ListProps) => {
           source="longitude"
           options={{ maximumFractionDigits: 8 }}
         />
-        <AudioPlayerField source="file" label="Source" />
+        {/* <AudioPlayerField source="file" label="Source" /> */}
+
         <ReferenceArrayField label="Tags" reference="tags" source="tag_ids">
           <SingleFieldList>
             <ChipField source="msg_loc" />
@@ -68,3 +73,25 @@ export const AssetList = (props: ListProps) => {
 };
 
 export default AssetList;
+
+const AssetPreview = (props: FieldProps) => {
+  const record = useRecordContext(props);
+
+  if (!record?.file) return <span>No File</span>;
+  switch (record.media_type) {
+    case "photo":
+      return (
+        <img
+          width="100px"
+          height="100px"
+          style={{ objectFit: "contain" }}
+          src={record?.file}
+        />
+      );
+    case "audio":
+      return <AudioPlayerField source="file" />;
+
+    default:
+      return <span>{record.media_type} not supported</span>;
+  }
+};
