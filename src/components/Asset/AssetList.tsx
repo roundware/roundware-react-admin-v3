@@ -1,25 +1,23 @@
 import React from "react";
 import {
-  List,
-  Datagrid,
-  TextField,
-  DateField,
-  NumberField,
   BooleanField,
-  ReferenceField,
+  ChipField,
+  Datagrid,
+  DateField,
+  DateTimeInput,
+  DeleteButton,
+  EditButton,
+  FieldProps,
+  List,
+  ListProps,
+  NumberField,
   ReferenceArrayField,
   SingleFieldList,
-  ChipField,
-  EditButton,
-  DeleteButton,
-  ListProps,
-  DateTimeInput,
-  useListContext,
+  TextField,
   useRecordContext,
-  FieldProps,
 } from "react-admin";
 import { useProjects } from "../../providers/ProjectsContext";
-import AudioPlayerField from "../AudioPlayerField";
+import AudioPlayerField from "../common/AudioPlayerField";
 
 export const AssetList = (props: ListProps) => {
   const { selectedProject } = useProjects();
