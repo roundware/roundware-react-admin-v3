@@ -1,4 +1,10 @@
-import { CardContent, Grid, makeStyles, TextField } from "@material-ui/core";
+import {
+  CardContent,
+  Grid,
+  makeStyles,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import React, { useEffect } from "react";
 import useFieldValue from "../../hooks/useFieldValue";
@@ -24,8 +30,9 @@ const AudioOptions = (props: Props) => {
   }, [file]);
   if (mediaType !== "audio") return <FileEdit />;
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" style={{ marginBottom: 28 }}>
       <CardContent>
+        <Typography variant="h6">Audio</Typography>
         <Grid container spacing={3}>
           <Grid item container md={9} xs={6}>
             <Grid item xs={12}>
