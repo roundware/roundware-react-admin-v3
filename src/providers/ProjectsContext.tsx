@@ -1,5 +1,5 @@
-import { useRedirect } from "ra-core";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { RoundwareDataProvider } from "ra-data-roundware-drf";
 export interface IProject {
   id: number;
   name: string;
@@ -40,10 +40,17 @@ export interface IProjectsContext {
   projectsList: IProject[] | null;
   selectProject: (project: IProject | null) => void;
   setProjectsList: React.Dispatch<React.SetStateAction<IProject[] | null>>;
+  setDataProvider: React.Dispatch<
+    React.SetStateAction<RoundwareDataProvider | null>
+  >;
 }
 const ProjectsContext = React.createContext<IProjectsContext>(undefined!);
 
-export const useProjects = () => React.useContext(ProjectsContext);
+export const useProjects = (dataProvider?: RoundwareDataProvider) => {
+  const context = React.useContext(ProjectsContext);
+  if (dataProvider) context.setDataProvider(dataProvider);
+  return context;
+};
 
 interface SelectedProjectProviderProps {
   children: React.ReactNode;
@@ -52,10 +59,13 @@ export const ProjectsProvider = ({
   children,
 }: SelectedProjectProviderProps) => {
   const [project, setProject] = useState<IProject | null>(null);
-
+  const [dataProvider, setDataProvider] =
+    useState<RoundwareDataProvider | null>(null);
   const [projectsList, setProjectsList] = useState<IProject[] | null>(null);
 
   const selectProject = (project: IProject | null) => {
+    if (dataProvider && project) dataProvider.currentProjectId = project?.id;
+
     setProject(null); // this will trigger an unmount for previos project dashboard
     setProject(project);
   };
@@ -67,6 +77,7 @@ export const ProjectsProvider = ({
         projectsList,
         selectProject,
         setProjectsList,
+        setDataProvider,
       }}
     >
       {children}
