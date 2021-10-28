@@ -15,7 +15,8 @@ import {
   CreateProps,
   Record,
 } from "react-admin";
-import { FormGroup } from "@material-ui/core";
+
+import { Grid } from "@material-ui/core";
 import Divider from "@material-ui/core/Divider";
 import { useProjects } from "../../providers/ProjectsContext";
 import { FileEdit } from "../common/FileEdit";
@@ -54,11 +55,12 @@ const AssetCreate = (props: CreateProps) => {
           ]}
           defaultValue="audio"
         />
+
         <AudioOptions />
-        {/* <FileEdit /> */}
         <LocationSelector
           fieldNames={{ latitude: `latitude`, longitude: `longitude` }}
         />
+
         <TextInput multiline source="description" fullWidth minRows={2} />
         <NumberInput source="latitude" />
         <NumberInput source="longitude" />
