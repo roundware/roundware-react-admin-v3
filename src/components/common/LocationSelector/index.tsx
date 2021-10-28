@@ -1,5 +1,5 @@
 import useFieldValue from "hooks/useFieldValue";
-import React from "react";
+import React, { useMemo } from "react";
 import {
   CircularProgress,
   Typography,
@@ -10,7 +10,7 @@ import {
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import PlacesAutoComplete from "./PlacesAutoComplete";
-
+import SelectorPin from "./SelectorPin";
 interface Props {
   fieldNames: {
     latitude: string;
@@ -19,7 +19,7 @@ interface Props {
 }
 
 const containerStyle = {
-  width: "400px",
+  width: "100%",
   height: "400px",
 };
 
@@ -29,8 +29,11 @@ const center = {
 };
 
 const LocationSelector = (props: Props) => {
-  const [lat, setLat] = useFieldValue(props.fieldNames.latitude);
-  const [lng, setLng] = useFieldValue(props.fieldNames.longitude);
+  const [latStr, setLat] = useFieldValue(props.fieldNames.latitude);
+  const [lngStr, setLng] = useFieldValue(props.fieldNames.longitude);
+
+  const lat = Number(latStr) || 0;
+  const lng = Number(lngStr) || 0;
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -41,9 +44,9 @@ const LocationSelector = (props: Props) => {
   const [map, setMap] = React.useState(null);
 
   const onLoad = React.useCallback(function callback(map) {
+    setMap(map);
     const bounds = new window.google.maps.LatLngBounds();
     map.fitBounds(bounds);
-    setMap(map);
   }, []);
 
   const onUnmount = React.useCallback(function callback(map) {
@@ -58,7 +61,7 @@ const LocationSelector = (props: Props) => {
   return (
     <Card variant="outlined">
       <CardContent>
-        <Grid container direction="column">
+        <Grid container direction="column" spacing={2}>
           <Grid container item xs={12} alignItems="center">
             <Grid item>
               <LocationOnIcon />
@@ -69,7 +72,18 @@ const LocationSelector = (props: Props) => {
           </Grid>
           <Grid item xs={12}>
             <Typography variant="subtitle1">
-              {lat && lng ? `${lat}, ${lng}` : `No Location Selected`}
+              {lat && lng ? (
+                <span>
+                  <div>
+                    Latitude: <b>{lat}</b>
+                  </div>
+                  <div>
+                    Longitude: <b>{lng}</b>
+                  </div>
+                </span>
+              ) : (
+                `No Location Selected`
+              )}
             </Typography>
           </Grid>
           <Grid item>
@@ -87,8 +101,11 @@ const LocationSelector = (props: Props) => {
                       onLoad={onLoad}
                       onUnmount={onUnmount}
                     >
-                      {/* Child components, such as markers, info windows, etc. */}
-                      <></>
+                      <SelectorPin
+                        onChange={handleOnLocationChange}
+                        lat={Number(lat) || 0}
+                        lng={Number(lng) || 0}
+                      />
                     </GoogleMap>
                   </Grid>
                 </Grid>
