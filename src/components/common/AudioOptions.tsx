@@ -1,0 +1,121 @@
+import { CardContent, Grid, makeStyles, TextField } from "@material-ui/core";
+import Card from "@material-ui/core/Card";
+import React, { useEffect } from "react";
+import useFieldValue from "../../hooks/useFieldValue";
+import CustomSlider from "./CustomSlider";
+import { FileEdit } from "./FileEdit";
+import VolumeSlider from "./VolumeSlider";
+import LineWeightIcon from "@material-ui/icons/LineWeight";
+interface Props {}
+
+const AudioOptions = (props: Props) => {
+  const [mediaType, setMediaType] = useFieldValue(`media_type`);
+  const [startTime, setStartTime] = useFieldValue(`start_time`);
+  const [endTime, setEndTime] = useFieldValue(`end_time`);
+  const [file, setFile] = useFieldValue(`file`);
+  const [volume, setVolume] = useFieldValue(`volume`);
+  const [durationInSec, setDurationInSec] = useFieldValue(
+    `audio_length_in_seconds`
+  );
+  const styles = useStyles();
+
+  useEffect(() => {
+    setVolume(1);
+  }, [file]);
+  if (mediaType !== "audio") return <FileEdit />;
+  return (
+    <Card variant="outlined">
+      <CardContent>
+        <Grid container spacing={3}>
+          <Grid item container md={9} xs={6}>
+            <Grid item xs={12}>
+              <FileEdit />
+            </Grid>
+            <Grid item container className={styles.timesContainer}>
+              <Grid item xs={6}>
+                <TextField
+                  value={startTime || 0}
+                  onChange={setStartTime}
+                  variant="filled"
+                  label="Start"
+                  fullWidth
+                  InputProps={{ className: styles.inputLeft }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  value={endTime || 0}
+                  onChange={setEndTime}
+                  variant="filled"
+                  label="End"
+                  fullWidth
+                  InputProps={{ className: styles.inputRight }}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  value={durationInSec || 0}
+                  variant="filled"
+                  label="Audio Length"
+                  fullWidth
+                  InputProps={{ className: styles.inputBottom }}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid
+            xs={12}
+            md={3}
+            container
+            item
+            direction="row"
+            spacing={3}
+            justifyContent="space-around"
+          >
+            <Grid item>
+              <VolumeSlider />
+            </Grid>
+            <Grid item>
+              <CustomSlider
+                vertical
+                icon={<LineWeightIcon />}
+                field={`weight`}
+                label="Weight"
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default AudioOptions;
+
+const useStyles = makeStyles((theme) => ({
+  inputLeft: {
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: 0,
+    borde: "none",
+  },
+  inputRight: {
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+    border: "none",
+  },
+  inputBottom: {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+  },
+  timesContainer: {
+    width: 360,
+    borderRadius: theme.shape.borderRadius,
+    border: "1px solid",
+    borderColor: "rgba(0, 0, 0, 0.47)",
+    borderBottomWidth: 0,
+  },
+  labelStyle: {
+    fontSize: 16,
+  },
+}));
