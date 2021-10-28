@@ -192,7 +192,7 @@ export const ResourceList = [
 ];
 
 function App() {
-  const { selectedProject } = useProjects();
+  const { selectedProject } = useProjects(dataProvider);
 
   return (
     <Admin
