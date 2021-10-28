@@ -27,7 +27,7 @@
   "scripts": {
     "start": "PORT=1234 react-scripts start",
     "build": "react-scripts build",
-    "deploy": "surge ./dist dev-roundware-admin.surge.sh"
+    "deploy": "surge ./build dev-roundware-admin.surge.sh"
   },
   "eslintConfig": {
     "extends": [
