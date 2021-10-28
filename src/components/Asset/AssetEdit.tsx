@@ -1,4 +1,5 @@
 import Divider from "@material-ui/core/Divider";
+import LocationSelector from "components/common/LocationSelector";
 import React from "react";
 import {
   BooleanInput,
@@ -73,7 +74,12 @@ const AssetEdit = (props: EditProps) => {
         />
 
         <AudioOptions />
-
+        <LocationSelector
+          fieldNames={{
+            latitude: `latitude`,
+            longitude: `longitude`,
+          }}
+        />
         <TextInput source="start_time" fullWidth />
         <TextInput source="end_time" fullWidth />
         <NumberInput source="session_id" fullWidth />
