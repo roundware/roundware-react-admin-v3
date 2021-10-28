@@ -7,10 +7,13 @@
     "@material-ui/core": "^4.11.4",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@material-ui/pickers": "^3.3.10",
+    "@react-google-maps/api": "^2.5.0",
+    "autosuggest-highlight": "^3.2.0",
     "date-fns": "^2.25.0",
+    "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "patch-package": "^6.4.7",
-    "ra-data-roundware-drf": "https://github.com/shreyas-jadhav/ra-data-roundware-drf/raw/main/ra-data-roundware-drf-0.1.6.tgz",
+    "ra-data-roundware-drf": "file:../ra-data-roundware-drf/ra-data-roundware-drf-0.1.6.tgz",
     "random-material-color": "^1.0.5",
     "react": "^17.0.2",
     "react-admin": "^3.18.3",
@@ -22,11 +25,9 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=1234 react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "deploy": "npm run build && surge ./build dev-roundware-admin.surge.sh"
+    "deploy": "surge ./dist dev-roundware-admin.surge.sh"
   },
   "eslintConfig": {
     "extends": [
@@ -50,9 +51,12 @@
     "@testing-library/jest-dom": "^5.13.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "@types/autosuggest-highlight": "^3.1.1",
+    "@types/lodash": "^4.14.176",
     "@types/react-dom": "^17.0.9",
     "@types/react-router-dom": "^5.3.0",
     "@types/wavesurfer.js": "^5.2.2",
+    "parcel": "^2.0.0",
     "typescript": "^4.3.2"
   }
 }
