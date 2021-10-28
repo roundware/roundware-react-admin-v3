@@ -1,6 +1,6 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 
-const adminTheme = createMuiTheme({
+const adminTheme = createTheme({
     palette: {
 		secondary: {
 			main:"#6b96d8"
@@ -9,6 +9,13 @@ const adminTheme = createMuiTheme({
 			main: "#dc004e"
 		}
     },
+	 props: {
+      // Name of the component
+      MuiButtonBase: {
+        // The properties to apply
+        disableRipple: true // No more ripple, on the whole application!
+      }
+    }
 });
 
 
