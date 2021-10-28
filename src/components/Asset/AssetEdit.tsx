@@ -1,31 +1,22 @@
-import React, { useState } from "react";
+import Divider from "@material-ui/core/Divider";
+import React from "react";
 import {
+  BooleanInput,
+  DateTimeInput,
   Edit,
+  EditProps,
+  NumberInput,
+  ReferenceArrayInput,
+  ReferenceInput,
+  SelectArrayInput,
+  SelectInput,
   SimpleForm,
   TextInput,
-  NumberInput,
-  BooleanInput,
-  SelectInput,
-  ReferenceInput,
-  ReferenceArrayInput,
-  SelectArrayInput,
-  DateTimeInput,
-  FileInput,
-  FileField,
-  EditProps,
   useEditController,
-  Record,
 } from "react-admin";
-import { useField } from "react-final-form";
-import Divider from "@material-ui/core/Divider";
-import Typography from "@material-ui/core/Typography";
-import AudioEdit from "../AudioPlayerField/AudioEdit";
-import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/Button";
-import makeStyles from "@material-ui/styles/makeStyles";
-import DeleteIcon from "@material-ui/icons/Delete";
 import { IAsset } from "../../types";
-import { FormLabel, Grid } from "@material-ui/core";
+import AudioOptions from "../common/AudioOptions";
+import { FileEdit } from "../common/FileEdit";
 const AssetEdit = (props: EditProps) => {
   const { record } = useEditController(props);
 
@@ -50,7 +41,7 @@ const AssetEdit = (props: EditProps) => {
       data.user_id = data?.user?.id;
       delete data.user;
     }
-
+    console.log(data);
     return data;
   };
   return (
@@ -81,7 +72,7 @@ const AssetEdit = (props: EditProps) => {
           fullWidth
         />
 
-        <FileEdit {...props} />
+        <AudioOptions />
 
         <TextInput source="start_time" fullWidth />
         <TextInput source="end_time" fullWidth />
@@ -137,76 +128,3 @@ const AssetEdit = (props: EditProps) => {
 };
 
 export default AssetEdit;
-
-export const FileEdit = (props: EditProps) => {
-  const {
-    input: { onChange, value },
-  } = useField(`file`);
-  const handleDelete = () => onChange({ target: { value: null } });
-
-  const {
-    input: { value: mediaType },
-  } = useField(`media_type`);
-
-  return (
-    <div style={{ width: "100%" }}>
-      <FormLabel>File</FormLabel>
-      <Grid container>
-        <Grid item style={{ marginRight: 16 }}>
-          {mediaType === "audio" && (
-            <AudioEdit
-              size="medium"
-              buttons={[
-                <IconButton style={{ color: "#dc004e" }} onClick={handleDelete}>
-                  <DeleteIcon />
-                </IconButton>,
-              ]}
-            />
-          )}
-
-          {mediaType === "photo" && (
-            <>
-              <img
-                alt="No Photo selected"
-                height="300px"
-                width="300px"
-                style={{ objectFit: "contain" }}
-                src={value?.src ? value.src : value}
-              />
-            </>
-          )}
-        </Grid>
-        <Grid item>
-          <FileInput
-            source="file"
-            multiple={false}
-            label={`Upload ${getFileExtensions(mediaType).reduce(
-              (acc, el) => (acc += el + ","),
-              ""
-            )}`}
-            accept={getFileExtensions(mediaType).reduce(
-              (acc, el) => (acc += acc + "," + el),
-              ""
-            )}
-          >
-            <FileField source="src" title="title" fullWidth />
-          </FileInput>
-        </Grid>
-      </Grid>
-    </div>
-  );
-};
-
-export const getFileExtensions = (mediaType: string) => {
-  switch (mediaType) {
-    case "audio":
-      return [`.mp3`, `.wav`];
-    case `photo`:
-      return [`.jpg`, `.png`, `.gif`];
-    case `text`:
-      return [`.txt`];
-    default:
-      return [];
-      break;
-  }
-};
