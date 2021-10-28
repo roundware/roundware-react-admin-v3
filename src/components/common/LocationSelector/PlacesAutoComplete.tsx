@@ -91,21 +91,17 @@ export default function PlacesAutoComplete({ onSelect }: Props) {
         setOptions(newValue ? [newValue, ...options] : options);
         setValue(newValue);
         if (!newValue) return;
-
-        //   @ts-ignore
-        window.geocoder.geocode(
-          { placeId: newValue.place_id },
-          (results: any[], status: string) => {
-            if (status === "OK") {
-              if (results[0]) {
-                onSelect(
-                  results[0].geometry.location.lat(),
-                  results[0].geometry.location.lng()
-                );
-              }
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ placeId: newValue.place_id }, (results, status) => {
+          if (status === "OK") {
+            if (Array.isArray(results) && results[0]) {
+              onSelect(
+                results[0].geometry.location.lat(),
+                results[0].geometry.location.lng()
+              );
             }
           }
-        );
+        });
       }}
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);
