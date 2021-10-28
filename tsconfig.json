@@ -21,7 +21,10 @@
     "jsx": "react-jsx",
     "experimentalDecorators": true,
     "jsxImportSource": "react",
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+  },
+  "rules": {
+    "no-unused-vars": 0
   },
   "include": [
     "src"
