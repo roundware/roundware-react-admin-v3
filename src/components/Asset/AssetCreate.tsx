@@ -9,36 +9,57 @@ import {
   ReferenceInput,
   ReferenceArrayInput,
   SelectArrayInput,
-  DateInput,
   FileInput,
   FileField,
   DateTimeInput,
   CreateProps,
+  Record,
 } from "react-admin";
+import { FormGroup } from "@material-ui/core";
 import Divider from "@material-ui/core/Divider";
-import Typography from "@material-ui/core/Typography";
-import { dateFormatter } from "../../utils";
-
+import { useProjects } from "../../providers/ProjectsContext";
+import { FileEdit } from "../common/FileEdit";
+import AudioOptions from "../common/AudioOptions";
+import LocationSelector from "components/common/LocationSelector";
 const AssetCreate = (props: CreateProps) => {
+  const transform = (data: Record) => {
+    data.file = data.file.rawFile;
+    data.session_id = 1;
+    return data;
+  };
+
+  const { selectedProject } = useProjects();
   return (
-    <Create title="Create an asset" {...props}>
+    <Create title="Create an asset" {...props} transform={transform}>
       <SimpleForm>
         <TextInput source="id" disabled />
-        <ReferenceInput
+        {/* <ReferenceInput
           label="Project"
           source="project_id"
           reference="projects"
+          defaultValue={selectedProject?.id}
         >
           <SelectInput source="name" />
-        </ReferenceInput>
-        <ReferenceInput label="User" source="user.id" reference="users">
-          <SelectInput source="user.username" />
-        </ReferenceInput>
-        <FileInput source="file" label="Asset File" accept="audio/mpeg">
-          <FileField source="file" title="title" />
-        </FileInput>
-        <NumberInput source="session_id" />
-        <TextInput multiline source="description" fullWidth />
+        </ReferenceInput> */}
+
+        {/* <ReferenceInput label="User" source="user.id" reference="users">
+          <SelectInput source="user.id" />
+        </ReferenceInput> */}
+        <SelectInput
+          source="media_type"
+          choices={[
+            { id: "audio", name: "audio" },
+            { id: "photo", name: "photo" },
+            { id: "text", name: "text" },
+          ]}
+          defaultValue="audio"
+        />
+        <AudioOptions />
+        {/* <FileEdit /> */}
+        <LocationSelector
+          fieldNames={{ latitude: `latitude`, longitude: `longitude` }}
+        />
+        <TextInput multiline source="description" fullWidth minRows={2} />
         <NumberInput source="latitude" />
         <NumberInput source="longitude" />
         <DateTimeInput source="created" />
@@ -46,8 +67,7 @@ const AssetCreate = (props: CreateProps) => {
         <BooleanInput source="submitted" />
         <NumberInput source="volume" />
         <NumberInput source="weight" />
-        <NumberInput source="start_time" />
-        <NumberInput source="end_time" />
+
         <ReferenceInput
           label="Language"
           source="language_id"
@@ -59,15 +79,6 @@ const AssetCreate = (props: CreateProps) => {
           <SelectArrayInput optionText="description" />
         </ReferenceArrayInput>
 
-        <SelectInput
-          source="media_type"
-          choices={[
-            { id: "audio", name: "audio" },
-            { id: "photo", name: "photo" },
-            { id: "text", name: "text" },
-            { id: "video", name: "video" },
-          ]}
-        />
         <NumberInput label="Audio Length(s)" source="audio_length_in_seconds" />
         <Divider />
         <ReferenceArrayInput
