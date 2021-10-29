@@ -26,8 +26,9 @@ const AudioOptions = (props: Props) => {
   const styles = useStyles();
 
   useEffect(() => {
-    setVolume(1);
+    if (typeof file !== "string") setVolume(1);
   }, [file]);
+
   if (mediaType !== "audio") return <FileEdit />;
   return (
     <Card variant="outlined" style={{ marginBottom: 28 }}>
@@ -89,6 +90,7 @@ const AudioOptions = (props: Props) => {
                 icon={<LineWeightIcon />}
                 field={`weight`}
                 label="Weight"
+                defaultValue={50}
               />
             </Grid>
           </Grid>
