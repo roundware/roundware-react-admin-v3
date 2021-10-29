@@ -2,9 +2,11 @@ import React from "react";
 import { Grid, Typography, withStyles, Slider } from "@material-ui/core";
 import VolumeUp from "@material-ui/icons/VolumeUp";
 import useFieldValue from "../../hooks/useFieldValue";
-interface Props {}
+interface Props {
+  field?: string;
+}
 
-const VolumeSlider = (props: Props) => {
+const VolumeSlider = ({ field = `volume` }: Props) => {
   const [volume, setVolume] = useFieldValue(`volume`);
   return (
     <Grid
