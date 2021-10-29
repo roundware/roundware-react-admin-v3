@@ -115,15 +115,10 @@ const AudioEditField = ({ size = "medium", buttons, ...props }: PropTypes) => {
     // when no end_time is specified make sure to set to it to the audio length
     if (loading) return;
     const audioDuration = wavesurferRef.current.getDuration()?.toFixed(2);
-    console.log(`setting end time as`, audioDuration);
-    setDurationInSec(audioDuration);
+    setDurationInSec(Number(audioDuration));
 
-    if (!end_time) {
-      changeEndTime(audioDuration);
-    }
-    if (!start_time && typeof start_time !== "number") {
-      changeStartTime(0);
-    }
+    if (!end_time) changeEndTime(Number(audioDuration));
+    if (!start_time && typeof start_time !== "number") changeStartTime(0);
   }, [end_time, loading]);
 
   useEffect(() => {
@@ -134,13 +129,13 @@ const AudioEditField = ({ size = "medium", buttons, ...props }: PropTypes) => {
 
   const onRangeUpdate = ({ start, end }: any) => {
     console.log(start, end);
-    changeStartTime(start?.toFixed(2));
-    changeEndTime(end?.toFixed(2));
+    changeStartTime(Number(start?.toFixed(2)));
+    changeEndTime(Number(end?.toFixed(2)));
   };
 
   const resetRange = () => {
     changeStartTime(0);
-    changeEndTime(wavesurferRef?.current?.getDuration()?.toFixed(2));
+    changeEndTime(Number(wavesurferRef?.current?.getDuration()?.toFixed(2)));
   };
 
   const handleOnZoom = (
@@ -148,7 +143,6 @@ const AudioEditField = ({ size = "medium", buttons, ...props }: PropTypes) => {
     value: number | number[]
   ) => {
     if (wavesurferRef?.current && event && !Array.isArray(value)) {
-      console.log(value * (value / 10));
       wavesurferRef.current?.zoom(value * (value / 10));
     }
   };
