@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RoundwareDataProvider } from "ra-data-roundware-drf";
+import { useRoundwareDataProvider } from "./DataProviderContext";
 export interface IProject {
   id: number;
   name: string;
@@ -40,27 +40,18 @@ export interface IProjectsContext {
   projectsList: IProject[] | null;
   selectProject: (project: IProject | null) => void;
   setProjectsList: React.Dispatch<React.SetStateAction<IProject[] | null>>;
-  setDataProvider: React.Dispatch<
-    React.SetStateAction<RoundwareDataProvider | null>
-  >;
 }
 const ProjectsContext = React.createContext<IProjectsContext>(undefined!);
 
-export const useProjects = (dataProvider?: RoundwareDataProvider) => {
-  const context = React.useContext(ProjectsContext);
-  if (dataProvider) context.setDataProvider(dataProvider);
-  return context;
-};
+export const useProjects = () => React.useContext(ProjectsContext);
 
-interface SelectedProjectProviderProps {
+export interface AllowChildrenOnlyProps {
   children: React.ReactNode;
 }
-export const ProjectsProvider = ({
-  children,
-}: SelectedProjectProviderProps) => {
+export const ProjectsProvider = ({ children }: AllowChildrenOnlyProps) => {
+  const dataProvider = useRoundwareDataProvider();
   const [project, setProject] = useState<IProject | null>(null);
-  const [dataProvider, setDataProvider] =
-    useState<RoundwareDataProvider | null>(null);
+
   const [projectsList, setProjectsList] = useState<IProject[] | null>(null);
 
   const selectProject = (project: IProject | null) => {
@@ -77,7 +68,6 @@ export const ProjectsProvider = ({
         projectsList,
         selectProject,
         setProjectsList,
-        setDataProvider,
       }}
     >
       {children}
