@@ -1,4 +1,5 @@
 import Divider from "@material-ui/core/Divider";
+import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
 import LocationSelector from "components/common/LocationSelector";
 import React from "react";
 import {
@@ -17,10 +18,7 @@ import {
 } from "react-admin";
 import { IAsset } from "../../types";
 import AudioOptions from "../common/AudioOptions";
-import { FileEdit } from "../common/FileEdit";
 const AssetEdit = (props: EditProps) => {
-  const { record } = useEditController(props);
-
   const transform = async (data: Partial<IAsset>) => {
     if (!data.file) {
       // wants to remove file
@@ -127,7 +125,7 @@ const AssetEdit = (props: EditProps) => {
         >
           <SelectArrayInput optionText="text" fullWidth />
         </ReferenceArrayInput>
-        <NumberInput source="envelope_ids" disabled fullWidth />
+        <EnvelopeIdSelector />
       </SimpleForm>
     </Edit>
   );
