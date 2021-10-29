@@ -6,6 +6,7 @@ import {
   Card,
   CardContent,
   Grid,
+  TextField,
 } from "@material-ui/core";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
@@ -71,20 +72,22 @@ const LocationSelector = (props: Props) => {
             </Grid>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="subtitle1">
-              {lat && lng ? (
-                <span>
-                  <div>
-                    Latitude: <b>{lat}</b>
-                  </div>
-                  <div>
-                    Longitude: <b>{lng}</b>
-                  </div>
-                </span>
-              ) : (
-                `No Location Selected`
-              )}
-            </Typography>
+            {lat && lng ? (
+              <div>
+                <TextField
+                  value={lat}
+                  label="Latitude"
+                  onChange={(e) => setLat(Number(e.target.value))}
+                />
+                <TextField
+                  value={lng}
+                  label="Longitude"
+                  onChange={(e) => setLng(Number(e.target.value))}
+                />
+              </div>
+            ) : (
+              `No Location Selected`
+            )}
           </Grid>
           <Grid item>
             {isLoaded ? (
