@@ -39,18 +39,18 @@ import {
   ListenEventsList,
 } from "./components/ListenEvents";
 import { SessionCreate, SessionEdit, SessionList } from "./components/Session";
+import { SpeakerCreate, SpeakerEdit } from "components/Speaker";
+import SpeakerList from "components/Speaker/SpeakerList";
+import { useRoundwareDataProvider } from "providers/DataProviderContext";
 const authProvider = tokenAuthProvider({
   obtainAuthTokenUrl: `${process.env.REACT_APP_SERVER_URL}/api/2/login/`,
 });
-const dataProvider = new RoundwareDataProvider(
-  `${process.env.REACT_APP_SERVER_URL}/api/2`,
-  fetchJsonWithAuthToken
-);
 
 const resourceLookup: { [index: string]: React.ReactNode } = {
   assets: (
     <Resource
       name="assets"
+      key="assets"
       list={AssetList}
       create={AssetCreate}
       edit={AssetEdit}
@@ -61,15 +61,27 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
   audiotracks: (
     <Resource
       name="audiotracks"
+      key="audiotracks"
       list={ListGuesser}
       edit={EditGuesser}
       icon={Audiotrack}
       options={{ label: "Audio Tracks" }}
     />
   ),
+  speakers: (
+    <Resource
+      name="speakers"
+      key="speakers"
+      list={SpeakerList}
+      edit={SpeakerEdit}
+      create={SpeakerCreate}
+      icon={Speaker}
+    />
+  ),
   envelopes: (
     <Resource
       name="envelopes"
+      key="envelopes"
       list={ListGuesser}
       edit={EditGuesser}
       icon={Email}
@@ -78,6 +90,7 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
   events: (
     <Resource
       name="events"
+      key="events"
       list={ListGuesser}
       edit={EditGuesser}
       icon={Event}
@@ -87,6 +100,7 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
   listenevents: (
     <Resource
       name="listenevents"
+      key="listenevents"
       list={ListenEventsList}
       edit={ListenEventsEdit}
       create={ListenEventsCreate}
@@ -98,6 +112,7 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
   sessions: (
     <Resource
       name="sessions"
+      key="sessions"
       list={SessionList}
       edit={SessionEdit}
       create={SessionCreate}
@@ -105,18 +120,10 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
     />
   ),
 
-  speakers: (
-    <Resource
-      name="speakers"
-      list={ListGuesser}
-      edit={EditGuesser}
-      icon={Speaker}
-    />
-  ),
-
   uigroups: (
     <Resource
       name="uigroups"
+      key="uigroups"
       list={ListGuesser}
       edit={EditGuesser}
       icon={Build}
@@ -127,6 +134,7 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
   uiitems: (
     <Resource
       name="uiitems"
+      key="uiitems"
       list={ListGuesser}
       edit={EditGuesser}
       icon={FeaturedPlayList}
@@ -137,6 +145,7 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
   tags: (
     <Resource
       name="tags"
+      key="tags"
       list={ListGuesser}
       edit={EditGuesser}
       icon={TagFaces}
@@ -145,6 +154,7 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
   tag_categories: (
     <Resource
       name="tag_categories"
+      key="tag_categories"
       options={{
         label: "Tag Categories",
       }}
@@ -156,6 +166,7 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
   languages: (
     <Resource
       name="languages"
+      key="languages"
       list={ListGuesser}
       edit={EditGuesser}
       icon={Language}
@@ -164,6 +175,7 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
   localizedstrings: (
     <Resource
       name="localizedstrings"
+      key="localizedstrings"
       options={{
         label: "Localized Strings",
       }}
@@ -175,6 +187,7 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
   users: (
     <Resource
       name="users"
+      key="users"
       list={ListGuesser}
       edit={EditGuesser}
       icon={PeopleAlt}
@@ -192,8 +205,8 @@ export const ResourceList = [
 ];
 
 function App() {
-  const { selectedProject } = useProjects(dataProvider);
-
+  const { selectedProject } = useProjects();
+  const dataProvider = useRoundwareDataProvider();
   return (
     <Admin
       theme={adminTheme}
