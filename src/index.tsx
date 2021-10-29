@@ -5,12 +5,18 @@ import App from "./App";
 import { ProjectsProvider } from "./providers/ProjectsContext";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
+import { RoundwareDataProviderContextProvider } from "providers/DataProviderContext";
+import { SpeakersProvider } from "providers/SpeakersContext";
 ReactDOM.render(
   <React.StrictMode>
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <ProjectsProvider>
-        <App />
-      </ProjectsProvider>
+      <RoundwareDataProviderContextProvider>
+        <ProjectsProvider>
+          <SpeakersProvider>
+            <App />
+          </SpeakersProvider>
+        </ProjectsProvider>
+      </RoundwareDataProviderContextProvider>
     </MuiPickersUtilsProvider>
   </React.StrictMode>,
   document.getElementById("root")
