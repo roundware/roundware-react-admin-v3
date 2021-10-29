@@ -18,7 +18,7 @@ export const FileEdit = () => {
   useEffect(() => {
     const fileExt =
       typeof value == "string"
-        ? value
+        ? value?.split(`.`)?.reverse()[0]
         : value?.src
         ? value?.src?.split(`.`)?.reverse()[0]
         : false;
