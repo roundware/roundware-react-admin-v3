@@ -25,13 +25,17 @@ const SpeakerList = (props: ListProps) => {
       <List
         {...props}
         aside={
-          <div style={{ width: "70%", margin: "0 18px" }}>
+          <div style={{ width: "60%", margin: "0 18px" }}>
             <SpeakerShapesControl />
           </div>
         }
         title="Speakers"
       >
-        <Datagrid rowClick="" expand={<SpeakerEdit />}>
+        <Datagrid
+          rowClick=""
+          expand={<SpeakerEdit />}
+          style={{ flexShrink: 1 }}
+        >
           <SpeakerHighter />
 
           <TextField source="id" />
