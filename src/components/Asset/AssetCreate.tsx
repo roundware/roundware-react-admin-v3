@@ -19,7 +19,7 @@ import {
 import { useProjects } from "../../providers/ProjectsContext";
 import AudioOptions from "../common/AudioOptions";
 import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
-import { IAsset } from "types";
+import { IAsset } from "types/asset";
 const AssetCreate = (props: CreateProps) => {
   const dataProvider = useDataProvider();
   const { selectedProject } = useProjects();
