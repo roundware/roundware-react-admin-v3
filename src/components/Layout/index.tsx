@@ -1,22 +1,22 @@
+import { Toolbar } from "@material-ui/core";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import { makeStyles } from "@material-ui/core/styles";
+import { useEffect } from "react";
 import {
-  Layout,
   AppBar,
-  MenuItemLink,
-  UserMenu,
   AppBarProps,
+  Layout,
   LayoutProps,
   Sidebar,
   SidebarProps,
   useRedirect,
+  ReduxState,
 } from "react-admin";
-import { ComponentType, forwardRef, useCallback, useEffect } from "react";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import { FormHelperText, TextField, Toolbar } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { useSelector } from "react-redux";
 import { useProjects } from "../../providers/ProjectsContext";
 import { Menu } from "./Menu";
 
@@ -51,9 +51,9 @@ const CustomAppBar = (props: AppBarProps) => {
     if (value === "create") return;
     selectProject(projectsList?.find((p) => p?.id === value) || null);
   };
-
+  const open = useSelector((state: ReduxState) => state.admin.ui.sidebarOpen);
   return (
-    <AppBar {...props} className={classes.appBar}>
+    <AppBar {...props} open={open} className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
         <InputLabel variant="standard" className={classes.label}>
           Project:{" "}
