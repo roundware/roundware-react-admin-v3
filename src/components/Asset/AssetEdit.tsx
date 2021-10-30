@@ -16,7 +16,7 @@ import {
   TextInput,
   useEditController,
 } from "react-admin";
-import { IAsset } from "../../types";
+import { IAsset } from "../../types/asset";
 import AudioOptions from "../common/AudioOptions";
 const AssetEdit = (props: EditProps) => {
   const transform = async (data: Partial<IAsset>) => {
