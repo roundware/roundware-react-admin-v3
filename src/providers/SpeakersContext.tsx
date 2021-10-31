@@ -7,6 +7,7 @@ export interface ISpeakerContext {
   selectedSpeaker: number | null;
   setSelectedSpeaker: React.Dispatch<React.SetStateAction<number | null>>;
   speakers?: ISpeaker[];
+  fetchData: () => void;
 }
 export const SpeakerContext = React.createContext<ISpeakerContext>(undefined!);
 export const useSpeakers = () => React.useContext(SpeakerContext);
@@ -17,6 +18,10 @@ export const SpeakersProvider = ({ children }: AllowChildrenOnlyProps) => {
   const [selectedSpeaker, setSelectedSpeaker] = useState<number | null>(null);
   const [speakers, setSpeakers] = useState<ISpeaker[]>();
   useEffect(() => {
+    fetchData();
+  }, [selectedProject?.id]);
+
+  const fetchData = () => {
     dataProvider
       .getList(`speakers`, {
         pagination: {
@@ -32,7 +37,7 @@ export const SpeakersProvider = ({ children }: AllowChildrenOnlyProps) => {
         },
       })
       .then((res) => setSpeakers(res.data as ISpeaker[]));
-  }, [selectedProject?.id]);
+  };
 
   return (
     <SpeakerContext.Provider
@@ -40,6 +45,7 @@ export const SpeakersProvider = ({ children }: AllowChildrenOnlyProps) => {
         selectedSpeaker,
         setSelectedSpeaker,
         speakers,
+        fetchData,
       }}
     >
       {children}
