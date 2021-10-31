@@ -13,10 +13,13 @@ import {
   useJsApiLoader,
   Polygon,
   DrawingManager,
+  PolygonProps,
 } from "@react-google-maps/api";
 import { getGoogleMapsCenter } from "utilities";
 import centerOfMass from "@turf/center-of-mass";
 import { getCoord } from "@turf/invariant";
+import SpeakerPolygonGroup from "./SpeakerPolygon";
+
 const containerStyle = {
   width: "100%",
   height: "60vh",
@@ -80,40 +83,6 @@ const SpeakerShapesControl = (props: Props) => {
     }
   }, [selectedSpeaker]);
 
-  // 1. make editable only the speaker which is selected
-  // 2. show a save button whenever changes are made, i.e
-  //    whenever any speaker is modified we add `updated` property as `true`
-  const googleMapPolygons = useMemo(() => {
-    if (!isLoaded) return [];
-    return (
-      speakers
-        ?.filter((s) => s?.shape)
-        .map((s) => {
-          const isSelected = s?.id == selectedSpeaker;
-
-          return {
-            // get the first polygon
-            // even though it is a multipolygon type we currently store only a single polygon
-            paths: s.shape.coordinates[0][0]?.map(
-              (p) => new window.google.maps.LatLng(p[1], p[0])
-            ),
-            options: {
-              fillColor: "lightblue",
-              fillOpacity: 1,
-              strokeColor: "red",
-              strokeOpacity: 1,
-              strokeWeight: 2,
-              clickable: true,
-              draggable: isSelected,
-              editable: isSelected,
-              geodesic: false,
-              zIndex: 1,
-            },
-          };
-        }) || []
-    );
-  }, [selectedSpeaker, speakers, isLoaded]);
-
   return (
     <Card>
       <CardContent>
@@ -146,13 +115,11 @@ const SpeakerShapesControl = (props: Props) => {
                   <DrawingManager />
                 )}
                 {/* all other polygons */}
-                {googleMapPolygons?.map((p) => (
-                  <Polygon
-                    onLoad={onLoadPolygon}
-                    paths={p.paths}
-                    options={p.options}
-                  />
-                ))}
+                {speakers
+                  ?.filter((s) => s.shape)
+                  ?.map((s, index) => (
+                    <SpeakerPolygonGroup speaker={s} key={s.id} />
+                  ))}
               </GoogleMap>
             ) : (
               <CircularProgress />
