@@ -15,6 +15,7 @@ import {
   Button,
   Paper,
   Grid,
+  CircularProgress,
 } from "@material-ui/core";
 import { polygonToGoogleMapPaths } from "utilities";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -25,6 +26,7 @@ import buffer from "@turf/buffer";
 import MapControl from "components/common/MapControl";
 import { multiPolygon } from "@turf/helpers";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import booleanEqual from "@turf/boolean-equal";
 interface Props {
   speaker: ISpeaker;
 }
@@ -32,7 +34,7 @@ interface Props {
  * this will render all the necesarry polygons for an individual speaker
  */
 const SpeakerPolygonsGroup = ({ speaker }: Props) => {
-  const { selectedSpeaker } = useSpeakers();
+  const { selectedSpeaker, fetchData, setSelectedSpeaker } = useSpeakers();
   const isSelected = selectedSpeaker == speaker.id;
   const map = useGoogleMap();
   const [shape, setShape] = useState(speaker.shape);
@@ -40,10 +42,17 @@ const SpeakerPolygonsGroup = ({ speaker }: Props) => {
 
   const dataProvider = useRoundwareDataProvider();
 
+  useEffect(() => {
+    if (isSelected) {
+      // @ts-ignore
+      map?.fitBounds(polygon?.getBounds());
+    }
+  }, [isSelected]);
+
   // the editable shape
   const shapePolygonOptions: PolygonProps[`options`] = {
     fillColor: "lightblue",
-    fillOpacity: 0.8,
+    fillOpacity: isSelected ? 0.6 : 0,
     strokeColor: "red",
     strokeOpacity: 1,
     strokeWeight: 2,
@@ -52,6 +61,18 @@ const SpeakerPolygonsGroup = ({ speaker }: Props) => {
     editable: isSelected,
     geodesic: false,
     zIndex: 3,
+  };
+
+  const attenuationBorderOptions = {
+    fillOpacity: 0,
+    strokeColor: isSelected ? `#ff0000` : "#000000",
+    strokeOpacity: 1,
+    strokeWeight: 1,
+    clickable: true,
+    draggable: false,
+    editable: false,
+    geodesic: false,
+    zIndex: 2,
   };
 
   // the inner border, should not be editable
@@ -89,17 +110,22 @@ const SpeakerPolygonsGroup = ({ speaker }: Props) => {
   const handleOnPolygonLoad = (loadedPolygon: google.maps.Polygon) =>
     setPolygon(loadedPolygon);
 
+  const [saving, setSaving] = useState(false);
   const handleSave = () => {
-    dataProvider.update(`speakers`, {
-      id: speaker.id,
-      data: {
-        ...speaker,
-        shape,
-      },
-      previousData: {
-        ...speaker,
-      },
-    });
+    setSaving(true);
+    dataProvider
+      .update(`speakers`, {
+        id: speaker.id,
+        data: {
+          ...speaker,
+          shape,
+        },
+        previousData: {
+          ...speaker,
+        },
+      })
+      .then(() => fetchData())
+      .finally(() => setSaving(false));
   };
 
   const polylineOptions = {
@@ -121,6 +147,12 @@ const SpeakerPolygonsGroup = ({ speaker }: Props) => {
   const handleDiscard = () => setShape(speaker.shape);
 
   const handleDelete = () => {};
+
+  const handleDblClick = () => {
+    if (selectedSpeaker != speaker.id) {
+      setSelectedSpeaker(speaker.id);
+    }
+  };
   return (
     <div>
       {/* original shape */}
@@ -136,6 +168,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props) => {
         // onDragEnd={updatePolygon}
         onMouseUp={updatePolygon}
         onLoad={handleOnPolygonLoad}
+        onDblClick={handleDblClick}
         options={shapePolygonOptions}
       />
 
@@ -151,8 +184,8 @@ const SpeakerPolygonsGroup = ({ speaker }: Props) => {
             <Grid direction="column" spacing={1}>
               <Grid item>
                 <Tooltip title="Save Changes" placement="right">
-                  <IconButton onClick={handleSave}>
-                    <SaveIcon />
+                  <IconButton onClick={handleSave} disabled={saving}>
+                    {saving ? <CircularProgress /> : <SaveIcon />}
                   </IconButton>
                 </Tooltip>
               </Grid>
@@ -179,15 +212,3 @@ const SpeakerPolygonsGroup = ({ speaker }: Props) => {
 };
 
 export default SpeakerPolygonsGroup;
-
-const attenuationBorderOptions = {
-  fillOpacity: 0,
-  strokeColor: "#000000",
-  strokeOpacity: 1,
-  strokeWeight: 1,
-  clickable: true,
-  draggable: false,
-  editable: false,
-  geodesic: false,
-  zIndex: 2,
-};
