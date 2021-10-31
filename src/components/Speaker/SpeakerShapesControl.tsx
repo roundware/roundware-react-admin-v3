@@ -48,13 +48,23 @@ const SpeakerShapesControl = (props: Props) => {
   // as center of boundry box of all the polygons of speakers
   const onLoad = React.useCallback(
     (map: google.maps.Map) => {
+      // @ts-ignore
+      google.maps.Polygon.prototype.getBounds = function () {
+        let bounds = new google.maps.LatLngBounds();
+        this.getPaths().forEach((p) => {
+          p.forEach((element: any) => bounds.extend(element));
+        });
+        return bounds;
+      };
       setMap(map);
       const bounds = new window.google.maps.LatLngBounds();
       map.fitBounds(bounds);
-      map.setOptions({
-        center: getGoogleMapsCenter(speakers?.filter((s) => s?.shape) || []),
-        zoom: 20,
-      });
+      map.panTo(new google.maps.LatLng(0, 0));
+      map.setZoom(1);
+      // map.setOptions({
+      //   center: getGoogleMapsCenter(speakers?.filter((s) => s?.shape) || []),
+      //   zoom: 1,
+      // });
     },
     [speakers]
   );
@@ -63,32 +73,28 @@ const SpeakerShapesControl = (props: Props) => {
     setMap(null);
   }, []);
 
-  const onLoadPolygon = (polygon: google.maps.Polygon) => {
-    console.log("polygon: ", polygon);
-  };
-
   // `selectedSpeaker` is just an id,
   // full data by finding the speaker
   const selectedSpeakerData = React.useMemo(() => {
     return speakers?.find((s) => s.id == selectedSpeaker);
   }, [selectedSpeaker, speakers]);
 
-  // every time a speaker is selected pan the map to it
-  useEffect(() => {
-    if (selectedSpeakerData?.shape) {
-      const center = centerOfMass(selectedSpeakerData?.shape);
-      const [lat, lng] = getCoord(center);
-      map?.panTo(new window.google.maps.LatLng(lng, lng));
-      map?.setZoom(8);
-    }
-  }, [selectedSpeaker]);
+  // // every time a speaker is selected pan the map to it
+  // useEffect(() => {
+  //   if (selectedSpeakerData?.shape) {
+  //     const center = centerOfMass(selectedSpeakerData?.shape);
+  //     const [lng, lat] = getCoord(center);
+  //     map?.panTo(new window.google.maps.LatLng(lat, lng));
+  //     map?.setZoom(8);
+  //   }
+  // }, [selectedSpeaker]);
 
   return (
     <Card>
       <CardContent>
         <Grid container direction="column" spacing={2}>
           <Grid item>
-            <Typography variant="h4">Map</Typography>
+            <Typography variant="h5">Shapes</Typography>
             <Typography
               variant="h6"
               style={{ fontWeight: selectedSpeaker ? "bold" : "normal" }}
@@ -98,7 +104,8 @@ const SpeakerShapesControl = (props: Props) => {
               ) : (
                 <Grid container direction="row" alignItems="center">
                   Select a Speaker to Edit using{" "}
-                  <LocationOnOutlinedIcon fontSize={"medium"} /> Icon from List
+                  <LocationOnOutlinedIcon fontSize={"medium"} /> Icon from List,
+                  Or Double Click any shape
                 </Grid>
               )}
             </Typography>
