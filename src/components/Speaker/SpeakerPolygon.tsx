@@ -26,7 +26,7 @@ import buffer from "@turf/buffer";
 import MapControl from "components/common/MapControl";
 import { multiPolygon } from "@turf/helpers";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import booleanEqual from "@turf/boolean-equal";
+import colors from "utilities/colors.json";
 interface Props {
   speaker: ISpeaker;
 }
@@ -51,8 +51,8 @@ const SpeakerPolygonsGroup = ({ speaker }: Props) => {
 
   // the editable shape
   const shapePolygonOptions: PolygonProps[`options`] = {
-    fillColor: "lightblue",
-    fillOpacity: isSelected ? 0.6 : 0,
+    fillColor: speaker.activeyn ? `gray` : "lightblue",
+    fillOpacity: isSelected ? 0.5 : 0,
     strokeColor: "red",
     strokeOpacity: 1,
     strokeWeight: 2,
