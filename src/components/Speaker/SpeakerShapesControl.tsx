@@ -1,25 +1,16 @@
-import React, { useMemo, useEffect, useState } from "react";
 import {
   Card,
   CardContent,
-  Typography,
-  Grid,
   CircularProgress,
+  Grid,
+  Typography,
 } from "@material-ui/core";
-import { useSpeakers } from "providers/SpeakersContext";
 import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
-import {
-  GoogleMap,
-  useJsApiLoader,
-  Polygon,
-  DrawingManager,
-  PolygonProps,
-} from "@react-google-maps/api";
-import { getGoogleMapsCenter } from "utilities";
-import centerOfMass from "@turf/center-of-mass";
-import { getCoord } from "@turf/invariant";
+import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { useSpeakers } from "providers/SpeakersContext";
+import React from "react";
+import SpeakerDrawer from "./SpeakerDrawer";
 import SpeakerPolygonGroup from "./SpeakerPolygon";
-
 const containerStyle = {
   width: "100%",
   height: "60vh",
@@ -73,22 +64,6 @@ const SpeakerShapesControl = (props: Props) => {
     setMap(null);
   }, []);
 
-  // `selectedSpeaker` is just an id,
-  // full data by finding the speaker
-  const selectedSpeakerData = React.useMemo(() => {
-    return speakers?.find((s) => s.id == selectedSpeaker);
-  }, [selectedSpeaker, speakers]);
-
-  // // every time a speaker is selected pan the map to it
-  // useEffect(() => {
-  //   if (selectedSpeakerData?.shape) {
-  //     const center = centerOfMass(selectedSpeakerData?.shape);
-  //     const [lng, lat] = getCoord(center);
-  //     map?.panTo(new window.google.maps.LatLng(lat, lng));
-  //     map?.setZoom(8);
-  //   }
-  // }, [selectedSpeaker]);
-
   return (
     <Card>
       <CardContent>
@@ -118,9 +93,7 @@ const SpeakerShapesControl = (props: Props) => {
                 onUnmount={onUnmount}
               >
                 {/* show a drawing manager only when there no shape, */}
-                {selectedSpeaker && !selectedSpeakerData?.shape && (
-                  <DrawingManager />
-                )}
+                <SpeakerDrawer />
                 {/* all other polygons */}
                 {speakers
                   ?.filter((s) => s.shape)
