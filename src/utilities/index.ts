@@ -5,10 +5,10 @@ import {
   multiPolygon,
   Polygon,
   multiLineString,
-  lineString,
-  polygon,
-  
+  polygon,  
 } from "@turf/helpers";
+import { polygonToLine } from "@turf/polygon-to-line";
+import area from "@turf/area";
 import buffer from "@turf/buffer";
 import { getCoord } from "@turf/invariant";
 import { ISpeaker } from "types/speaker";
@@ -43,6 +43,8 @@ export const googleMapPathToGeoJSONPath = (paths: google.maps.LatLng[]) =>   pat
 export const getSpeakerGeoJSONObjectsForPath = (path: number[][], attenuation_distance: number) => {
 
   
+  /** form a closed ring first */
+  path = [...path, path[0]];
 
   /** get multipolygon with single polygon forom the path */
   let shape = multiPolygon([[path]]).geometry;
@@ -51,10 +53,11 @@ export const getSpeakerGeoJSONObjectsForPath = (path: number[][], attenuation_di
   const boundary = multiLineString([path]).geometry;
 
   /** line string by subtracting attenuation distance */
-  const attenuation_border = buffer(shape, -attenuation_distance, { units: 'meters' });
+  const attenuation_border = polygonToLine(buffer(polygon([path]).geometry, -attenuation_distance, { units: 'meters' }).geometry).geometry;
   
+  /** if area is becoming zero, alert the user about it */
+  const speakerArea = area(polygon([path]));
+  if(speakerArea <= 0) alert(`Speaker area has become zero. Please use a smaller attenuation radius or increase the polygon shape!`)
   
-
-  console.info(shape, boundary, attenuation_border);
   return {shape, attenuation_border, boundary }
 }
