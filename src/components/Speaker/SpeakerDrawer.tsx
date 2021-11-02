@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useSpeakers } from "providers/SpeakersContext";
+import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import { DrawingManager, DrawingManagerProps } from "@react-google-maps/api";
 import {
   Paper,
@@ -22,8 +23,9 @@ type googleMapDrawnShapes =
   | google.maps.Rectangle
   | null;
 const SpeakerDrawer = (props: Props) => {
-  const { selectedSpeaker, speakers } = useSpeakers();
-
+  const { selectedSpeaker, speakers, fetchData, setSelectedSpeaker } =
+    useSpeakers();
+  const dataProvider = useRoundwareDataProvider();
   // `selectedSpeaker` is just an id,
   // full data by finding the speaker
   const selectedSpeakerData = React.useMemo(() => {
@@ -36,9 +38,28 @@ const SpeakerDrawer = (props: Props) => {
   /** GeoJSON polygon path of current drawn shape */
   const [drawnPaths, setDrawnPaths] = useState<number[][] | null>(null);
 
-  /** calculate path for circle */
+  /** listeners for keeping track when shape is edited */
+  const [listeners, setListeners] = useState<google.maps.MapsEventListener[]>(
+    []
+  );
+
+  /** on new circle drawn */
   const handleOnCircleComplete = (circle: google.maps.Circle) => {
     setCurrentShape(circle);
+
+    /** setup listeners to get new paths when circle is edited */
+    const circleListeners = [`radius_changed`, `center_changed`].map((e) =>
+      google.maps.event.addListener(circle, e, () => getPathsFromCircle(circle))
+    );
+    /** save listeners to clear when new shape drawn */
+    setListeners(circleListeners);
+
+    getPathsFromCircle(circle);
+  };
+
+  /** calculate paths from given circle */
+  const getPathsFromCircle = (circle: google.maps.Circle) => {
+    console.log(`calculating path for circle`);
     const numPts = 512;
     const path: google.maps.LatLng[] = [];
     for (var i = 0; i < numPts; i++) {
@@ -50,18 +71,41 @@ const SpeakerDrawer = (props: Props) => {
         )
       );
     }
+
     setDrawnPaths(googleMapPathToGeoJSONPath(path));
   };
 
-  /** set paths for polygon */
+  /** on new polygon,  sets listeners for edit changes for polygon */
   const handleOnPolygonComplete = (polygon: google.maps.Polygon) => {
     setCurrentShape(polygon);
-    setDrawnPaths(googleMapPathToGeoJSONPath(polygon.getPath().getArray()));
+    /** listeners for edit changes */
+    const polygonListeners = [`insert_at`, `remove_at`, `set_at`].map((e) =>
+      google.maps.event.addListener(polygon, e, () =>
+        getPathFromPolygon(polygon)
+      )
+    );
+    setListeners(polygonListeners);
+    getPathFromPolygon(polygon);
   };
 
-  /** get all corners of rectangle from bounds and set path */
+  /** gets path from given polygon */
+  const getPathFromPolygon = (polygon: google.maps.Polygon) =>
+    setDrawnPaths(googleMapPathToGeoJSONPath(polygon.getPath().getArray()));
+
+  /** on new rectangle shape */
   const handleOnRectangleComplete = (rectangle: google.maps.Rectangle) => {
     setCurrentShape(rectangle);
+    const rectangleListeners = [`bounds_changed`].map((e) =>
+      google.maps.event.addListener(rectangle, e, () =>
+        getPathFromRectangle(rectangle)
+      )
+    );
+    setListeners(rectangleListeners);
+    getPathFromRectangle(rectangle);
+  };
+
+  /** calculates paths from givem rectangle */
+  const getPathFromRectangle = (rectangle: google.maps.Rectangle) => {
     const bounds = rectangle.getBounds();
     if (!bounds) return;
     const NE = bounds.getNorthEast();
@@ -73,13 +117,18 @@ const SpeakerDrawer = (props: Props) => {
     setDrawnPaths(googleMapPathToGeoJSONPath([NW, NE, SE, SW]));
   };
 
-  /** removes previous shape from map and sets current shape */
+  /** removes previous shape from map & paths and sets current shape
+   *  NOTE: this must be called before saving new paths of shape
+   */
   const setCurrentShape = (shape: googleMapDrawnShapes) => {
     setDrawnShape((prev) => {
       if (prev) prev?.setMap(null);
+      /** remove previous paths */
       setDrawnPaths(null);
       /** shows hand for editing the newly created shape */
       drawingManager?.setDrawingMode(null);
+      /** remove previous listeners */
+      listeners.forEach((l) => l.remove());
       return shape;
     });
   };
@@ -91,6 +140,7 @@ const SpeakerDrawer = (props: Props) => {
     strokeWeight: 2,
     clickable: false,
     editable: true,
+    draggable: true,
     zIndex: 1,
   };
   /** options for drawing manager component */
@@ -119,17 +169,40 @@ const SpeakerDrawer = (props: Props) => {
 
   /* saves to db and refetch */
   const handleSave = () => {
+    setSaving(true);
     const { attenuation_distance } = selectedSpeakerData!;
     if (!Array.isArray(drawnPaths) || !attenuation_distance) return;
     const objects = getSpeakerGeoJSONObjectsForPath(
       drawnPaths,
       attenuation_distance
     );
+    dataProvider
+      .update(`speakers`, {
+        data: {
+          ...selectedSpeakerData,
+          ...objects,
+        },
+        id: Number(selectedSpeaker),
+        previousData: {
+          id: Number(selectedSpeaker),
+          ...selectedSpeakerData,
+        },
+      })
+      .then(() => {
+        /** remove drawn shape */
+        handleRedraw();
+        /** deselect speaker */
+        setSelectedSpeaker(null);
+        /** get new saved speakers data */
+        fetchData();
+      })
+      .finally(() => setSaving(false));
   };
 
   /** removes current shape */
   const handleRedraw = () => setCurrentShape(null);
 
+  /** if selected speaker already has a shape don't show drawing manager */
   if (!selectedSpeaker || selectedSpeakerData?.shape) return null;
 
   return (
