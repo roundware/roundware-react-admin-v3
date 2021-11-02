@@ -24,17 +24,21 @@ const CustomSlider = ({
   return (
     <Grid
       container
-      direction="column"
+      direction={vertical ? "column" : `row`}
       spacing={1}
       alignItems="center"
+      justifyContent="center"
       style={{ height: "100%" }}
     >
       <Grid item>
         <Typography>{label}</Typography>
       </Grid>
-      <Grid item>
-        <Typography variant="subtitle1">{Number(value)?.toFixed(0)}</Typography>
+      <Grid item xs={12}>
+        <Typography align="center" variant="subtitle1">
+          {Number(value)?.toFixed(0)}
+        </Typography>
       </Grid>
+      {!vertical && <Grid item>{icon}</Grid>}
       <Grid item style={{ flexGrow: 1 }}>
         <CustomSliderVariant
           orientation={vertical ? "vertical" : `horizontal`}
@@ -43,7 +47,7 @@ const CustomSlider = ({
           onChange={(e, v) => setValue(v)}
         />
       </Grid>
-      <Grid item>{icon}</Grid>
+      {vertical && <Grid item>{icon}</Grid>}
     </Grid>
   );
 };
@@ -57,6 +61,7 @@ export const CustomSliderVariant = withStyles({
     "&$vertical": {
       width: 8,
     },
+    width: "100%",
     marginLeft: -4,
   },
   thumb: {
