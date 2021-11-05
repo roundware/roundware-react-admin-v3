@@ -60,7 +60,7 @@ const SpeakerDrawer = (props: Props) => {
   /** calculate paths from given circle */
   const getPathsFromCircle = (circle: google.maps.Circle) => {
     console.log(`calculating path for circle`);
-    const numPts = 512;
+    const numPts = 64;
     const path: google.maps.LatLng[] = [];
     for (var i = 0; i < numPts; i++) {
       path.push(
