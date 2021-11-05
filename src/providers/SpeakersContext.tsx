@@ -6,6 +6,7 @@ import { ISpeaker } from "types/speaker";
 export interface ISpeakerContext {
   selectedSpeaker: number | null;
   setSelectedSpeaker: React.Dispatch<React.SetStateAction<number | null>>;
+  setSpeakers: React.Dispatch<React.SetStateAction<ISpeaker[] | undefined>>;
   speakers?: ISpeaker[];
   fetchData: () => void;
 }
@@ -45,6 +46,7 @@ export const SpeakersProvider = ({ children }: AllowChildrenOnlyProps) => {
         selectedSpeaker,
         setSelectedSpeaker,
         speakers,
+        setSpeakers,
         fetchData,
       }}
     >
