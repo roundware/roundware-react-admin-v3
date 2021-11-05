@@ -1,32 +1,27 @@
-import React, { useMemo, useState, useEffect, useRef } from "react";
-import { ISpeaker } from "types/speaker";
+import {
+  CircularProgress,
+  Grid,
+  IconButton,
+  Paper,
+  Tooltip,
+} from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
+import HistoryIcon from "@material-ui/icons/History";
+import SaveIcon from "@material-ui/icons/Save";
 import {
   Polygon,
   PolygonProps,
-  InfoWindow,
-  useGoogleMap,
   Polyline,
-  PolylineProps,
+  useGoogleMap,
 } from "@react-google-maps/api";
-import {
-  Toolbar,
-  Tooltip,
-  IconButton,
-  Button,
-  Paper,
-  Grid,
-  CircularProgress,
-} from "@material-ui/core";
-import { polygonToGoogleMapPaths } from "utilities";
-import DeleteIcon from "@material-ui/icons/Delete";
-import SaveIcon from "@material-ui/icons/Save";
-import HistoryIcon from "@material-ui/icons/History";
-import { useSpeakers } from "providers/SpeakersContext";
 import buffer from "@turf/buffer";
-import MapControl from "components/common/MapControl";
 import { multiPolygon } from "@turf/helpers";
+import MapControl from "components/common/MapControl";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import colors from "utilities/colors.json";
+import { useSpeakers } from "providers/SpeakersContext";
+import React, { useEffect, useMemo, useState } from "react";
+import { ISpeaker } from "types/speaker";
+import { polygonToGoogleMapPaths } from "utilities";
 interface Props {
   speaker: ISpeaker;
 }
@@ -34,7 +29,8 @@ interface Props {
  * this will render all the necesarry polygons for an individual speaker
  */
 const SpeakerPolygonsGroup = ({ speaker }: Props) => {
-  const { selectedSpeaker, fetchData, setSelectedSpeaker } = useSpeakers();
+  const { selectedSpeaker, fetchData, setSelectedSpeaker, setSpeakers } =
+    useSpeakers();
   const isSelected = selectedSpeaker == speaker.id;
   const map = useGoogleMap();
   const [shape, setShape] = useState(speaker.shape);
@@ -146,7 +142,24 @@ const SpeakerPolygonsGroup = ({ speaker }: Props) => {
 
   const handleDiscard = () => setShape(speaker.shape);
 
-  const handleDelete = () => {};
+  const handleDelete = () => {
+    const confirmation = window.confirm(
+      `Deleting a speaker will only allow you to draw a new shape`
+    );
+    if (confirmation) {
+      setSpeakers((s) => {
+        const sps = [...s!].filter((s) => s?.id != selectedSpeaker);
+        sps.push({
+          ...s?.find((s) => s.id == selectedSpeaker),
+          // @ts-ignore
+          shape: undefined,
+          attenuation_border: undefined,
+          boundary: undefined,
+        });
+        return sps;
+      });
+    }
+  };
 
   const handleDblClick = () => {
     if (selectedSpeaker != speaker.id) {
