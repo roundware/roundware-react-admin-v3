@@ -49,7 +49,7 @@ export const SpeakerCreate = (props: CreateProps) => {
       data.file = data.file.rawFile;
       delete data.uri;
       delete data.backupuri;
-    }
+    } else delete data?.file;
     return data;
   };
   return (
