@@ -1,28 +1,26 @@
 import React from "react";
 import {
+  Create,
   CreateProps,
-  ListProps,
+  Datagrid,
+  DateField,
+  DateTimeInput,
+  DeleteButton,
+  Edit,
+  EditButton,
   EditProps,
   List,
-  Create,
-  Edit,
-  Datagrid,
-  SimpleForm,
-  TextInput,
-  TextField,
+  ListProps,
   NumberField,
-  DateField,
-  ReferenceField,
   NumberInput,
-  DateTimeInput,
+  ReferenceField,
   ReferenceInput,
   SelectInput,
-  EditButton,
-  DeleteButton,
-  ShowButton,
+  SimpleForm,
+  TextField,
+  TextInput,
 } from "react-admin";
 import { useProjects } from "../providers/ProjectsContext";
-import { dateFormatter } from "../utils";
 
 export const ListenEventsList = (props: ListProps) => {
   const { selectedProject } = useProjects();
@@ -31,8 +29,16 @@ export const ListenEventsList = (props: ListProps) => {
       {...props}
       filter={{ project_id: selectedProject?.id }}
       filters={[
-        <DateTimeInput source="start_time__gte" label="Started After" />,
-        <DateTimeInput source="start_time__lte" label="Started Before" />,
+        <DateTimeInput
+          key="startgte"
+          source="start_time__gte"
+          label="Started After"
+        />,
+        <DateTimeInput
+          key="startlte"
+          source="start_time__lte"
+          label="Started Before"
+        />,
       ]}
     >
       <Datagrid>

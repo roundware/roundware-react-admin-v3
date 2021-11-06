@@ -1,26 +1,27 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import { WaveSurfer, WaveForm, Region } from "wavesurfer-react";
-import { useField } from "react-final-form";
-// @ts-ignore
-import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions";
-// @ts-ignore
-import TimelinePlugin from "wavesurfer.js/dist/plugin/wavesurfer.timeline";
+import {
+  CircularProgress,
+  Grid,
+  IconButton,
+  Slider,
+  Tooltip,
+  Typography,
+} from "@material-ui/core";
+import PauseIcon from "@material-ui/icons/Pause";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import ResetIcon from "@material-ui/icons/Restore";
 import ZoomInIcon from "@material-ui/icons/ZoomIn";
 import ZoomOutIcon from "@material-ui/icons/ZoomOut";
-import {
-  IconButton,
-  Grid,
-  CircularProgress,
-  Typography,
-  Tooltip,
-  Slider,
-} from "@material-ui/core";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import PauseIcon from "@material-ui/icons/Pause";
-import ResetIcon from "@material-ui/icons/Restore";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { useField } from "react-final-form";
+import { Region, WaveForm, WaveSurfer } from "wavesurfer-react";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import TimelinePlugin from "wavesurfer.js/dist/plugin/wavesurfer.timeline";
 import useFieldValue from "../../../hooks/useFieldValue";
-import CustomSlider, { CustomSliderVariant } from "../CustomSlider";
 
 interface PropTypes {
   size?: "small" | "medium";
@@ -96,6 +97,7 @@ const AudioEditField = ({ size = "medium", buttons, ...props }: PropTypes) => {
       return wavesurferRef.current.pause();
     }
     const region = Object.values(wavesurferRef.current.regions.list)[0];
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     region.play();
     setPlaying(true);
@@ -139,6 +141,7 @@ const AudioEditField = ({ size = "medium", buttons, ...props }: PropTypes) => {
   };
 
   const handleOnZoom = (
+    // eslint-disable-next-line @typescript-eslint/ban-types
     event: React.ChangeEvent<{}>,
     value: number | number[]
   ) => {
@@ -208,7 +211,9 @@ const AudioEditField = ({ size = "medium", buttons, ...props }: PropTypes) => {
                   </Tooltip>
                 </Grid>
                 {buttons?.map((b) => (
-                  <Grid item>{b}</Grid>
+                  <Grid item key={b?.toString()}>
+                    {b}
+                  </Grid>
                 ))}
               </>
             )}

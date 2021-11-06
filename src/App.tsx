@@ -1,8 +1,4 @@
-import {
-  fetchJsonWithAuthToken,
-  tokenAuthProvider,
-  RoundwareDataProvider,
-} from "ra-data-roundware-drf";
+import { tokenAuthProvider } from "ra-data-roundware-drf";
 import React from "react";
 import { Admin, Resource, ListGuesser, EditGuesser } from "react-admin";
 import AssetCreate from "./components/Asset/AssetCreate";
@@ -204,7 +200,7 @@ export const ResourceList = [
       ) || []),
 ];
 
-function App() {
+function App(): JSX.Element {
   const { selectedProject } = useProjects();
   const dataProvider = useRoundwareDataProvider();
   return (
@@ -212,14 +208,18 @@ function App() {
       theme={adminTheme}
       layout={CustomLayout}
       title="Roundware Admin"
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       dataProvider={dataProvider}
       authProvider={authProvider}
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       dashboard={selectedProject && Dashboard}
+      // eslint-disable-next-line react/no-children-prop
       children={[
         <Resource
           name="projects"
+          key="projects"
           list={ProjectList}
           create={ProjectCreate}
           edit={ProjectEdit}

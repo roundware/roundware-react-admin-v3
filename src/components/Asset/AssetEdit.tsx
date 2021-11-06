@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import Divider from "@material-ui/core/Divider";
 import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
 import LocationSelector from "components/common/LocationSelector";
@@ -14,11 +15,11 @@ import {
   SelectInput,
   SimpleForm,
   TextInput,
-  useEditController,
 } from "react-admin";
 import { IAsset } from "../../types/asset";
 import AudioOptions from "../common/AudioOptions";
-const AssetEdit = (props: EditProps) => {
+
+const AssetEdit = (props: EditProps): JSX.Element => {
   const transform = async (data: Partial<IAsset>) => {
     if (!data.file) {
       // wants to remove file

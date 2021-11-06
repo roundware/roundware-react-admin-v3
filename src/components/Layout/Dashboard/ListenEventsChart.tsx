@@ -72,14 +72,14 @@ const getListensPerDay = (
   const chartDataMap = new Map<string, number>();
 
   eventsWithDate.forEach((s) => {
-    let keyName = s.start_time.toDateString();
+    const keyName = s.start_time.toDateString();
     let total = chartDataMap.get(keyName);
     if (total === undefined) total = 1;
     else total += 1;
     chartDataMap.set(keyName, total);
   });
 
-  let chartData: { date: number; total: number }[] = [];
+  const chartData: { date: number; total: number }[] = [];
 
   chartDataMap.forEach((val, key) => {
     chartData.push({
@@ -114,6 +114,7 @@ const ListenEventsChart = ({ events }: Props) => {
     if (value === "total") {
       setRange([
         getSanitizedList(
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           events?.data
         )[0].start_time,
@@ -133,6 +134,7 @@ const ListenEventsChart = ({ events }: Props) => {
 
   const [startDate, setStartDate] = useState(
     getSanitizedList(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       events?.data || []
     )?.[0]?.start_time || new Date()
@@ -147,6 +149,7 @@ const ListenEventsChart = ({ events }: Props) => {
 
   const redirect = useRedirect();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleOnBarClick = (e: any) => {
     if (ResourceList?.includes(`listenevents`))
       redirect(
@@ -170,6 +173,7 @@ const ListenEventsChart = ({ events }: Props) => {
               <FormControlLabel
                 control={
                   <Checkbox
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     //   @ts-ignore
                     defaultValue={showLine}
                     onChange={(e) => setShowLine(e?.target?.checked)}
@@ -181,8 +185,9 @@ const ListenEventsChart = ({ events }: Props) => {
                 <InputLabel>Range</InputLabel>
                 <Select
                   defaultValue={30}
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   // @ts-ignore
-                  onChange={(e) => handleOnSelectChange(e!.target!.value)}
+                  onChange={(e) => handleOnSelectChange(e?.target?.value)}
                 >
                   <MenuItem value={7}>Last 7 Days</MenuItem>
                   <MenuItem value={30}>Last 30 Days</MenuItem>
@@ -213,6 +218,7 @@ const ListenEventsChart = ({ events }: Props) => {
                   value={startDate}
                   views={["year", "month", "date"]}
                   onChange={(date) => {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     setStartDate(date);
                   }}
@@ -225,6 +231,7 @@ const ListenEventsChart = ({ events }: Props) => {
                   inputVariant="outlined"
                   value={endDate}
                   onChange={(date) => {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     setEndDate(date);
                   }}
@@ -240,6 +247,7 @@ const ListenEventsChart = ({ events }: Props) => {
             <ResponsiveContainer>
               <ComposedChart
                 data={getListensPerDay(
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   /* @ts-ignore */
                   events.data,
                   range

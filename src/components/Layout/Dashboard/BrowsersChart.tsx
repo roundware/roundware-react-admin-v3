@@ -1,23 +1,15 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { Card, CardContent, CardHeader } from "@material-ui/core";
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CircularProgress,
-} from "@material-ui/core";
 import { GetListResult, Record } from "react-admin";
 import {
-  PieChart,
+  Cell,
+  Legend,
   Pie,
+  PieChart,
   ResponsiveContainer,
   Tooltip,
-  Legend,
-  Cell,
-  Sector,
-  Label,
 } from "recharts";
-// @ts-ignore
-import randomMC from "random-material-color";
 import { CenteredLoading } from ".";
 
 interface Props {
@@ -42,7 +34,7 @@ const getclientSystemData = (sessions: { client_system: string }[]) => {
     else total += 1;
     clientSystemMap.set(keyName, total);
   });
-  let chartData: {
+  const chartData: {
     name: string;
     total: number;
   }[] = [];
@@ -131,6 +123,7 @@ const BrowsersChart = (props: Props) => {
                   verticalAlign="bottom"
                   align="center"
                   height={40}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   formatter={(value: any, name: any) => {
                     return `${name?.payload?.name} (${name?.payload?.total})`;
                   }}

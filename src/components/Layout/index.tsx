@@ -5,16 +5,16 @@ import ListSubheader from "@material-ui/core/ListSubheader";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   AppBar,
   AppBarProps,
   Layout,
   LayoutProps,
+  ReduxState,
   Sidebar,
   SidebarProps,
   useRedirect,
-  ReduxState,
 } from "react-admin";
 import { useSelector } from "react-redux";
 import { useProjects } from "../../providers/ProjectsContext";
@@ -44,6 +44,7 @@ const CustomAppBar = (props: AppBarProps) => {
       name?: string | undefined;
       value: unknown;
     }>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     child: React.ReactNode
   ) => {
     const { value } = event.target;
@@ -74,7 +75,9 @@ const CustomAppBar = (props: AppBarProps) => {
               <ListSubheader>Recent</ListSubheader>
             )}
             {projectsList?.map((p) => (
-              <MenuItem value={p?.id}>{p?.name}</MenuItem>
+              <MenuItem key={p?.id} value={p?.id}>
+                {p?.name}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -88,7 +91,7 @@ const CustomSidebar = (props: SidebarProps) => {
   return <Sidebar {...props} />;
 };
 
-const CustomLayout = (props: LayoutProps) => {
+const CustomLayout = (props: LayoutProps): JSX.Element => {
   const { selectedProject } = useProjects();
   const redirect = useRedirect();
   useEffect(() => {
@@ -99,6 +102,7 @@ const CustomLayout = (props: LayoutProps) => {
     <Layout
       {...props}
       appBar={CustomAppBar}
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       sidebar={CustomSidebar}
       menu={Menu}

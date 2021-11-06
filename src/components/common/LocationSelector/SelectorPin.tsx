@@ -6,7 +6,7 @@ interface Props {
   lat: number;
   lng: number;
 }
-const SelectorPin = ({ onChange, lat, lng }: Props) => {
+const SelectorPin = ({ onChange, lat, lng }: Props): JSX.Element => {
   const map = useGoogleMap();
 
   useEffect(() => {
@@ -26,6 +26,7 @@ const SelectorPin = ({ onChange, lat, lng }: Props) => {
         lng,
       }}
       onDragEnd={(evt) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //   @ts-ignore
         onChange(evt.latLng.lat(), evt.latLng.lng());
       }}

@@ -1,27 +1,13 @@
-import {
-  makeStyles,
-  Container,
-  Typography,
-  TextField,
-  FormControl,
-  FormControlLabel,
-  Divider,
-  Grid,
-  Box,
-  CircularProgress,
-} from "@material-ui/core";
+import { Box, CircularProgress, Grid, makeStyles } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
-import { useDataProvider, GetListResult, Record } from "react-admin";
-import React, { useEffect, useState, useMemo, useCallback } from "react";
-import { useProjects } from "../../../providers/ProjectsContext";
-import CardWithIcon from "./CardWithIcon";
-import { Hearing } from "@material-ui/icons";
 import subDays from "date-fns/fp/subDays/index.js";
+import { GetListParams } from "ra-core";
+import React, { useCallback, useEffect, useState } from "react";
+import { GetListResult, Record, useDataProvider } from "react-admin";
+import { useProjects } from "../../../providers/ProjectsContext";
 import DashboardContent from "./DashboardContent";
 import ProjectDetails from "./ProjectDetails";
-import { GetListParams } from "ra-core";
 
-interface Props {}
 const useStyles = makeStyles((theme) => ({
   container: {
     marginTop: theme.spacing(4),
@@ -33,13 +19,7 @@ export const intervals = [
   15, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 365, 0,
 ];
 
-async function resolvePromises(promises: Promise<void>[]) {
-  for (const p of promises) {
-    await Promise.resolve(p);
-  }
-}
-
-const Dashboard = (props: Props) => {
+const Dashboard = (): JSX.Element => {
   const classes = useStyles();
   const { selectedProject } = useProjects();
 
@@ -57,6 +37,7 @@ const Dashboard = (props: Props) => {
   }>({});
 
   const [busy, setBusy] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [lastProjectId, setLastProjectId] = useState(selectedProject?.id);
 
   const updateData = useCallback(
@@ -76,7 +57,7 @@ const Dashboard = (props: Props) => {
         setListenEvents(null);
         setAssets(null);
 
-        let params: GetListParams = {
+        const params: GetListParams = {
           filter: {
             project_id: selectedProject?.id,
           },

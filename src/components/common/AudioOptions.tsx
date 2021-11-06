@@ -12,17 +12,14 @@ import CustomSlider from "./CustomSlider";
 import { FileEdit } from "./FileEdit";
 import VolumeSlider from "./VolumeSlider";
 import LineWeightIcon from "@material-ui/icons/LineWeight";
-interface Props {}
 
-const AudioOptions = (props: Props) => {
-  const [mediaType, setMediaType] = useFieldValue(`media_type`);
+const AudioOptions = (): JSX.Element => {
+  const [mediaType] = useFieldValue(`media_type`);
   const [startTime, setStartTime] = useFieldValue(`start_time`);
   const [endTime, setEndTime] = useFieldValue(`end_time`);
-  const [file, setFile] = useFieldValue(`file`);
-  const [volume, setVolume] = useFieldValue(`volume`);
-  const [durationInSec, setDurationInSec] = useFieldValue(
-    `audio_length_in_seconds`
-  );
+  const [file] = useFieldValue(`file`);
+  const [, setVolume] = useFieldValue(`volume`);
+  const [durationInSec] = useFieldValue(`audio_length_in_seconds`);
   const styles = useStyles();
 
   useEffect(() => {

@@ -1,51 +1,38 @@
-import React, { useState, useEffect } from "react";
-import { GetListResult, Record, useRedirect } from "react-admin";
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   Card,
-  CardHeader,
   CardContent,
-  Toolbar,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormControl,
-  Typography,
-  Grid,
-  FormControlLabel,
+  CardHeader,
   Checkbox,
-  CircularProgress,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Toolbar,
+  Typography,
 } from "@material-ui/core";
+import { DatePicker } from "@material-ui/pickers";
+import { addDays, isAfter, isBefore, subDays } from "date-fns";
+import React, { useEffect, useState } from "react";
+import { GetListResult, Record, useRedirect } from "react-admin";
 import {
-  format,
-  subDays,
-  addDays,
-  isBefore,
-  isAfter,
-  differenceInCalendarDays,
-} from "date-fns";
-import {
-  ResponsiveContainer,
+  Bar,
+  Brush,
+  CartesianGrid,
   ComposedChart,
-  Area,
+  Label,
+  Legend,
+  Line,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Label,
-  Bar,
-  Line,
-  Brush,
-  Legend,
 } from "recharts";
-
-import {
-  DatePicker,
-  TimePicker,
-  DateTimePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
-import { ResourceList } from "../../../App";
 import { CenteredLoading } from ".";
+import { ResourceList } from "../../../App";
+
 interface Props {
   assets: GetListResult<Record> | null;
 }
@@ -67,7 +54,7 @@ type BarChartData = {
   [index: string]: number | undefined;
 };
 
-export const isWithinRange = (date: Date, range: Date[]) => {
+export const isWithinRange = (date: Date, range: Date[]): boolean => {
   range = range.sort((a, b) => (a > b ? 1 : -1));
 
   if (
@@ -92,7 +79,7 @@ const getRecordingsPerDay = (assets: IAsset[], range: Date[]) => {
     photo: 0,
   };
   assetsWithDate.forEach((s) => {
-    let keyName = s.created.toDateString();
+    const keyName = s.created.toDateString();
     let data = chartDataMap.get(keyName);
 
     if (data === undefined) {
@@ -100,14 +87,16 @@ const getRecordingsPerDay = (assets: IAsset[], range: Date[]) => {
     }
     data = {
       ...data,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       [s?.media_type]: data![s?.media_type] + 1,
     };
 
     chartDataMap.set(keyName, data);
   });
 
-  let chartData: BarChartData[] = [];
+  const chartData: BarChartData[] = [];
 
   chartDataMap.forEach((val, key) => {
     chartData.push({
@@ -116,9 +105,12 @@ const getRecordingsPerDay = (assets: IAsset[], range: Date[]) => {
     });
   });
   console.log(chartData);
-  return chartData.sort((s1, s2) => (s1!.date! > s2!.date! ? 1 : -1));
+  return chartData.sort((s1, s2) =>
+    (s1?.date || 0) > (s2?.date || 0) ? 1 : -1
+  );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getSanitizedList = (assets: any[]): IAsset[] => [
   ...assets
     .filter((a) => ![1].includes(a.id))
@@ -130,7 +122,7 @@ const getSanitizedList = (assets: any[]): IAsset[] => [
     .sort((a, b) => (a.created > b.created ? 1 : -1)),
 ];
 
-const AssetsChart = ({ assets }: Props) => {
+const AssetsChart = ({ assets }: Props): JSX.Element => {
   const [customRange, setCustomRange] = useState(false);
   const [range, setRange] = useState([new Date(), new Date()]);
 

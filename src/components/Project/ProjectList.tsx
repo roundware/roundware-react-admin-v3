@@ -10,13 +10,12 @@ import { useListContext, useRedirect } from "ra-core";
 import React, { useEffect } from "react";
 import { List, ListProps, TextInput } from "react-admin";
 import { IProject, useProjects } from "../../providers/ProjectsContext";
-import { Search } from "@material-ui/icons";
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   topTextInput: {
     marginTop: "40px",
   },
 }));
-const ProjectList = (props: ListProps) => {
+const ProjectList = (props: ListProps): JSX.Element => {
   const classes = useStyles();
   return (
     <List
@@ -32,6 +31,7 @@ const ProjectList = (props: ListProps) => {
           source="name"
           label="Search by Name"
           alwaysOn
+          key="name"
           className={classes.topTextInput}
         />,
       ]}

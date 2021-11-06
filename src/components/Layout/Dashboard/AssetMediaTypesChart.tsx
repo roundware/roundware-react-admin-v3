@@ -1,16 +1,9 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CircularProgress,
-  Toolbar,
-  Typography,
-} from "@material-ui/core";
+import { Card, CardContent, CardHeader } from "@material-ui/core";
 import React from "react";
 import { GetListResult, Record, useRedirect } from "react-admin";
 import {
-  Legend,
   Cell,
+  Legend,
   Pie,
   PieChart,
   ResponsiveContainer,
@@ -25,14 +18,14 @@ const getMediaTypes = (assets: GetListResult<Record>) => {
   const chartDataMap = new Map<string, number>();
 
   assets.data.forEach((s) => {
-    let keyName = s.media_type;
+    const keyName = s.media_type;
     let total = chartDataMap.get(keyName);
     if (total === undefined) total = 1;
     else total += 1;
     chartDataMap.set(keyName, total);
   });
 
-  let chartData: { media_type: string; total: number }[] = [];
+  const chartData: { media_type: string; total: number }[] = [];
 
   chartDataMap.forEach((val, key) => {
     chartData.push({
@@ -75,9 +68,10 @@ const renderCustomizedLabel = ({
   );
 };
 
-const AssetMediaTypesChart = ({ assets }: Props) => {
+const AssetMediaTypesChart = ({ assets }: Props): JSX.Element => {
   const redirect = useRedirect();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleOnClick = (payload: any) => {
     if (ResourceList.includes(`assets`))
       redirect(

@@ -16,13 +16,13 @@ import {
   getSpeakerGeoJSONObjectsForPath,
   googleMapPathToGeoJSONPath,
 } from "utilities";
-interface Props {}
+
 type googleMapDrawnShapes =
   | google.maps.Circle
   | google.maps.Polygon
   | google.maps.Rectangle
   | null;
-const SpeakerDrawer = (props: Props) => {
+const SpeakerDrawer = (): JSX.Element | null => {
   const { selectedSpeaker, speakers, fetchData, setSelectedSpeaker } =
     useSpeakers();
   const dataProvider = useRoundwareDataProvider();
@@ -33,7 +33,7 @@ const SpeakerDrawer = (props: Props) => {
   }, [selectedSpeaker, speakers]);
 
   /** to keep track of current shape and remove previous from map */
-  const [drawnShape, setDrawnShape] = useState<googleMapDrawnShapes>();
+  const [, setDrawnShape] = useState<googleMapDrawnShapes>();
 
   /** GeoJSON polygon path of current drawn shape */
   const [drawnPaths, setDrawnPaths] = useState<number[][] | null>(null);
@@ -62,9 +62,10 @@ const SpeakerDrawer = (props: Props) => {
     console.log(`calculating path for circle`);
     const numPts = 64;
     const path: google.maps.LatLng[] = [];
-    for (var i = 0; i < numPts; i++) {
+    for (let i = 0; i < numPts; i++) {
       path.push(
         google.maps.geometry.spherical.computeOffset(
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           circle.getCenter()!,
           circle.getRadius(),
           (i * 360) / numPts
@@ -148,6 +149,7 @@ const SpeakerDrawer = (props: Props) => {
     drawingControlOptions: {
       drawingModes: [`circle`, `polygon`, `rectangle`].map(
         (t) =>
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           //   @ts-ignore
           google.maps.drawing.OverlayType[t.toUpperCase()]
       ),
@@ -170,6 +172,7 @@ const SpeakerDrawer = (props: Props) => {
   /* saves to db and refetch */
   const handleSave = () => {
     setSaving(true);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { attenuation_distance } = selectedSpeakerData!;
     if (!Array.isArray(drawnPaths) || !attenuation_distance) return;
     const objects = getSpeakerGeoJSONObjectsForPath(

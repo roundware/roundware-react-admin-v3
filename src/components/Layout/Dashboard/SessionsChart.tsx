@@ -3,7 +3,6 @@ import {
   CardContent,
   CardHeader,
   Checkbox,
-  CircularProgress,
   FormControl,
   FormControlLabel,
   Grid,
@@ -36,7 +35,7 @@ interface Props {
   sessions: GetListResult<Record> | null;
 }
 
-export const isWithinRange = (date: Date, range: Date[]) => {
+export const isWithinRange = (date: Date, range: Date[]): boolean => {
   range = range.sort((a, b) => (a > b ? 1 : -1));
 
   if (
@@ -59,14 +58,14 @@ const getSessionsPerDay = (
   const chartDataMap = new Map<string, number>();
 
   sessionsWithDate.forEach((s) => {
-    let keyName = s.starttime.toDateString();
+    const keyName = s.starttime.toDateString();
     let total = chartDataMap.get(keyName);
     if (total === undefined) total = 1;
     else total += 1;
     chartDataMap.set(keyName, total);
   });
 
-  let chartData: { date: number; total: number }[] = [];
+  const chartData: { date: number; total: number }[] = [];
 
   chartDataMap.forEach((val, key) => {
     chartData.push({
@@ -102,6 +101,7 @@ const SessionsChart = ({ sessions }: Props) => {
     if (value === "total") {
       setRange([
         getSanitizedList(
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           sessions.data || []
         )[0].starttime,
@@ -121,6 +121,7 @@ const SessionsChart = ({ sessions }: Props) => {
 
   const [startDate, setStartDate] = useState(
     getSanitizedList(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       sessions?.data || []
     )?.[0]?.starttime || new Date()
@@ -131,12 +132,13 @@ const SessionsChart = ({ sessions }: Props) => {
     setRange([startDate, endDate]);
   }, [startDate, endDate]);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [skipNoActivity, setSkipNoActivity] = useState(false);
   const [showLine, setShowLine] = useState(false);
 
   const redirect = useRedirect();
 
-  const handleOnBarClick = (e: any) => {
+  const handleOnBarClick = (e: { date: string }) => {
     if (ResourceList.includes(`sessions`))
       redirect(
         `list`,
@@ -161,8 +163,9 @@ const SessionsChart = ({ sessions }: Props) => {
                 <InputLabel>Range</InputLabel>
                 <Select
                   defaultValue={30}
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   // @ts-ignore
-                  onChange={(e) => handleOnSelectChange(e!.target!.value)}
+                  onChange={(e) => handleOnSelectChange(e?.target?.value)}
                 >
                   <MenuItem value={7}>Last 7 Days</MenuItem>
                   <MenuItem value={30}>Last 30 Days</MenuItem>
@@ -214,6 +217,7 @@ const SessionsChart = ({ sessions }: Props) => {
                   value={startDate}
                   views={["year", "month", "date"]}
                   onChange={(date) => {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     setStartDate(date);
                   }}
@@ -226,6 +230,7 @@ const SessionsChart = ({ sessions }: Props) => {
                   inputVariant="outlined"
                   value={endDate}
                   onChange={(date) => {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     setEndDate(date);
                   }}
@@ -241,6 +246,7 @@ const SessionsChart = ({ sessions }: Props) => {
             <ResponsiveContainer>
               <ComposedChart
                 data={getSessionsPerDay(
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   /* @ts-ignore */
                   sessions.data || [],
                   range

@@ -1,26 +1,16 @@
+import { Card, CardContent, CardHeader } from "@material-ui/core";
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CircularProgress,
-  CardHeader,
-} from "@material-ui/core";
 import { GetListResult, Record } from "react-admin";
 import {
-  PieChart,
+  Cell,
+  Legend,
   Pie,
+  PieChart,
   ResponsiveContainer,
   Tooltip,
-  Legend,
-  Cell,
-  Sector,
-  Label,
 } from "recharts";
-
-// @ts-ignore
-import randomMC from "random-material-color";
-import { COLORS } from "./BrowsersChart";
 import { CenteredLoading } from ".";
+import { COLORS } from "./BrowsersChart";
 
 interface Props {
   sessions: GetListResult<Record> | null;
@@ -52,7 +42,7 @@ const getClientTypeData = (sessions: { client_type: string }[]) => {
     else total += 1;
     clientTypeMap.set(keyName, total);
   });
-  let chartData: {
+  const chartData: {
     name: string;
     total: number;
   }[] = [];
@@ -105,6 +95,7 @@ const ClientTypeChart = (props: Props) => {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart height={400} width={400}>
                 <Pie
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   // @ts-ignore
                   data={getClientTypeData(props.sessions.data)}
                   dataKey="total"
@@ -118,6 +109,7 @@ const ClientTypeChart = (props: Props) => {
                   outerRadius={80}
                   label={renderCustomizedLabel}
                 >
+                  {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                   {/* @ts-ignore */}
                   {getClientTypeData(props.sessions.data).map(
                     (entry, index) => (
@@ -132,6 +124,7 @@ const ClientTypeChart = (props: Props) => {
                 <Tooltip />
                 <Legend
                   verticalAlign="bottom"
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   formatter={(value: any, name: any) => {
                     return `${name?.payload?.name} (${name?.payload?.total})`;
                   }}

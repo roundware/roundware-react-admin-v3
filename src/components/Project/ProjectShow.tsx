@@ -14,9 +14,9 @@ import React from "react";
 import { Typography } from "@material-ui/core";
 import { useProjects } from "../../providers/ProjectsContext";
 
-interface Props extends ShowProps {}
+type Props = ShowProps;
 
-const ProjectShow = (props: Props) => {
+const ProjectShow = (props: Props): JSX.Element => {
   const { selectedProject } = useProjects();
   const redirect = useRedirect();
   const { record } = useShowController(props);

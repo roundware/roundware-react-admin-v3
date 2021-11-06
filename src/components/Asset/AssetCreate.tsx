@@ -5,7 +5,6 @@ import {
   BooleanInput,
   Create,
   CreateProps,
-  DateTimeInput,
   NumberInput,
   Record,
   ReferenceArrayInput,
@@ -19,8 +18,8 @@ import {
 import { useProjects } from "../../providers/ProjectsContext";
 import AudioOptions from "../common/AudioOptions";
 import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
-import { IAsset } from "types/asset";
-const AssetCreate = (props: CreateProps) => {
+
+const AssetCreate = (props: CreateProps): JSX.Element => {
   const dataProvider = useDataProvider();
   const { selectedProject } = useProjects();
   const transform = async (data: Record) => {
@@ -29,7 +28,7 @@ const AssetCreate = (props: CreateProps) => {
       data.file = data.file.rawFile;
       // as it is being created via admin
       data.session_id = 1;
-      data.project_id = selectedProject!.id;
+      data.project_id = selectedProject?.id;
 
       console.log(data.envelope_ids);
       if (Number(data.envelope_ids) > 0) {
@@ -54,11 +53,13 @@ const AssetCreate = (props: CreateProps) => {
           4
         )}`
       );
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore it should be optional only in case of create but types say it isn't
       delete data.id;
       return data;
     } catch (e) {
       console.error(e);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       alert(e?.message || `Something went wrong!`);
     }
@@ -68,6 +69,7 @@ const AssetCreate = (props: CreateProps) => {
     <Create
       title="Create an asset"
       {...props}
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       transform={transform}
     >

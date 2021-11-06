@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { WaveSurfer, WaveForm, Region } from "wavesurfer-react";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions";
 import { useRecordContext } from "react-admin";
@@ -20,11 +21,16 @@ interface PropTypes {
   buttons?: React.ReactNode[];
 }
 
-const AudioPlayerField = ({ size = "small", buttons, ...props }: PropTypes) => {
-  const { source } = props;
+const AudioPlayerField = ({
+  size = "small",
+  buttons,
+  ...props
+}: PropTypes): JSX.Element | null => {
   const { file, ...record } = useRecordContext(props);
   const [loading, setLoading] = useState(true);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const wavesurferRef = React.useRef<any>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleMount = React.useCallback((waveSurfer: any) => {
     wavesurferRef.current = waveSurfer;
     if (wavesurferRef.current) {
@@ -92,7 +98,9 @@ const AudioPlayerField = ({ size = "small", buttons, ...props }: PropTypes) => {
                 </IconButton>
               </Grid>
               {buttons?.map((b) => (
-                <Grid item>{b}</Grid>
+                <Grid item key={b?.toString()}>
+                  {b}
+                </Grid>
               ))}
             </>
           )}

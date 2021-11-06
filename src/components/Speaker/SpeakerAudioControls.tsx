@@ -13,18 +13,20 @@ import CustomSlider from "components/common/CustomSlider";
 import VolumeUpIcon from "@material-ui/icons/VolumeUp";
 import useFieldValue from "hooks/useFieldValue";
 import SpeakerAudioPlayer from "./SpeakerAudioPlayer";
-interface Props {}
 
-const SpeakerAudioControls = (props: Props) => {
+const SpeakerAudioControls = (): JSX.Element => {
   const [sourceMode, setSourceMode] = useState<`UPLOAD` | `URI`>(`UPLOAD`);
   const handleChange = (
+    // eslint-disable-next-line @typescript-eslint/ban-types
     event: React.ChangeEvent<{}>,
     newValue: `UPLOAD` | `URI`
   ) => {
     setSourceMode(newValue);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [file, setFile] = useFieldValue(`file`);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [uri, seturi] = useFieldValue(`uri`);
 
   return (

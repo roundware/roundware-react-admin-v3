@@ -4,10 +4,13 @@ import {
   IconButton,
   Paper,
   Tooltip,
+  Popover,
+  Typography,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import HistoryIcon from "@material-ui/icons/History";
 import SaveIcon from "@material-ui/icons/Save";
+import BlurCircularIcon from "@material-ui/icons/BlurCircular";
 import {
   Polygon,
   PolygonProps,
@@ -19,7 +22,7 @@ import { multiPolygon } from "@turf/helpers";
 import MapControl from "components/common/MapControl";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import { useSpeakers } from "providers/SpeakersContext";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { MouseEventHandler, useEffect, useMemo, useState } from "react";
 import { ISpeaker } from "types/speaker";
 import { polygonToGoogleMapPaths } from "utilities";
 interface Props {
@@ -28,7 +31,7 @@ interface Props {
 /**
  * this will render all the necesarry polygons for an individual speaker
  */
-const SpeakerPolygonsGroup = ({ speaker }: Props) => {
+const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
   const { selectedSpeaker, fetchData, setSelectedSpeaker, setSpeakers } =
     useSpeakers();
   const isSelected = selectedSpeaker == speaker.id;
@@ -40,6 +43,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props) => {
 
   useEffect(() => {
     if (isSelected) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       map?.fitBounds(polygon?.getBounds());
     }
@@ -87,6 +91,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props) => {
 
   const handleDragStart = () => setDragging(true);
   const updatePolygon = (e: google.maps.MapMouseEvent) => {
+    if (e) console.log(`Polygon edited`);
     setDragging(false);
     const newPath = polygon
       ?.getPath()
@@ -97,10 +102,6 @@ const SpeakerPolygonsGroup = ({ speaker }: Props) => {
       const newMultiPolygon = multiPolygon([[newPath]]).geometry;
       setShape(newMultiPolygon);
     }
-
-    // if (Array.isArray(newPath)) {
-    //   setShape(multiPolygon(newPath.map(p => p.))
-    // }
   };
   const [polygon, setPolygon] = useState<google.maps.Polygon>();
   const handleOnPolygonLoad = (loadedPolygon: google.maps.Polygon) =>
@@ -151,6 +152,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props) => {
         const sps = [...s!].filter((s) => s?.id != selectedSpeaker);
         sps.push({
           ...s?.find((s) => s.id == selectedSpeaker),
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           shape: undefined,
           attenuation_border: undefined,
@@ -166,6 +168,16 @@ const SpeakerPolygonsGroup = ({ speaker }: Props) => {
       setSelectedSpeaker(speaker.id);
     }
   };
+
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null
+  );
+  const handleOpenAD: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    setAnchorEl(e.currentTarget || null);
+  };
+
+  const handleCloseAD = () => setAnchorEl(null);
+
   return (
     <div>
       {/* original shape */}
@@ -215,6 +227,28 @@ const SpeakerPolygonsGroup = ({ speaker }: Props) => {
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>
+              </Grid>
+              <Grid item>
+                <Tooltip title="Attenuation Distance" placement="right">
+                  <IconButton onClick={handleOpenAD}>
+                    <BlurCircularIcon />
+                  </IconButton>
+                </Tooltip>
+                <Popover
+                  open={Boolean(anchorEl)}
+                  anchorEl={anchorEl}
+                  onClose={handleCloseAD}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                >
+                  <Typography>The content of the Popover.</Typography>
+                </Popover>
               </Grid>
             </Grid>
           </Paper>

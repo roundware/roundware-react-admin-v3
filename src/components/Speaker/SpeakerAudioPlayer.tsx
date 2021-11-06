@@ -1,40 +1,42 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import { WaveSurfer, WaveForm, Region } from "wavesurfer-react";
-import { useField } from "react-final-form";
-// @ts-ignore
-import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions";
-// @ts-ignore
-import TimelinePlugin from "wavesurfer.js/dist/plugin/wavesurfer.timeline";
-import ZoomInIcon from "@material-ui/icons/ZoomIn";
-import ZoomOutIcon from "@material-ui/icons/ZoomOut";
+import {
+  CircularProgress,
+  Grid,
+  IconButton,
+  Slider,
+  Tooltip,
+} from "@material-ui/core";
+import PauseIcon from "@material-ui/icons/Pause";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import VolumeDown from "@material-ui/icons/VolumeDown";
 import VolumeUp from "@material-ui/icons/VolumeUp";
-import {
-  IconButton,
-  Grid,
-  CircularProgress,
-  Typography,
-  Tooltip,
-  Slider,
-} from "@material-ui/core";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import PauseIcon from "@material-ui/icons/Pause";
-import ResetIcon from "@material-ui/icons/Restore";
+import ZoomInIcon from "@material-ui/icons/ZoomIn";
+import ZoomOutIcon from "@material-ui/icons/ZoomOut";
 import useFieldValue from "hooks/useFieldValue";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { Region, WaveForm, WaveSurfer } from "wavesurfer-react";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import TimelinePlugin from "wavesurfer.js/dist/plugin/wavesurfer.timeline";
 
 interface PropTypes {
   size?: "small" | "medium";
   buttons?: React.ReactNode[];
-  src?: string | any;
+  src?: string | unknown;
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const SpeakerAudioPlayer = ({
   size = "medium",
   src,
   buttons,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ...props
 }: PropTypes) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [id, setId] = useFieldValue(`id`);
 
   const plugins = [
@@ -105,6 +107,7 @@ const SpeakerAudioPlayer = ({
   }, [currentVolume]);
 
   const handleOnZoom = (
+    // eslint-disable-next-line @typescript-eslint/ban-types
     event: React.ChangeEvent<{}>,
     value: number | number[]
   ) => {
@@ -171,7 +174,9 @@ const SpeakerAudioPlayer = ({
                   </Tooltip>
                 </Grid>
                 {buttons?.map((b) => (
-                  <Grid item>{b}</Grid>
+                  <Grid item key={b?.toString()}>
+                    {b}
+                  </Grid>
                 ))}
               </>
             )}

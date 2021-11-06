@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import { FileField, FileInput } from "react-admin";
 import { useField } from "react-final-form";
 import AudioEdit from "./AudioPlayerField/AudioEdit";
-export const FileEdit = () => {
+export const FileEdit = (): JSX.Element => {
   const {
     input: { onChange, value },
   } = useField(`file`);
@@ -35,7 +35,11 @@ export const FileEdit = () => {
             <AudioEdit
               size="medium"
               buttons={[
-                <IconButton style={{ color: "#dc004e" }} onClick={handleDelete}>
+                <IconButton
+                  key="del"
+                  style={{ color: "#dc004e" }}
+                  onClick={handleDelete}
+                >
                   <DeleteIcon />
                 </IconButton>,
               ]}
@@ -77,7 +81,7 @@ export const FileEdit = () => {
   );
 };
 
-export const getFileExtensions = (mediaType: string) => {
+export const getFileExtensions = (mediaType: string): string[] => {
   switch (mediaType) {
     case "audio":
       return [`mp3`, `wav`];

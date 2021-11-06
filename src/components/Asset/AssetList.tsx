@@ -19,15 +19,23 @@ import {
 import { useProjects } from "../../providers/ProjectsContext";
 import AudioPlayerField from "../common/AudioPlayerField";
 
-export const AssetList = (props: ListProps) => {
+export const AssetList = (props: ListProps): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
     <List
       {...props}
       filter={{ project_id: selectedProject?.id }}
       filters={[
-        <DateTimeInput label="Created After" source="created__gte" />,
-        <DateTimeInput label="Created Before" source="created__lte" />,
+        <DateTimeInput
+          key="after"
+          label="Created After"
+          source="created__gte"
+        />,
+        <DateTimeInput
+          key="before"
+          label="Created Before"
+          source="created__lte"
+        />,
       ]}
       perPage={30}
     >

@@ -1,25 +1,21 @@
-import {
-  EditButton,
-  DeleteButton,
-  List,
-  Datagrid,
-  TextField,
-  BooleanField,
-  ListProps,
-  NumberField,
-  ReferenceField,
-  useRecordContext,
-  NumberInput,
-  TextInput,
-  SimpleForm,
-} from "react-admin";
-import { Grid, IconButton, Tooltip, Typography } from "@material-ui/core";
-import { useSpeakers } from "providers/SpeakersContext";
-import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
+import { IconButton, Tooltip } from "@material-ui/core";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
+import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
+import { useSpeakers } from "providers/SpeakersContext";
+import React from "react";
+import {
+  BooleanField,
+  Datagrid,
+  DeleteButton,
+  EditButton,
+  List,
+  ListProps,
+  TextField,
+  useRecordContext,
+} from "react-admin";
 import { SpeakerEdit } from ".";
 import SpeakerShapesControl from "./SpeakerShapesControl";
-const SpeakerList = (props: ListProps) => {
+const SpeakerList = (props: ListProps): JSX.Element => {
   return (
     <>
       <List

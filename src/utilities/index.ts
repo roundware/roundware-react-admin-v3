@@ -5,7 +5,9 @@ import {
   multiPolygon,
   Polygon,
   multiLineString,
-  polygon,  
+  polygon,
+  MultiLineString,
+  LineString,  
 } from "@turf/helpers";
 import { polygonToLine } from "@turf/polygon-to-line";
 import area from "@turf/area";
@@ -19,7 +21,7 @@ export const getGoogleMapsCenter = (
   const polygons = speakers.map((s) => multiPolygon(s.shape.coordinates));
 
   // create a feature collection
-  let polygonCollection = featureCollection(polygons);
+  const polygonCollection = featureCollection(polygons);
 
   // now get the center of it
 
@@ -37,17 +39,21 @@ export const polygonToGoogleMapPaths = (polygon: MultiPolygon | Polygon) => {
 };
 
 /** converts googleMap LatLng paths to GeoJSON paths (reverses the coordinates) */
-export const googleMapPathToGeoJSONPath = (paths: google.maps.LatLng[]) =>   paths.map((p) => [p.lng(), p.lat()]);
+export const googleMapPathToGeoJSONPath = (paths: google.maps.LatLng[]): number[][] =>   paths.map((p) => [p.lng(), p.lat()]);
 
 /** return calculated speaker.shape, boundary, attenuation_border objects */
-export const getSpeakerGeoJSONObjectsForPath = (path: number[][], attenuation_distance: number) => {
+export const getSpeakerGeoJSONObjectsForPath = (path: number[][], attenuation_distance: number): {
+    shape: MultiPolygon;
+    attenuation_border: LineString | MultiLineString;
+    boundary: MultiLineString;
+} => {
 
   
   /** form a closed ring first */
   path = [...path, path[0]];
 
   /** get multipolygon with single polygon forom the path */
-  let shape = multiPolygon([[path]]).geometry;
+  const shape = multiPolygon([[path]]).geometry;
   
   /** boundary */
   const boundary = multiLineString([path]).geometry;

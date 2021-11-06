@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from "react";
 import {
   FormControl,
-  Radio,
-  FormLabel,
-  RadioGroup,
   FormControlLabel,
+  FormLabel,
   Grid,
+  Radio,
+  RadioGroup,
 } from "@material-ui/core";
-import { ReferenceInput, NumberInput } from "react-admin";
 import useFieldValue from "hooks/useFieldValue";
-interface Props {}
+import React, { useState } from "react";
+import { NumberInput, ReferenceInput } from "react-admin";
 
-const EnvelopeIdSelector = (props: Props) => {
+const EnvelopeIdSelector = () => {
   const [envelope_ids, setEnvelope_ids] = useFieldValue(`envelope_ids`);
 
   const [mode, setMode] = useState<`manual` | `createNew`>(
@@ -21,6 +20,7 @@ const EnvelopeIdSelector = (props: Props) => {
       : `createNew`
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChangeMode = (e: any, value: "manual" | "createNew") => {
     // clear the previous envelope ids value
     if (value === "createNew") {
@@ -38,6 +38,7 @@ const EnvelopeIdSelector = (props: Props) => {
             aria-label="gender"
             name="gender1"
             value={mode}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             onChange={handleChangeMode}
           >

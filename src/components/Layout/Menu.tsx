@@ -1,25 +1,24 @@
-import * as React from "react";
-import { createElement } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core";
+import { AccountTree } from "@material-ui/icons";
+import DefaultIcon from "@material-ui/icons/ViewList";
+import * as React from "react";
 import {
   DashboardMenuItem,
+  getResources,
   Menu as RAMenu,
   MenuItemLink,
-  getResources,
   MenuProps,
   setSidebarVisibility,
 } from "react-admin";
-import DefaultIcon from "@material-ui/icons/ViewList";
-import LabelIcon from "@material-ui/icons/Label";
+import { useDispatch, useSelector } from "react-redux";
 import { useProjects } from "../../providers/ProjectsContext";
-import { AccountTree } from "@material-ui/icons";
 const useStyles = makeStyles((theme) => ({
   raMenu: {
     paddingTop: "30px",
   },
 }));
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const Menu = (props: MenuProps) => {
   const resources = useSelector(getResources);
   const classes = useStyles();
@@ -32,6 +31,7 @@ export const Menu = (props: MenuProps) => {
     <RAMenu {...props} className={classes.raMenu}>
       <div onMouseEnter={openMenu} onMouseLeave={closeMenu}>
         {selectedProject && <DashboardMenuItem />}
+        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
         {/* @ts-ignore */}
         <MenuItemLink
           key={"projects"}
@@ -50,6 +50,7 @@ export const Menu = (props: MenuProps) => {
             .filter((resource) => resource.name !== "projects")
             .sort((a, b) => (a.name > b.name ? 1 : -1))
             .map((resource) => (
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               //   @ts-ignore
               <MenuItemLink
                 key={resource.name}

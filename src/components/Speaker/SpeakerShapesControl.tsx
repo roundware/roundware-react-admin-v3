@@ -16,34 +16,36 @@ const containerStyle = {
   height: "60vh",
 };
 
-const center = {
-  lat: 34.0479,
-  lng: 100.6197,
-};
-interface Props {}
+// const center = {
+//   lat: 34.0479,
+//   lng: 100.6197,
+// };
+
 /**
  * shows / edit / create any shapes of type ISpeakerShape
  *
  */
-const SpeakerShapesControl = (props: Props) => {
+const SpeakerShapesControl = (): JSX.Element => {
   const { selectedSpeaker, speakers } = useSpeakers();
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY!,
     libraries: ["places", "drawing"],
   });
 
-  const [map, setMap] = React.useState<google.maps.Map | null>(null);
+  // const [map, setMap] = React.useState<google.maps.Map | null>(null);
 
   // on load set the center
   // as center of boundry box of all the polygons of speakers
   const onLoad = React.useCallback(
     (map: google.maps.Map) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       google.maps.Polygon.prototype.getBounds = function () {
-        let bounds = new google.maps.LatLngBounds();
+        const bounds = new google.maps.LatLngBounds();
         this.getPaths().forEach((p) => {
-          p.forEach((element: any) => bounds.extend(element));
+          p.forEach((element: unknown) => bounds.extend(element));
         });
         return bounds;
       };
@@ -97,7 +99,7 @@ const SpeakerShapesControl = (props: Props) => {
                 {/* all other polygons */}
                 {speakers
                   ?.filter((s) => s.shape)
-                  ?.map((s, index) => (
+                  ?.map((s) => (
                     <SpeakerPolygonGroup speaker={s} key={s.id} />
                   ))}
               </GoogleMap>
