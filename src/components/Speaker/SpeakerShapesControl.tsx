@@ -67,7 +67,7 @@ const SpeakerShapesControl = (): JSX.Element => {
   }, []);
 
   return (
-    <Card>
+    <Card variant="outlined">
       <CardContent>
         <Grid container direction="column" spacing={2}>
           <Grid item>
