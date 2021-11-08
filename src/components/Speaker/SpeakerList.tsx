@@ -1,8 +1,8 @@
+import React from "react";
 import { IconButton, Tooltip } from "@material-ui/core";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
 import { useSpeakers } from "providers/SpeakersContext";
-import React from "react";
 import {
   BooleanField,
   Datagrid,
@@ -27,11 +27,7 @@ const SpeakerList = (props: ListProps): JSX.Element => {
         }
         title="Speakers"
       >
-        <Datagrid
-          rowClick=""
-          expand={<SpeakerEdit />}
-          style={{ flexShrink: 1 }}
-        >
+        <Datagrid expand={<SpeakerEdit />} style={{ flexShrink: 1 }}>
           <SpeakerHighter />
 
           <TextField source="id" />

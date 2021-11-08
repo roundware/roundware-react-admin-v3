@@ -34,7 +34,7 @@ const SpeakerShapesControl = (): JSX.Element => {
     libraries: ["places", "drawing"],
   });
 
-  // const [map, setMap] = React.useState<google.maps.Map | null>(null);
+  const [, setMap] = React.useState<google.maps.Map | null>(null);
 
   // on load set the center
   // as center of boundry box of all the polygons of speakers
@@ -45,7 +45,7 @@ const SpeakerShapesControl = (): JSX.Element => {
       google.maps.Polygon.prototype.getBounds = function () {
         const bounds = new google.maps.LatLngBounds();
         this.getPaths().forEach((p) => {
-          p.forEach((element: unknown) => bounds.extend(element));
+          p.forEach((element: google.maps.LatLng) => bounds.extend(element));
         });
         return bounds;
       };
@@ -115,9 +115,9 @@ const SpeakerShapesControl = (): JSX.Element => {
 
 export default SpeakerShapesControl;
 
-const paths = [
-  { lat: 25.774, lng: -80.19 },
-  { lat: 18.466, lng: -66.118 },
-  { lat: 32.321, lng: -64.757 },
-  { lat: 25.774, lng: -80.19 },
-];
+// const paths = [
+//   { lat: 25.774, lng: -80.19 },
+//   { lat: 18.466, lng: -66.118 },
+//   { lat: 32.321, lng: -64.757 },
+//   { lat: 25.774, lng: -80.19 },
+// ];

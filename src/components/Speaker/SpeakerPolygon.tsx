@@ -5,7 +5,9 @@ import {
   Paper,
   Tooltip,
   Popover,
-  Typography,
+  Box,
+  TextField,
+  FormHelperText,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import HistoryIcon from "@material-ui/icons/History";
@@ -22,7 +24,7 @@ import { multiPolygon } from "@turf/helpers";
 import MapControl from "components/common/MapControl";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import { useSpeakers } from "providers/SpeakersContext";
-import React, { MouseEventHandler, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ISpeaker } from "types/speaker";
 import { polygonToGoogleMapPaths } from "utilities";
 interface Props {
@@ -37,8 +39,10 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
   const isSelected = selectedSpeaker == speaker.id;
   const map = useGoogleMap();
   const [shape, setShape] = useState(speaker.shape);
-  const [distance, setDistance] = useState(speaker.attenuation_distance);
-
+  const [distance, setDistance] = useState(
+    Number(speaker.attenuation_distance)
+  );
+  console.log(distance);
   const dataProvider = useRoundwareDataProvider();
 
   useEffect(() => {
@@ -149,7 +153,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
     );
     if (confirmation) {
       setSpeakers((s) => {
-        const sps = [...s!].filter((s) => s?.id != selectedSpeaker);
+        const sps = [...(s || [])].filter((s) => s?.id != selectedSpeaker);
         sps.push({
           ...s?.find((s) => s.id == selectedSpeaker),
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -247,7 +251,14 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
                     horizontal: "center",
                   }}
                 >
-                  <Typography>The content of the Popover.</Typography>
+                  <Box p={3}>
+                    <TextField
+                      type="number"
+                      value={distance}
+                      onChange={(e) => console.log(e.target.value)}
+                      helperText="Meters"
+                    />
+                  </Box>
                 </Popover>
               </Grid>
             </Grid>
