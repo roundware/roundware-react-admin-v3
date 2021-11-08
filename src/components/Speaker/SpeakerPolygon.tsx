@@ -7,7 +7,6 @@ import {
   Popover,
   Box,
   TextField,
-  FormHelperText,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import HistoryIcon from "@material-ui/icons/History";
@@ -26,7 +25,12 @@ import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import { useSpeakers } from "providers/SpeakersContext";
 import React, { useEffect, useMemo, useState } from "react";
 import { ISpeaker } from "types/speaker";
-import { polygonToGoogleMapPaths } from "utilities";
+import {
+  polygonToGoogleMapPaths,
+  getSpeakerGeoJSONObjectsForPath,
+  googleMapPathToGeoJSONPath,
+} from "utilities";
+import useDebounce from "hooks/useDebounce";
 interface Props {
   speaker: ISpeaker;
 }
@@ -42,7 +46,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
   const [distance, setDistance] = useState(
     Number(speaker.attenuation_distance)
   );
-  console.log(distance);
+
   const dataProvider = useRoundwareDataProvider();
 
   useEffect(() => {
@@ -79,13 +83,14 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
     zIndex: 2,
   };
 
+  const debouncedDistance = useDebounce(distance, 1000);
   // the inner border, should not be editable
   const attenuationBorderPath = useMemo(() => {
     const polygon = buffer(shape, -distance, {
       units: "meters",
     });
     return polygonToGoogleMapPaths(polygon.geometry);
-  }, [shape, distance]);
+  }, [shape, debouncedDistance]);
 
   const shapePath = useMemo(() => {
     return polygonToGoogleMapPaths(shape);
@@ -119,7 +124,11 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
         id: speaker.id,
         data: {
           ...speaker,
-          shape,
+          ...getSpeakerGeoJSONObjectsForPath(
+            googleMapPathToGeoJSONPath(shapePath),
+            distance
+          ),
+          attenuation_distance: distance,
         },
         previousData: {
           ...speaker,
@@ -253,9 +262,10 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
                 >
                   <Box p={3}>
                     <TextField
+                      label="Attenuation Distance"
                       type="number"
-                      value={distance}
-                      onChange={(e) => console.log(e.target.value)}
+                      defaultValue={distance}
+                      onChange={(e) => setDistance(Number(e.target.value))}
                       helperText="Meters"
                     />
                   </Box>
