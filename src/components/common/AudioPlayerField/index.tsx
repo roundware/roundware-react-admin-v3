@@ -5,7 +5,7 @@ import { WaveSurfer, WaveForm, Region } from "wavesurfer-react";
 // @ts-ignore
 import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions";
 import { useRecordContext } from "react-admin";
-import { IconButton, Grid, CircularProgress } from "@material-ui/core";
+import { IconButton, Grid, LinearProgress } from "@material-ui/core";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import PauseIcon from "@material-ui/icons/Pause";
 const plugins = [
@@ -28,6 +28,8 @@ const AudioPlayerField = ({
 }: PropTypes): JSX.Element | null => {
   const { file, ...record } = useRecordContext(props);
   const [loading, setLoading] = useState(true);
+
+  const [progress, setProgress] = useState(0);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const wavesurferRef = React.useRef<any>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -42,6 +44,10 @@ const AudioPlayerField = ({
 
       wavesurferRef.current.on("ready", () => {
         setLoading(false);
+      });
+
+      wavesurferRef.current.on("loading", (n: number) => {
+        setProgress(n);
       });
 
       // wavesurferRef.current.on("region-removed", (region) => {
@@ -66,7 +72,9 @@ const AudioPlayerField = ({
 
   if (!file) return null;
   return (
-    <div style={{ width: size === "small" ? "280px" : "360px" }}>
+    <div
+      style={{ width: size === "small" ? "280px" : "360px", minHeight: 160 }}
+    >
       <Grid container spacing={2} direction="column">
         <Grid item style={{ height: loading ? 0 : `initial` }}>
           <WaveSurfer plugins={plugins} onMount={handleMount}>
@@ -89,7 +97,11 @@ const AudioPlayerField = ({
           container
         >
           {loading ? (
-            <CircularProgress />
+            <LinearProgress
+              variant="determinate"
+              style={{ flexGrow: 1 }}
+              value={progress}
+            />
           ) : (
             <>
               <Grid item>

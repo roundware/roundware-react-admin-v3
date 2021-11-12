@@ -1,5 +1,5 @@
 import {
-  CircularProgress,
+  LinearProgress,
   Grid,
   IconButton,
   Slider,
@@ -52,13 +52,16 @@ const SpeakerAudioPlayer = ({
     },
   ];
 
-  const [minvolume, setMinVolume] = useFieldValue(`minvolume`);
-  const [maxvolume, setmaxVolume] = useFieldValue(`maxvolume`);
+  const [minvolume] = useFieldValue(`minvolume`);
+  const [maxvolume] = useFieldValue(`maxvolume`);
 
   const [loading, setLoading] = useState(true);
+
+  const [progress, setProgress] = useState(0);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const wavesurferRef = React.useRef<any>();
   const handleMount = React.useCallback(
-    (waveSurfer: any) => {
+    (waveSurfer: unknown) => {
       wavesurferRef.current = waveSurfer;
       if (wavesurferRef.current) {
         if (src) {
@@ -69,6 +72,10 @@ const SpeakerAudioPlayer = ({
 
         wavesurferRef.current.on("ready", () => {
           setLoading(false);
+        });
+
+        wavesurferRef.current.on("loading", (p: number) => {
+          setProgress(p);
         });
 
         // });
@@ -93,10 +100,9 @@ const SpeakerAudioPlayer = ({
 
   useEffect(() => {
     if (wavesurferRef && wavesurferRef.current && src) {
-      setLoading(true);
       wavesurferRef.current.load(src);
     }
-  }, [src]);
+  }, [src, wavesurferRef]);
 
   const [currentVolume, setCurrentVolume] = useState(maxvolume);
 
@@ -116,12 +122,17 @@ const SpeakerAudioPlayer = ({
     }
   };
 
-  console.log(src);
   if (!src) return null;
   return (
-    <div style={{ width: size === "small" ? "280px" : "100%" }}>
+    <div style={{ width: size === "small" ? "280px" : "100%", minHeight: 160 }}>
       <Grid container spacing={2} direction="column">
-        <Grid item style={{ height: loading ? 0 : `initial` }}>
+        <Grid
+          item
+          style={{
+            visibility: loading ? "hidden" : "visible",
+            height: loading ? 0 : "initial",
+          }}
+        >
           <WaveSurfer plugins={plugins} onMount={handleMount}>
             <WaveForm
               id={"waveform-" + id}
@@ -149,7 +160,14 @@ const SpeakerAudioPlayer = ({
             md={8}
           >
             {loading ? (
-              <CircularProgress />
+              <div>
+                <div>Loading Audio {progress} %</div>
+                <LinearProgress
+                  style={{ flexGrow: 1 }}
+                  variant="determinate"
+                  value={progress}
+                />
+              </div>
             ) : (
               <>
                 <Grid item>
@@ -209,4 +227,4 @@ const SpeakerAudioPlayer = ({
   );
 };
 
-export default SpeakerAudioPlayer;
+export default React.memo(SpeakerAudioPlayer);
