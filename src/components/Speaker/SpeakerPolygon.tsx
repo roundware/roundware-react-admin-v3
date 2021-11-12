@@ -85,10 +85,13 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
 
   const debouncedDistance = useDebounce(distance, 1000);
   // the inner border, should not be editable
-  const attenuationBorderPath = useMemo(() => {
+  const attenuationBorderPath: google.maps.LatLng[] | null = useMemo(() => {
     const polygon = buffer(shape, -distance, {
       units: "meters",
     });
+
+    /** just use previous shape as something goes wrong */
+    if (!polygon) return null;
     return polygonToGoogleMapPaths(polygon.geometry);
   }, [shape, debouncedDistance]);
 
@@ -210,11 +213,13 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
         options={shapePolygonOptions}
       />
 
-      <Polygon
-        paths={attenuationBorderPath}
-        options={attenuationBorderOptions}
-        visible={!dragging}
-      />
+      {attenuationBorderPath && (
+        <Polygon
+          paths={attenuationBorderPath}
+          options={attenuationBorderOptions}
+          visible={!dragging}
+        />
+      )}
 
       {isSelected && (
         <MapControl position={window.google.maps.ControlPosition.LEFT_CENTER}>
