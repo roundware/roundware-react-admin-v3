@@ -1,7 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AllowChildrenOnlyProps, useProjects } from "./ProjectsContext";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import { ISpeaker } from "types/speaker";
+import { useResourceContext } from "react-admin";
 
 export interface ISpeakerContext {
   selectedSpeaker: number | null;
@@ -13,11 +14,14 @@ export interface ISpeakerContext {
 export const SpeakerContext = React.createContext<ISpeakerContext>(undefined!);
 export const useSpeakers = () => React.useContext(SpeakerContext);
 
-export const SpeakersProvider = ({ children }: AllowChildrenOnlyProps) => {
+export const SpeakersProvider = ({
+  children,
+}: AllowChildrenOnlyProps): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
   const { selectedProject } = useProjects();
   const [selectedSpeaker, setSelectedSpeaker] = useState<number | null>(null);
   const [speakers, setSpeakers] = useState<ISpeaker[]>();
+
   useEffect(() => {
     fetchData();
   }, [selectedProject?.id]);
