@@ -1,21 +1,27 @@
-import React, { useState } from "react";
-import { FileInput, TextInput, FileField } from "react-admin";
 import {
+  Box,
   Card,
   CardContent,
   Grid,
-  Tabs,
+  Slider,
   Tab,
+  Tabs,
   Typography,
-  Box,
 } from "@material-ui/core";
-import CustomSlider from "components/common/CustomSlider";
 import VolumeUpIcon from "@material-ui/icons/VolumeUp";
 import useFieldValue from "hooks/useFieldValue";
+import React, { useState } from "react";
+import { FileField, FileInput, TextInput } from "react-admin";
 import SpeakerAudioPlayer from "./SpeakerAudioPlayer";
 
 const SpeakerAudioControls = (): JSX.Element => {
-  const [sourceMode, setSourceMode] = useState<`UPLOAD` | `URI`>(`UPLOAD`);
+  const [file] = useFieldValue(`file`);
+
+  const [uri] = useFieldValue(`uri`);
+
+  const [sourceMode, setSourceMode] = useState<`UPLOAD` | `URI`>(
+    uri ? "URI" : `UPLOAD`
+  );
   const handleChange = (
     // eslint-disable-next-line @typescript-eslint/ban-types
     event: React.ChangeEvent<{}>,
@@ -24,16 +30,22 @@ const SpeakerAudioControls = (): JSX.Element => {
     setSourceMode(newValue);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [file, setFile] = useFieldValue(`file`);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [uri, seturi] = useFieldValue(`uri`);
+  const [minVolume, setMinVolume] = useFieldValue(`minvolume`);
+  const [maxVolume, setMaxVolume] = useFieldValue(`maxvolume`);
+  const [range, setRange] = useState([minVolume || 0.1, maxVolume || 0.5]);
+
+  const handleRangeChange = (event: unknown, newValue: number | number[]) => {
+    if (!Array.isArray(newValue)) return;
+    setRange(newValue);
+    setMinVolume(newValue[0]);
+    setMaxVolume(newValue[1]);
+  };
 
   return (
     <Card variant="outlined">
       <CardContent>
         <Grid container direction="row">
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={12}>
             <Tabs value={sourceMode} onChange={handleChange}>
               <Tab label={`UPLOAD`} value={"UPLOAD"} />
               <Tab label={`URI`} value={"URI"} />
@@ -55,31 +67,31 @@ const SpeakerAudioControls = (): JSX.Element => {
               />
             </Box>
           </Grid>
+          <Grid item xs={12}>
+            Volume Range
+          </Grid>
           <Grid
             xs={12}
-            md={6}
+            md={12}
             item
             container
             direction="row"
-            spacing={2}
-            justifyContent="space-around"
+            spacing={3}
+            wrap="nowrap"
           >
             <Grid item>
-              <CustomSlider
-                defaultValue={10}
-                label="Min Volume"
-                field="minvolume"
-                vertical
-                icon={<VolumeUpIcon />}
-              />
+              <VolumeUpIcon />
             </Grid>
-            <Grid item>
-              <CustomSlider
-                defaultValue={50}
-                label="Max Volume"
-                field="maxvolume"
-                vertical
-                icon={<VolumeUpIcon />}
+            <Grid item style={{ flexGrow: 1 }}>
+              <Slider
+                value={range}
+                defaultValue={[0.1, 0.5]}
+                onChange={handleRangeChange}
+                valueLabelDisplay="auto"
+                step={0.01}
+                min={0}
+                max={1}
+                aria-labelledby="range-slider"
               />
             </Grid>
           </Grid>
