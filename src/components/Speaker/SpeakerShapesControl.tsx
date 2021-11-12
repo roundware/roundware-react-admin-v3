@@ -62,18 +62,18 @@ const SpeakerShapesControl = (): JSX.Element => {
     [speakers]
   );
 
-  const onUnmount = React.useCallback(function callback(map) {
+  const onUnmount = React.useCallback(function callback() {
     setMap(null);
   }, []);
 
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" style={{ margin: 16 }}>
       <CardContent>
         <Grid container direction="column" spacing={2}>
           <Grid item>
             <Typography variant="h5">Shapes</Typography>
             <Typography
-              variant="h6"
+              variant="body1"
               style={{ fontWeight: selectedSpeaker ? "bold" : "normal" }}
             >
               {selectedSpeaker ? (
