@@ -13,12 +13,30 @@ import {
   Record,
 } from "react-admin";
 import { useProjects } from "providers/ProjectsContext";
+import { useSpeakers } from "providers/SpeakersContext";
 import SpeakerAudioControls from "./SpeakerAudioControls";
 
-export const SpeakerEdit = (props: EditProps) => {
+export const SpeakerEdit = (props: EditProps): JSX.Element => {
   const { selectedProject } = useProjects();
+  const { fetchData } = useSpeakers();
+
+  const transform = (data: Record) => {
+    data.project = selectedProject?.id;
+    if (typeof data?.file?.src == "string") {
+      data.file = data.file.rawFile;
+      delete data.uri;
+      delete data.backupuri;
+    } else delete data?.file;
+    return data;
+  };
+
   return (
-    <Edit {...props}>
+    <Edit
+      {...props}
+      mutationMode="optimistic"
+      onSuccess={fetchData}
+      transform={transform}
+    >
       <SimpleForm>
         <TextInput source="id" fullWidth />
         <BooleanInput source="activeyn" fullWidth />
@@ -31,7 +49,7 @@ export const SpeakerEdit = (props: EditProps) => {
 
         <ReferenceInput
           source="project_id"
-          defaultValue={selectedProject!.id}
+          defaultValue={selectedProject?.id}
           reference="projects"
         >
           <SelectInput optionText="name" fullWidth />
@@ -41,10 +59,11 @@ export const SpeakerEdit = (props: EditProps) => {
   );
 };
 
-export const SpeakerCreate = (props: CreateProps) => {
+export const SpeakerCreate = (props: CreateProps): JSX.Element => {
   const { selectedProject } = useProjects();
+  const { fetchData } = useSpeakers();
   const transform = (data: Record) => {
-    data.project = selectedProject!.id;
+    data.project = selectedProject?.id;
     if (typeof data?.file?.src == "string") {
       data.file = data.file.rawFile;
       delete data.uri;
@@ -53,7 +72,7 @@ export const SpeakerCreate = (props: CreateProps) => {
     return data;
   };
   return (
-    <Create {...props} transform={transform}>
+    <Create {...props} transform={transform} onSuccess={fetchData}>
       <SimpleForm>
         <BooleanInput source="activeyn" fullWidth defaultChecked />
         <TextInput source="code" fullWidth required />
