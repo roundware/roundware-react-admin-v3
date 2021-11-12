@@ -25,7 +25,19 @@ const SpeakerList = (props: ListProps): JSX.Element => {
       style={{ marginTop: 28 }}
       component={Paper}
     >
-      <Grid item xs={12} md={6} sm={6} style={{ flexShrink: 1, flexGrow: 0 }}>
+      <Grid
+        item
+        xs={12}
+        md={6}
+        style={{
+          flexShrink: 1,
+          flexGrow: 0,
+          overflowY: "scroll",
+          overflowX: "visible",
+          width: "100%",
+          height: "80vh",
+        }}
+      >
         <List
           {...props}
           title="Speakers"
@@ -52,7 +64,7 @@ const SpeakerList = (props: ListProps): JSX.Element => {
           </Datagrid>
         </List>
       </Grid>
-      <Grid xs={12} style={{ flexShrink: 1, flexGrow: 1 }}>
+      <Grid xs={12} md={6} style={{ flexShrink: 1, flexGrow: 1 }}>
         <SpeakerShapesControl />
       </Grid>
     </Grid>
