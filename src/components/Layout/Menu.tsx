@@ -12,6 +12,7 @@ import {
 } from "react-admin";
 import { useDispatch, useSelector } from "react-redux";
 import { useProjects } from "../../providers/ProjectsContext";
+import BuildIcon from "@material-ui/icons/Build";
 const useStyles = makeStyles((theme) => ({
   raMenu: {
     paddingTop: "30px",
@@ -44,6 +45,14 @@ export const Menu = (props: MenuProps) => {
           }}
           primaryText={selectedProject ? `Project` : `All Projects`}
           leftIcon={<AccountTree />}
+        />
+        <MenuItemLink
+          key={"build-iui"}
+          to={{
+            pathname: `/buildui`,
+          }}
+          primaryText={"Build UI"}
+          leftIcon={<BuildIcon />}
         />
         {selectedProject &&
           resources
