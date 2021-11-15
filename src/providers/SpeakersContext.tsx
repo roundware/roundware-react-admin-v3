@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { AllowChildrenOnlyProps, useProjects } from "./ProjectsContext";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import React, { useEffect, useState } from "react";
 import { ISpeaker } from "types/speaker";
-import { useResourceContext } from "react-admin";
+import { AllowChildrenOnlyProps, useProjects } from "./ProjectsContext";
 
 export interface ISpeakerContext {
   selectedSpeaker: number | null;
@@ -11,8 +10,10 @@ export interface ISpeakerContext {
   speakers?: ISpeaker[];
   fetchData: () => void;
 }
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 export const SpeakerContext = React.createContext<ISpeakerContext>(undefined!);
-export const useSpeakers = () => React.useContext(SpeakerContext);
+export const useSpeakers = (): ISpeakerContext =>
+  React.useContext(SpeakerContext);
 
 export const SpeakersProvider = ({
   children,
@@ -26,8 +27,9 @@ export const SpeakersProvider = ({
     fetchData();
   }, [selectedProject?.id]);
 
-  const fetchData = () => {
-    dataProvider
+  const fetchData = async () => {
+    console.log(`fetching speakers`);
+    await dataProvider
       .getList(`speakers`, {
         pagination: {
           perPage: 0,

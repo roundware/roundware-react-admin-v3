@@ -43,19 +43,18 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
   const isSelected = selectedSpeaker == speaker.id;
   const map = useGoogleMap();
   const [shape, setShape] = useState(speaker.shape);
+
   const [distance, setDistance] = useState(
     Number(speaker.attenuation_distance)
   );
 
-  const dataProvider = useRoundwareDataProvider();
-
   useEffect(() => {
-    if (isSelected) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      map?.fitBounds(polygon?.getBounds());
-    }
-  }, [isSelected]);
+    if (speaker.attenuation_distance)
+      setDistance(Number(speaker.attenuation_distance));
+    if (speaker.shape) setShape(speaker.shape);
+  }, [speaker]);
+
+  const dataProvider = useRoundwareDataProvider();
 
   // the editable shape
   const shapePolygonOptions: PolygonProps[`options`] = {
@@ -93,11 +92,11 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
     /** just use previous shape as something goes wrong */
     if (!polygon) return null;
     return polygonToGoogleMapPaths(polygon.geometry);
-  }, [shape, debouncedDistance]);
+  }, [shape, debouncedDistance, speaker]);
 
   const shapePath = useMemo(() => {
     return polygonToGoogleMapPaths(shape);
-  }, [shape]);
+  }, [shape, speaker]);
 
   const [dragging, setDragging] = useState(false);
 
@@ -140,6 +139,25 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
       .then(() => fetchData())
       .finally(() => setSaving(false));
   };
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (
+      isSelected &&
+      polygon &&
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      typeof polygon?.getBounds == "function" &&
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      polygon.getBounds()
+    ) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      map?.fitBounds(polygon.getBounds());
+    }
+  }, [isSelected, polygon, speaker]);
 
   const polylineOptions = {
     strokeColor: "#000000",

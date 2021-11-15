@@ -11,6 +11,8 @@ import {
   SimpleForm,
   TextInput,
   Record,
+  useRedirect,
+  useRefresh,
 } from "react-admin";
 import { useProjects } from "providers/ProjectsContext";
 import { useSpeakers } from "providers/SpeakersContext";
@@ -27,14 +29,23 @@ export const SpeakerEdit = (props: EditProps): JSX.Element => {
       delete data.uri;
       delete data.backupuri;
     } else delete data?.file;
+    delete data.shape;
+    delete data.attenuation_border;
+    delete data.boundary;
     return data;
   };
 
+  const redirect = useRedirect();
+  const refresh = useRefresh();
   return (
     <Edit
       {...props}
-      mutationMode="optimistic"
-      onSuccess={fetchData}
+      mutationMode="pessimistic"
+      onSuccess={() => {
+        fetchData();
+        refresh();
+        redirect("list", `/speakers`);
+      }}
       transform={transform}
     >
       <SimpleForm>
@@ -69,10 +80,24 @@ export const SpeakerCreate = (props: CreateProps): JSX.Element => {
       delete data.uri;
       delete data.backupuri;
     } else delete data?.file;
+    if (!data.minvolume) data.minvolume = 0.1;
+    if (!data.maxvolume) data.maxvolume = 0.5;
     return data;
   };
+
+  const redirect = useRedirect();
+  const refresh = useRefresh();
   return (
-    <Create {...props} transform={transform} onSuccess={fetchData}>
+    <Create
+      {...props}
+      transform={transform}
+      // mutationMode="pessimistic"
+      onSuccess={() => {
+        fetchData();
+        refresh();
+        redirect(`list`, `/speakers`);
+      }}
+    >
       <SimpleForm>
         <BooleanInput source="activeyn" fullWidth defaultChecked />
         <TextInput source="code" fullWidth required />
