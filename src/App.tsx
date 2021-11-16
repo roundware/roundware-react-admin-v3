@@ -152,8 +152,8 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
   ),
   tag_categories: (
     <Resource
-      name="tag_categories"
-      key="tag_categories"
+      name="tagcategories"
+      key="tagcategories"
       options={{
         label: "Tag Categories",
       }}
