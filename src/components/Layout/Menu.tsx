@@ -46,14 +46,16 @@ export const Menu = (props: MenuProps) => {
           primaryText={selectedProject ? `Project` : `All Projects`}
           leftIcon={<AccountTree />}
         />
-        <MenuItemLink
-          key={"build-iui"}
-          to={{
-            pathname: `/buildui`,
-          }}
-          primaryText={"Build UI"}
-          leftIcon={<BuildIcon />}
-        />
+        {selectedProject && (
+          <MenuItemLink
+            key={"build-iui"}
+            to={{
+              pathname: `/buildui`,
+            }}
+            primaryText={"Build UI"}
+            leftIcon={<BuildIcon />}
+          />
+        )}
         {selectedProject &&
           resources
             .filter((resource) => resource.name !== "projects")
