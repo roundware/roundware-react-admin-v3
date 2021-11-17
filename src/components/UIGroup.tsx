@@ -22,10 +22,8 @@ import {
   ReferenceInput,
   SelectInput,
   ArrayInput,
-  SelectArrayInput,
-  ReferenceArrayInput,
+  useEditController,
   SimpleFormIterator,
-  AutocompleteArrayInput,
 } from "react-admin";
 
 export const UiGroupList = (props: ListProps): JSX.Element => {
@@ -49,7 +47,7 @@ export const UiGroupList = (props: ListProps): JSX.Element => {
         ui_mode: "speak",
       }}
     >
-      <Datagrid>
+      <Datagrid expand={<UiGroupEdit />}>
         <TextField source="id" />
         <TextField source="name" />
         <ReferenceField
@@ -75,6 +73,7 @@ export const UiGroupList = (props: ListProps): JSX.Element => {
 };
 
 export const UiGroupEdit = (props: EditProps): JSX.Element => {
+  const { record } = useEditController(props);
   return (
     <Edit {...props}>
       <SimpleForm>
@@ -115,7 +114,15 @@ export const UiGroupEdit = (props: EditProps): JSX.Element => {
           <SimpleFormIterator>
             <BooleanInput label="Active" source="active" />
             <BooleanInput label="Default" source="default" />
-            <ReferenceInput label="Tag" source="tag_id" reference="tags">
+
+            <ReferenceInput
+              label="Tag"
+              source="tag_id"
+              reference="tags"
+              filter={{
+                tag_category_id: record?.tag_category_id,
+              }}
+            >
               <SelectInput optionText="value" />
             </ReferenceInput>
           </SimpleFormIterator>
