@@ -10,7 +10,6 @@ import ProjectCreate from "./components/Project/ProjectCreate";
 import ProjectEdit from "./components/Project/ProjectEdit";
 import ProjectList from "./components/Project/ProjectList";
 import { useProjects } from "./providers/ProjectsContext";
-import BuildUI from "components/BuildUi";
 import adminTheme from "./styles";
 import {
   WebAsset,
@@ -39,7 +38,7 @@ import { SessionCreate, SessionEdit, SessionList } from "./components/Session";
 import { SpeakerCreate, SpeakerEdit } from "components/Speaker";
 import SpeakerList from "components/Speaker/SpeakerList";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import { Route } from "react-router-dom";
+import { UiGroupCreate, UiGroupEdit, UiGroupList } from "components/UIGroup";
 
 const authProvider = tokenAuthProvider({
   obtainAuthTokenUrl: `${process.env.REACT_APP_SERVER_URL}/api/2/login/`,
@@ -55,6 +54,17 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
       edit={AssetEdit}
       options={{ label: "Assets" }}
       icon={WebAsset}
+    />
+  ),
+  uigroups: (
+    <Resource
+      name="uigroups"
+      key="uigroups"
+      list={UiGroupList}
+      edit={UiGroupEdit}
+      create={UiGroupCreate}
+      icon={Build}
+      options={{ label: "Build UI" }}
     />
   ),
   audiotracks: (
@@ -116,17 +126,6 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
       edit={SessionEdit}
       create={SessionCreate}
       icon={AccessTime}
-    />
-  ),
-
-  uigroups: (
-    <Resource
-      name="uigroups"
-      key="uigroups"
-      list={ListGuesser}
-      edit={EditGuesser}
-      icon={Build}
-      options={{ label: "UI Groups" }}
     />
   ),
 
@@ -218,9 +217,6 @@ function App(): JSX.Element {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       dashboard={selectedProject && Dashboard}
-      customRoutes={[
-        <Route key="buildui" exact path="/buildui" component={BuildUI} />,
-      ]}
       // eslint-disable-next-line react/no-children-prop
       children={[
         <Resource
