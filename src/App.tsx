@@ -10,6 +10,7 @@ import ProjectCreate from "./components/Project/ProjectCreate";
 import ProjectEdit from "./components/Project/ProjectEdit";
 import ProjectList from "./components/Project/ProjectList";
 import { useProjects } from "./providers/ProjectsContext";
+import { Route } from "react-router-dom";
 import adminTheme from "./styles";
 import {
   WebAsset,
@@ -39,7 +40,7 @@ import { SpeakerCreate, SpeakerEdit } from "components/Speaker";
 import SpeakerList from "components/Speaker/SpeakerList";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import { UiGroupCreate, UiGroupEdit, UiGroupList } from "components/UIGroup";
-
+import BuildUi from "components/BuildUi";
 const authProvider = tokenAuthProvider({
   obtainAuthTokenUrl: `${process.env.REACT_APP_SERVER_URL}/api/2/login/`,
 });
@@ -214,6 +215,9 @@ function App(): JSX.Element {
       // @ts-ignore
       dataProvider={dataProvider}
       authProvider={authProvider}
+      customRoutes={[
+        <Route component={BuildUi} key="buildui" path={`/buildui`} />,
+      ]}
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       dashboard={selectedProject && Dashboard}
