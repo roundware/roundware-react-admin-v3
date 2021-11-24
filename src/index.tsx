@@ -7,13 +7,16 @@ import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import { RoundwareDataProviderContextProvider } from "providers/DataProviderContext";
 import { SpeakersProvider } from "providers/SpeakersContext";
+import { BuildUIContextProvider } from "providers/BuildUIContext";
 ReactDOM.render(
   <React.StrictMode>
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <RoundwareDataProviderContextProvider>
         <ProjectsProvider>
           <SpeakersProvider>
-            <App />
+            <BuildUIContextProvider>
+              <App />
+            </BuildUIContextProvider>
           </SpeakersProvider>
         </ProjectsProvider>
       </RoundwareDataProviderContextProvider>
