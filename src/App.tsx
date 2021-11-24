@@ -39,8 +39,9 @@ import { SessionCreate, SessionEdit, SessionList } from "./components/Session";
 import { SpeakerCreate, SpeakerEdit } from "components/Speaker";
 import SpeakerList from "components/Speaker/SpeakerList";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import { UiGroupCreate, UiGroupEdit, UiGroupList } from "components/UIGroup";
-import BuildUi from "components/BuildUi";
+import { UiGroupCreate, UiGroupEdit } from "components/UIGroup/index";
+import { UiGroupList } from "components/UIGroup/UIGroupsList";
+
 const authProvider = tokenAuthProvider({
   obtainAuthTokenUrl: `${process.env.REACT_APP_SERVER_URL}/api/2/login/`,
 });
@@ -215,9 +216,9 @@ function App(): JSX.Element {
       // @ts-ignore
       dataProvider={dataProvider}
       authProvider={authProvider}
-      customRoutes={[
-        <Route component={BuildUi} key="buildui" path={`/buildui`} />,
-      ]}
+      // customRoutes={[
+      //   <Route component={BuildUi} key="buildui" path={`/buildui`} />,
+      // ]}
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       dashboard={selectedProject && Dashboard}
