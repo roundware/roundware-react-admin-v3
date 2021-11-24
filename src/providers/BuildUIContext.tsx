@@ -11,6 +11,7 @@ export interface IBuildUIContext {
 }
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 export const BuildUIContext = React.createContext<IBuildUIContext>(undefined!);
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const useBuildUI = () => React.useContext(BuildUIContext);
 
 export const BuildUIContextProvider = ({
