@@ -32,6 +32,7 @@ import {
   DatagridHeaderProps,
   UpdateResult,
   Record,
+  useNotify,
 } from "react-admin";
 import UIGroupListActions from "./UIGroupListActions";
 import TableCell from "@material-ui/core/TableCell";
@@ -160,6 +161,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const DraggableDatagridBody = (props: DatagridBodyProps) => {
   const [loading, setLoading] = useState(false);
   const classes = useStyles();
+  const notify = useNotify();
   const { refetch, data } = useListContext();
   const dataProvider = useRoundwareDataProvider();
   const allGroups = useMemo(
@@ -169,16 +171,23 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
   const handleDragEnd: OnDragEndResponder = (result, provided) => {
     const { source, destination, draggableId } = result;
 
+    if (!destination) return;
     // find the group which is moved
     const movedGroup = allGroups.find((g) => g.id == draggableId);
     if (!movedGroup) return;
 
+    const res = confirm(
+      `Changing order or UI Groups will partially reset UI Items because they can be nested. Are you sure you want to do this?`
+    );
+    if (!res) return;
     // destination.index is the new index for movedGroup
 
     // detemine direction:
     // if positive then moved downwards and negative upwards
     const movedDirection =
-      destination!.index - source.index > 0 ? `up` : `down`;
+      destination!.index - source.index < 0 ? `up` : `down`;
+
+    console.log(movedDirection);
 
     // promises of update requests
     const promises: Promise<UpdateResult<Record>>[] = [];
@@ -187,9 +196,17 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
     allGroups.forEach((g) => {
       let newIndex: number | null = null;
       if (g.id == movedGroup.id) return;
-      if (movedDirection == "up" && g.index <= destination!.index) {
+      if (
+        movedDirection == "up" &&
+        g.index >= destination!.index &&
+        g.index <= source!.index
+      ) {
         newIndex = g.index + 1;
-      } else if (movedDirection == "down" && g.index >= destination!.index) {
+      } else if (
+        movedDirection == "down" &&
+        g.index <= destination!.index &&
+        g.index >= source.index
+      ) {
         newIndex = g.index - 1;
       }
       if (typeof newIndex == "number") {
@@ -218,7 +235,10 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
     // resolve all prmises
     setLoading(true);
     Promise.all(promises)
-      .then(() => refetch())
+      .then(() => {
+        refetch();
+        notify(`Changed UI Groups Order!`, `success`);
+      })
       .finally(() => setLoading(false));
   };
 
@@ -267,13 +287,9 @@ const DraggableDatagridRow = ({
       index={record?.index!}
     >
       {(provided) => (
-        <TableRow
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
+        <TableRow ref={provided.innerRef} {...provided.draggableProps}>
           {/* first column: selection checkbox */}
-          <TableCell>
+          <TableCell {...provided.dragHandleProps}>
             <ReorderIcon />
           </TableCell>
           {/* data columns based on children */}
