@@ -1,5 +1,6 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
+import { Grid, DialogContent, Dialog } from "@material-ui/core";
+
 import {
   ArrayInput,
   BooleanInput,
@@ -29,9 +30,7 @@ export const UiGroupEdit = (props: EditProps): JSX.Element => {
       }}
     >
       <SimpleForm>
-        <Grid container style={{ width: "100%" }} spacing={2}>
-          <Grid item xs={12} md={6}>
-            {/* <ArrayInput label="UI Items" source="ui_items">
+        {/* <ArrayInput label="UI Items" source="ui_items">
               <SimpleFormIterator>
                 <BooleanInput label="Active" source="active" />
                 <BooleanInput label="Default" source="default" />
@@ -48,46 +47,43 @@ export const UiGroupEdit = (props: EditProps): JSX.Element => {
                 </ReferenceInput>
               </SimpleFormIterator>
             </ArrayInput> */}
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextInput disabled fullWidth source="id" required />
-            <NumberInput source="index" fullWidth required />
 
-            <ReferenceInput
-              source="tag_category_id"
-              reference="tagcategories"
-              label="Select Tag Category"
-            >
-              <SelectInput optionText="name" fullWidth />
-            </ReferenceInput>
-            <TextInput source="name" fullWidth required />
-            <TranslatableInputs locales={["en"]}>
-              <TextInput source="header_text_loc" fullWidth />
-            </TranslatableInputs>
-            <RadioButtonGroupInput
-              source="ui_mode"
-              key="ui-mode-filter"
-              alwaysOn
-              choices={[
-                { id: "listen", name: "Listen" },
-                { id: "speak", name: "Speak" },
-                { id: "browse", name: "Browse" },
-              ]}
-            />
-            <RadioButtonGroupInput
-              source="select"
-              fullWidth
-              defaultValue="single"
-              choices={[
-                { id: "single", name: "Single" },
-                { id: "multi", name: "Multiple" },
-                { id: "min_one", name: "Multiple Atleast One" },
-              ]}
-            />
+        <TextInput disabled fullWidth source="id" required />
+        <NumberInput source="index" fullWidth required />
 
-            <BooleanInput source="active" />
-          </Grid>
-        </Grid>
+        <ReferenceInput
+          source="tag_category_id"
+          reference="tagcategories"
+          label="Select Tag Category"
+        >
+          <SelectInput optionText="name" fullWidth />
+        </ReferenceInput>
+        <TextInput source="name" fullWidth required />
+        <TranslatableInputs locales={["en"]}>
+          <TextInput source="header_text_loc" fullWidth />
+        </TranslatableInputs>
+        <RadioButtonGroupInput
+          source="ui_mode"
+          key="ui-mode-filter"
+          alwaysOn
+          choices={[
+            { id: "listen", name: "Listen" },
+            { id: "speak", name: "Speak" },
+            { id: "browse", name: "Browse" },
+          ]}
+        />
+        <RadioButtonGroupInput
+          source="select"
+          fullWidth
+          defaultValue="single"
+          choices={[
+            { id: "single", name: "Single" },
+            { id: "multi", name: "Multiple" },
+            { id: "min_one", name: "Multiple Atleast One" },
+          ]}
+        />
+
+        <BooleanInput source="active" />
       </SimpleForm>
     </Edit>
   );
