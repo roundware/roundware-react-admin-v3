@@ -1,98 +1,194 @@
-import React, { useState, useEffect } from "react";
-import TreeView from "@material-ui/lab/TreeView";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import TreeItem from "@material-ui/lab/TreeItem";
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import React, { useState, useEffect, useCallback } from "react";
 import { CircularProgress } from "@material-ui/core";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import DragHandleSharpIcon from "@material-ui/icons/DragHandleSharp";
+import TreeItem from "@material-ui/lab/TreeItem";
+import TreeView from "@material-ui/lab/TreeView";
 import { useBuildUI } from "providers/BuildUIContext";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
-
-interface UiItemNode {
-  id: number;
-  displayText: string;
-  index: number | null;
-  parent_id: number | null;
-  children?: UiItemNode[];
-}
-
-function list_to_tree(list: UiItemNode[]) {
-  // eslint-disable-next-line prefer-const
-  let map: {
-    [index: number]: number;
-  } = {};
-  let node: UiItemNode, i: number;
-
-  const roots: UiItemNode[] = [];
-  for (i = 0; i < list.length; i += 1) {
-    map[list[i].id] = i; // initialize the map
-    list[i].children = []; // initialize the children
-  }
-
-  for (i = 0; i < list.length; i += 1) {
-    node = list[i];
-    if (node.parent_id !== null) {
-      // if you have dangling branches check that map[node.parentId] exists
-      list[map[node?.parent_id]]?.children?.push(node);
-    } else {
-      roots.push(node);
-    }
-  }
-  return roots;
-}
-
+import { UiItemNode } from "types/uiGroups";
+import {
+  Grid,
+  Box,
+  ButtonGroup,
+  Button,
+  Typography,
+  Divider,
+  Card,
+  Paper,
+} from "@material-ui/core";
+import {
+  Draggable,
+  Droppable,
+  DragDropContext,
+  OnDragEndResponder,
+  OnDragStartResponder,
+} from "react-beautiful-dnd";
 const UIItemsTreeView = (): JSX.Element => {
-  const { uiGroups } = useBuildUI();
-  const dataProvider = useRoundwareDataProvider();
+  const { uiItemsTree, loading, uiGroups, uiItemsList } = useBuildUI();
 
-  const [uiItemsTree, setUiItemsTree] = useState<UiItemNode[]>([]);
-  const [uiItemsList, setUiItemsList] = useState<UiItemNode[]>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    setLoading(true);
-    const uiItems: UiItemNode[] = [];
-    const promises: Promise<void>[] = [];
-    uiGroups.forEach((g) => {
-      g.ui_items.forEach((item) => {
-        const prom = dataProvider
-          .getOne(`tags`, {
-            id: item.tag_id,
-          })
-          .then((res) => {
-            uiItems.push({
-              id: item.id,
-              parent_id: item.parent_id,
-              index: item.index,
-              displayText: res.data.value,
-            });
-          });
-        promises.push(prom);
-      });
-    });
-    Promise.all(promises).then(() => {
-      setUiItemsList(uiItems);
-      setUiItemsTree(list_to_tree(uiItems));
-      setLoading(false);
-    });
-  }, [uiGroups]);
+  const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
-  const renderTreeItems = (items: UiItemNode[]) => {
-    return items
-      .sort((a, b) => (a > b ? -1 : 1))
-      .map((i) => (
-        <TreeItem key={i.id} nodeId={i.id?.toString()} label={i.displayText}>
-          {Array.isArray(i.children) && renderTreeItems(i.children)}
-        </TreeItem>
-      ));
+  const collapseItem = (id: number) => {
+    setExpandedItems((prev) => {
+      return [...prev].filter((pi) => pi !== id.toString());
+    });
+  };
+  const expandItem = (id: number) => {
+    setExpandedItems((prev) => {
+      return [...prev, id.toString()];
+    });
+  };
+
+  const renderTreeItems = useCallback((items: UiItemNode[]) => {
+    if (!items.length) return null;
+    const droppableId =
+      items?.[0]?.ui_group_id?.toString() +
+      "-" +
+      items?.[0]?.parent_id?.toString();
+    return (
+      <DragDropContext onDragEnd={handleDragEnd} onDragStart={hanldeDragStart}>
+        <Droppable droppableId={droppableId}>
+          {(provided, snapshot) => {
+            return (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {items
+                  .sort((a, b) => (a!.index! > b!.index! ? 1 : -1))
+                  .map((i) => (
+                    <Draggable
+                      key={i.id}
+                      draggableId={i.id.toString()}
+                      index={i.index!}
+                    >
+                      {(provided, snapshot) => (
+                        <TreeItem
+                          {...provided.draggableProps}
+                          ref={provided.innerRef}
+                          nodeId={i.id?.toString()}
+                          label={
+                            <Box>
+                              <Grid container direction="row" wrap="nowrap">
+                                <Grid item {...provided.dragHandleProps}>
+                                  <DragHandleSharpIcon />
+                                </Grid>
+                                <Grid item>
+                                  <Typography>
+                                    (
+                                    {uiGroups.findIndex(
+                                      (g) => g.id == i.ui_group_id
+                                    ) +
+                                      1 +
+                                      "." +
+                                      i.index}
+                                    ) {i.displayText}
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            </Box>
+                          }
+                          collapseIcon={
+                            <ExpandMoreIcon
+                              onClick={() => collapseItem(i.id)}
+                            />
+                          }
+                          expandIcon={
+                            <ChevronRightIcon
+                              onClick={() => expandItem(i.id)}
+                            />
+                          }
+                        >
+                          {Array.isArray(i.children) &&
+                            renderTreeItems(i.children)}
+                        </TreeItem>
+                      )}
+                    </Draggable>
+                  ))}
+                {provided.placeholder}
+              </div>
+            );
+          }}
+        </Droppable>
+      </DragDropContext>
+    );
+  }, []);
+
+  const [selectedUiGroup, setSelectedUiGroup] = useState<number | null>(
+    uiGroups[uiGroups.length - 1]?.id
+  );
+
+  const selectUiGroupId = (id: number) => {
+    setSelectedUiGroup(id);
+    const newExpanded = uiItemsList
+      ?.filter((i) => {
+        const index = uiGroups.findIndex((g) => g.id == i.ui_group_id);
+        const selectedsIndex = uiGroups.findIndex((g) => g.id == id);
+        if (selectedsIndex > index) return true;
+        return false;
+      })
+      ?.map((i) => i?.id?.toString());
+    setExpandedItems(newExpanded);
+  };
+
+  const handleDragEnd: OnDragEndResponder = (provided, snapshop) => {
+    console.log(provided);
+  };
+
+  /** when drag start collapse those items */
+  const hanldeDragStart: OnDragStartResponder = (provided, snapshot) => {
+    const uiGroupId = Number(provided.source.droppableId?.split(`-`)[0]);
+    const foundGroup = uiGroups.find((g) => g.id == uiGroupId);
+
+    foundGroup?.ui_items?.forEach((i) => {
+      collapseItem(i.id);
+    });
   };
 
   return (
-    <TreeView
-      defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpandIcon={<ChevronRightIcon />}
-      expanded={uiItemsList.map((i) => i.id.toString())}
-    >
-      {loading ? <CircularProgress /> : renderTreeItems(uiItemsTree)}
-    </TreeView>
+    <Grid container spacing={3} direction="column">
+      <Grid item xs={12} alignItems="center">
+        <Typography variant="h6">Organize UI Items</Typography>
+        <Typography
+          variant="subtitle2"
+          style={{ display: "flex", alignItems: "center" }}
+        >
+          Hold <DragHandleSharpIcon fontSize="medium" /> to change order.
+        </Typography>
+      </Grid>
+      <Divider />
+      <Grid item container justifyContent="space-between" alignItems="center">
+        <Grid item>Select UI Group </Grid>
+        <Grid item>
+          <ButtonGroup>
+            {uiGroups.map((g) => (
+              <Button
+                variant={"contained"}
+                color={g.id == selectedUiGroup ? `primary` : "secondary"}
+                onClick={() => selectUiGroupId(g.id)}
+                key={g.id}
+              >
+                {g.index}
+              </Button>
+            ))}
+          </ButtonGroup>
+        </Grid>
+      </Grid>
+      <Divider />
+      <Grid item xs={12}>
+        <Paper>
+          <TreeView
+            defaultCollapseIcon={<ExpandMoreIcon />}
+            defaultExpandIcon={<ChevronRightIcon />}
+            expanded={expandedItems}
+            selected={uiItemsList
+              ?.filter((i) => i?.ui_group_id == selectedUiGroup)
+              ?.map((i) => i?.id?.toString())}
+          >
+            {loading ? <CircularProgress /> : renderTreeItems(uiItemsTree)}
+          </TreeView>
+        </Paper>
+      </Grid>
+    </Grid>
   );
 };
 
