@@ -20,3 +20,13 @@ export interface IUIItems {
   tag_id: number;
   parent_id: null | number;
 }
+
+export interface UiItemNode {
+  id: number;
+  displayText: string;
+  index: number | null;
+  parent_id: number | null;
+  ui_group_id: number;
+  children?: UiItemNode[];
+}
+
