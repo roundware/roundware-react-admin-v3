@@ -29,7 +29,7 @@ export const UiGroupList = (props: ListProps): JSX.Element => {
           <Grid item xs={12}>
             <Divider />
           </Grid>
-          <Grid item xs={12} md={7}>
+          <Grid item xs={12} md={6}>
             <List
               {...props}
               filters={[
@@ -93,7 +93,7 @@ export const UiGroupList = (props: ListProps): JSX.Element => {
               </DraggableDatagrid>
             </List>
           </Grid>
-          <Grid item xs={12} md={5}>
+          <Grid item xs={12} md={6}>
             <UIItemsTreeView />
           </Grid>
         </Grid>
