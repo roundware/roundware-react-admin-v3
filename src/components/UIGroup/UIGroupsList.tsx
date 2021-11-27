@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Box, Divider, Grid } from "@material-ui/core";
 import BuildUIHeader from "components/UIGroup/BuildUIHeader";
+import { useBuildUI } from "providers/BuildUIContext";
 import React from "react";
 import {
   BooleanInput,
@@ -14,10 +15,12 @@ import {
   ReferenceField,
   TextField,
 } from "react-admin";
+import { IUIGroup } from "types/uiGroups";
 import { DraggableDatagrid } from "./DraggableDatagrid";
 import UIGroupListActions from "./UIGroupListActions";
 import UIItemsTreeView from "./UIItemsTreeView";
 export const UiGroupList = (props: ListProps): JSX.Element => {
+  const { setUiMode } = useBuildUI();
   return (
     <>
       <Box pt={5}>
@@ -44,6 +47,9 @@ export const UiGroupList = (props: ListProps): JSX.Element => {
                     { id: "browse", name: "Browse" },
                   ]}
                   label="Select UI Mode"
+                  onChange={(v) =>
+                    setUiMode(v as unknown as IUIGroup[`ui_mode`])
+                  }
                 />,
                 <BooleanInput
                   source="active"
