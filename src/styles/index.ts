@@ -9,13 +9,15 @@ const adminTheme = createTheme({
       main: "#dc004e",
     },
   },
-  props: {
-    // Name of the component
-    MuiButtonBase: {
-      // The properties to apply
-      disableRipple: true, // No more ripple, on the whole application!
+  shape: {
+        borderRadius: 8,
     },
-  },
+
+  props: {
+    MuiButtonBase: {
+        disableRipple: true
+      }
+    }
 });
 
 export default adminTheme;
