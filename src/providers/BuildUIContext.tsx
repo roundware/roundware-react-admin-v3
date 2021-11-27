@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useCallback, useEffect, useState } from "react";
 import { IUIGroup, UiItemNode } from "types/uiGroups";
 import { useRoundwareDataProvider } from "./DataProviderContext";
@@ -11,6 +12,7 @@ export interface IBuildUIContext {
   uiItemsTree: UiItemNode[];
   uiItemsList: UiItemNode[];
   loading: boolean;
+  dummyPatchForGroup: (id: number) => Promise<void>;
 }
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 export const BuildUIContext = React.createContext<IBuildUIContext>(undefined!);
@@ -51,11 +53,9 @@ export const BuildUIContextProvider = ({
           })
           .then((res) => {
             uiItems.push({
+              ...item,
               id: item.id,
-              parent_id: item.parent_id,
-              index: item.index,
               displayText: res.data.value,
-              ui_group_id: item.ui_group_id,
             });
           });
         promises.push(prom);
@@ -86,6 +86,17 @@ export const BuildUIContextProvider = ({
       .then((res) => setFetchedData(res.data as IUIGroup[]));
   }, [selectedProject]);
 
+  const dummyPatchForGroup = async (id: number) => {
+    /** hack to get latest ui group object into cached resources */
+    await dataProvider.update(`uigroups`, {
+      id,
+      data: {
+        note: `dummay patch request to get latest data into cached resources`,
+      },
+      previousData: uiGroups.find((g) => g.id == id)!,
+    });
+  };
+
   return (
     <BuildUIContext.Provider
       value={{
@@ -96,6 +107,7 @@ export const BuildUIContextProvider = ({
         uiItemsTree,
         uiItemsList,
         loading,
+        dummyPatchForGroup,
       }}
     >
       {children}
