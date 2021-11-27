@@ -1,30 +1,31 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useState, useEffect, useCallback } from "react";
-import { CircularProgress } from "@material-ui/core";
+import {
+  Button,
+  ButtonGroup,
+  CircularProgress,
+  Divider,
+  Grid,
+  Paper,
+  Typography,
+} from "@material-ui/core";
+import { alpha, makeStyles, Theme } from "@material-ui/core/styles";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DragHandleSharpIcon from "@material-ui/icons/DragHandleSharp";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TreeItem from "@material-ui/lab/TreeItem";
 import TreeView from "@material-ui/lab/TreeView";
 import { useBuildUI } from "providers/BuildUIContext";
-import { UiItemNode } from "types/uiGroups";
+import React, { useCallback, useState } from "react";
 import {
-  Grid,
-  Box,
-  ButtonGroup,
-  Button,
-  Typography,
-  Divider,
-  Card,
-  Paper,
-} from "@material-ui/core";
-import {
+  DragDropContext,
   Draggable,
   Droppable,
-  DragDropContext,
   OnDragEndResponder,
   OnDragStartResponder,
 } from "react-beautiful-dnd";
+import { UiItemNode } from "types/uiGroups";
+import TreeItemLabel from "./TreeItemLabel";
+
 const UIItemsTreeView = (): JSX.Element => {
   const { uiItemsTree, loading, uiGroups, uiItemsList } = useBuildUI();
 
@@ -40,6 +41,8 @@ const UIItemsTreeView = (): JSX.Element => {
       return [...prev, id.toString()];
     });
   };
+
+  const classes = useStyles();
 
   const renderTreeItems = useCallback((items: UiItemNode[]) => {
     if (!items.length) return null;
@@ -66,26 +69,15 @@ const UIItemsTreeView = (): JSX.Element => {
                           {...provided.draggableProps}
                           ref={provided.innerRef}
                           nodeId={i.id?.toString()}
+                          className={classes.treeItem}
+                          classes={{
+                            group: classes.treeItemGroup,
+                          }}
                           label={
-                            <Box>
-                              <Grid container direction="row" wrap="nowrap">
-                                <Grid item {...provided.dragHandleProps}>
-                                  <DragHandleSharpIcon />
-                                </Grid>
-                                <Grid item>
-                                  <Typography>
-                                    (
-                                    {uiGroups.findIndex(
-                                      (g) => g.id == i.ui_group_id
-                                    ) +
-                                      1 +
-                                      "." +
-                                      i.index}
-                                    ) {i.displayText}
-                                  </Typography>
-                                </Grid>
-                              </Grid>
-                            </Box>
+                            <TreeItemLabel
+                              uiItem={i}
+                              dragHandleProps={provided.dragHandleProps}
+                            />
                           }
                           collapseIcon={
                             <ExpandMoreIcon
@@ -175,7 +167,7 @@ const UIItemsTreeView = (): JSX.Element => {
       </Grid>
       <Divider />
       <Grid item xs={12}>
-        <Paper>
+        <Paper style={{ padding: 10 }}>
           <TreeView
             defaultCollapseIcon={<ExpandMoreIcon />}
             defaultExpandIcon={<ChevronRightIcon />}
@@ -191,5 +183,14 @@ const UIItemsTreeView = (): JSX.Element => {
     </Grid>
   );
 };
+
+const useStyles = makeStyles((theme: Theme) => ({
+  treeItem: {},
+  treeItemGroup: {
+    marginLeft: 7,
+    paddingLeft: 18,
+    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
+  },
+}));
 
 export default UIItemsTreeView;
