@@ -6,7 +6,8 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import ReorderIcon from "@material-ui/icons/Reorder";
+import ReorderIcon from "@material-ui/icons/DragHandle";
+import { useBuildUI } from "providers/BuildUIContext";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import React, { useMemo, useState } from "react";
 import {
@@ -64,6 +65,7 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
   const notify = useNotify();
   const { refetch, data } = useListContext();
   const dataProvider = useRoundwareDataProvider();
+  const { refetchData } = useBuildUI();
   const allGroups = useMemo(
     () => Object.values(data).sort((a, b) => (a.index > b.index ? 1 : -1)),
     [data]
@@ -155,6 +157,7 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
     Promise.all(promises)
       .then(() => {
         refetch();
+        refetchData();
         notify(`Changed UI Groups order`, `info`);
       })
       .catch(() =>
