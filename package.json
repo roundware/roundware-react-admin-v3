@@ -29,6 +29,7 @@
     "react-beautiful-dnd": "^13.1.0",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
+    "react-spring": "^9.3.2",
     "recharts": "^2.1.4",
     "wavesurfer-react": "^2.0.9",
     "wavesurfer.js": "^4.6.0",
