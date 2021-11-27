@@ -21,12 +21,9 @@ export interface IUIItems {
   parent_id: null | number;
 }
 
-export interface UiItemNode {
-  id: number;
+export interface UiItemNode  extends IUIItems {
   displayText: string;
-  index: number | null;
-  parent_id: number | null;
-  ui_group_id: number;
+  
   children?: UiItemNode[];
 }
 
