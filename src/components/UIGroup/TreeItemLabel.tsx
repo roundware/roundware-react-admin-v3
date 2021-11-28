@@ -10,14 +10,19 @@ import {
   IconButton,
   CircularProgress,
   Tooltip,
+  Dialog,
+  DialogContent,
+  LinearProgress,
 } from "@material-ui/core";
 import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
 import DragHandleSharpIcon from "@material-ui/icons/DragHandleSharp";
 import DeleteIcon from "@material-ui/icons/Delete";
+import CloseIcon from "@material-ui/icons/Close";
 import { useBuildUI } from "providers/BuildUIContext";
 import { Confirm, useNotify, useRefresh } from "react-admin";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
+import { ITag } from "types/tags";
 interface Props {
   uiItem: UiItemNode;
   dragHandleProps?: DraggableProvidedDragHandleProps;
@@ -25,7 +30,8 @@ interface Props {
 
 const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
   const i = uiItem;
-  const { uiGroups, refetchData, dummyPatchForGroup } = useBuildUI();
+  const { uiGroups, refetchData, dummyPatchForGroup, getTagsForGroup } =
+    useBuildUI();
   const notify = useNotify();
   const refresh = useRefresh();
   const dataProvider = useRoundwareDataProvider();
@@ -86,6 +92,29 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
     return true;
   }, [uiItem]);
 
+  const [showNestingDialog, setShowNestingDialog] = useState(false);
+  const handleCloseNestDialog = () => setShowNestingDialog(false);
+  const [loadingTags, setLoadingTags] = useState(true);
+  const [nestableTags, setNestableTags] = useState<ITag[]>([]);
+
+  /** on nest button click */
+  const handleOpenNestingDialog = async () => {
+    /* show the dialog */
+    setShowNestingDialog(true);
+    /* show loading progress */
+    setLoadingTags(true);
+
+    /* get all the tags according to tag category of the group */
+    const tags = await getTagsForGroup(i.ui_group_id);
+
+    setLoadingTags(false);
+
+    setNestableTags(tags);
+  };
+
+  const isTagNested = (tagId: number) =>
+    i?.children?.some((item) => item.tag_id == tagId);
+
   return (
     <Box sx={{}}>
       <Grid
@@ -123,10 +152,51 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
           {canNestItems && (
             <Grid item>
               <Tooltip title="Nest Items">
-                <IconButton>
+                <IconButton onClick={handleOpenNestingDialog}>
                   <PlaylistAddIcon />
                 </IconButton>
               </Tooltip>
+              {showNestingDialog && (
+                <Dialog open={showNestingDialog}>
+                  <DialogContent>
+                    <Grid container spacing={2} direction="column">
+                      <Grid
+                        item
+                        container
+                        justifyContent="space-between"
+                        alignItems="center"
+                        spacing={2}
+                      >
+                        <Grid item>
+                          <Typography>
+                            Select Items To Nest below {i.displayText}
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <IconButton onClick={handleCloseNestDialog}>
+                            <CloseIcon />
+                          </IconButton>
+                        </Grid>
+                      </Grid>
+                      {loadingTags && (
+                        <Grid item>
+                          <LinearProgress />
+                        </Grid>
+                      )}
+                      <Grid item container direction="column">
+                        {nestableTags?.map((t) => (
+                          <Grid item key={t.id}>
+                            <FormControlLabel
+                              control={<Checkbox checked={isTagNested(t.id)} />}
+                              label={t.value}
+                            />
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </Grid>
+                  </DialogContent>
+                </Dialog>
+              )}
             </Grid>
           )}
           {updating && (
@@ -166,7 +236,7 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
                       Are you sure you want to delete this item? This may delete
                       its child items also.
                     </div>
-                    {deleting && <CircularProgress />}
+                    {deleting && <LinearProgress />}
                   </div>
                 }
                 confirm="Yes"

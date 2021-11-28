@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useCallback, useEffect, useState } from "react";
+import { ITag } from "types/tags";
 import { IUIGroup, UiItemNode } from "types/uiGroups";
 import { useRoundwareDataProvider } from "./DataProviderContext";
 import { AllowChildrenOnlyProps, useProjects } from "./ProjectsContext";
@@ -13,6 +14,7 @@ export interface IBuildUIContext {
   uiItemsList: UiItemNode[];
   loading: boolean;
   dummyPatchForGroup: (id: number) => Promise<void>;
+  getTagsForGroup: (groupId: number) => Promise<ITag[]>;
 }
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 export const BuildUIContext = React.createContext<IBuildUIContext>(undefined!);
@@ -45,27 +47,44 @@ export const BuildUIContextProvider = ({
     setLoading(true);
     const uiItems: UiItemNode[] = [];
     const promises: Promise<void>[] = [];
-    uiGroups.forEach((g) => {
-      g.ui_items.forEach((item) => {
-        const prom = dataProvider
-          .getOne(`tags`, {
-            id: item.tag_id,
-          })
-          .then((res) => {
-            uiItems.push({
-              ...item,
-              id: item.id,
-              displayText: res.data.value,
-            });
+    /** first get all the tags to avoid cachine issue */
+    dataProvider
+      .getList(`tags`, {
+        filter: {},
+        sort: {
+          field: `id`,
+          order: `ASC`,
+        },
+        pagination: {
+          perPage: 0,
+          page: 0,
+        },
+      })
+      .then(() =>
+        uiGroups.forEach((g) => {
+          g.ui_items.forEach((item) => {
+            const prom = dataProvider
+              .getOne(`tags`, {
+                id: item.tag_id,
+              })
+              .then((res) => {
+                uiItems.push({
+                  ...item,
+                  id: item.id,
+                  displayText: res.data.value,
+                });
+              });
+            promises.push(prom);
           });
-        promises.push(prom);
-      });
-    });
-    Promise.all(promises).then(() => {
-      setUiItemsList(uiItems);
-      setUiItemsTree(list_to_tree(uiItems));
-      setLoading(false);
-    });
+        })
+      )
+      .then(() =>
+        Promise.all(promises).then(() => {
+          setUiItemsList(uiItems);
+          setUiItemsTree(list_to_tree(uiItems));
+          setLoading(false);
+        })
+      );
   }, [uiGroups]);
 
   const refetchData = useCallback(() => {
@@ -97,6 +116,38 @@ export const BuildUIContextProvider = ({
     });
   };
 
+  /** gets all the possible tag for a group. determined by category */
+  const getTagsForGroup = async (groupId: number): Promise<ITag[]> => {
+    /** find that ui gorup */
+    const uiGroup = uiGroups.find((g) => g.id == groupId);
+    /** group not found return empty */
+    if (!uiGroup) return [];
+
+    /** get tags filtered by tag_category of that group */
+
+    const {
+      data,
+    }: {
+      data: ITag[];
+    } = await dataProvider.getList(`tags`, {
+      filter: {
+        tag_category_id: uiGroup.tag_category_id,
+      },
+      pagination: {
+        perPage: 0,
+        page: 0,
+      },
+      sort: {
+        field: "id",
+        order: `ASC`,
+      },
+    });
+
+    return data.filter(
+      (t: ITag) => t.tag_category_id == uiGroup.tag_category_id
+    );
+  };
+
   return (
     <BuildUIContext.Provider
       value={{
@@ -108,6 +159,7 @@ export const BuildUIContextProvider = ({
         uiItemsList,
         loading,
         dummyPatchForGroup,
+        getTagsForGroup,
       }}
     >
       {children}
