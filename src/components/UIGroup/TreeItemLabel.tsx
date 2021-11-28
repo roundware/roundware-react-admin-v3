@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { UiItemNode } from "types/uiGroups";
 import {
   Box,
@@ -9,6 +9,7 @@ import {
   Checkbox,
   IconButton,
   CircularProgress,
+  Tooltip,
 } from "@material-ui/core";
 import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
 import DragHandleSharpIcon from "@material-ui/icons/DragHandleSharp";
@@ -16,7 +17,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { useBuildUI } from "providers/BuildUIContext";
 import { Confirm, useNotify, useRefresh } from "react-admin";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
-
+import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 interface Props {
   uiItem: UiItemNode;
   dragHandleProps?: DraggableProvidedDragHandleProps;
@@ -76,6 +77,15 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
     }
   };
 
+  const canNestItems = useMemo(() => {
+    /** if its already of last ui group we can't nest items */
+    const lastGroup = uiGroups[uiGroups.length - 1];
+    if (uiItem.ui_group_id == lastGroup.id) return false;
+
+    /** nothing matched return true */
+    return true;
+  }, [uiItem]);
+
   return (
     <Box sx={{}}>
       <Grid
@@ -87,7 +97,9 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
       >
         <Grid container>
           <Grid item {...dragHandleProps}>
-            <DragHandleSharpIcon />
+            <Tooltip title="Drag to Change Order">
+              <DragHandleSharpIcon />
+            </Tooltip>
           </Grid>
           <Grid item>
             <Typography>
@@ -106,29 +118,44 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
           spacing={1}
           justifyContent="flex-end"
           alignItems="center"
+          alignContent="center"
         >
+          {canNestItems && (
+            <Grid item>
+              <Tooltip title="Nest Items">
+                <IconButton>
+                  <PlaylistAddIcon />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+          )}
           {updating && (
             <Grid item>
               <CircularProgress size={16} />
             </Grid>
           )}
+
           <Grid item>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={i.default}
-                  onChange={handleOnDefaultChange}
-                  disabled={updating}
-                />
-              }
-              label="Default"
-            />
+            <Tooltip title="Is Default Selected">
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={i.default}
+                    onChange={handleOnDefaultChange}
+                    disabled={updating}
+                  />
+                }
+                label="Default"
+              />
+            </Tooltip>
           </Grid>
 
           <Grid item>
-            <IconButton onClick={handleOpenConfirm}>
-              <DeleteIcon />
-            </IconButton>
+            <Tooltip title="Delete Ui Item">
+              <IconButton onClick={handleOpenConfirm}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
             {deleteConfirm && (
               <Confirm
                 isOpen={true}
