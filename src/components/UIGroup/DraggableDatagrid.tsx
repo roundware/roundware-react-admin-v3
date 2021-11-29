@@ -21,6 +21,7 @@ import {
   UpdateResult,
   useListContext,
   useNotify,
+  DeleteResult,
 } from "react-admin";
 import {
   DragDropContext,
@@ -65,7 +66,7 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
   const notify = useNotify();
   const { refetch, data } = useListContext();
   const dataProvider = useRoundwareDataProvider();
-  const { refetchData } = useBuildUI();
+  const { refetchData, uiItemsList } = useBuildUI();
   const allGroups = useMemo(
     () => Object.values(data).sort((a, b) => (a.index > b.index ? 1 : -1)),
     [data]
@@ -77,7 +78,7 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
     const { source, destination, draggableId } = result;
 
     /** not destination nothing changed return go home tata byebye */
-    if (!destination) return;
+    if (!destination?.index) return;
 
     // find the group which is moved
     const movedGroup = allGroups.find((g) => g.id == draggableId);
@@ -99,18 +100,20 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
 
     // promises of dataProvider calls
     const promises: Promise<UpdateResult<Record>>[] = [];
+    const deletePromises: Promise<void | DeleteResult<Record>>[] = [];
 
     /** affected ui group ids */
-    const affectedUiGroupIds = [];
+    const affectedUiGroupIds: number[] = [];
+
     // loop through all and push promises if need to update any object
     allGroups.forEach((g) => {
       let newIndex: number | null = null;
 
-      /** its the same element don'tdo anything here */
-      if (g.id == movedGroup.id) return;
-
-      /** find if its affected and increment or decrement its index */
-      if (
+      /** its the same element just use destination index */
+      if (g.id == movedGroup.id) {
+        newIndex = destination.index;
+      } else if (
+        /** find if its affected and increment or decrement its index */
         movedDirection == "up" &&
         g.index >= destination!.index &&
         g.index <= source!.index
@@ -138,35 +141,45 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
         promises.push(prom);
 
         /** 2. add to id as we need to delete its ui items */
-        affectedUiGroupIds.push(g.id);
+        affectedUiGroupIds.push(Number(g.id));
       }
     });
 
-    // update movedGroup with its destination index
-    const targetElementUpdate = dataProvider.update(`uigroups`, {
-      data: {
-        index: destination!.index,
-      },
-      id: movedGroup.id,
-      previousData: movedGroup,
+    /** 2. delete the conflicting ui items */
+    const affectedUiItems = uiItemsList.filter((i) =>
+      affectedUiGroupIds.includes(i.ui_group_id)
+    );
+
+    /** create delete promises */
+    affectedUiItems.forEach((i) => {
+      const deleteProm = dataProvider
+        .delete(`uiitems`, {
+          id: i.id,
+          previousData: i,
+        })
+        .catch(() => console.log(`its ok to be not found`));
+      deletePromises.push(deleteProm);
     });
-    promises.push(targetElementUpdate);
 
     // resolve all prmises
     setLoading(true);
-    Promise.all(promises)
-      .then(() => {
-        refetch();
-        refetchData();
-        notify(`Changed UI Groups order`, `info`);
-      })
-      .catch(() =>
-        notify(
-          `Couldn't change order. Something went wrong. Please try again.`,
-          `error`
-        )
-      )
-      .finally(() => setLoading(false));
+    Promise.all(deletePromises)
+      .catch(() => console.log(`its ok to be not found`))
+      .finally(() =>
+        Promise.all(promises)
+          .then(() => {
+            refetch();
+            refetchData();
+            notify(`Changed UI Groups order`, `info`);
+          })
+          .catch(() =>
+            notify(
+              `Couldn't change order. Something went wrong. Please try again.`,
+              `error`
+            )
+          )
+          .finally(() => setLoading(false))
+      );
   };
 
   return (
