@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useState, useMemo } from "react";
-import { UiItemNode } from "types/uiGroups";
+import { UiItemNode, IUIItems } from "types/uiGroups";
 import {
   Box,
   Grid,
@@ -13,13 +13,14 @@ import {
   Dialog,
   DialogContent,
   LinearProgress,
+  Button,
 } from "@material-ui/core";
 import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
 import DragHandleSharpIcon from "@material-ui/icons/DragHandleSharp";
 import DeleteIcon from "@material-ui/icons/Delete";
 import CloseIcon from "@material-ui/icons/Close";
 import { useBuildUI } from "providers/BuildUIContext";
-import { Confirm, useNotify, useRefresh } from "react-admin";
+import { Confirm, useNotify, useRefresh, useRedirect } from "react-admin";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import { ITag } from "types/tags";
@@ -97,6 +98,12 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
   const [loadingTags, setLoadingTags] = useState(true);
   const [nestableTags, setNestableTags] = useState<ITag[]>([]);
 
+  /** nested group */
+  const nestedGroup = useMemo(
+    () => uiGroups[uiGroups.findIndex((g) => g.id == i.ui_group_id) + 1],
+    [uiItem]
+  );
+
   /** on nest button click */
   const handleOpenNestingDialog = async () => {
     /* show the dialog */
@@ -104,8 +111,12 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
     /* show loading progress */
     setLoadingTags(true);
 
-    /* get all the tags according to tag category of the group */
-    const tags = await getTagsForGroup(i.ui_group_id);
+    let tags: ITag[] = [];
+
+    if (nestedGroup) {
+      /* get all the tags according to tag category of the group */
+      tags = await getTagsForGroup(nestedGroup.id);
+    }
 
     setLoadingTags(false);
 
@@ -113,7 +124,66 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
   };
 
   const isTagNested = (tagId: number) =>
-    i?.children?.some((item) => item.tag_id == tagId);
+    nestedGroup?.ui_items?.some(
+      (item) => item.tag_id == tagId && item.parent_id == uiItem.id
+    );
+
+  const getNestedItemByTag = (tagId: number) =>
+    nestedGroup?.ui_items?.find(
+      (g) => g.tag_id == tagId && g.parent_id == uiItem.id
+    );
+  const handleOnTagChange = async (tagId: number, checked: boolean) => {
+    try {
+      setLoadingTags(true);
+      /** if already nested then delete it */
+      if (isTagNested(tagId) && !checked) {
+        /** get the item to be deleted */
+        const uiItemTobeDeleted = getNestedItemByTag(tagId);
+        if (!uiItemTobeDeleted) throw new Error();
+        /** send request to delete */
+        await dataProvider.delete(`uiitems`, {
+          id: uiItemTobeDeleted.id,
+          previousData: uiItemTobeDeleted,
+        });
+      } else {
+        /** construct the new ui Item */
+        const newUiItem: Omit<IUIItems, `id`> = {
+          parent_id: uiItem.id,
+          tag_id: tagId,
+          /** add to the last index (roundware index start from 1 so make sure to increment) */
+          index:
+            nestedGroup?.ui_items.filter((i) => i.parent_id === uiItem.id)
+              .length + 1,
+          active: true,
+          /** user can default later */
+          default: false,
+          ui_group_id: nestedGroup.id,
+        };
+
+        /** save to db */
+        await dataProvider.create(`uiitems`, {
+          data: newUiItem,
+        });
+      }
+
+      /** revalidate the nested group's cached data */
+      await dummyPatchForGroup(nestedGroup.id);
+      refetchData();
+      refresh();
+      notify(`Successfully nested item.`, `success`);
+    } catch {
+      notify(`Sorry, something went wrong. Please try again.`, `error`);
+    } finally {
+      setLoadingTags(false);
+    }
+  };
+
+  const redirect = useRedirect();
+  const handleRedirect = () => {
+    redirect(`create`, `/tags`, undefined, {
+      tag_category_id: nestedGroup.tag_category_id,
+    });
+  };
 
   return (
     <Box sx={{}}>
@@ -169,7 +239,8 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
                       >
                         <Grid item>
                           <Typography>
-                            Select Items To Nest below {i.displayText}
+                            Select Tags To Nest below &ldquo;{i.displayText}
+                            &rdquo;
                           </Typography>
                         </Grid>
                         <Grid item>
@@ -189,9 +260,22 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
                             <FormControlLabel
                               control={<Checkbox checked={isTagNested(t.id)} />}
                               label={t.value}
+                              disabled={loadingTags}
+                              onChange={(_v, c) => handleOnTagChange(t.id, c)}
                             />
                           </Grid>
                         ))}
+
+                        <Grid item>
+                          <Button
+                            variant="text"
+                            onClick={handleRedirect}
+                            style={{ textTransform: "none" }}
+                            color="primary"
+                          >
+                            Create more Tags?
+                          </Button>
+                        </Grid>
                       </Grid>
                     </Grid>
                   </DialogContent>
