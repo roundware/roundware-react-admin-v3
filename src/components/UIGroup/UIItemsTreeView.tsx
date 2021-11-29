@@ -7,6 +7,7 @@ import {
   Grid,
   Paper,
   Typography,
+  LinearProgress,
 } from "@material-ui/core";
 import { alpha, makeStyles, Theme } from "@material-ui/core/styles";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -25,11 +26,22 @@ import {
 } from "react-beautiful-dnd";
 import { UiItemNode } from "types/uiGroups";
 import TreeItemLabel from "./TreeItemLabel";
-
+import { UpdateResult, Record, useRefresh, useNotify } from "react-admin";
+import { useRoundwareDataProvider } from "providers/DataProviderContext";
 const UIItemsTreeView = (): JSX.Element => {
-  const { uiItemsTree, loading, uiGroups, uiItemsList } = useBuildUI();
-
+  const {
+    uiItemsTree,
+    loading,
+    uiGroups,
+    uiItemsList,
+    dummyPatchForGroup,
+    refetchData,
+  } = useBuildUI();
+  const dataProvider = useRoundwareDataProvider();
+  const [reorderingGroup, setReorderingGroup] = useState<number | undefined>();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const refresh = useRefresh();
+  const notify = useNotify();
 
   const collapseItem = (id: number) => {
     setExpandedItems((prev) => {
@@ -44,66 +56,92 @@ const UIItemsTreeView = (): JSX.Element => {
 
   const classes = useStyles();
 
-  const renderTreeItems = useCallback((items: UiItemNode[]) => {
-    if (!items.length) return null;
-    const droppableId =
-      items?.[0]?.ui_group_id?.toString() +
-      "-" +
-      items?.[0]?.parent_id?.toString();
-    return (
-      <DragDropContext onDragEnd={handleDragEnd} onDragStart={hanldeDragStart}>
-        <Droppable droppableId={droppableId}>
-          {(provided, snapshot) => {
-            return (
-              <div ref={provided.innerRef} {...provided.droppableProps}>
-                {items
-                  .sort((a, b) => (a!.index! > b!.index! ? 1 : -1))
-                  .map((i) => (
-                    <Draggable
-                      key={i.id}
-                      draggableId={i.id.toString()}
-                      index={i.index!}
-                    >
-                      {(provided, snapshot) => (
-                        <TreeItem
-                          {...provided.draggableProps}
-                          ref={provided.innerRef}
-                          nodeId={i.id?.toString()}
-                          className={classes.treeItem}
-                          classes={{
-                            group: classes.treeItemGroup,
-                          }}
-                          label={
-                            <TreeItemLabel
-                              uiItem={i}
-                              dragHandleProps={provided.dragHandleProps}
-                            />
-                          }
-                          collapseIcon={
-                            <ExpandMoreIcon
-                              onClick={() => collapseItem(i.id)}
-                            />
-                          }
-                          expandIcon={
-                            <ChevronRightIcon
-                              onClick={() => expandItem(i.id)}
-                            />
-                          }
-                        >
-                          {Array.isArray(i.children) &&
-                            renderTreeItems(i.children)}
-                        </TreeItem>
-                      )}
-                    </Draggable>
-                  ))}
-                {provided.placeholder}
-              </div>
-            );
-          }}
-        </Droppable>
-      </DragDropContext>
-    );
-  }, []);
+  const renderTreeItems = useCallback(
+    (items: UiItemNode[]) => {
+      if (!items.length) return null;
+      const droppableId =
+        items?.[0]?.ui_group_id?.toString() +
+        "-" +
+        items?.[0]?.parent_id?.toString();
+
+      const group = uiGroups.find((g) => g.id == items?.[0]?.ui_group_id);
+      if (!group) return null;
+      return (
+        <DragDropContext
+          onDragEnd={handleDragEnd}
+          onDragStart={hanldeDragStart}
+        >
+          <Droppable droppableId={droppableId}>
+            {(provided, snapshot) => {
+              return (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  style={{
+                    border: snapshot.isDraggingOver
+                      ? `1px dashed green`
+                      : `none`,
+                    padding: snapshot.isDraggingOver ? 3 : 4,
+                    borderRadius: 8,
+                  }}
+                >
+                  <Typography variant="caption">
+                    {group.index}. {group.header_text_loc}
+                  </Typography>
+                  {items
+                    .sort((a, b) => (a!.index! > b!.index! ? 1 : -1))
+                    .map((i) => (
+                      <Draggable
+                        key={i.id}
+                        draggableId={i.id.toString()}
+                        index={i.index!}
+                      >
+                        {(provided, snapshot) => (
+                          <TreeItem
+                            {...provided.draggableProps}
+                            ref={provided.innerRef}
+                            nodeId={i.id?.toString()}
+                            className={classes.treeItem}
+                            classes={{
+                              group: classes.treeItemGroup,
+                            }}
+                            label={
+                              reorderingGroup == group.id ? (
+                                <LinearProgress />
+                              ) : (
+                                <TreeItemLabel
+                                  uiItem={i}
+                                  dragHandleProps={provided.dragHandleProps}
+                                />
+                              )
+                            }
+                            collapseIcon={
+                              <ExpandMoreIcon
+                                onClick={() => collapseItem(i.id)}
+                              />
+                            }
+                            expandIcon={
+                              <ChevronRightIcon
+                                onClick={() => expandItem(i.id)}
+                              />
+                            }
+                          >
+                            {Array.isArray(i.children) &&
+                              renderTreeItems(i.children)}
+                          </TreeItem>
+                        )}
+                      </Draggable>
+                    ))}
+                  {provided.placeholder}
+                </div>
+              );
+            }}
+          </Droppable>
+        </DragDropContext>
+      );
+    },
+    [reorderingGroup]
+  );
 
   const [selectedUiGroup, setSelectedUiGroup] = useState<number | null>(
     uiGroups[uiGroups.length - 1]?.id
@@ -123,7 +161,80 @@ const UIItemsTreeView = (): JSX.Element => {
   };
 
   const handleDragEnd: OnDragEndResponder = (provided, snapshop) => {
-    console.log(provided);
+    /** source and destination index */
+    const { source, destination, draggableId } = provided;
+
+    /** not destination nothing changed return go home tata byebye */
+    if (!destination?.index) return;
+
+    // find the item which is moved
+    const draggedItem = uiItemsList.find((g) => g.id == Number(draggableId));
+    if (!draggedItem) return;
+
+    // detemine direction:
+    // if positive then moved downwards and negative upwards
+    const movedDirection =
+      destination!.index - source.index < 0 ? `up` : `down`;
+
+    console.log(movedDirection);
+
+    // promises of dataProvider calls
+    const promises: Promise<UpdateResult<Record>>[] = [];
+
+    // list of items need to possibly modified
+    const possiblyAffectedItems = uiItemsList.filter(
+      (i) =>
+        i.ui_group_id == draggedItem.ui_group_id &&
+        i.parent_id == draggedItem.parent_id
+    );
+    // loop through sus
+    possiblyAffectedItems.forEach((i) => {
+      let newIndex: number | null = null;
+
+      /** its the same element just update with whatever destination */
+      if (i.id == draggedItem.id) {
+        newIndex = destination.index;
+      } else if (
+        /** find if its affected and increment or decrement its index */
+        movedDirection == "up" &&
+        i.index >= destination!.index &&
+        i.index <= source!.index
+      ) {
+        newIndex = i.index + 1;
+      } else if (
+        movedDirection == "down" &&
+        i.index <= destination!.index &&
+        i.index >= source.index
+      ) {
+        newIndex = i.index - 1;
+      }
+
+      /** if its affected  */
+      if (typeof newIndex == "number") {
+        console.log(i, i.index, `changed to`, newIndex);
+        const prom = dataProvider.update(`uiitems`, {
+          data: {
+            index: newIndex,
+          },
+          id: i.id,
+          previousData: i,
+        });
+        promises.push(prom);
+      }
+    });
+
+    setReorderingGroup(draggedItem.ui_group_id);
+    Promise.all(promises)
+      .then(() => dummyPatchForGroup(draggedItem.ui_group_id))
+      .then(() => refetchData())
+      .then(() => notify(`Changed UI Items order`, `info`))
+      .catch(() =>
+        notify(
+          `Couldn't change order. Something went wrong. Please try again.`,
+          `error`
+        )
+      )
+      .finally(() => setReorderingGroup(undefined));
   };
 
   /** when drag start collapse those items */
