@@ -140,7 +140,7 @@ const UIItemsTreeView = (): JSX.Element => {
         </DragDropContext>
       );
     },
-    [reorderingGroup]
+    [reorderingGroup, uiGroups]
   );
 
   const [selectedUiGroup, setSelectedUiGroup] = useState<number | null>(
