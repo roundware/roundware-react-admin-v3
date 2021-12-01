@@ -32,11 +32,12 @@ export const BuildUIContextProvider = ({
   const dataProvider = useRoundwareDataProvider();
   const { selectedProject } = useProjects();
   useEffect(() => {
+    if (!selectedProject) return;
     refetchData();
   }, [selectedProject]);
 
   useEffect(() => {
-    setUiGroups(fetchedData.filter((g) => g.ui_mode == uiMode));
+    setUiGroups(fetchedData.filter((g) => g?.ui_mode == uiMode));
   }, [uiMode, fetchedData]);
 
   const [uiItemsTree, setUiItemsTree] = useState<UiItemNode[]>([]);
@@ -44,6 +45,7 @@ export const BuildUIContextProvider = ({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!selectedProject) return;
     setLoading(true);
     const uiItems: UiItemNode[] = [];
     const promises: Promise<void>[] = [];
