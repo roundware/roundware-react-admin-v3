@@ -6,6 +6,12 @@ export interface IUIGroup {
   active: boolean;
   index: number;
   header_text_loc: string;
+  header_text_loc_admin: {
+    id: number;
+    language: string;
+    text: string;
+    language_id: number;
+  }[];
   tag_category_id: number;
   project_id: number;
   ui_items: IUIItems[];
