@@ -28,7 +28,7 @@ export const SpeakersProvider = ({
   }, [selectedProject?.id]);
 
   const fetchData = async () => {
-    console.log(`fetching speakers`);
+    if (!selectedProject) return;
     await dataProvider
       .getList(`speakers`, {
         pagination: {
