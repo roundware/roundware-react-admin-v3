@@ -1,6 +1,7 @@
 import { Grid, IconButton, Paper, Tooltip } from "@material-ui/core";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
+import { useProjects } from "providers/ProjectsContext";
 import { useSpeakers } from "providers/SpeakersContext";
 import React from "react";
 import {
@@ -18,7 +19,8 @@ import { SpeakerEdit } from ".";
 import SpeakerShapesControl from "./SpeakerShapesControl";
 const SpeakerList = (props: ListProps): JSX.Element => {
   const rc = useResourceContext();
-  console.log("rc", rc);
+  const { selectedProject } = useProjects();
+  if (!selectedProject) return <>No Project Selected.</>;
   return (
     <>
       <Grid
