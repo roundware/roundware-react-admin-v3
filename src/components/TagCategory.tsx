@@ -1,3 +1,4 @@
+import useFieldValue from "hooks/useFieldValue";
 import React from "react";
 import {
   CreateProps,
@@ -9,31 +10,59 @@ import {
   Datagrid,
   SimpleForm,
   TextInput,
+  TextField,
+  useRedirect,
+  DatagridCellProps,
 } from "react-admin";
-
-export const TagCategoryList = (props: ListProps) => {
+import { Button } from "@material-ui/core";
+export const TagCategoryList = (props: ListProps): JSX.Element => {
   return (
     <List {...props}>
-      <Datagrid></Datagrid>
+      <Datagrid optimized>
+        <TextField source="id" />
+        <TextField source="name" />
+        <TextField source="data" />
+        <RedirectButton />
+      </Datagrid>
     </List>
   );
 };
 
-export const TagCategoryEdit = (props: EditProps) => {
+const RedirectButton = (props: DatagridCellProps) => {
+  const redirect = useRedirect();
+  const handleOnViewTags = () => {
+    redirect(
+      `list`,
+      `/tags?filter=${JSON.stringify({ tag_category_id: props?.record?.id })}`,
+      undefined,
+      {}
+    );
+  };
+  return (
+    <Button color="primary" onClick={handleOnViewTags}>
+      View Tags{" "}
+    </Button>
+  );
+};
+
+export const TagCategoryEdit = (props: EditProps): JSX.Element => {
   return (
     <Edit {...props}>
       <SimpleForm>
-        <TextInput source="id" required />
+        <TextInput source="id" required disabled />
+        <TextInput source="name" required />
+        <TextInput source="data" />
       </SimpleForm>
     </Edit>
   );
 };
 
-export const UserCreate = (props: CreateProps) => {
+export const TagCategoryCreate = (props: CreateProps): JSX.Element => {
   return (
     <Create {...props}>
       <SimpleForm>
-        <TextInput source="id" required />
+        <TextInput source="name" required />
+        <TextInput source="data" />
       </SimpleForm>
     </Create>
   );
