@@ -12,6 +12,7 @@ export interface IBuildUIContext {
   refetchData: () => void;
   uiItemsTree: UiItemNode[];
   uiItemsList: UiItemNode[];
+  tags: ITag[];
   loading: boolean;
   dummyPatchForGroup: (id: number) => Promise<void>;
   getTagsForGroup: (groupId: number) => Promise<ITag[]>;
@@ -28,7 +29,7 @@ export const BuildUIContextProvider = ({
 
   const [uiGroups, setUiGroups] = useState<IUIGroup[]>([]);
   const [uiMode, setUiMode] = useState<IUIGroup[`ui_mode`]>("speak");
-
+  const [tags, setTags] = useState<ITag[]>([]);
   const dataProvider = useRoundwareDataProvider();
   const { selectedProject } = useProjects();
   useEffect(() => {
@@ -62,24 +63,20 @@ export const BuildUIContextProvider = ({
           page: 0,
         },
       })
-      .then(() =>
+      .then((res) => {
+        const fetchedTags: ITag[] = res.data as ITag[];
+        setTags(fetchedTags);
         uiGroups.forEach((g) => {
           g.ui_items.forEach((item) => {
-            const prom = dataProvider
-              .getOne(`tags`, {
-                id: item.tag_id,
-              })
-              .then((res) => {
-                uiItems.push({
-                  ...item,
-                  id: item.id,
-                  displayText: res.data.value,
-                });
-              });
-            promises.push(prom);
+            uiItems.push({
+              ...item,
+              id: item.id,
+              displayText:
+                fetchedTags.find((t) => t.id == item.tag_id)?.value || "",
+            });
           });
-        })
-      )
+        });
+      })
       .then(() =>
         Promise.all(promises).then(() => {
           setUiItemsList(uiItems);
@@ -162,6 +159,7 @@ export const BuildUIContextProvider = ({
         loading,
         dummyPatchForGroup,
         getTagsForGroup,
+        tags,
       }}
     >
       {children}
