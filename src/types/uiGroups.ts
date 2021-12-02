@@ -1,3 +1,5 @@
+import { LocalizedString } from "types";
+
 export interface IUIGroup {
   id: number;
   name: string;
@@ -6,12 +8,7 @@ export interface IUIGroup {
   active: boolean;
   index: number;
   header_text_loc: string;
-  header_text_loc_admin: {
-    id: number;
-    language: string;
-    text: string;
-    language_id: number;
-  }[];
+  header_text_loc_admin: LocalizedString[];
   tag_category_id: number;
   project_id: number;
   ui_items: IUIItems[];
