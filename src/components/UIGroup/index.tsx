@@ -6,6 +6,7 @@ import {
   Tabs,
   TextField,
 } from "@material-ui/core";
+import TranslatableField from "components/common/TranslatableField";
 import useFieldValue from "hooks/useFieldValue";
 import { useBuildUI } from "providers/BuildUIContext";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
@@ -41,20 +42,22 @@ export const UiGroupEdit = (props: EditProps): JSX.Element => {
     };
     const promises: Promise<UpdateResult<Record>>[] = [];
 
-    r.header_text_loc = r?.header_text_loc_admin?.map((h) => h.id) || [];
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     r.ui_items = r?.ui_items?.map((i) => i.id) || [];
     r.header_text_loc_admin?.forEach((h) => {
-      const patchLocalizedStringProm = dataProvider.update(`localizedstrings`, {
-        id: h.id,
-        data: h,
-        previousData: h,
-      });
+      const patchLocalizedStringProm = dataProvider[h.id ? `update` : `create`](
+        `localizedstrings`,
+        {
+          id: h.id,
+          data: h,
+          previousData: h,
+        }
+      );
       promises.push(patchLocalizedStringProm);
     });
-    await Promise.all(promises);
-
+    const responses = await Promise.all(promises);
+    r.header_text_loc = responses?.map((h) => Number(h.data.id)) || [];
     delete r.header_text_loc_admin;
     return r as Record;
   };
@@ -109,7 +112,7 @@ export const UiGroupEdit = (props: EditProps): JSX.Element => {
           <SelectInput optionText="name" fullWidth />
         </ReferenceInput>
         <TextInput source="name" fullWidth required />
-        <TranslatableHeader />
+        <TranslatableField source="header_text_loc_admin" />
         <RadioButtonGroupInput
           source="ui_mode"
           key="ui-mode-filter"
@@ -201,7 +204,7 @@ export const UiGroupCreate = (props: CreateProps): JSX.Element => {
           <SelectInput optionText="name" fullWidth />
         </ReferenceInput>
         <TextInput source="name" fullWidth required />
-        <TranslatableHeader />
+        <TranslatableField source="header_text_loc_admin" />
         <RadioButtonGroupInput
           source="ui_mode"
           key="ui-mode-filter"
@@ -227,87 +230,5 @@ export const UiGroupCreate = (props: CreateProps): JSX.Element => {
         <BooleanInput source="active" defaultValue={true} />
       </SimpleForm>
     </Create>
-  );
-};
-
-const TranslatableHeader = () => {
-  const [value, setValue] = useFieldValue(`header_text_loc_admin`);
-  const [loading, setLoading] = useState(true);
-  const [languages, setLanguages] = useState<ILanguage[]>([]);
-  const { selectedProject } = useProjects();
-  const dataProvider = useRoundwareDataProvider();
-  useEffect(() => {
-    if (!selectedProject) return;
-    setLoading(true);
-    /** fetch all languages  */
-    dataProvider
-      .getList(`languages`, {
-        filter: {},
-        sort: {
-          field: "id",
-          order: "ASC",
-        },
-        pagination: {
-          perPage: 0,
-          page: 0,
-        },
-      })
-      .then((res) => {
-        const thisProjectLanguages = res.data.filter((l) =>
-          selectedProject.language_ids.includes(Number(l.id))
-        ) as ILanguage[];
-        setLanguages(thisProjectLanguages);
-        setSelectedLanguage(thisProjectLanguages?.[0]?.id);
-      })
-      .finally(() => setLoading(false));
-  }, [selectedProject]);
-  const [selectedLanguage, setSelectedLanguage] = useState<number>(
-    languages?.[0]?.id
-  );
-
-  if (loading) return <LinearProgress />;
-  return (
-    <Card variant="outlined">
-      <Tabs
-        value={selectedLanguage}
-        onChange={(_e, v) => setSelectedLanguage(Number(v))}
-      >
-        {languages.map((l) => (
-          <Tab key={l.id} value={l.id} label={l.name} />
-        ))}
-      </Tabs>
-      <Box p={2}>
-        <TextField
-          value={
-            value &&
-            value?.find?.(
-              (h: IUIGroup[`header_text_loc_admin`][0]) =>
-                h.language_id == selectedLanguage
-            )?.text
-          }
-          variant="outlined"
-          onChange={(e) => {
-            const newText = e.target.value;
-
-            const previousFilter = [...value].filter(
-              (h: IUIGroup[`header_text_loc_admin`][0]) =>
-                h.language_id !== selectedLanguage
-            );
-
-            const newLanguageObject = {
-              ...[...value].find(
-                (h: IUIGroup[`header_text_loc_admin`][0]) =>
-                  h.language_id == selectedLanguage
-              ),
-              language_id: selectedLanguage,
-              text: newText,
-            };
-            setValue([...previousFilter, newLanguageObject]);
-          }}
-          fullWidth
-          label="Text"
-        />
-      </Box>
-    </Card>
   );
 };
