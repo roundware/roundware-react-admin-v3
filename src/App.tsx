@@ -41,6 +41,12 @@ import SpeakerList from "components/Speaker/SpeakerList";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import { UiGroupCreate, UiGroupEdit } from "components/UIGroup/index";
 import { UiGroupList } from "components/UIGroup/UIGroupsList";
+import { TagList, TagCreate, TagEdit } from "components/Tag";
+import {
+  TagCategoryList,
+  TagCategoryEdit,
+  TagCategoryCreate,
+} from "components/TagCategory";
 
 const authProvider = tokenAuthProvider({
   obtainAuthTokenUrl: `${process.env.REACT_APP_SERVER_URL}/api/2/login/`,
@@ -146,8 +152,9 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
     <Resource
       name="tags"
       key="tags"
-      list={ListGuesser}
-      edit={EditGuesser}
+      list={TagList}
+      edit={TagEdit}
+      create={TagCreate}
       icon={TagFaces}
     />
   ),
@@ -158,8 +165,9 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
       options={{
         label: "Tag Categories",
       }}
-      list={ListGuesser}
-      edit={EditGuesser}
+      list={TagCategoryList}
+      edit={TagCategoryEdit}
+      create={TagCategoryCreate}
       icon={Label}
     />
   ),
