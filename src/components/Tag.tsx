@@ -17,6 +17,8 @@ import {
   UpdateResult,
   CreateResult,
   useRefresh,
+  EditButton,
+  DeleteButton,
 } from "react-admin";
 import TranslatableField from "./common/TranslatableField";
 import { ITag } from "types/tags";
@@ -52,6 +54,8 @@ export const TagList = (props: ListProps): JSX.Element => {
           >
             <TextField source="name" />
           </ReferenceField>
+          <EditButton />
+          <DeleteButton />
         </Datagrid>
       </List>
     </Box>

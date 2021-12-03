@@ -1,20 +1,21 @@
-import useFieldValue from "hooks/useFieldValue";
+import { Button } from "@material-ui/core";
 import React from "react";
 import {
+  Create,
   CreateProps,
-  ListProps,
+  Datagrid,
+  DatagridCellProps,
+  DeleteButton,
+  Edit,
+  EditButton,
   EditProps,
   List,
-  Create,
-  Edit,
-  Datagrid,
+  ListProps,
   SimpleForm,
-  TextInput,
   TextField,
+  TextInput,
   useRedirect,
-  DatagridCellProps,
 } from "react-admin";
-import { Button } from "@material-ui/core";
 export const TagCategoryList = (props: ListProps): JSX.Element => {
   return (
     <List {...props}>
@@ -23,6 +24,8 @@ export const TagCategoryList = (props: ListProps): JSX.Element => {
         <TextField source="name" />
         <TextField source="data" />
         <RedirectButton />
+        <EditButton />
+        <DeleteButton />
       </Datagrid>
     </List>
   );
