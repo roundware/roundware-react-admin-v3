@@ -1,6 +1,5 @@
+import { Grid, Slider, Typography, withStyles } from "@material-ui/core";
 import React from "react";
-import { Grid, Typography, withStyles, Slider } from "@material-ui/core";
-import VolumeUp from "@material-ui/icons/VolumeUp";
 import useFieldValue from "../../hooks/useFieldValue";
 interface Props {
   field: string;
@@ -16,8 +15,8 @@ const CustomSlider = ({
   vertical,
   defaultValue = 100,
   icon,
-}: Props) => {
-  const [value, setValue] = useFieldValue(field);
+}: Props): JSX.Element => {
+  const [value, setValue] = useFieldValue<number>(field);
   React.useEffect(() => {
     setValue(value || defaultValue);
   }, []);
@@ -44,7 +43,7 @@ const CustomSlider = ({
           orientation={vertical ? "vertical" : `horizontal`}
           valueLabelDisplay="off"
           value={value}
-          onChange={(e, v) => setValue(v)}
+          onChange={(e, v) => setValue(Number(v))}
         />
       </Grid>
       {vertical && <Grid item>{icon}</Grid>}

@@ -22,6 +22,7 @@ import TranslatableField from "./common/TranslatableField";
 import { ITag } from "types/tags";
 import { Box } from "@material-ui/core";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import { LocalizedString } from "types";
 export const TagList = (props: ListProps): JSX.Element => {
   return (
     <Box pt={3}>
@@ -67,9 +68,9 @@ export const TagEdit = (props: EditProps): JSX.Element => {
       const patchLocalizedStringProm = dataProvider[h.id ? `update` : `create`](
         `localizedstrings`,
         {
-          id: h.id,
+          id: h.id as Record[`id`],
           data: h,
-          previousData: h,
+          previousData: h as Record,
         }
       );
       promises.push(patchLocalizedStringProm);
@@ -81,9 +82,9 @@ export const TagEdit = (props: EditProps): JSX.Element => {
       const patchLocalizedStringProm = dataProvider[h.id ? `update` : `create`](
         `localizedstrings`,
         {
-          id: h.id,
+          id: h.id as Record[`id`],
           data: h,
-          previousData: h,
+          previousData: h as Record,
         }
       );
       promises.push(patchLocalizedStringProm);

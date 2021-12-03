@@ -1,13 +1,13 @@
-import React from "react";
-import { Grid, Typography, withStyles, Slider } from "@material-ui/core";
+import { Grid, Slider, Typography, withStyles } from "@material-ui/core";
 import VolumeUp from "@material-ui/icons/VolumeUp";
+import React from "react";
 import useFieldValue from "../../hooks/useFieldValue";
 interface Props {
   field?: string;
 }
 
-const VolumeSlider = ({ field = `volume` }: Props) => {
-  const [volume, setVolume] = useFieldValue(`volume`);
+const VolumeSlider = ({ field = `volume` }: Props): JSX.Element => {
+  const [volume, setVolume] = useFieldValue<number>(field);
   return (
     <Grid
       container
@@ -29,7 +29,7 @@ const VolumeSlider = ({ field = `volume` }: Props) => {
           orientation="vertical"
           valueLabelDisplay="off"
           value={(volume || 1) * 100}
-          onChange={(e, v) => setVolume((Number(v) / 100).toFixed(2))}
+          onChange={(e, v) => setVolume(Number((Number(v) / 100).toFixed(2)))}
         />
       </Grid>
       <Grid item>

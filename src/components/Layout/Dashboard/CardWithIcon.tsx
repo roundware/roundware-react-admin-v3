@@ -1,9 +1,8 @@
-import * as React from "react";
-import { FC, createElement } from "react";
-import { Card, Box, Typography, Divider } from "@material-ui/core";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Box, Card, Divider, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
-import { ReactNode } from "react";
+import * as React from "react";
+import { createElement, FC, ReactNode } from "react";
 import { useRedirect } from "react-admin";
 interface Props {
   icon: FC<any>;
@@ -26,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
       color: "inherit",
     },
   },
-  main: (props: Props) => ({
+  main: () => ({
     overflow: "inherit",
     padding: 16,
     background: `url(https://github.dev/marmelab/react-admin/blob/44fd60acd706052b4fcabd0461fe143872949652/examples/demo/src/dashboard/cartouche.png) no-repeat`,
@@ -40,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   title: {},
 }));
 
-const CardWithIcon = (props: Props) => {
+const CardWithIcon = (props: Props): JSX.Element => {
   const {
     icon,
     title,

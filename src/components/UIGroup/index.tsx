@@ -1,17 +1,8 @@
-import {
-  Box,
-  Card,
-  LinearProgress,
-  Tab,
-  Tabs,
-  TextField,
-} from "@material-ui/core";
 import TranslatableField from "components/common/TranslatableField";
-import useFieldValue from "hooks/useFieldValue";
 import { useBuildUI } from "providers/BuildUIContext";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import { useProjects } from "providers/ProjectsContext";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useMemo } from "react";
 import {
   BooleanInput,
   Create,
@@ -20,16 +11,15 @@ import {
   EditProps,
   NumberInput,
   RadioButtonGroupInput,
+  Record,
   ReferenceInput,
   SelectInput,
   SimpleForm,
   TextInput,
-  Record,
   UpdateResult,
-  useRefresh,
   useRedirect,
+  useRefresh,
 } from "react-admin";
-import { ILanguage } from "types";
 import { IUIGroup } from "types/uiGroups";
 
 export const UiGroupEdit = (props: EditProps): JSX.Element => {
@@ -49,9 +39,9 @@ export const UiGroupEdit = (props: EditProps): JSX.Element => {
       const patchLocalizedStringProm = dataProvider[h.id ? `update` : `create`](
         `localizedstrings`,
         {
-          id: h.id,
+          id: h.id as Record[`id`],
           data: h,
-          previousData: h,
+          previousData: h as Record,
         }
       );
       promises.push(patchLocalizedStringProm);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   Card,
@@ -196,6 +197,7 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
                   <Select
                     defaultValue={30}
                     // @ts-ignore
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     onChange={(e) => handleOnSelectChange(e!.target!.value)}
                   >
                     <MenuItem value={7}>Last 7 Days</MenuItem>

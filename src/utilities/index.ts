@@ -31,7 +31,7 @@ export const getGoogleMapsCenter = (
 };
 
 /** gets google map paths from geojson polygon */
-export const polygonToGoogleMapPaths = (polygon: MultiPolygon | Polygon) => {
+export const polygonToGoogleMapPaths = (polygon: MultiPolygon | Polygon): google.maps.LatLng[] => {
   let coordinates;
   if (polygon.type == "MultiPolygon") coordinates = polygon.coordinates[0][0];
   else coordinates = polygon.coordinates[0];

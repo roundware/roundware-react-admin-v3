@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, CardContent, CardHeader } from "@material-ui/core";
 import React from "react";
 import { GetListResult, Record, useRedirect } from "react-admin";
@@ -48,7 +49,7 @@ const renderCustomizedLabel = ({
   outerRadius,
   percent,
   media_type,
-  index,
+
   fill,
 }: any) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 1.5;

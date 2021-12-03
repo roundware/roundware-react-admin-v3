@@ -41,14 +41,18 @@ export interface IProjectsContext {
   selectProject: (project: IProject | null) => void;
   setProjectsList: React.Dispatch<React.SetStateAction<IProject[] | null>>;
 }
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const ProjectsContext = React.createContext<IProjectsContext>(undefined!);
 
-export const useProjects = () => React.useContext(ProjectsContext);
+export const useProjects = (): IProjectsContext =>
+  React.useContext(ProjectsContext);
 
 export interface AllowChildrenOnlyProps {
   children: React.ReactNode;
 }
-export const ProjectsProvider = ({ children }: AllowChildrenOnlyProps) => {
+export const ProjectsProvider = ({
+  children,
+}: AllowChildrenOnlyProps): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
   const [project, setProject] = useState<IProject | null>(null);
 

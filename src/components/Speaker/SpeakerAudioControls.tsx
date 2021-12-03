@@ -15,7 +15,9 @@ import { FileField, FileInput, TextInput } from "react-admin";
 import SpeakerAudioPlayer from "./SpeakerAudioPlayer";
 
 const SpeakerAudioControls = (): JSX.Element => {
-  const [file] = useFieldValue(`file`);
+  const [file] = useFieldValue<{
+    src?: string;
+  }>(`file`);
 
   const [uri] = useFieldValue(`uri`);
 
@@ -30,8 +32,8 @@ const SpeakerAudioControls = (): JSX.Element => {
     setSourceMode(newValue);
   };
 
-  const [minVolume, setMinVolume] = useFieldValue(`minvolume`);
-  const [maxVolume, setMaxVolume] = useFieldValue(`maxvolume`);
+  const [minVolume, setMinVolume] = useFieldValue<number>(`minvolume`);
+  const [maxVolume, setMaxVolume] = useFieldValue<number>(`maxvolume`);
   const [range, setRange] = useState([minVolume || 0.1, maxVolume || 0.5]);
 
   const handleRangeChange = (event: unknown, newValue: number | number[]) => {

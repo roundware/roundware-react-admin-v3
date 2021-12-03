@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Card, CardContent, CardHeader } from "@material-ui/core";
 import React from "react";
@@ -63,7 +64,6 @@ const renderCustomizedLabel = ({
   innerRadius,
   outerRadius,
   percent,
-  index,
   payload,
   fill,
 }: any) => {
@@ -85,7 +85,7 @@ const renderCustomizedLabel = ({
   );
 };
 
-const BrowsersChart = (props: Props) => {
+const BrowsersChart = (props: Props): JSX.Element => {
   return (
     <Card style={{ width: "100%" }}>
       <CardHeader title="Operating Systems" />

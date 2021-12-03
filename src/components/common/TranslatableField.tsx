@@ -1,12 +1,11 @@
 import {
   Box,
   Card,
+  FormLabel,
   LinearProgress,
   Tab,
   Tabs,
   TextField,
-  FormLabel,
-  CardContent,
 } from "@material-ui/core";
 import useFieldValue from "hooks/useFieldValue";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
@@ -19,7 +18,7 @@ interface Props {
   label?: string;
 }
 const TranslatableField = ({ source, label = "" }: Props): JSX.Element => {
-  const [value, setValue] = useFieldValue(source);
+  const [value, setValue] = useFieldValue<LocalizedString[]>(source);
   const [loading, setLoading] = useState(true);
   const [languages, setLanguages] = useState<ILanguage[]>([]);
   const { selectedProject } = useProjects();
@@ -83,7 +82,7 @@ const TranslatableField = ({ source, label = "" }: Props): JSX.Element => {
               (h: LocalizedString) => h.language_id !== selectedLanguage
             );
 
-            const newLanguageObject = {
+            const newLanguageObject: LocalizedString = {
               ...[...value].find(
                 (h: LocalizedString) => h.language_id == selectedLanguage
               ),
