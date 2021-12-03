@@ -1,29 +1,28 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
-  Grid,
-  Tooltip,
-  IconButton,
-  Dialog,
-  DialogContent,
-  Typography,
-  DialogActions,
   Button,
-  FormControlLabel,
   Checkbox,
-  LinearProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  FormControlLabel,
+  Grid,
+  IconButton,
+  Tooltip,
+  Typography,
 } from "@material-ui/core";
-import {
-  DatagridRowProps,
-  useRedirect,
-  useNotify,
-  useRefresh,
-} from "react-admin";
-import { useBuildUI } from "providers/BuildUIContext";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
-import { UiItemNode, IUIItems, IUIGroup } from "types/uiGroups";
-import { ITag } from "types/tags";
+import { useBuildUI } from "providers/BuildUIContext";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import React, { useCallback, useMemo, useState } from "react";
+import {
+  DatagridRowProps,
+  useNotify,
+  useRedirect,
+  useRefresh,
+} from "react-admin";
+import { ITag } from "types/tags";
+import { IUIItems, UiItemNode } from "types/uiGroups";
 const AddCommonItem = (props: DatagridRowProps): JSX.Element => {
   /**  selected group */
   const currentGroup = props.record;
