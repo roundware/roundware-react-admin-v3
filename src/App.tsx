@@ -44,6 +44,11 @@ import ProjectEdit from "./components/Project/ProjectEdit";
 import ProjectList from "./components/Project/ProjectList";
 import ProjectShow from "./components/Project/ProjectShow";
 import { SessionCreate, SessionEdit, SessionList } from "./components/Session";
+import {
+  AudioTrackList,
+  AudioTrackEdit,
+  AudioTrackCreate,
+} from "components/AudioTrack";
 import { useProjects } from "./providers/ProjectsContext";
 import adminTheme from "./styles";
 
@@ -78,8 +83,9 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
     <Resource
       name="audiotracks"
       key="audiotracks"
-      list={ListGuesser}
-      edit={EditGuesser}
+      list={AudioTrackList}
+      edit={AudioTrackEdit}
+      create={AudioTrackCreate}
       icon={Audiotrack}
       options={{ label: "Audio Tracks" }}
     />
