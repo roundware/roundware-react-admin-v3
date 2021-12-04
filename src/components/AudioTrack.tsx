@@ -13,6 +13,7 @@ import {
   ListProps,
   SimpleForm,
   TextInput,
+  NumberInput,
 } from "react-admin";
 import RangeSlider from "./common/RangeSlider";
 export const AudioTrackList = (props: ListProps): JSX.Element => {
@@ -70,6 +71,7 @@ export const AudioTrackEdit = (props: EditProps): JSX.Element => {
           step={0.1}
         />
         <RangeSlider source="panduration" unit="s" label="Pan Duration" />
+        <NumberInput source="banned_duration" defaultValue={0} />
         <BooleanInput source="repeatrecordings" label="Repeat Recordings" />
         <BooleanInput source="start_with_silence" label="Start With Silence" />
         <BooleanInput
@@ -136,6 +138,11 @@ export const AudioTrackCreate = (props: CreateProps): JSX.Element => {
           label="Pan Duration"
           step={0.1}
           defaultValue={[0, 100]}
+        />
+        <NumberInput
+          source="banned_duration"
+          helperText="Seconds"
+          defaultValue={0}
         />
         <BooleanInput source="repeatrecordings" label="Repeat Recordings" />
         <BooleanInput source="start_with_silence" label="Start With Silence" />
