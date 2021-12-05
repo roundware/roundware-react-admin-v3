@@ -103,31 +103,45 @@ const AddCommonItem = (props: DatagridRowProps): JSX.Element => {
       if (checked) {
         const itemsToBeCreated: Omit<IUIItems, "id">[] = [];
 
-        /** need nest below all the items from parent element */
-        previousGroupItems?.forEach((i) => {
-          /** only if item with that tag id doesn't exists */
-          if (
-            !currentGroupItems?.some(
-              (cgi) => cgi.parent_id == i.id && cgi.tag_id == t.id
-            )
-          ) {
-            /** calculate new index */
-            const index = currentGroupItems?.reduce<number>((acc, crr) => {
-              if (crr.parent_id == i.id) return acc + 1;
-              return acc;
-            }, 1);
-
-            /** add to items to be created list */
+        /** for fist level */
+        if (currentGroup.index === 1) {
+          if (!currentGroupItems?.some((cgi) => cgi.tag_id == t.id)) {
             itemsToBeCreated.push({
               active: true,
               default: false,
-              parent_id: i.id,
+              parent_id: null,
               tag_id: t.id,
-              index,
+              index: currentGroupItems?.length + 1,
               ui_group_id: Number(currentGroup.id),
             });
           }
-        });
+        } else {
+          /** need nest below all the items from parent element */
+          previousGroupItems?.forEach((i) => {
+            /** only if item with that tag id doesn't exists */
+            if (
+              !currentGroupItems?.some(
+                (cgi) => cgi.parent_id == i.id && cgi.tag_id == t.id
+              )
+            ) {
+              /** calculate new index */
+              const index = currentGroupItems?.reduce<number>((acc, crr) => {
+                if (crr.parent_id == i.id) return acc + 1;
+                return acc;
+              }, 1);
+
+              /** add to items to be created list */
+              itemsToBeCreated.push({
+                active: true,
+                default: false,
+                parent_id: i.id,
+                tag_id: t.id,
+                index,
+                ui_group_id: Number(currentGroup.id),
+              });
+            }
+          });
+        }
 
         const promises = itemsToBeCreated?.map((i) =>
           dataProvider.create(`uiitems`, {
