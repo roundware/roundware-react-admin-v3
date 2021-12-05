@@ -8,7 +8,6 @@ import React from "react";
 import {
   BooleanInput,
   DatagridRowProps,
-  DeleteButton,
   EditButton,
   List,
   ListProps,
@@ -18,6 +17,7 @@ import {
 } from "react-admin";
 import { IUIGroup } from "types/uiGroups";
 import AddCommonItem from "./AddCommonItem";
+import DeleteUiGroupButton from "./DeleteUiGroupButton";
 import { DraggableDatagrid } from "./DraggableDatagrid";
 import UIGroupListActions from "./UIGroupListActions";
 import UIItemsTreeView from "./UIItemsTreeView";
@@ -46,7 +46,6 @@ export const UiGroupList = (props: ListProps): JSX.Element => {
                   choices={[
                     { id: "listen", name: "Listen" },
                     { id: "speak", name: "Speak" },
-                    { id: "browse", name: "Browse" },
                   ]}
                   label="Select UI Mode"
                   onChange={(v) =>
@@ -124,13 +123,7 @@ const RowActions = (props: DatagridRowProps): JSX.Element => {
         <AddCommonItem {...props} />
       </Grid>
       <Grid item>
-        <DeleteButton
-          record={props.record}
-          basePath={props.basePath}
-          size="small"
-          label=""
-          undoable={false}
-        />
+        <DeleteUiGroupButton record={props.record} basePath={props.basePath} />
       </Grid>
     </Grid>
   );
