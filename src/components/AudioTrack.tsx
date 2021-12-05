@@ -65,11 +65,13 @@ export const AudioTrackEdit = (props: EditProps): JSX.Element => {
           unit="s"
           label="Playback Duration (seconds)"
           min={0}
+          step={0.1}
         />
         <RangeSlider
           source="deadair"
           label="Silence Duration (seconds)"
           min={0}
+          step={0.1}
         />
         <RangeSlider
           source="fadeintime"
