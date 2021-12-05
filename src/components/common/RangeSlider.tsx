@@ -1,9 +1,10 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import Slider, { SliderProps } from "@material-ui/core/Slider";
-import { Box, Grid } from "@material-ui/core";
+import { Box, Grid, Card } from "@material-ui/core";
 import useFieldValue from "hooks/useFieldValue";
 import { makeStyles } from "@material-ui/core/styles";
+import { NumberInput } from "react-admin";
 interface Props extends Omit<SliderProps, "defaultValue"> {
   minField?: string;
   maxField?: string;
@@ -11,6 +12,7 @@ interface Props extends Omit<SliderProps, "defaultValue"> {
   label?: string;
   unit?: string;
   defaultValue?: [number, number];
+  forceMax?: number;
 }
 
 const RangeSlider = ({
@@ -20,6 +22,10 @@ const RangeSlider = ({
   label,
   unit,
   defaultValue,
+  max = 100,
+  min = 0,
+  forceMax,
+  step = 1,
   ...props
 }: Props): JSX.Element => {
   const [minValue, setMin] = useFieldValue<number>(
@@ -53,7 +59,7 @@ const RangeSlider = ({
   const classes = useStyles();
 
   return (
-    <Box mb={2}>
+    <Box mb={3} mt={2}>
       <Typography gutterBottom>{label}</Typography>
       <Slider
         value={value}
@@ -61,6 +67,15 @@ const RangeSlider = ({
         valueLabelDisplay="auto"
         defaultValue={defaultValue}
         {...props}
+        min={min}
+        max={
+          typeof forceMax == "number"
+            ? forceMax
+            : value[1] >= max
+            ? value[1] + 10
+            : max
+        }
+        step={step}
         className={classes.root}
       />
       <Grid container spacing={2}>
@@ -71,14 +86,30 @@ const RangeSlider = ({
             }}
             variant="caption"
           >
-            Min: {minValue}
-            {unit}
+            <NumberInput
+              source={`min${source}`}
+              label={`Min ${label}`}
+              size="small"
+              variant="outlined"
+              helperText={unit}
+              max={forceMax}
+              min={min}
+              step={Number(step) || 1}
+            />
           </Typography>
         </Grid>
         <Grid item>
           <Typography variant="caption" color="secondary">
-            Max: {maxValue}
-            {unit}
+            <NumberInput
+              source={`max${source}`}
+              label={`Max ${label}`}
+              variant="outlined"
+              size="small"
+              helperText={unit}
+              max={forceMax}
+              min={min}
+              step={Number(step) || 1}
+            />
           </Typography>
         </Grid>
       </Grid>
