@@ -17,12 +17,13 @@ import {
   DeleteButtonProps,
   useRefresh,
   UpdateResult,
+  DeleteResult,
   useNotify,
 } from "react-admin";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 
 const DeleteUiGroupButton = ({ record }: DeleteButtonProps): JSX.Element => {
-  const { refetchData, uiGroups } = useBuildUI();
+  const { refetchData, uiGroups, uiItemsList } = useBuildUI();
   const [showConfirm, setShowConfirm] = useState(false);
   const handleClose = () => setShowConfirm(false);
   const refresh = useRefresh();
@@ -36,7 +37,8 @@ const DeleteUiGroupButton = ({ record }: DeleteButtonProps): JSX.Element => {
   const handleDelete = async () => {
     try {
       setLoading(true);
-      const promises: Promise<UpdateResult<Record>>[] = [];
+      const promises: Promise<UpdateResult<Record> | DeleteResult<Record>>[] =
+        [];
       uiGroups.forEach((g) => {
         if (g.index > record!.index) {
           const updateProm = dataProvider.update(`uigroups`, {
@@ -49,6 +51,16 @@ const DeleteUiGroupButton = ({ record }: DeleteButtonProps): JSX.Element => {
           promises.push(updateProm);
         }
       });
+
+      uiItemsList.forEach((i) => {
+        if (i.ui_group_id == record?.id) {
+          const deleteProm = dataProvider.delete(`uiitems`, {
+            id: i.id,
+          });
+          promises.push(deleteProm);
+        }
+      });
+
       const deleteProm = dataProvider.delete(`uigroups`, {
         id: record!.id,
       });
