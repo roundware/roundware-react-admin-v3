@@ -170,7 +170,7 @@ export const UiGroupCreate = (props: CreateProps): JSX.Element => {
     const lastIndex: number = uiGroups.reduce<number>((lastIndex, el) => {
       if (el.index > lastIndex) lastIndex = el.index;
       return lastIndex;
-    }, 1);
+    }, 0);
     return lastIndex + 1;
   }, [uiGroups]);
 
