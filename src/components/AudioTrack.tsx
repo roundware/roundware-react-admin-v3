@@ -58,19 +58,45 @@ export const AudioTrackEdit = (props: EditProps): JSX.Element => {
           min={0}
           max={1}
           step={0.1}
+          forceMax={1}
         />
-        <RangeSlider source="duration" unit="s" label="Duration" min={0} />
-        <RangeSlider source="deadair" label="Dead Air" min={0} />
-        <RangeSlider source="fadeintime" unit="s" label="Fade In Time" />
-        <RangeSlider source="fadeouttime" unit="s" label="Fade Out Time" />
+        <RangeSlider
+          source="duration"
+          unit="s"
+          label="Playback Duration (seconds)"
+          min={0}
+        />
+        <RangeSlider
+          source="deadair"
+          label="Silence Duration (seconds)"
+          min={0}
+        />
+        <RangeSlider
+          source="fadeintime"
+          unit="s"
+          label="Fade In Time (seconds)"
+          step={0.1}
+        />
+        <RangeSlider
+          source="fadeouttime"
+          unit="s"
+          label="Fade Out Time (seconds)"
+          step={0.1}
+        />
         <RangeSlider
           source="panpos"
           label="Pan Position"
           min={-1}
           max={1}
           step={0.1}
+          forceMax={1}
         />
-        <RangeSlider source="panduration" unit="s" label="Pan Duration" />
+        <RangeSlider
+          source="panduration"
+          unit="s"
+          label="Pan Duration (seconds)"
+          step={0.1}
+        />
         <NumberInput source="banned_duration" defaultValue={0} />
         <BooleanInput source="repeatrecordings" label="Repeat Recordings" />
         <BooleanInput source="start_with_silence" label="Start With Silence" />
@@ -94,18 +120,19 @@ export const AudioTrackCreate = (props: CreateProps): JSX.Element => {
           max={1}
           step={0.1}
           defaultValue={[0, 1]}
+          forceMax={1}
         />
         <RangeSlider
           source="duration"
           unit="s"
-          label="Duration"
+          label="Playback Duration (seconds)"
           step={0.1}
           min={0}
           defaultValue={[0, 100]}
         />
         <RangeSlider
           source="deadair"
-          label="Dead Air"
+          label="Silence Duration (seconds)"
           step={0.1}
           min={0}
           defaultValue={[0, 50]}
@@ -114,15 +141,15 @@ export const AudioTrackCreate = (props: CreateProps): JSX.Element => {
           source="fadeintime"
           step={0.1}
           unit="s"
-          label="Fade In Time"
-          defaultValue={[0, 100]}
+          label="Fade In Time (seconds)"
+          defaultValue={[0, 20]}
         />
         <RangeSlider
           source="fadeouttime"
           step={0.1}
           unit="s"
-          label="Fade Out Time"
-          defaultValue={[0, 100]}
+          label="Fade Out Time (seconds)"
+          defaultValue={[0, 20]}
         />
         <RangeSlider
           source="panpos"
@@ -131,13 +158,14 @@ export const AudioTrackCreate = (props: CreateProps): JSX.Element => {
           max={1}
           step={0.1}
           defaultValue={[-0.1, 0.1]}
+          forceMax={1}
         />
         <RangeSlider
           source="panduration"
           unit="s"
-          label="Pan Duration"
+          label="Pan Duration (seconds)"
           step={0.1}
-          defaultValue={[0, 100]}
+          defaultValue={[0, 60]}
         />
         <NumberInput
           source="banned_duration"
