@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, useMediaQuery } from "@material-ui/core";
 import { AccountTree } from "@material-ui/icons";
 import DefaultIcon from "@material-ui/icons/ViewList";
 import * as React from "react";
@@ -12,8 +12,8 @@ import {
 } from "react-admin";
 import { useDispatch, useSelector } from "react-redux";
 import { useProjects } from "../../providers/ProjectsContext";
-import BuildIcon from "@material-ui/icons/Build";
-const useStyles = makeStyles((theme) => ({
+
+const useStyles = makeStyles(() => ({
   raMenu: {
     paddingTop: "30px",
   },
@@ -25,8 +25,15 @@ export const Menu = (props: MenuProps) => {
   const classes = useStyles();
   const { selectedProject } = useProjects();
   const dispatch = useDispatch();
-  const openMenu = () => dispatch(setSidebarVisibility(true));
-  const closeMenu = () => dispatch(setSidebarVisibility(false));
+  const openMenu = () => {
+    dispatch(setSidebarVisibility(true));
+  };
+
+  const isBigScreen = useMediaQuery(`(min-width:1400px)`);
+  const closeMenu = () => {
+    if (isBigScreen) return;
+    dispatch(setSidebarVisibility(false));
+  };
 
   return (
     <RAMenu {...props} className={classes.raMenu}>
