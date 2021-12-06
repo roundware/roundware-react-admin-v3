@@ -62,7 +62,6 @@ export const AudioTrackEdit = (props: EditProps): JSX.Element => {
         />
         <RangeSlider
           source="duration"
-          unit="s"
           label="Playback Duration (seconds)"
           min={0}
           step={0.1}
@@ -75,13 +74,11 @@ export const AudioTrackEdit = (props: EditProps): JSX.Element => {
         />
         <RangeSlider
           source="fadeintime"
-          unit="s"
           label="Fade In Time (seconds)"
           step={0.1}
         />
         <RangeSlider
           source="fadeouttime"
-          unit="s"
           label="Fade Out Time (seconds)"
           step={0.1}
         />
@@ -95,7 +92,6 @@ export const AudioTrackEdit = (props: EditProps): JSX.Element => {
         />
         <RangeSlider
           source="panduration"
-          unit="s"
           label="Pan Duration (seconds)"
           step={0.1}
         />
@@ -126,7 +122,6 @@ export const AudioTrackCreate = (props: CreateProps): JSX.Element => {
         />
         <RangeSlider
           source="duration"
-          unit="s"
           label="Playback Duration (seconds)"
           step={0.1}
           min={0}
@@ -142,16 +137,14 @@ export const AudioTrackCreate = (props: CreateProps): JSX.Element => {
         <RangeSlider
           source="fadeintime"
           step={0.1}
-          unit="s"
           label="Fade In Time (seconds)"
-          defaultValue={[0, 20]}
+          defaultValue={[0, 10]}
         />
         <RangeSlider
           source="fadeouttime"
           step={0.1}
-          unit="s"
           label="Fade Out Time (seconds)"
-          defaultValue={[0, 20]}
+          defaultValue={[0, 10]}
         />
         <RangeSlider
           source="panpos"
@@ -164,7 +157,6 @@ export const AudioTrackCreate = (props: CreateProps): JSX.Element => {
         />
         <RangeSlider
           source="panduration"
-          unit="s"
           label="Pan Duration (seconds)"
           step={0.1}
           defaultValue={[0, 60]}
