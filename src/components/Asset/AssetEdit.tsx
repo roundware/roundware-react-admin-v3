@@ -103,7 +103,11 @@ const AssetEdit = (props: EditProps): JSX.Element => {
           <SelectInput source="name" fullWidth />
         </ReferenceInput>
         <ReferenceArrayInput source="tag_ids" reference="tags" fullWidth>
-          <SelectArrayInput optionText="description" fullWidth />
+          <SelectArrayInput
+            translateChoice={false}
+            optionText="description"
+            fullWidth
+          />
         </ReferenceArrayInput>
 
         <NumberInput
