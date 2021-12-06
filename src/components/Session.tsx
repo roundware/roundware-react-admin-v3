@@ -37,9 +37,7 @@ export const SessionList = (props: ListProps) => {
         <BooleanField source="demo_stream_enabled" />
         <BooleanField source="geo_listen_enabled" />
         <TextField source="timezone" />
-        <ReferenceField source="project_id" reference="projects">
-          <TextField source="name" />
-        </ReferenceField>
+
         <EditButton />
         <DeleteButton />
       </Datagrid>
@@ -81,9 +79,6 @@ export const SessionCreate = (props: CreateProps) => {
         <BooleanInput source="demo_stream_enabled" />
         <BooleanInput source="geo_listen_enabled" />
         <TextInput source="timezone" />
-        <ReferenceInput source="project_id" reference="projects" required>
-          <SelectInput source="name" />
-        </ReferenceInput>
       </SimpleForm>
     </Create>
   );

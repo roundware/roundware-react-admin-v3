@@ -49,6 +49,7 @@ import {
   AudioTrackEdit,
   AudioTrackCreate,
 } from "components/AudioTrack";
+import { UserList, UserCreate, UserEdit } from "components/User";
 import { useProjects } from "./providers/ProjectsContext";
 import adminTheme from "./styles";
 
@@ -142,16 +143,16 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
     />
   ),
 
-  uiitems: (
-    <Resource
-      name="uiitems"
-      key="uiitems"
-      list={ListGuesser}
-      edit={EditGuesser}
-      icon={FeaturedPlayList}
-      options={{ label: "UI Items" }}
-    />
-  ),
+  // uiitems: (
+  //   <Resource
+  //     name="uiitems"
+  //     key="uiitems"
+  //     list={ListGuesser}
+  //     edit={EditGuesser}
+  //     icon={FeaturedPlayList}
+  //     options={{ label: "UI Items" }}
+  //   />
+  // ),
 
   tags: (
     <Resource
@@ -201,8 +202,9 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
     <Resource
       name="users"
       key="users"
-      list={ListGuesser}
-      edit={EditGuesser}
+      list={UserList}
+      edit={UserEdit}
+      create={UserCreate}
       icon={PeopleAlt}
     />
   ),
