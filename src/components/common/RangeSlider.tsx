@@ -89,6 +89,11 @@ const RangeSlider = ({
             <NumberInput
               source={`min${source}`}
               label={`Min ${label}`}
+              InputLabelProps={{
+                style: {
+                  width: 300,
+                },
+              }}
               size="small"
               variant="outlined"
               helperText={unit}
@@ -109,6 +114,11 @@ const RangeSlider = ({
               max={forceMax}
               min={min}
               step={Number(step) || 1}
+              InputLabelProps={{
+                style: {
+                  width: 300,
+                },
+              }}
             />
           </Typography>
         </Grid>
