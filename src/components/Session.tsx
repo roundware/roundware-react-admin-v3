@@ -50,7 +50,7 @@ export const SessionList = (props: ListProps) => {
 export const SessionEdit = (props: EditProps) => {
   return (
     <Edit {...props}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" disabled />
         <TextInput source="device" required />
         <DateTimeInput source="starttime" required />
@@ -71,7 +71,7 @@ export const SessionEdit = (props: EditProps) => {
 export const SessionCreate = (props: CreateProps) => {
   return (
     <Create {...props}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
         <TextInput source="device" required />
         <DateTimeInput source="starttime" required defaultValue={new Date()} />

@@ -67,7 +67,7 @@ export const UiGroupEdit = (props: EditProps): JSX.Element => {
       mutationMode="pessimistic"
       onSuccess={refreshData}
     >
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         {/* <ArrayInput label="UI Items" source="ui_items">
               <SimpleFormIterator>
                 <BooleanInput label="Active" source="active" />
@@ -176,7 +176,7 @@ export const UiGroupCreate = (props: CreateProps): JSX.Element => {
 
   return (
     <Create {...props} transform={transform} onSuccess={refreshData}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <NumberInput
           source="index"
           fullWidth

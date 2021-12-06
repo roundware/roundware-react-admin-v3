@@ -61,7 +61,7 @@ export const ListenEventsList = (props: ListProps) => {
 export const ListenEventsEdit = (props: EditProps) => {
   return (
     <Edit {...props}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" disabled />
         <NumberInput source="duration_in_seconds" />
         <DateTimeInput source="starttime" label="Start Time" />
@@ -79,7 +79,7 @@ export const ListenEventsEdit = (props: EditProps) => {
 export const ListenEventsCreate = (props: CreateProps) => {
   return (
     <Create {...props}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" disabled />
         <NumberInput source="duration_in_seconds" required />
         <DateTimeInput source="starttime" label="Start Time" required />

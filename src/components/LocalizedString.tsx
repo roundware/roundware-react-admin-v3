@@ -22,7 +22,7 @@ export const LocalizedStringList = (props: ListProps) => {
 export const LocalizedStringEdit = (props: EditProps) => {
   return (
     <Edit {...props}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>
     </Edit>
@@ -32,7 +32,7 @@ export const LocalizedStringEdit = (props: EditProps) => {
 export const LocalizedStringCreate = (props: CreateProps) => {
   return (
     <Create {...props}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>
     </Create>

@@ -11,31 +11,37 @@ import {
   SelectArrayInput,
   required,
   CreateProps,
-  DateInput
+  DateInput,
 } from "react-admin";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import { FormControl, FormHelperText, TextField } from "@material-ui/core";
 
 const ProjectCreate = (props: CreateProps) => {
-
   const dateFormatter = (v: string) => {
     return new Date(v).toISOString();
-  }
+  };
 
   const [date, setDate] = useState<string>("");
 
   return (
     <Create title="Create a new project" {...props}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="name" fullWidth validate={required()} />
         <TextInput multiline source="description" fullWidth />
         <NumberInput source="latitude" validate={required()} />
         <NumberInput source="longitude" validate={required()} />
-        
-        <DateInput source="pub_date" helperText={new Date(date).toDateString()} defaultValue={new Date()} style={{marginBottom: 0}}  onChange={e => setDate(e.target.value)}  format={dateFormatter} label="Publish Date"  />
-          
-          
+
+        <DateInput
+          source="pub_date"
+          helperText={new Date(date).toDateString()}
+          defaultValue={new Date()}
+          style={{ marginBottom: 0 }}
+          onChange={(e) => setDate(e.target.value)}
+          format={dateFormatter}
+          label="Publish Date"
+        />
+
         <BooleanInput source="auto_submit" />
         <NumberInput source="max_recording_length" validate={required()} />
         <TextInput source="sharing_url" fullWidth validate={required()} />
@@ -46,7 +52,11 @@ const ProjectCreate = (props: CreateProps) => {
         <BooleanInput source="geo_speak_enabled" />
         <BooleanInput source="reset_tag_defaults_on_startup" />
         <BooleanInput source="timed_asset_priority" />
-        <ReferenceArrayInput source="language_ids" reference="languages" validate={required()}>
+        <ReferenceArrayInput
+          source="language_ids"
+          reference="languages"
+          validate={required()}
+        >
           <SelectArrayInput optionText="name" />
         </ReferenceArrayInput>
         <SelectInput
@@ -68,7 +78,7 @@ const ProjectCreate = (props: CreateProps) => {
         />
         <BooleanInput source="listen_questions_dynamic" />
         <BooleanInput source="speak_questions_dynamic" />
-        <Divider  />
+        <Divider />
         <Typography variant={"h6"} gutterBottom>
           Secondary Settings
         </Typography>
@@ -95,8 +105,7 @@ const ProjectCreate = (props: CreateProps) => {
         />
       </SimpleForm>
     </Create>
-
-  )
-}
+  );
+};
 
 export default ProjectCreate;

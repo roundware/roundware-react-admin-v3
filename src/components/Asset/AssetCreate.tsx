@@ -73,7 +73,7 @@ const AssetCreate = (props: CreateProps): JSX.Element => {
       // @ts-ignore
       transform={transform}
     >
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <SelectInput
           source="media_type"
           choices={[

@@ -24,7 +24,7 @@ export const LanguageList = (props: ListProps) => {
 export const LanguageEdit = (props: EditProps) => {
   return (
     <Edit {...props}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>
     </Edit>
@@ -34,7 +34,7 @@ export const LanguageEdit = (props: EditProps) => {
 export const LanguageCreate = (props: CreateProps) => {
   return (
     <Create {...props}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>
     </Create>

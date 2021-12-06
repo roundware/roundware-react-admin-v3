@@ -51,7 +51,7 @@ const AssetEdit = (props: EditProps): JSX.Element => {
       // @ts-ignore
       transform={transform}
     >
-      <SimpleForm redirect={false}>
+      <SimpleForm redirect={false} warnWhenUnsavedChanges>
         <TextInput source="id" disabled fullWidth />
         <ReferenceInput
           label="Project"

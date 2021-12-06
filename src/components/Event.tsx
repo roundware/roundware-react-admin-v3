@@ -23,7 +23,7 @@ export const EventsList = (props: ListProps) => {
 export const EventsEdit = (props: EditProps) => {
   return (
     <Edit {...props}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>
     </Edit>
@@ -33,7 +33,7 @@ export const EventsEdit = (props: EditProps) => {
 export const EventsCreate = (props: CreateProps) => {
   return (
     <Create {...props}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>
     </Create>

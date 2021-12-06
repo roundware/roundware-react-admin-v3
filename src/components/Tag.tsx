@@ -109,7 +109,7 @@ export const TagEdit = (props: EditProps): JSX.Element => {
       onSuccess={refresh}
       transform={transform}
     >
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
         <ReferenceInput
           source="tag_category_id"
@@ -127,7 +127,17 @@ export const TagEdit = (props: EditProps): JSX.Element => {
           source="loc_description_admin"
           label={`Localized Description`}
         />
-        <TextInput source="filter" />
+        <SelectInput
+          source="filter"
+          choices={[
+            { id: "", name: "No Filter" },
+            { id: "_within_10km", name: "Assets Within 10KM" },
+            {
+              id: "_ten_most_recent_days",
+              name: "Assets created within 10 days.",
+            },
+          ]}
+        />
         <TextInput source="data" />
       </SimpleForm>
     </Edit>
@@ -177,7 +187,7 @@ export const TagCreate = (props: CreateProps): JSX.Element => {
   const refresh = useRefresh();
   return (
     <Create {...props} transform={transform} onSuccess={refresh}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <ReferenceInput
           source="tag_category_id"
           reference="tagcategories"
@@ -194,7 +204,17 @@ export const TagCreate = (props: CreateProps): JSX.Element => {
           source="loc_description_admin"
           label={`Localized Description`}
         />
-        <TextInput source="filter" />
+        <SelectInput
+          source="filter"
+          choices={[
+            { id: "", name: "No Filter" },
+            { id: "_within_10km", name: "Assets Within 10KM" },
+            {
+              id: "_ten_most_recent_days",
+              name: "Assets created within 10 days.",
+            },
+          ]}
+        />
         <TextInput source="data" />
       </SimpleForm>
     </Create>

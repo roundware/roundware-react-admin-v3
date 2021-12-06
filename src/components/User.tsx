@@ -23,7 +23,7 @@ export const UserList = (props: ListProps) => {
 export const UserEdit = (props: EditProps) => {
   return (
     <Edit {...props}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>
     </Edit>
@@ -33,7 +33,7 @@ export const UserEdit = (props: EditProps) => {
 export const UserCreate = (props: CreateProps) => {
   return (
     <Create {...props}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>
     </Create>

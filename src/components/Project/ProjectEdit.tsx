@@ -18,7 +18,7 @@ import Typography from "@material-ui/core/Typography";
 const ProjectEdit = (props: EditProps) => {
   return (
     <Edit title="Edit a project" {...props}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" disabled />
         <TextInput source="name" fullWidth />
         <TextInput multiline source="description" fullWidth />

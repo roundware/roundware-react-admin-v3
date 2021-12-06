@@ -48,7 +48,7 @@ export const SpeakerEdit = (props: EditProps): JSX.Element => {
       }}
       transform={transform}
     >
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" fullWidth />
         <BooleanInput source="activeyn" fullWidth />
         <TextInput source="code" fullWidth />
@@ -98,7 +98,7 @@ export const SpeakerCreate = (props: CreateProps): JSX.Element => {
         redirect(`list`, `/speakers`);
       }}
     >
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <BooleanInput source="activeyn" fullWidth defaultChecked />
         <TextInput source="code" fullWidth required />
 

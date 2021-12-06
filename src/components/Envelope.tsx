@@ -23,7 +23,7 @@ export const EnvelopeList = (props: ListProps) => {
 export const EnvelopeEdit = (props: EditProps) => {
   return (
     <Edit {...props}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>
     </Edit>
@@ -33,7 +33,7 @@ export const EnvelopeEdit = (props: EditProps) => {
 export const EnvelopeCreate = (props: CreateProps) => {
   return (
     <Create {...props}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>
     </Create>
