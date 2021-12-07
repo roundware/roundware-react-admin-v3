@@ -8,8 +8,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect } from "react";
 import {
   AppBar,
-  AppBarProps,
   Layout,
+  AppBarProps,
   LayoutProps,
   ReduxState,
   Sidebar,
@@ -18,6 +18,7 @@ import {
 } from "react-admin";
 import { useSelector } from "react-redux";
 import { useProjects } from "../../providers/ProjectsContext";
+import Appbar from "./Appbar";
 import { Menu } from "./Menu";
 
 const useStyles = makeStyles((theme) => ({
@@ -101,7 +102,7 @@ const CustomLayout = (props: LayoutProps): JSX.Element => {
   return (
     <Layout
       {...props}
-      appBar={CustomAppBar}
+      appBar={Appbar}
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       sidebar={CustomSidebar}
