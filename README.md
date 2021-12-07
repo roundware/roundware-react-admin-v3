@@ -1,6 +1,24 @@
-# Getting Started with Create React App
+# Getting Started 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Setting Up
+
+Make copy of `env.example` and `.env` and edit the variables.
+```
+REACT_APP_SERVER_URL=https://dev.roundware.com
+
+
+# example - assets,audiotracks,envelopes,events,listenevents,sessions,speakers,uigroups,uiitems,tags,tag_categories,languages,localizedstrings,users
+          - all (display everything)
+          - none (display only dashboard)
+REACT_APP_INCLUDE_TABS=all
+
+REACT_APP_INCLUDE_PROJECT_IDS=all
+
+REACT_APP_GOOGLE_MAPS_API_KEY=
+
+```
 
 ## Available Scripts
 
