@@ -52,11 +52,6 @@ export const UiGroupList = (props: ListProps): JSX.Element => {
                     setUiMode(v as unknown as IUIGroup[`ui_mode`])
                   }
                 />,
-                <BooleanInput
-                  source="active"
-                  label="Show Active Groups"
-                  key="active-filter"
-                />,
               ]}
               sort={{
                 field: "index",
@@ -64,7 +59,6 @@ export const UiGroupList = (props: ListProps): JSX.Element => {
               }}
               filterDefaultValues={{
                 ui_mode: "speak",
-                active: true,
               }}
               actions={<UIGroupListActions />}
               bulkActionButtons={false}
