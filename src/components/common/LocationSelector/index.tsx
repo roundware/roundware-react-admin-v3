@@ -1,5 +1,5 @@
 import useFieldValue from "hooks/useFieldValue";
-import React, { useMemo } from "react";
+import React from "react";
 import {
   CircularProgress,
   Typography,
@@ -29,7 +29,7 @@ const center = {
   lng: -38.523,
 };
 
-const LocationSelector = (props: Props) => {
+const LocationSelector = (props: Props): JSX.Element => {
   const [latStr, setLat] = useFieldValue(props.fieldNames.latitude);
   const [lngStr, setLng] = useFieldValue(props.fieldNames.longitude);
 
@@ -38,11 +38,12 @@ const LocationSelector = (props: Props) => {
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY!,
-    libraries: ["places"],
+    libraries: ["places", "drawing"],
   });
 
-  const [map, setMap] = React.useState(null);
+  const [, setMap] = React.useState(null);
 
   const onLoad = React.useCallback(function callback(map) {
     setMap(map);
@@ -50,7 +51,7 @@ const LocationSelector = (props: Props) => {
     map.fitBounds(bounds);
   }, []);
 
-  const onUnmount = React.useCallback(function callback(map) {
+  const onUnmount = React.useCallback(function callback() {
     setMap(null);
   }, []);
 
