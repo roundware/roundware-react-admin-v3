@@ -29,7 +29,7 @@ export const Menu = (props: MenuProps) => {
     dispatch(setSidebarVisibility(true));
   };
 
-  const isBigScreen = useMediaQuery(`(min-width:1400px)`);
+  const isBigScreen = useMediaQuery(`(min-width:1024px)`);
   const closeMenu = () => {
     if (isBigScreen) return;
     dispatch(setSidebarVisibility(false));
