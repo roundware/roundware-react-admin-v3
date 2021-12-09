@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  CircularProgress,
+  LinearProgress,
   Grid,
   IconButton,
   Slider,
@@ -30,7 +31,7 @@ interface PropTypes {
 
 const AudioEditField = ({ size = "medium", buttons, ...props }: PropTypes) => {
   const {
-    input: { onChange, value },
+    input: { value },
   } = useField(`file`);
   const {
     input: { value: start_time, onChange: changeStartTime },
@@ -41,9 +42,7 @@ const AudioEditField = ({ size = "medium", buttons, ...props }: PropTypes) => {
   const {
     input: { value: id },
   } = useField(`id`);
-  const [durationInSec, setDurationInSec] = useFieldValue(
-    `audio_length_in_seconds`
-  );
+  const [, setDurationInSec] = useFieldValue(`audio_length_in_seconds`);
 
   const plugins = [
     {
@@ -58,8 +57,8 @@ const AudioEditField = ({ size = "medium", buttons, ...props }: PropTypes) => {
     },
   ];
 
-  const [volume, setVolume] = useFieldValue(`volume`);
-
+  const [volume] = useFieldValue<number>(`volume`);
+  const [progress, setProgress] = useState(0);
   const audioSrc = typeof value?.src === "string" ? value.src : value;
   const [loading, setLoading] = useState(true);
   const wavesurferRef = React.useRef<any>();
@@ -76,6 +75,10 @@ const AudioEditField = ({ size = "medium", buttons, ...props }: PropTypes) => {
         wavesurferRef.current.on("ready", () => {
           setLoading(false);
           wavesurferRef.current.currentTime = start_time;
+        });
+
+        wavesurferRef.current.on("loading", (p: number) => {
+          setProgress(p);
         });
 
         // wavesurferRef.current.on("region-removed", (region) => {
@@ -193,7 +196,14 @@ const AudioEditField = ({ size = "medium", buttons, ...props }: PropTypes) => {
             md={8}
           >
             {loading ? (
-              <CircularProgress />
+              <div>
+                <div>Loading Audio {progress} %</div>
+                <LinearProgress
+                  style={{ flexGrow: 1 }}
+                  variant="determinate"
+                  value={progress}
+                />
+              </div>
             ) : (
               <>
                 <Grid item>
