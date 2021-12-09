@@ -22,7 +22,7 @@ import {
 } from "react-admin";
 import { useProjects } from "../providers/ProjectsContext";
 
-export const ListenEventsList = (props: ListProps) => {
+export const ListenEventsList = (props: ListProps): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
     <List
@@ -39,9 +39,12 @@ export const ListenEventsList = (props: ListProps) => {
           source="start_time__lte"
           label="Started Before"
         />,
+        <ReferenceInput source="asset_id" reference="assets" key="asset_id">
+          <SelectInput optionText="id" />
+        </ReferenceInput>,
       ]}
     >
-      <Datagrid>
+      <Datagrid rowClick="edit">
         <NumberField source="id" />
         <NumberField source="duration_in_seconds" />
         <DateField source="start_time" />
@@ -58,7 +61,7 @@ export const ListenEventsList = (props: ListProps) => {
   );
 };
 
-export const ListenEventsEdit = (props: EditProps) => {
+export const ListenEventsEdit = (props: EditProps): JSX.Element => {
   return (
     <Edit {...props}>
       <SimpleForm warnWhenUnsavedChanges>
@@ -76,7 +79,7 @@ export const ListenEventsEdit = (props: EditProps) => {
   );
 };
 
-export const ListenEventsCreate = (props: CreateProps) => {
+export const ListenEventsCreate = (props: CreateProps): JSX.Element => {
   return (
     <Create {...props}>
       <SimpleForm warnWhenUnsavedChanges>

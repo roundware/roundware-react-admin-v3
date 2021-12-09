@@ -11,7 +11,7 @@ import {
   TextInput,
 } from "react-admin";
 
-export const UiItemList = (props: ListProps) => {
+export const UiItemList = (props: ListProps): JSX.Element => {
   return (
     <List {...props}>
       <Datagrid></Datagrid>
@@ -19,7 +19,7 @@ export const UiItemList = (props: ListProps) => {
   );
 };
 
-export const UiItemEdit = (props: EditProps) => {
+export const UiItemEdit = (props: EditProps): JSX.Element => {
   return (
     <Edit {...props}>
       <SimpleForm warnWhenUnsavedChanges>
@@ -29,7 +29,7 @@ export const UiItemEdit = (props: EditProps) => {
   );
 };
 
-export const UserCreate = (props: CreateProps) => {
+export const UserCreate = (props: CreateProps): JSX.Element => {
   return (
     <Create {...props}>
       <SimpleForm warnWhenUnsavedChanges>
