@@ -50,6 +50,11 @@ import {
   AudioTrackCreate,
 } from "components/AudioTrack";
 import { UserList, UserCreate, UserEdit } from "components/User";
+import {
+  TimedAssetList,
+  TimedAssetCreate,
+  TimedAssetEdit,
+} from "components/TimedAsset";
 import { useProjects } from "./providers/ProjectsContext";
 import adminTheme from "./styles";
 
@@ -67,6 +72,17 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
       edit={AssetEdit}
       options={{ label: "Assets" }}
       icon={WebAsset}
+    />
+  ),
+  timedassets: (
+    <Resource
+      name="timedassets"
+      key="timedassets"
+      list={TimedAssetList}
+      edit={TimedAssetEdit}
+      create={TimedAssetCreate}
+      icon={WebAsset}
+      options={{ label: "Timed Assets" }}
     />
   ),
   uigroups: (
