@@ -66,7 +66,10 @@ const AudioPlayerField = ({
       setPlaying(false);
       return wavesurferRef.current.pause();
     }
-    wavesurferRef.current.play();
+    const region = Object.values(wavesurferRef.current.regions.list)[0];
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    region.play();
     setPlaying(true);
   };
 
