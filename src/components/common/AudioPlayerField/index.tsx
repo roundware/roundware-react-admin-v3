@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { WaveSurfer, WaveForm, Region } from "wavesurfer-react";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions";
-import { useRecordContext } from "react-admin";
+import { useRecordContext, Record } from "react-admin";
 import { IconButton, Grid, LinearProgress } from "@material-ui/core";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import PauseIcon from "@material-ui/icons/Pause";
+import useFieldValue from "hooks/useFieldValue";
+import { useRoundwareDataProvider } from "providers/DataProviderContext";
 const plugins = [
   {
     plugin: RegionsPlugin,
@@ -19,46 +21,77 @@ interface PropTypes {
   source: string;
   size?: "small" | "medium";
   buttons?: React.ReactNode[];
+  inEditView?: boolean;
 }
 
+const useEditContext = ({ source }: PropTypes) => {
+  const [assetId] = useFieldValue<string>(source);
+  const [asset, setAsset] = useState<Record>({
+    file: "",
+    start_time: 0,
+    end_time: 0,
+    id: 0,
+  });
+  const dataProvider = useRoundwareDataProvider();
+  useEffect(() => {
+    dataProvider
+      .getOne(`assets`, {
+        id: assetId,
+      })
+      .then(({ data }) => setAsset(data));
+  }, [assetId]);
+
+  return asset;
+};
+
+const hooks = {
+  useRecordContext,
+  useEditContext,
+};
 const AudioPlayerField = ({
   size = "small",
   buttons,
+  inEditView,
   ...props
 }: PropTypes): JSX.Element | null => {
-  const { file, ...record } = useRecordContext(props);
+  const { file, ...record } =
+    hooks[inEditView ? `useEditContext` : `useRecordContext`](props);
+
   const [loading, setLoading] = useState(true);
 
   const [progress, setProgress] = useState(0);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const wavesurferRef = React.useRef<any>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleMount = React.useCallback((waveSurfer: any) => {
-    wavesurferRef.current = waveSurfer;
-    if (wavesurferRef.current) {
-      if (file) {
-        wavesurferRef.current.load(file);
+  const handleMount = React.useCallback(
+    (waveSurfer: any) => {
+      wavesurferRef.current = waveSurfer;
+      if (wavesurferRef.current) {
+        if (file) {
+          wavesurferRef.current.load(file);
+        }
+
+        // wavesurferRef.current.on("region-created", regionCreatedHandler);
+
+        wavesurferRef.current.on("ready", () => {
+          setLoading(false);
+        });
+
+        wavesurferRef.current.on("loading", (n: number) => {
+          setProgress(n);
+        });
+
+        // wavesurferRef.current.on("region-removed", (region) => {
+        //   console.log("region-removed --> ", region);
+        // });
+
+        // wavesurferRef.current.on("loading", (data) => {
+        //   console.log("loading --> ", data);
+        // });
       }
-
-      // wavesurferRef.current.on("region-created", regionCreatedHandler);
-
-      wavesurferRef.current.on("ready", () => {
-        setLoading(false);
-      });
-
-      wavesurferRef.current.on("loading", (n: number) => {
-        setProgress(n);
-      });
-
-      // wavesurferRef.current.on("region-removed", (region) => {
-      //   console.log("region-removed --> ", region);
-      // });
-
-      // wavesurferRef.current.on("loading", (data) => {
-      //   console.log("loading --> ", data);
-      // });
-    }
-  }, []);
+    },
+    [file]
+  );
 
   const [playing, setPlaying] = useState(false);
   const handlePlay = () => {
@@ -72,6 +105,13 @@ const AudioPlayerField = ({
     region.play();
     setPlaying(true);
   };
+
+  useEffect(() => {
+    if (wavesurferRef && wavesurferRef.current && file) {
+      setLoading(true);
+      wavesurferRef.current.load(file);
+    }
+  }, [file]);
 
   if (!file) return null;
   return (
@@ -88,7 +128,12 @@ const AudioPlayerField = ({
               height={size === "small" ? 64 : 128}
               // maxCanvasWidth={size === "small" ? 4000 : 6000}
             >
-              <Region start={record.start_time} end={record.end_time} />
+              <Region
+                start={record?.start_time}
+                end={record?.end_time}
+                drag={false}
+                resize={false}
+              />
             </WaveForm>
           </WaveSurfer>
         </Grid>
