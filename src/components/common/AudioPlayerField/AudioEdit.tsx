@@ -29,7 +29,10 @@ interface PropTypes {
   buttons?: React.ReactNode[];
 }
 
-const AudioEditField = ({ size = "medium", buttons, ...props }: PropTypes) => {
+const AudioEditField = ({
+  size = "medium",
+  buttons,
+}: PropTypes): JSX.Element | null => {
   const {
     input: { value },
   } = useField(`file`);
@@ -153,7 +156,7 @@ const AudioEditField = ({ size = "medium", buttons, ...props }: PropTypes) => {
     }
   };
 
-  if (!audioSrc) return null;
+  if (!audioSrc) return <></>;
   return (
     <div style={{ width: size === "small" ? "280px" : "100%" }}>
       <Grid container spacing={2} direction="column">
