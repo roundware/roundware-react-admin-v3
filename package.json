@@ -26,7 +26,7 @@
     "ra-data-roundware-drf": "https://github.com/shreyas-jadhav/ra-data-roundware-drf/raw/main/ra-data-roundware-drf-0.1.6.tgz",
     "random-material-color": "^1.0.5",
     "react": "^17.0.2",
-    "react-admin": "^3.19.2",
+    "react-admin": "^3.19.3",
     "react-admin-lerna": "file:../react-admin",
     "react-beautiful-dnd": "^13.1.0",
     "react-dom": "^17.0.2",
