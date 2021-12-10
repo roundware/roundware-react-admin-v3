@@ -1,21 +1,25 @@
+import RangeSlider from "components/common/RangeSlider";
 import React from "react";
 import {
-  ListProps,
-  EditProps,
-  CreateProps,
-  List,
-  Datagrid,
-  Edit,
-  SimpleForm,
   Create,
-  TextField,
-  TextInput,
-  ReferenceField,
+  CreateProps,
+  Datagrid,
+  DeleteButton,
+  Edit,
+  EditButton,
+  EditProps,
+  List,
+  ListProps,
   NumberField,
   NumberInput,
+  ReferenceField,
   ReferenceInput,
   SelectInput,
+  SimpleForm,
+  TextField,
+  TextInput,
 } from "react-admin";
+import AudioPlayerField from "./common/AudioPlayerField";
 
 export const TimedAssetList = (props: ListProps): JSX.Element => {
   return (
@@ -50,14 +54,19 @@ export const TimedAssetList = (props: ListProps): JSX.Element => {
         order: "ASC",
       }}
     >
-      <Datagrid rowClick={"edit"}>
+      <Datagrid rowClick={""}>
         <TextField source="id" />
         <ReferenceField source="asset_id" reference="assets">
           <TextField source="file" />
         </ReferenceField>
+        <ReferenceField source="asset_id" reference="assets" link={false}>
+          <AudioPlayerField source="file" />
+        </ReferenceField>
 
         <NumberField source="start" sortable sortBy="ASC" />
         <NumberField source="end" sortable />
+        <EditButton />
+        <DeleteButton />
       </Datagrid>
     </List>
   );
@@ -66,13 +75,15 @@ export const TimedAssetList = (props: ListProps): JSX.Element => {
 export const TimedAssetEdit = (props: EditProps): JSX.Element => {
   return (
     <Edit {...props}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" disabled />
         <ReferenceInput source="asset_id" reference="assets">
           <SelectInput optionText="id" />
         </ReferenceInput>
-        <NumberInput source="start" />
-        <NumberInput source="end" />
+
+        <AudioPlayerField source="asset_id" inEditView label="Audio" />
+
+        <RangeSlider minField="start" maxField="end" />
       </SimpleForm>
     </Edit>
   );
@@ -81,12 +92,17 @@ export const TimedAssetEdit = (props: EditProps): JSX.Element => {
 export const TimedAssetCreate = (props: CreateProps): JSX.Element => {
   return (
     <Create {...props}>
-      <SimpleForm>
+      <SimpleForm warnWhenUnsavedChanges>
         <ReferenceInput source="asset_id" reference="assets">
           <SelectInput optionText={(record) => `${record?.id}`} />
         </ReferenceInput>
-        <NumberInput source="start" />
-        <NumberInput source="end" />
+        <ReferenceField source="asset_id" reference="assets" label={""}>
+          <TextField source="file" label={""} />
+        </ReferenceField>
+        <ReferenceField source="asset_id" reference="assets" link={false}>
+          <AudioPlayerField source="file" label="Audio" />
+        </ReferenceField>
+        <RangeSlider minField="start" maxField="end" />
       </SimpleForm>
     </Create>
   );
