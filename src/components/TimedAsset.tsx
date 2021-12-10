@@ -96,12 +96,7 @@ export const TimedAssetCreate = (props: CreateProps): JSX.Element => {
         <ReferenceInput source="asset_id" reference="assets">
           <SelectInput optionText={(record) => `${record?.id}`} />
         </ReferenceInput>
-        <ReferenceField source="asset_id" reference="assets" label={""}>
-          <TextField source="file" label={""} />
-        </ReferenceField>
-        <ReferenceField source="asset_id" reference="assets" link={false}>
-          <AudioPlayerField source="file" label="Audio" />
-        </ReferenceField>
+        <AudioPlayerField source="asset_id" inEditView label="Audio" />
         <RangeSlider minField="start" maxField="end" />
       </SimpleForm>
     </Create>
