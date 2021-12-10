@@ -1,9 +1,9 @@
-import React from "react";
-import Typography from "@material-ui/core/Typography";
+import { Box, Grid } from "@material-ui/core";
 import Slider, { SliderProps } from "@material-ui/core/Slider";
-import { Box, Grid, Card } from "@material-ui/core";
-import useFieldValue from "hooks/useFieldValue";
 import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import useFieldValue from "hooks/useFieldValue";
+import React from "react";
 import { NumberInput } from "react-admin";
 interface Props extends Omit<SliderProps, "defaultValue"> {
   minField?: string;
@@ -87,8 +87,8 @@ const RangeSlider = ({
             variant="caption"
           >
             <NumberInput
-              source={`min${source}`}
-              label={`Min ${label}`}
+              source={minField || `min${source}`}
+              label={capitalize(minField) || `Min ${label}`}
               InputLabelProps={{
                 style: {
                   width: 300,
@@ -106,8 +106,8 @@ const RangeSlider = ({
         <Grid item>
           <Typography variant="caption" color="secondary">
             <NumberInput
-              source={`max${source}`}
-              label={`Max ${label}`}
+              source={maxField || `max${source}`}
+              label={capitalize(maxField) || `Max ${label}`}
               variant="outlined"
               size="small"
               helperText={unit}
@@ -126,5 +126,8 @@ const RangeSlider = ({
     </Box>
   );
 };
+
+const capitalize = (label?: string) =>
+  label ? label.charAt(0).toUpperCase() + label.slice(1) : false;
 
 export default RangeSlider;
