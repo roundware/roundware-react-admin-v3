@@ -38,6 +38,10 @@ export const AssetList = (props: ListProps): JSX.Element => {
         />,
       ]}
       perPage={30}
+      sort={{
+        field: "id",
+        order: "DSC",
+      }}
     >
       <Datagrid>
         <TextField source="id" />
