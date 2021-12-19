@@ -20,7 +20,7 @@ export const UserList = (props: ListProps): JSX.Element => {
       <Datagrid rowClick={"edit"}>
         <TextField source="id" />
         <TextField source="username" />
-        <TextField source="fist_name" />
+        <TextField source="first_name" />
         <TextField source="last_name" />
         <TextField source="email" />
         <TextField source="device_id" />
@@ -47,8 +47,8 @@ export const UserEdit = (props: EditProps): JSX.Element => {
         <TextInput source="fist_name" />
         <TextInput source="last_name" />
         <TextInput source="email" />
-        <TextInput source="device_id" defaultValue="" />
-        <TextInput source="client_type" />
+        {/* <TextInput source="device_id" defaultValue="" /> */}
+        {/* <TextInput source="client_type" /> */}
       </SimpleForm>
     </Edit>
   );
@@ -67,11 +67,11 @@ export const UserCreate = (props: CreateProps): JSX.Element => {
         warnWhenUnsavedChanges
       >
         <TextInput source="username" />
-        <TextInput source="fist_name" />
+        <TextInput source="first_name" />
         <TextInput source="last_name" />
         <TextInput source="email" />
-        <TextInput source="device_id" defaultValue="" />
-        <TextInput source="client_type" />
+        {/* <TextInput source="device_id" defaultValue="" /> */}
+        {/* <TextInput source="client_type" /> */}
       </SimpleForm>
     </Create>
   );
