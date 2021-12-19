@@ -1,44 +1,40 @@
-import React, { useState } from "react";
-import {
-  Create,
-  SimpleForm,
-  TextInput,
-  NumberInput,
-  BooleanInput,
-  SelectInput,
-  ReferenceInput,
-  ReferenceArrayInput,
-  SelectArrayInput,
-  required,
-  CreateProps,
-  DateInput,
-} from "react-admin";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
-import { FormControl, FormHelperText, TextField } from "@material-ui/core";
+import { useProjects } from "providers/ProjectsContext";
+import React from "react";
+import {
+  BooleanInput,
+  Create,
+  CreateProps,
+  DateTimeInput,
+  NumberInput,
+  ReferenceArrayInput,
+  required,
+  SelectArrayInput,
+  SelectInput,
+  SimpleForm,
+  TextInput,
+} from "react-admin";
 
-const ProjectCreate = (props: CreateProps) => {
-  const dateFormatter = (v: string) => {
-    return new Date(v).toISOString();
-  };
-
-  const [date, setDate] = useState<string>("");
-
+const ProjectCreate = (props: CreateProps): JSX.Element => {
+  const { selectProject } = useProjects();
   return (
-    <Create title="Create a new project" {...props}>
+    <Create
+      title="Create a new project"
+      {...props}
+      onSuccess={() => selectProject(null)}
+    >
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="name" fullWidth validate={required()} />
         <TextInput multiline source="description" fullWidth />
         <NumberInput source="latitude" validate={required()} />
         <NumberInput source="longitude" validate={required()} />
 
-        <DateInput
+        <DateTimeInput
           source="pub_date"
-          helperText={new Date(date).toDateString()}
           defaultValue={new Date()}
           style={{ marginBottom: 0 }}
-          onChange={(e) => setDate(e.target.value)}
-          format={dateFormatter}
+          // format={dateFormatter}
           label="Publish Date"
         />
 
