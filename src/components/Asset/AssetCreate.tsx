@@ -18,6 +18,8 @@ import {
 import { useProjects } from "../../providers/ProjectsContext";
 import AudioOptions from "../common/AudioOptions";
 import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
+import TranslatableField from "components/common/TranslatableField";
+import { LocalizedString } from "types";
 
 const AssetCreate = (props: CreateProps): JSX.Element => {
   const dataProvider = useDataProvider();
@@ -28,9 +30,8 @@ const AssetCreate = (props: CreateProps): JSX.Element => {
       data.file = data.file.rawFile;
       // as it is being created via admin
       data.session_id = 1;
+      data.project = selectedProject?.id;
       data.project_id = selectedProject?.id;
-
-      console.log(data.envelope_ids);
       if (Number(data.envelope_ids) > 0) {
         // this means user wants to specify an existing envelope_ids
         // note though its plural, it doesn't want an array format
@@ -46,6 +47,28 @@ const AssetCreate = (props: CreateProps): JSX.Element => {
         });
         data.envelope_ids = Number(res.data.id);
       }
+
+      const descriptionIds = data.loc_description_admin?.map(
+        (d: LocalizedString) =>
+          dataProvider
+            .create("localizedstrings", {
+              data: d,
+            })
+            .then(({ data }) => data.id)
+      );
+
+      data.description_loc_ids = await Promise.all(descriptionIds);
+
+      const altTextIds = data.loc_alt_text_admin?.map((d: LocalizedString) =>
+        dataProvider
+          .create("localizedstrings", {
+            data: d,
+          })
+          .then(({ data }) => data.id)
+      );
+
+      data.alt_text_loc_ids = await Promise.all(altTextIds);
+
       alert(
         `This is how data would be sent in form-data format, \n ${JSON.stringify(
           data,
@@ -88,12 +111,12 @@ const AssetCreate = (props: CreateProps): JSX.Element => {
           fieldNames={{ latitude: `latitude`, longitude: `longitude` }}
         />
         <TextInput multiline source="description" fullWidth minRows={2} />
-        <NumberInput source="latitude" />
-        <NumberInput source="longitude" />
+        {/* <NumberInput source="latitude" />
+        <NumberInput source="longitude" /> */}
         {/* <DateTimeInput source="created" />
         <DateTimeInput source="updated" /> */}
         <BooleanInput source="submitted" />
-        <NumberInput source="volume" />
+        {/* <NumberInput source="volume" /> */}
 
         <ReferenceInput
           label="Language"
@@ -104,24 +127,19 @@ const AssetCreate = (props: CreateProps): JSX.Element => {
           <SelectInput source="name" />
         </ReferenceInput>
         <ReferenceArrayInput source="tag_ids" reference="tags" fullWidth>
-          <SelectArrayInput optionText="description" />
+          <SelectArrayInput optionText="value" />
         </ReferenceArrayInput>
-        <NumberInput label="Audio Length(s)" source="audio_length_in_seconds" />
-        <Divider />
-        <ReferenceArrayInput
-          source="description_loc_ids"
-          reference="localizedstrings"
-          fullWidth
-        >
-          <SelectArrayInput optionText="text" />
-        </ReferenceArrayInput>
-        <ReferenceArrayInput
-          source="alt_text_loc_ids"
-          reference="localizedstrings"
-          fullWidth
-        >
-          <SelectArrayInput optionText="text" />
-        </ReferenceArrayInput>
+        {/* <NumberInput label="Audio Length(s)" source="audio_length_in_seconds" /> */}
+        {/* <Divider /> */}
+        <TranslatableField
+          source="loc_description_admin"
+          label="Description Localized"
+        />
+
+        <TranslatableField source="loc_alt_text_admin" label="Alt Text" />
+        <ReferenceInput label="User" source="user.id" reference="users">
+          <SelectInput optionText="username" fullWidth />
+        </ReferenceInput>
         <EnvelopeIdSelector />
       </SimpleForm>
     </Create>
