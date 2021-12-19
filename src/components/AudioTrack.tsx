@@ -14,12 +14,14 @@ import {
   SimpleForm,
   TextInput,
   NumberInput,
+  TextField,
 } from "react-admin";
 import RangeSlider from "./common/RangeSlider";
 export const AudioTrackList = (props: ListProps): JSX.Element => {
   return (
     <List {...props}>
       <Datagrid rowClick="edit">
+        <TextField source="id" />
         <RangeDisplay source="volume" label="Volume" />
         <RangeDisplay source="duration" label="Duration" />
         <RangeDisplay source="deadair" label="Dead Air" />
