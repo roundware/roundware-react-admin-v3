@@ -2,6 +2,7 @@
 import Divider from "@material-ui/core/Divider";
 import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
 import LocationSelector from "components/common/LocationSelector";
+import TranslatableField from "components/common/TranslatableField";
 import React from "react";
 import {
   BooleanInput,
@@ -79,22 +80,15 @@ const AssetEdit = (props: EditProps): JSX.Element => {
             longitude: `longitude`,
           }}
         />
-        <TextInput source="start_time" fullWidth />
-        <TextInput source="end_time" fullWidth />
+
         <NumberInput source="session_id" fullWidth />
         <ReferenceInput label="User" source="user.id" reference="users">
-          <SelectInput source="user.username" fullWidth />
+          <SelectInput optionText="username" fullWidth />
         </ReferenceInput>
         <TextInput multiline source="description" fullWidth />
-        <NumberInput source="latitude" fullWidth />
-        <NumberInput source="longitude" fullWidth />
         <DateTimeInput source="created" fullWidth />
         <DateTimeInput source="updated" fullWidth />
         <BooleanInput source="submitted" fullWidth />
-        <NumberInput source="volume" fullWidth />
-        <NumberInput source="weight" fullWidth />
-        <NumberInput source="start_time" fullWidth />
-        <NumberInput source="end_time" fullWidth />
         <ReferenceInput
           label="Language"
           source="language_id"
@@ -109,27 +103,13 @@ const AssetEdit = (props: EditProps): JSX.Element => {
             fullWidth
           />
         </ReferenceArrayInput>
-
-        <NumberInput
-          label="Audio Length(s)"
-          source="audio_length_in_seconds"
-          fullWidth
+        <TranslatableField
+          source="loc_description_admin"
+          label="Description Localized"
         />
-        <Divider />
-        <ReferenceArrayInput
-          source="description_loc_ids"
-          reference="localizedstrings"
-          fullWidth
-        >
-          <SelectArrayInput optionText="text" fullWidth />
-        </ReferenceArrayInput>
-        <ReferenceArrayInput
-          source="alt_text_loc_ids"
-          reference="localizedstrings"
-          fullWidth
-        >
-          <SelectArrayInput optionText="text" fullWidth />
-        </ReferenceArrayInput>
+
+        <TranslatableField source="loc_alt_text_admin" label="Alt Text" />
+
         <EnvelopeIdSelector />
       </SimpleForm>
     </Edit>
