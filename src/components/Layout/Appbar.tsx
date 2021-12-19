@@ -8,26 +8,22 @@ import {
   Theme,
   Toolbar,
   useMediaQuery,
-  Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import * as React from "react";
-import { memo } from "react";
-import { UserMenu } from "react-admin";
-import { SidebarToggleButton } from "./SidebarToggleButton";
 import { useProjects } from "providers/ProjectsContext";
-import { HideOnScroll, AppBarProps } from "ra-ui-materialui";
+import { AppBarProps, HideOnScroll } from "ra-ui-materialui";
+import React, { memo, useState } from "react";
+import { useRedirect, UserMenu } from "react-admin";
+import { SidebarToggleButton } from "./SidebarToggleButton";
 const AppBar = (props: AppBarProps): JSX.Element => {
   const {
-    children,
-    classes: classesOverride,
     className,
     color = "secondary",
     logout,
-    open,
+
     title,
-    userMenu,
-    container: Container,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    classes: propsClasses,
     ...rest
   } = props;
   const classes = useStyles(props);
@@ -39,7 +35,10 @@ const AppBar = (props: AppBarProps): JSX.Element => {
     theme.breakpoints.down("xs")
   );
 
+  const redirect = useRedirect();
   const { projectsList, selectedProject, selectProject } = useProjects();
+
+  const [isCreate, setIsCreate] = useState(false);
 
   const handleOnChange = (
     event: React.ChangeEvent<{
@@ -49,9 +48,17 @@ const AppBar = (props: AppBarProps): JSX.Element => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     child: React.ReactNode
   ) => {
+    setIsCreate(false);
     const { value } = event.target;
-    if (!value) return;
-    if (value === "create") return;
+
+    if (value == "none") {
+      selectProject(null);
+      return redirect(`list`, `/projects`);
+    }
+    if (value === "create") {
+      setIsCreate(true);
+      return redirect(`create`, `/projects`);
+    }
     selectProject(projectsList?.find((p) => p?.id === value) || null);
   };
 
@@ -77,7 +84,7 @@ const AppBar = (props: AppBarProps): JSX.Element => {
                 defaultValue={selectedProject?.id || "none"}
                 id="grouped-select"
                 className={classes.select}
-                value={selectedProject?.id || "none"}
+                value={isCreate ? `create` : selectedProject?.id || "none"}
                 onChange={handleOnChange}
               >
                 <MenuItem value="none">
