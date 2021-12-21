@@ -16,15 +16,24 @@ import { ILanguage, LocalizedString } from "types";
 interface Props {
   source: string;
   label?: string;
+  fromProject?: boolean;
 }
-const TranslatableField = ({ source, label = "" }: Props): JSX.Element => {
+const TranslatableField = ({
+  source,
+  label = "",
+  fromProject,
+}: Props): JSX.Element => {
   const [value, setValue] = useFieldValue<LocalizedString[]>(source);
+  const [language_ids] = useFieldValue<number[]>(`language_ids`);
+
   const [loading, setLoading] = useState(true);
   const [languages, setLanguages] = useState<ILanguage[]>([]);
   const { selectedProject } = useProjects();
   const dataProvider = useRoundwareDataProvider();
   useEffect(() => {
-    if (!selectedProject) return;
+    console.log("fetching all languages");
+    if (!fromProject && !selectedProject) return;
+    console.log("yes");
     setLoading(true);
     /** fetch all languages  */
     dataProvider
@@ -40,19 +49,33 @@ const TranslatableField = ({ source, label = "" }: Props): JSX.Element => {
         },
       })
       .then((res) => {
-        const thisProjectLanguages = res.data.filter((l) =>
-          selectedProject.language_ids.includes(Number(l.id))
-        ) as ILanguage[];
+        console.log(language_ids);
+        const neededIds = fromProject
+          ? language_ids
+          : selectedProject?.language_ids || [];
+        const thisProjectLanguages = res.data.filter((l) => {
+          return neededIds.includes(Number(l.id));
+        }) as ILanguage[];
         setLanguages(thisProjectLanguages);
         setSelectedLanguage(thisProjectLanguages?.[0]?.id);
       })
       .finally(() => setLoading(false));
-  }, [selectedProject]);
+  }, [selectedProject, language_ids]);
   const [selectedLanguage, setSelectedLanguage] = useState<number>(
     languages?.[0]?.id
   );
 
   if (loading) return <LinearProgress />;
+  if (fromProject && !languages?.length)
+    return (
+      <TextField
+        label={label}
+        disabled
+        variant="filled"
+        helperText="Please add languages to this project to enable this field."
+      />
+    );
+
   return (
     <Card variant="outlined" style={{ marginBottom: 16 }}>
       <Box p={2}>
