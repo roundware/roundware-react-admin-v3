@@ -112,9 +112,10 @@ const AudioEditField = ({
   useEffect(() => {
     if (wavesurferRef && wavesurferRef.current && audioSrc) {
       setLoading(true);
-      setDurationInSec(0);
-      changeEndTime(0);
-      changeStartTime(0);
+      const audioDuration = wavesurferRef.current.getDuration()?.toFixed(2);
+      setDurationInSec(Number(audioDuration));
+      changeEndTime(end_time || 0);
+      changeStartTime(start_time || 0);
       wavesurferRef.current.load(audioSrc);
     }
   }, [audioSrc]);
