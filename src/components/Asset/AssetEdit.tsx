@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import Divider from "@material-ui/core/Divider";
 import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
 import LocationSelector from "components/common/LocationSelector";
+import TagIdSelector from "components/common/TagIdSelector";
 import TranslatableField from "components/common/TranslatableField";
 import React from "react";
 import {
@@ -10,17 +10,17 @@ import {
   Edit,
   EditProps,
   NumberInput,
-  ReferenceArrayInput,
   ReferenceInput,
-  SelectArrayInput,
   SelectInput,
   SimpleForm,
   TextInput,
+  useRedirect,
 } from "react-admin";
 import { IAsset } from "../../types/asset";
 import AudioOptions from "../common/AudioOptions";
 
 const AssetEdit = (props: EditProps): JSX.Element => {
+  const redirect = useRedirect();
   const transform = async (data: Partial<IAsset>) => {
     if (!data.file) {
       // wants to remove file
@@ -42,7 +42,11 @@ const AssetEdit = (props: EditProps): JSX.Element => {
       data.user_id = data?.user?.id;
       delete data.user;
     }
-    console.log(data);
+    data.tag_ids = data.tag_ids
+      // @ts-ignore
+      ?.reduce((acc: string, el: string) => acc + el + ",", "")
+      // @ts-ignore
+      .slice(0, -1);
     return data;
   };
   return (
@@ -51,6 +55,7 @@ const AssetEdit = (props: EditProps): JSX.Element => {
       {...props}
       // @ts-ignore
       transform={transform}
+      onSuccess={() => redirect(`list`, `/assets`)}
     >
       <SimpleForm redirect={false} warnWhenUnsavedChanges>
         <TextInput source="id" disabled fullWidth />
@@ -96,13 +101,7 @@ const AssetEdit = (props: EditProps): JSX.Element => {
         >
           <SelectInput source="name" fullWidth />
         </ReferenceInput>
-        <ReferenceArrayInput source="tag_ids" reference="tags" fullWidth>
-          <SelectArrayInput
-            translateChoice={false}
-            optionText="description"
-            fullWidth
-          />
-        </ReferenceArrayInput>
+        <TagIdSelector source="tag_ids" multiple label="Tags" />
         <TranslatableField
           source="loc_description_admin"
           label="Description Localized"

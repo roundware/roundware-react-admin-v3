@@ -1,37 +1,37 @@
-import Divider from "@material-ui/core/Divider";
+import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
 import LocationSelector from "components/common/LocationSelector";
+import TagIdSelector from "components/common/TagIdSelector";
+import TranslatableField from "components/common/TranslatableField";
 import React from "react";
 import {
   BooleanInput,
   Create,
   CreateProps,
-  NumberInput,
   Record,
-  ReferenceArrayInput,
   ReferenceInput,
-  SelectArrayInput,
   SelectInput,
   SimpleForm,
   TextInput,
   useDataProvider,
+  useRedirect,
 } from "react-admin";
+import { LocalizedString } from "types";
 import { useProjects } from "../../providers/ProjectsContext";
 import AudioOptions from "../common/AudioOptions";
-import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
-import TranslatableField from "components/common/TranslatableField";
-import { LocalizedString } from "types";
 
 const AssetCreate = (props: CreateProps): JSX.Element => {
   const dataProvider = useDataProvider();
   const { selectedProject } = useProjects();
+  const redirect = useRedirect();
   const transform = async (data: Record) => {
     try {
       // use the file blob as file property
       data.file = data.file.rawFile;
       // as it is being created via admin
       data.session_id = 1;
-      data.project = selectedProject?.id;
+      // data.project = selectedProject?.id;
       data.project_id = selectedProject?.id;
+
       if (Number(data.envelope_ids) > 0) {
         // this means user wants to specify an existing envelope_ids
         // note though its plural, it doesn't want an array format
@@ -69,13 +69,9 @@ const AssetCreate = (props: CreateProps): JSX.Element => {
 
       data.alt_text_loc_ids = await Promise.all(altTextIds);
 
-      alert(
-        `This is how data would be sent in form-data format, \n ${JSON.stringify(
-          data,
-          undefined,
-          4
-        )}`
-      );
+      data.tag_ids = data.tag_ids
+        ?.reduce((acc: string, el: string) => acc + el + ",", "")
+        .slice(0, -1);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore it should be optional only in case of create but types say it isn't
       delete data.id;
@@ -95,6 +91,7 @@ const AssetCreate = (props: CreateProps): JSX.Element => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       transform={transform}
+      onSuccess={() => redirect(`list`, `/assets`)}
     >
       <SimpleForm warnWhenUnsavedChanges>
         <SelectInput
@@ -126,9 +123,7 @@ const AssetCreate = (props: CreateProps): JSX.Element => {
         >
           <SelectInput source="name" />
         </ReferenceInput>
-        <ReferenceArrayInput source="tag_ids" reference="tags" fullWidth>
-          <SelectArrayInput optionText="value" />
-        </ReferenceArrayInput>
+        <TagIdSelector source="tag_ids" multiple label="Tags" />
         {/* <NumberInput label="Audio Length(s)" source="audio_length_in_seconds" /> */}
         {/* <Divider /> */}
         <TranslatableField
