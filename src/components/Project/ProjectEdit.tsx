@@ -70,7 +70,7 @@ const ProjectEdit = (props: EditProps): JSX.Element => {
     <Edit
       title="Edit a project"
       {...props}
-      onSuccess={() => redirect(`list`, `/projects`)}
+      onSuccess={() => redirect(`/`)}
       transform={transform}
     >
       <SimpleForm warnWhenUnsavedChanges>
