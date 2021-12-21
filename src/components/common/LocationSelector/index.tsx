@@ -43,17 +43,16 @@ const LocationSelector = (props: Props): JSX.Element => {
     libraries: ["places", "drawing"],
   });
 
-  const [, setMap] = React.useState(null);
-
-  const onLoad = React.useCallback(function callback(map) {
-    setMap(map);
+  const onLoad = React.useCallback(function callback(map: google.maps.Map) {
     const bounds = new window.google.maps.LatLngBounds();
     map.fitBounds(bounds);
+    map.setCenter({
+      lat,
+      lng,
+    });
   }, []);
 
-  const onUnmount = React.useCallback(function callback() {
-    setMap(null);
-  }, []);
+  // const onUnmount = React.useCallback(function callback() {}, []);
 
   const handleOnLocationChange = (newLat: number, newLng: number) => {
     setLat(newLat);
@@ -103,7 +102,7 @@ const LocationSelector = (props: Props): JSX.Element => {
                       center={center}
                       zoom={10}
                       onLoad={onLoad}
-                      onUnmount={onUnmount}
+                      // onUnmount={onUnmount}
                     >
                       <SelectorPin
                         onChange={handleOnLocationChange}
