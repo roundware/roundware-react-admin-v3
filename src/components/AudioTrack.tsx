@@ -19,7 +19,33 @@ import {
 import RangeSlider from "./common/RangeSlider";
 export const AudioTrackList = (props: ListProps): JSX.Element => {
   return (
-    <List {...props}>
+    <List
+      {...props}
+      filters={
+        [`duration`, `deadair`].flatMap((k) => [
+          <NumberInput
+            source={"min" + k + "__gte"}
+            label={`Min ${k} Greater Than`}
+            key={"min" + k + "__gte"}
+          />,
+          <NumberInput
+            source={"min" + k + "__lte"}
+            label={`Min ${k} Lesser Than`}
+            key={"min" + k + "__lte"}
+          />,
+          <NumberInput
+            source={"max" + k + "__gte"}
+            key={"max" + k + "__gte"}
+            label={`Max ${k} Greater Than`}
+          />,
+          <NumberInput
+            source={"max" + k + "__lte"}
+            key={`max${k}__lte`}
+            label={`Max ${k} Lesser Than`}
+          />,
+        ]) as JSX.Element[]
+      }
+    >
       <Datagrid rowClick="edit">
         <TextField source="id" />
         <RangeDisplay source="volume" label="Volume" />
