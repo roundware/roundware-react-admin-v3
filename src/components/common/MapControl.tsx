@@ -8,7 +8,7 @@ type MapControlProps = React.PropsWithChildren<{
   position: google.maps.ControlPosition;
 }>;
 
-export default function MapControl(props: MapControlProps) {
+export default function MapControl(props: MapControlProps): JSX.Element {
   const { position, children } = props;
 
   const map = useGoogleMap();
