@@ -20,6 +20,7 @@ import {
   useNotify,
   useRedirect,
   useRefresh,
+  Record,
 } from "react-admin";
 import { ITag } from "types/tags";
 import { IUIItems, UiItemNode } from "types/uiGroups";
@@ -167,6 +168,8 @@ const AddCommonItem = (props: DatagridRowProps): JSX.Element => {
         const promises = itemsIdsToBeDeleted.map((i) =>
           dataProvider.delete(`uiitems`, {
             id: i,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            previousData: undefined! as Record,
           })
         );
 

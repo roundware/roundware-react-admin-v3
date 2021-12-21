@@ -56,6 +56,7 @@ const DeleteUiGroupButton = ({ record }: DeleteButtonProps): JSX.Element => {
         if (i.ui_group_id == record?.id) {
           const deleteProm = dataProvider.delete(`uiitems`, {
             id: i.id,
+            previousData: i as Record,
           });
           promises.push(deleteProm);
         }
@@ -63,6 +64,7 @@ const DeleteUiGroupButton = ({ record }: DeleteButtonProps): JSX.Element => {
 
       const deleteProm = dataProvider.delete(`uigroups`, {
         id: record!.id,
+        previousData: record as Record,
       });
       await Promise.all([...promises, deleteProm]);
       notify(`Successfully deleted!`, {
