@@ -20,7 +20,7 @@ export interface IAsset {
   audio_length_in_seconds: number;
   tag_ids: number[];
   session_id: 1;
-  envelope_ids: number[];
+  envelope_ids: number[] | number;
   user_id?: number;
   user?: {
     id: number;
