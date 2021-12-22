@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
 import LocationSelector from "components/common/LocationSelector";
 import TagIdSelector from "components/common/TagIdSelector";
 import TranslatableField from "components/common/TranslatableField";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BooleanInput,
   DateTimeInput,
@@ -17,14 +18,23 @@ import {
   TextInput,
   useRedirect,
   Record,
+  useEditController,
+  Identifier,
 } from "react-admin";
 import { IAsset } from "../../types/asset";
 import AudioOptions from "../common/AudioOptions";
 
 const AssetEdit = (props: EditProps): JSX.Element => {
   const redirect = useRedirect();
-
+  const editControl = useEditController(props);
   const dataProvider = useRoundwareDataProvider();
+
+  useEffect(() => {
+    // revalidate to get the localized strings
+    dataProvider
+      .getOneJson(`assets`, props.id!, { admin: 1 }, true)
+      .then(() => editControl.refetch());
+  }, []);
 
   const transform = async (data: Partial<IAsset>) => {
     if (!data.file) {
@@ -64,39 +74,77 @@ const AssetEdit = (props: EditProps): JSX.Element => {
       data.envelope_ids = Number(res.data.id);
     }
 
-    const descriptionIds = data.loc_description_admin?.map((d) =>
-      // @ts-ignore
-      dataProvider[d.id ? `update` : `create`]("localizedstrings", {
-        data: d,
-        ...(d.id && {
-          id: d.id,
-        }),
-        previousData: d as Record,
-      }).then(({ data }) => data.id as number)
-    );
+    const descriptionIds = data.loc_description_admin?.map((d) => {
+      let prom: Promise<Record[`id`]>;
+      if (d.id) {
+        prom = dataProvider
+          .update(`localizedstrings`, {
+            id: d.id,
+            data: d,
+            previousData: d as Record,
+          })
+          .then(({ data }) => data.id);
+      } else {
+        prom = dataProvider
+          .create(`localizedstrings`, {
+            data: d,
+          })
+          .then(({ data }) => data.id);
+      }
+      return prom;
+    });
 
     if (descriptionIds?.length)
-      data.description_loc_ids = await Promise.all(descriptionIds);
+      data.description_loc_ids = (await Promise.all(
+        descriptionIds
+      )) as number[];
 
-    const altTextIds = data.loc_alt_text_admin?.map((d) =>
-      // @ts-ignore
-      dataProvider[d.id ? `update` : `create`]("localizedstrings", {
-        data: d,
-        ...(d.id && {
-          id: d.id,
-        }),
-        previousData: d as Record,
-      }).then(({ data }) => data.id as number)
-    );
+    const altTextIds = data.loc_alt_text_admin?.map((d) => {
+      let prom: Promise<Record[`id`]>;
+      if (d.id) {
+        prom = dataProvider
+          .update(`localizedstrings`, {
+            id: d.id,
+            data: d,
+            previousData: d as Record,
+          })
+          .then(({ data }) => data.id);
+      } else {
+        prom = dataProvider
+          .create(`localizedstrings`, {
+            data: d,
+          })
+          .then(({ data }) => data.id);
+      }
+      return prom;
+    });
 
     if (altTextIds?.length)
-      data.alt_text_loc_ids = await Promise.all(altTextIds);
+      data.alt_text_loc_ids = (await Promise.all(altTextIds)) as number[];
 
-    data.tag_ids = data.tag_ids
-      // @ts-ignore
-      ?.reduce((acc: string, el: string) => acc + el + ",", "")
-      // @ts-ignore
-      .slice(0, -1);
+    if (data.file) {
+      data.tag_ids = data.tag_ids
+        // @ts-ignore
+        ?.reduce((acc: string, el: string) => acc + el + ",", "")
+        // @ts-ignore
+        .slice(0, -1);
+
+      if (Array.isArray(data.alt_text_loc_ids))
+        data.alt_text_loc_ids = data.alt_text_loc_ids
+          ?.reduce(
+            (acc: string, el: number) => acc.toString() + el.toString() + ",",
+            ""
+          )
+          .slice(0, -1);
+
+      if (Array.isArray(data.description_loc_ids))
+        data.description_loc_ids = data.description_loc_ids
+          ?.reduce(
+            (acc: string, el: number) => acc.toString() + el.toString() + ",",
+            ""
+          )
+          .slice(0, -1);
+    }
     return data;
   };
   return (
@@ -105,6 +153,7 @@ const AssetEdit = (props: EditProps): JSX.Element => {
       {...props}
       // @ts-ignore
       transform={transform}
+      mutationMode="optimistic"
       onSuccess={() => redirect(`list`, `/assets`)}
     >
       <SimpleForm redirect={false} warnWhenUnsavedChanges>
