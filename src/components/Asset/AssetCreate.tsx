@@ -57,7 +57,8 @@ const AssetCreate = (props: CreateProps): JSX.Element => {
             .then(({ data }) => data.id)
       );
 
-      data.description_loc_ids = await Promise.all(descriptionIds);
+      if (descriptionIds?.length)
+        data.description_loc_ids = await Promise.all(descriptionIds);
 
       const altTextIds = data.loc_alt_text_admin?.map((d: LocalizedString) =>
         dataProvider
@@ -67,7 +68,8 @@ const AssetCreate = (props: CreateProps): JSX.Element => {
           .then(({ data }) => data.id)
       );
 
-      data.alt_text_loc_ids = await Promise.all(altTextIds);
+      if (altTextIds?.length)
+        data.alt_text_loc_ids = await Promise.all(altTextIds);
 
       data.tag_ids = data.tag_ids
         ?.reduce((acc: string, el: string) => acc + el + ",", "")
