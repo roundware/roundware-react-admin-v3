@@ -57,9 +57,10 @@ const TagIdSelector = ({ label, source, multiple }: Props): JSX.Element => {
   return (
     <Autocomplete
       options={tags}
+      fullWidth
       groupBy={(option: TagWithCategory) => option?.category_name}
       getOptionLabel={(option: TagWithCategory) => option?.value}
-      style={{ width: "100%", marginBottom: 16 }}
+      style={{ minWidth: 300, width: "100%", marginBottom: 16, marginTop: 16 }}
       onChange={(e, v: TagWithCategory[] | TagWithCategory | null) => {
         console.log(v);
         setValue(
@@ -83,12 +84,7 @@ const TagIdSelector = ({ label, source, multiple }: Props): JSX.Element => {
           : (tags.find((t) => t?.id == value) as TagWithCategory)
       }
       renderInput={(params) => (
-        <TextField
-          {...params}
-          placeholder="Type a tag..."
-          label={label}
-          variant="filled"
-        />
+        <TextField {...params} fullWidth label={label} variant="filled" />
       )}
     />
   );
