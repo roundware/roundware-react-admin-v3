@@ -1,3 +1,5 @@
+import { LocalizedString } from "types";
+
 export interface IAsset {
   id: number;
   description: string;
@@ -23,4 +25,6 @@ export interface IAsset {
   user?: {
     id: number;
   }
+  loc_description_admin?: LocalizedString[]
+  loc_alt_text_admin?: LocalizedString[];
 }
