@@ -163,6 +163,7 @@ const ProjectCreate = (props: CreateProps): JSX.Element => {
             defaultValue="mp3"
             validate={required()}
             fullWidth
+            style={{ visibility: "hidden", position: "absolute" }}
           />
 
           <SelectInput
@@ -180,6 +181,7 @@ const ProjectCreate = (props: CreateProps): JSX.Element => {
               { id: "256", name: "256" },
               { id: "320", name: "320" },
             ]}
+            style={{ visibility: "hidden", position: "absolute" }}
           />
         </CardBox>
         <Grid container spacing={2} style={{ width: "100%" }}>
