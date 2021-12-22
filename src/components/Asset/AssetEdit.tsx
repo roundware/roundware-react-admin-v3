@@ -42,6 +42,32 @@ const AssetEdit = (props: EditProps): JSX.Element => {
       data.user_id = data?.user?.id;
       delete data.user;
     }
+
+    const descriptionIds = data.loc_description_admin?.map(
+      (d: LocalizedString) =>
+        dataProvider[d.id ? `update` : `create`]("localizedstrings", {
+          data: d,
+          ...(d.id && {
+            id: d.id,
+          }),
+        }).then(({ data }) => data.id)
+    );
+
+    if (descriptionIds?.length)
+      data.description_loc_ids = await Promise.all(descriptionIds);
+
+    const altTextIds = data.loc_alt_text_admin?.map((d: LocalizedString) =>
+      dataProvider[d.id ? `update` : `create`]("localizedstrings", {
+        data: d,
+        ...(d.id && {
+          id: d.id,
+        }),
+      }).then(({ data }) => data.id)
+    );
+
+    if (altTextIds?.length)
+      data.alt_text_loc_ids = await Promise.all(altTextIds);
+
     data.tag_ids = data.tag_ids
       // @ts-ignore
       ?.reduce((acc: string, el: string) => acc + el + ",", "")
