@@ -14,8 +14,8 @@ export interface IAsset {
   weight: number;
   project: number;
   language_id: number;
-  description_loc_ids: number[];
-  alt_text_loc_ids: number[];
+  description_loc_ids: number[] | string;
+  alt_text_loc_ids: number[] | string;
   media_type: string;
   audio_length_in_seconds: number;
   tag_ids: number[];
