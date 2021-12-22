@@ -3,6 +3,7 @@ import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
 import LocationSelector from "components/common/LocationSelector";
 import TagIdSelector from "components/common/TagIdSelector";
 import TranslatableField from "components/common/TranslatableField";
+import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import React from "react";
 import {
   BooleanInput,
@@ -15,12 +16,16 @@ import {
   SimpleForm,
   TextInput,
   useRedirect,
+  Record,
 } from "react-admin";
 import { IAsset } from "../../types/asset";
 import AudioOptions from "../common/AudioOptions";
 
 const AssetEdit = (props: EditProps): JSX.Element => {
   const redirect = useRedirect();
+
+  const dataProvider = useRoundwareDataProvider();
+
   const transform = async (data: Partial<IAsset>) => {
     if (!data.file) {
       // wants to remove file
@@ -43,26 +48,45 @@ const AssetEdit = (props: EditProps): JSX.Element => {
       delete data.user;
     }
 
-    const descriptionIds = data.loc_description_admin?.map(
-      (d: LocalizedString) =>
-        dataProvider[d.id ? `update` : `create`]("localizedstrings", {
-          data: d,
-          ...(d.id && {
-            id: d.id,
-          }),
-        }).then(({ data }) => data.id)
-    );
+    if (Number(data.envelope_ids) > 0) {
+      // this means user wants to specify an existing envelope_ids
+      // note though its plural, it doesn't want an array format
+      data.envelope_ids = Number(data.envelope_ids);
+    } else {
+      // we need to create a new envelope here; and pass that id
+      // using session_id = 1 for admin
 
-    if (descriptionIds?.length)
-      data.description_loc_ids = await Promise.all(descriptionIds);
+      const res = await dataProvider.create(`envelopes`, {
+        data: {
+          session_id: 1,
+        },
+      });
+      data.envelope_ids = Number(res.data.id);
+    }
 
-    const altTextIds = data.loc_alt_text_admin?.map((d: LocalizedString) =>
+    const descriptionIds = data.loc_description_admin?.map((d) =>
+      // @ts-ignore
       dataProvider[d.id ? `update` : `create`]("localizedstrings", {
         data: d,
         ...(d.id && {
           id: d.id,
         }),
-      }).then(({ data }) => data.id)
+        previousData: d as Record,
+      }).then(({ data }) => data.id as number)
+    );
+
+    if (descriptionIds?.length)
+      data.description_loc_ids = await Promise.all(descriptionIds);
+
+    const altTextIds = data.loc_alt_text_admin?.map((d) =>
+      // @ts-ignore
+      dataProvider[d.id ? `update` : `create`]("localizedstrings", {
+        data: d,
+        ...(d.id && {
+          id: d.id,
+        }),
+        previousData: d as Record,
+      }).then(({ data }) => data.id as number)
     );
 
     if (altTextIds?.length)
