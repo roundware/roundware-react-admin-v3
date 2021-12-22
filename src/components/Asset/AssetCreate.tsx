@@ -48,7 +48,21 @@ const AssetCreate = (props: CreateProps): JSX.Element => {
         data.envelope_ids = Number(res.data.id);
       }
 
-      const descriptionIds = data.loc_description_admin?.map(
+      const descriptionIds: Promise<Record[`id`]>[] =
+        data.loc_description_admin?.map((d: LocalizedString) =>
+          dataProvider
+            .create("localizedstrings", {
+              data: d,
+            })
+            .then(({ data }) => data.id)
+        );
+
+      if (descriptionIds?.length)
+        data.description_loc_ids = await (await Promise.all(descriptionIds))
+          .reduce((acc: string, el) => acc.toString() + el.toString() + ",", "")
+          .slice(0, -1);
+
+      const altTextIds: Promise<Record[`id`]>[] = data.loc_alt_text_admin?.map(
         (d: LocalizedString) =>
           dataProvider
             .create("localizedstrings", {
@@ -57,19 +71,10 @@ const AssetCreate = (props: CreateProps): JSX.Element => {
             .then(({ data }) => data.id)
       );
 
-      if (descriptionIds?.length)
-        data.description_loc_ids = await Promise.all(descriptionIds);
-
-      const altTextIds = data.loc_alt_text_admin?.map((d: LocalizedString) =>
-        dataProvider
-          .create("localizedstrings", {
-            data: d,
-          })
-          .then(({ data }) => data.id)
-      );
-
       if (altTextIds?.length)
-        data.alt_text_loc_ids = await Promise.all(altTextIds);
+        data.alt_text_loc_ids = await (await Promise.all(altTextIds))
+          .reduce((acc: string, el) => acc.toString() + el.toString() + ",", "")
+          .slice(0, -1);
 
       data.tag_ids = data.tag_ids
         ?.reduce((acc: string, el: string) => acc + el + ",", "")
