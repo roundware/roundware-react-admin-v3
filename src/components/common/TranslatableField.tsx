@@ -31,9 +31,8 @@ const TranslatableField = ({
   const { selectedProject } = useProjects();
   const dataProvider = useRoundwareDataProvider();
   useEffect(() => {
-    console.log("fetching all languages");
     if (!fromProject && !selectedProject) return;
-    console.log("yes");
+
     setLoading(true);
     /** fetch all languages  */
     dataProvider
@@ -49,7 +48,6 @@ const TranslatableField = ({
         },
       })
       .then((res) => {
-        console.log(language_ids);
         const neededIds = fromProject
           ? language_ids
           : selectedProject?.language_ids || [];
@@ -92,10 +90,11 @@ const TranslatableField = ({
       <Box p={2}>
         <TextField
           value={
-            value &&
-            value?.find?.(
-              (h: LocalizedString) => h.language_id == selectedLanguage
-            )?.text
+            Array.isArray(value)
+              ? value?.find?.(
+                  (h: LocalizedString) => h.language_id == selectedLanguage
+                )?.text || ""
+              : ""
           }
           variant="outlined"
           onChange={(e) => {
