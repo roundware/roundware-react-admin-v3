@@ -111,7 +111,17 @@ const TranslatableField = ({
               language_id: selectedLanguage,
               text: newText,
             };
-            setValue([...previousFilter, newLanguageObject]);
+            setValue(
+              [...previousFilter, newLanguageObject].filter((t) => {
+                if (t.id) {
+                  return true;
+                  // it text it being created but not text then filter out
+                } else if (t?.text?.length < 1) {
+                  return false;
+                }
+                return true;
+              })
+            );
           }}
           fullWidth
           label="Text"
