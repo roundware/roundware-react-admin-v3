@@ -42,12 +42,12 @@ export const AssetList = (props: ListProps): JSX.Element => {
         />,
         <NumberInput
           key="audiolengthgte"
-          label="Audio Length Greater Than Seconds"
+          label="Audio Length Greater Than"
           source="audio_length_in_seconds__gte"
         />,
         <NumberInput
           key="audiolengthlte"
-          label="Audio Length Lesser Than Seconds"
+          label="Audio Length Lesser Than"
           source="audio_length_in_seconds__lte"
         />,
         <TagIdSelector
