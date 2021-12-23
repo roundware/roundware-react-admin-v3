@@ -84,7 +84,13 @@ const TagIdSelector = ({ label, source, multiple }: Props): JSX.Element => {
           : (tags.find((t) => t?.id == value) as TagWithCategory)
       }
       renderInput={(params) => (
-        <TextField {...params} fullWidth label={label} variant="filled" />
+        <TextField
+          {...params}
+          fullWidth
+          label={label}
+          placeholder="Type to filter tags"
+          variant="filled"
+        />
       )}
     />
   );
