@@ -8,6 +8,7 @@ import {
   Theme,
   Toolbar,
   useMediaQuery,
+  Link,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useProjects } from "providers/ProjectsContext";
@@ -71,11 +72,26 @@ const AppBar = (props: AppBarProps): JSX.Element => {
           className={classes.toolbar}
         >
           <div className={classes.leftContent}>
-            <SidebarToggleButton
-              className={classes.menuButton}
-              classes={sidebarToggleButtonClasses}
-            />
-            {title}
+            {selectedProject && (
+              <SidebarToggleButton
+                className={classes.menuButton}
+                classes={sidebarToggleButtonClasses}
+              />
+            )}
+            <Link
+              onClick={(e) => {
+                e.preventDefault();
+                return redirect(`list`, `/projects`);
+              }}
+              href={`/#/projects`}
+              style={{
+                cursor: "pointer",
+                color: "#fff",
+                marginLeft: selectedProject ? 0 : 16,
+              }}
+            >
+              {title}
+            </Link>
             <InputLabel variant="standard" className={classes.label}>
               Project:{" "}
             </InputLabel>
