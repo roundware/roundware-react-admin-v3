@@ -3,20 +3,17 @@ import {
   Grid,
   makeStyles,
   Typography,
+  TextField,
+  Container,
 } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import AddIcon from "@material-ui/icons/Add";
 import { useListContext, useRedirect } from "ra-core";
-import React, { useEffect } from "react";
-import { List, ListProps, TextInput } from "react-admin";
+import React, { useEffect, useState } from "react";
+import { List, ListProps } from "react-admin";
 import { IProject, useProjects } from "../../providers/ProjectsContext";
-const useStyles = makeStyles(() => ({
-  topTextInput: {
-    marginTop: "40px",
-  },
-}));
+import SearchIcon from "@material-ui/icons/Search";
 const ProjectList = (props: ListProps): JSX.Element => {
-  const classes = useStyles();
   return (
     <List
       hasCreate={false}
@@ -26,15 +23,6 @@ const ProjectList = (props: ListProps): JSX.Element => {
       perPage={0}
       bulkActionButtons={false}
       component={ProjectListWrapper}
-      filters={[
-        <TextInput
-          source="name"
-          label="Search by Name"
-          alwaysOn
-          key="name"
-          className={classes.topTextInput}
-        />,
-      ]}
       {...props}
     >
       <ProjectCard />
@@ -79,9 +67,11 @@ const useCardStyles = makeStyles((theme) => ({
 }));
 const ProjectCardWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Grid alignContent="center" container spacing={2}>
-      {children}
-    </Grid>
+    <Container>
+      <Grid alignContent="center" container spacing={2}>
+        {children}
+      </Grid>
+    </Container>
   );
 };
 const ProjectCard = () => {
@@ -108,37 +98,55 @@ const ProjectCard = () => {
       );
     }
   }, [data]);
+
+  const [textFilter, setTextFilter] = useState("");
   return (
     <>
+      <Grid item xs={12}>
+        <TextField
+          placeholder="Search By Project Name"
+          onChange={(e) => setTextFilter(e.target.value)}
+          value={textFilter}
+          InputProps={{
+            startAdornment: <SearchIcon />,
+          }}
+        />
+      </Grid>
       <Grid item>
         <CreateProjectCard />
       </Grid>
       {Array.isArray(projectsList) &&
-        projectsList.map((p) => (
-          <Grid key={p?.id} item>
-            <Card
-              onClick={() => handleOnProjectSelect(p)}
-              key={p?.id}
-              className={classes.root}
-            >
-              <CardActionArea className={classes.cardContent}>
-                <Typography
-                  className={classes.title}
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  Project #{p?.id}
-                </Typography>
-                <Typography variant="h5" component="h2">
-                  {p?.name}
-                </Typography>
-                <Typography className={classes.pos} color="textSecondary">
-                  Created: {new Date(p?.pub_date).toLocaleString()}
-                </Typography>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        ))}
+        projectsList
+          .filter((p) =>
+            textFilter
+              ? p?.name?.toLowerCase().indexOf(textFilter?.toLowerCase()) != -1
+              : true
+          )
+          .map((p) => (
+            <Grid key={p?.id} item>
+              <Card
+                onClick={() => handleOnProjectSelect(p)}
+                key={p?.id}
+                className={classes.root}
+              >
+                <CardActionArea className={classes.cardContent}>
+                  <Typography
+                    className={classes.title}
+                    color="textSecondary"
+                    gutterBottom
+                  >
+                    Project #{p?.id}
+                  </Typography>
+                  <Typography variant="h5" component="h2">
+                    {p?.name}
+                  </Typography>
+                  <Typography className={classes.pos} color="textSecondary">
+                    Created: {new Date(p?.pub_date).toLocaleString()}
+                  </Typography>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          ))}
     </>
   );
 };
