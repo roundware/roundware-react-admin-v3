@@ -54,7 +54,11 @@ const SpeakerAudioControls = (): JSX.Element => {
             </Tabs>
 
             <TabPanel value={`UPLOAD`} current={sourceMode}>
-              <FileInput source="file" accept={".mp3,.wav"} multiple={false}>
+              <FileInput
+                source="file"
+                accept={".mp3,.wav,.m4a"}
+                multiple={false}
+              >
                 <FileField source="src" title="title" fullWidth />
               </FileInput>
             </TabPanel>
