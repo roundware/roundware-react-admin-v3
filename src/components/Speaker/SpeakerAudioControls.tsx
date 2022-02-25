@@ -34,7 +34,10 @@ const SpeakerAudioControls = (): JSX.Element => {
 
   const [minVolume, setMinVolume] = useFieldValue<number>(`minvolume`);
   const [maxVolume, setMaxVolume] = useFieldValue<number>(`maxvolume`);
-  const [range, setRange] = useState([minVolume || 0.1, maxVolume || 0.5]);
+  const [range, setRange] = useState([
+    typeof minVolume == "number" ? minVolume : 0.1,
+    typeof maxVolume == "number" ? maxVolume : 0.5,
+  ]);
 
   const handleRangeChange = (event: unknown, newValue: number | number[]) => {
     if (!Array.isArray(newValue)) return;
