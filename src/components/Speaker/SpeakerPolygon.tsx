@@ -85,9 +85,17 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
   const debouncedDistance = useDebounce(distance, 1000);
   // the inner border, should not be editable
   const attenuationBorderPath: google.maps.LatLng[] | null = useMemo(() => {
-    const polygon = buffer(shape, -distance, {
-      units: "meters",
-    });
+    let polygon;
+    try {
+      console.log(shape.coordinates);
+      polygon = buffer(shape, -distance, {
+        units: "meters",
+      });
+    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      alert(JSON.stringify(e?.message));
+    }
 
     /** just use previous shape as something goes wrong */
     if (!polygon) return null;
@@ -104,12 +112,16 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
   const updatePolygon = (e: google.maps.MapMouseEvent) => {
     if (e) console.log(`Polygon edited`);
     setDragging(false);
-    const newPath = polygon
+    let newPath = polygon
       ?.getPath()
       .getArray()
       .map((p) => [p.lng(), p.lat()]);
 
     if (Array.isArray(newPath)) {
+      // form closed ring;
+      if (newPath[0] != newPath[newPath.length - 1]) {
+        newPath = [...newPath, newPath[0]];
+      }
       const newMultiPolygon = multiPolygon([[newPath]]).geometry;
       setShape(newMultiPolygon);
     }
