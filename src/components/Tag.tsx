@@ -14,8 +14,6 @@ import {
   TextField,
   ReferenceField,
   Record,
-  UpdateResult,
-  CreateResult,
   useRefresh,
   EditButton,
   DeleteButton,
@@ -24,7 +22,8 @@ import TranslatableField from "./common/TranslatableField";
 import { ITag } from "types/tags";
 import { Box } from "@material-ui/core";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import { LocalizedString } from "types";
+import { handleLocalizedStrings } from "utils";
+
 export const TagList = (props: ListProps): JSX.Element => {
   return (
     <Box pt={3}>
@@ -66,35 +65,16 @@ export const TagEdit = (props: EditProps): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
   const transform = async (record: Record): Promise<Record> => {
     const r = record as Partial<ITag>;
-    const promises: Promise<UpdateResult<Record>>[] = [];
 
-    r.loc_msg_admin?.forEach((h) => {
-      const patchLocalizedStringProm = dataProvider[h.id ? `update` : `create`](
-        `localizedstrings`,
-        {
-          id: h.id as Record[`id`],
-          data: h,
-          previousData: h as Record,
-        }
+    if (r.loc_msg_admin) {
+      r.loc_msg = await handleLocalizedStrings(r.loc_msg_admin, dataProvider);
+    }
+    if (r.loc_description_admin) {
+      r.loc_description = await handleLocalizedStrings(
+        r.loc_description_admin,
+        dataProvider
       );
-      promises.push(patchLocalizedStringProm);
-    });
-    let responses = await Promise.all(promises);
-    r.loc_msg = responses.map((h) => Number(h.data.id)) || [];
-
-    r.loc_description_admin?.forEach((h) => {
-      const patchLocalizedStringProm = dataProvider[h.id ? `update` : `create`](
-        `localizedstrings`,
-        {
-          id: h.id as Record[`id`],
-          data: h,
-          previousData: h as Record,
-        }
-      );
-      promises.push(patchLocalizedStringProm);
-    });
-    responses = await Promise.all(promises);
-    r.loc_description = responses.map((h) => Number(h.data.id)) || [];
+    }
 
     delete r.loc_msg_admin;
     delete r.loc_description_admin;
@@ -149,36 +129,14 @@ export const TagCreate = (props: CreateProps): JSX.Element => {
   const transform = async (record: Record): Promise<Record> => {
     const r = record as Partial<ITag>;
 
-    /** create localized strings for msg */
-    const msgPromises: Promise<CreateResult<Record>>[] = [];
+    if (r.loc_msg_admin)
+      r.loc_msg = await handleLocalizedStrings(r.loc_msg_admin, dataProvider);
 
-    r.loc_msg_admin?.forEach((h) => {
-      const createLocalizedStringProm = dataProvider.create(
-        `localizedstrings`,
-        {
-          data: h,
-        }
+    if (r.loc_description_admin)
+      r.loc_description = await handleLocalizedStrings(
+        r.loc_description_admin,
+        dataProvider
       );
-      msgPromises.push(createLocalizedStringProm);
-    });
-
-    /** pass ids of created string */
-    const msgResponses = await Promise.all(msgPromises);
-    r.loc_msg = msgResponses.map((h) => Number(h.data.id)) || [];
-
-    /** create localized string for description */
-    const desPromises: Promise<CreateResult<Record>>[] = [];
-    r.loc_description_admin?.forEach((h) => {
-      const createLocalizedStringProm = dataProvider.create(
-        `localizedstrings`,
-        {
-          data: h,
-        }
-      );
-      desPromises.push(createLocalizedStringProm);
-    });
-    const desResponses = await Promise.all(desPromises);
-    r.loc_description = desResponses.map((h) => Number(h.data.id)) || [];
 
     delete r.loc_msg_admin;
     delete r.loc_description_admin;

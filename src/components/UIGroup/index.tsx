@@ -21,6 +21,7 @@ import {
   useRefresh,
 } from "react-admin";
 import { IUIGroup } from "types/uiGroups";
+import { handleLocalizedStrings } from "utils";
 
 export const UiGroupEdit = (props: EditProps): JSX.Element => {
   const { refetchData } = useBuildUI();
@@ -35,19 +36,12 @@ export const UiGroupEdit = (props: EditProps): JSX.Element => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     r.ui_items = r?.ui_items?.map((i) => i.id) || [];
-    r.header_text_loc_admin?.forEach((h) => {
-      const patchLocalizedStringProm = dataProvider[h.id ? `update` : `create`](
-        `localizedstrings`,
-        {
-          id: h.id as Record[`id`],
-          data: h,
-          previousData: h as Record,
-        }
+
+    if (r.header_text_loc_admin?.length)
+      r.header_text_loc = await handleLocalizedStrings(
+        r.header_text_loc_admin,
+        dataProvider
       );
-      promises.push(patchLocalizedStringProm);
-    });
-    const responses = await Promise.all(promises);
-    r.header_text_loc = responses?.map((h) => Number(h.data.id)) || [];
     delete r.header_text_loc_admin;
     return r as Record;
   };
@@ -139,21 +133,18 @@ export const UiGroupCreate = (props: CreateProps): JSX.Element => {
       header_text_loc: number[];
       ui_items: number[];
     };
-    const promises: Promise<UpdateResult<Record>>[] = [];
+
     r.project_id = selectedProject?.id;
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     r.ui_items = r?.ui_items?.map((i) => i.id) || [];
-    r.header_text_loc_admin?.forEach((h) => {
-      const patchLocalizedStringProm = dataProvider.create(`localizedstrings`, {
-        data: h,
-      });
-      promises.push(patchLocalizedStringProm);
-    });
 
-    const res = await Promise.all(promises);
-    r.header_text_loc = res.map((r) => Number(r.data.id));
+    if (r.header_text_loc_admin)
+      r.header_text_loc = await handleLocalizedStrings(
+        r.header_text_loc_admin,
+        dataProvider
+      );
 
     delete r.header_text_loc_admin;
     return r as Record;

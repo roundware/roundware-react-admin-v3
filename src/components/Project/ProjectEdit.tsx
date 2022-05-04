@@ -20,12 +20,13 @@ import {
   EditProps,
 } from "react-admin";
 import { LocalizedString } from "types";
+import { handleLocalizedStrings } from "utils";
 const ProjectEdit = (props: EditProps): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
   const redirect = useRedirect();
   const transform = async (r: Record) => {
     const data = { ...r };
-    const promises: Promise<void>[] = [];
+
     const fields = [
       `sharing_message_loc`,
       `out_of_range_message_loc`,
@@ -33,35 +34,10 @@ const ProjectEdit = (props: EditProps): JSX.Element => {
       `demo_stream_message_loc`,
     ];
 
-    fields.forEach((f) => {
-      data[f] = [];
-      if (Array.isArray(data[f + "_admin"])) {
-        // console.log(data[f]);
-        data[f + "_admin"].forEach((l: LocalizedString) => {
-          if (!l.id) {
-            const prom = dataProvider
-              .create(`localizedstrings`, {
-                data: l,
-              })
-              .then(({ data: resData }) => {
-                data[f] = [...(data[f] && data[f]), resData.id];
-              });
-            promises.push(prom);
-          } else {
-            const prom = dataProvider
-              .update(`localizedstrings`, {
-                data: l,
-                id: l.id,
-                previousData: l as Record,
-              })
-              .then(({ data: resData }) => {
-                data[f] = [...(data[f] && data[f]), resData.id];
-              });
-            promises.push(prom);
-          }
-        });
-      }
+    const promises = fields.map((f) => async () => {
+      data[f] = await handleLocalizedStrings(data[f + "_admin"], dataProvider);
     });
+
     await Promise.all(promises);
     return data;
   };

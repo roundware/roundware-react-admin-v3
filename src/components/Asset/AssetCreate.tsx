@@ -2,6 +2,7 @@ import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
 import LocationSelector from "components/common/LocationSelector";
 import TagIdSelector from "components/common/TagIdSelector";
 import TranslatableField from "components/common/TranslatableField";
+import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import React from "react";
 import {
   BooleanInput,
@@ -12,15 +13,15 @@ import {
   SelectInput,
   SimpleForm,
   TextInput,
-  useDataProvider,
   useRedirect,
 } from "react-admin";
 import { LocalizedString } from "types";
+import { handleLocalizedStrings } from "utils";
 import { useProjects } from "../../providers/ProjectsContext";
 import AudioOptions from "../common/AudioOptions";
 
 const AssetCreate = (props: CreateProps): JSX.Element => {
-  const dataProvider = useDataProvider();
+  const dataProvider = useRoundwareDataProvider();
   const { selectedProject } = useProjects();
   const redirect = useRedirect();
   const transform = async (data: Record) => {
@@ -48,31 +49,17 @@ const AssetCreate = (props: CreateProps): JSX.Element => {
         data.envelope_ids = Number(res.data.id);
       }
 
-      const descriptionIds: Promise<Record[`id`]>[] =
-        data.loc_description_admin?.map((d: LocalizedString) =>
-          dataProvider
-            .create("localizedstrings", {
-              data: d,
-            })
-            .then(({ data }) => data.id)
-        );
-
-      if (descriptionIds?.length)
-        data.description_loc_ids = await (await Promise.all(descriptionIds))
+      if (data.loc_description_admin?.length)
+        data.description_loc_ids = (
+          await handleLocalizedStrings(data.loc_description_admin, dataProvider)
+        )
           .reduce((acc: string, el) => acc.toString() + el.toString() + ",", "")
           .slice(0, -1);
 
-      const altTextIds: Promise<Record[`id`]>[] = data.loc_alt_text_admin?.map(
-        (d: LocalizedString) =>
-          dataProvider
-            .create("localizedstrings", {
-              data: d,
-            })
-            .then(({ data }) => data.id)
-      );
-
-      if (altTextIds?.length)
-        data.alt_text_loc_ids = await (await Promise.all(altTextIds))
+      if (data.loc_alt_text_admin?.length)
+        data.alt_text_loc_ids = (
+          await handleLocalizedStrings(data.loc_alt_text_admin, dataProvider)
+        )
           .reduce((acc: string, el) => acc.toString() + el.toString() + ",", "")
           .slice(0, -1);
 

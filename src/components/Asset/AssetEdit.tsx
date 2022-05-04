@@ -21,6 +21,7 @@ import {
   useEditController,
   Identifier,
 } from "react-admin";
+import { handleLocalizedStrings } from "utils";
 import { IAsset } from "../../types/asset";
 import AudioOptions from "../common/AudioOptions";
 
@@ -74,53 +75,17 @@ const AssetEdit = (props: EditProps): JSX.Element => {
       data.envelope_ids = Number(res.data.id);
     }
 
-    const descriptionIds = data.loc_description_admin?.map((d) => {
-      let prom: Promise<Record[`id`]>;
-      if (d.id) {
-        prom = dataProvider
-          .update(`localizedstrings`, {
-            id: d.id,
-            data: d,
-            previousData: d as Record,
-          })
-          .then(({ data }) => data.id);
-      } else {
-        prom = dataProvider
-          .create(`localizedstrings`, {
-            data: d,
-          })
-          .then(({ data }) => data.id);
-      }
-      return prom;
-    });
+    if (data.loc_description_admin?.length)
+      data.description_loc_ids = await handleLocalizedStrings(
+        data.loc_description_admin,
+        dataProvider
+      );
 
-    if (descriptionIds?.length)
-      data.description_loc_ids = (await Promise.all(
-        descriptionIds
-      )) as number[];
-
-    const altTextIds = data.loc_alt_text_admin?.map((d) => {
-      let prom: Promise<Record[`id`]>;
-      if (d.id) {
-        prom = dataProvider
-          .update(`localizedstrings`, {
-            id: d.id,
-            data: d,
-            previousData: d as Record,
-          })
-          .then(({ data }) => data.id);
-      } else {
-        prom = dataProvider
-          .create(`localizedstrings`, {
-            data: d,
-          })
-          .then(({ data }) => data.id);
-      }
-      return prom;
-    });
-
-    if (altTextIds?.length)
-      data.alt_text_loc_ids = (await Promise.all(altTextIds)) as number[];
+    if (data.loc_alt_text_admin?.length)
+      data.alt_text_loc_ids = await handleLocalizedStrings(
+        data.loc_alt_text_admin,
+        dataProvider
+      );
 
     if (data.file) {
       data.tag_ids = data.tag_ids
