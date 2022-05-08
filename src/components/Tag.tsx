@@ -23,6 +23,7 @@ import { ITag } from "types/tags";
 import { Box } from "@material-ui/core";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import { handleLocalizedStrings } from "utils";
+import { useBuildUI } from "providers/BuildUIContext";
 
 export const TagList = (props: ListProps): JSX.Element => {
   return (
@@ -81,12 +82,17 @@ export const TagEdit = (props: EditProps): JSX.Element => {
     return r as Record;
   };
 
+  const { refetchData } = useBuildUI();
+
   const refresh = useRefresh();
   return (
     <Edit
       {...props}
       mutationMode="pessimistic"
-      onSuccess={refresh}
+      onSuccess={() => {
+        refresh();
+        refetchData();
+      }}
       transform={transform}
     >
       <SimpleForm warnWhenUnsavedChanges>
@@ -143,8 +149,16 @@ export const TagCreate = (props: CreateProps): JSX.Element => {
     return r as Record;
   };
   const refresh = useRefresh();
+  const { refetchData } = useBuildUI();
   return (
-    <Create {...props} transform={transform} onSuccess={refresh}>
+    <Create
+      {...props}
+      transform={transform}
+      onSuccess={() => {
+        refresh();
+        refetchData();
+      }}
+    >
       <SimpleForm warnWhenUnsavedChanges>
         <ReferenceInput
           source="tag_category_id"
