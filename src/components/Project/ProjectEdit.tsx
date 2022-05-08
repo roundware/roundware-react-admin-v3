@@ -46,6 +46,7 @@ const ProjectEdit = (props: EditProps): JSX.Element => {
     <Edit
       title="Edit a project"
       {...props}
+      mutationMode="optimistic"
       onSuccess={() => redirect(`/`)}
       transform={transform}
     >
