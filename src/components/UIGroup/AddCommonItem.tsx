@@ -9,6 +9,7 @@ import {
   IconButton,
   Tooltip,
   Typography,
+  CircularProgress,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
@@ -199,7 +200,7 @@ const AddCommonItem = (props: DatagridRowProps): JSX.Element => {
     redirect(
       `create`,
       `/tags?filter=${JSON.stringify({
-        tag_category_id: props?.record?.tag_category_id,
+        tag_category_id: `%d${props?.record?.tag_category_id}`,
       })}`
     );
 
@@ -210,17 +211,13 @@ const AddCommonItem = (props: DatagridRowProps): JSX.Element => {
           <AddIcon />
         </IconButton>
       </Tooltip>
-      <Dialog open={showDialog}>
+      <Dialog keepMounted={false} open={showDialog}>
         <DialogContent>
           <Grid container direction="column" spacing={2}>
             <Grid item container spacing={4} wrap="nowrap" alignItems="center">
               <Grid item>
-                <Typography variant="h6">Add Common Item</Typography>
-                <Typography variant="caption">
-                  Checking will add the item to all possible nested levels.{" "}
-                  <br />
-                  <b>Note:</b>
-                  Unselecting an item will also remove it from all the levels.
+                <Typography variant="h6">
+                  Add Common Item at all levels
                 </Typography>
               </Grid>
               <Grid item>
@@ -229,6 +226,7 @@ const AddCommonItem = (props: DatagridRowProps): JSX.Element => {
                 </IconButton>
               </Grid>
             </Grid>
+
             <Grid item container direction="column">
               {tagsToDisplay?.map((i, index) => (
                 <Grid item key={i.id}>
@@ -242,7 +240,7 @@ const AddCommonItem = (props: DatagridRowProps): JSX.Element => {
                         onChange={(_e, checked) => handleOnChange(i, checked)}
                       />
                     }
-                    disabled={disabledItems?.includes(i?.id)}
+                    disabled={Boolean(disabledItems?.length)}
                   />
                 </Grid>
               ))}
@@ -251,7 +249,7 @@ const AddCommonItem = (props: DatagridRowProps): JSX.Element => {
         </DialogContent>
         <DialogActions>
           <Button color="primary" onClick={handleAddMore}>
-            Add more Tags?
+            Create more Tags in this category?
           </Button>
           <Button onClick={handleClose}>Close</Button>
         </DialogActions>
