@@ -99,7 +99,7 @@ const DeleteUiGroupButton = ({ record }: DeleteButtonProps): JSX.Element => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button variant="contained" onClick={handleDelete}>
+          <Button variant="contained" color="secondary" onClick={handleDelete}>
             Delete
           </Button>
         </DialogActions>
