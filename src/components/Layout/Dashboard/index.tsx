@@ -88,10 +88,11 @@ const Dashboard = (): JSX.Element => {
               },
             })
             .then((data: GetListResult<Record>) => {
+              if (!data) return;
               setListenEvents((prev) => ({
                 ...prev,
-                data: [...(prev?.data || []), ...data.data],
-                total: [...(prev?.data || []), ...data.data].length,
+                data: [...(prev?.data || []), ...data?.data],
+                total: [...(prev?.data || []), ...data?.data].length,
               }));
               setResourcesRanges((prev) => ({
                 ...prev,
@@ -104,6 +105,7 @@ const Dashboard = (): JSX.Element => {
               ...params,
             })
             .then((data: GetListResult<Record>) => {
+              if (!data) return;
               setAssets((prev) => ({
                 ...prev,
                 data: [...(prev?.data || []), ...data.data],
