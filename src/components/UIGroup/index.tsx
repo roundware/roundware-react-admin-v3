@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { TextField } from "@material-ui/core";
 import TranslatableField from "components/common/TranslatableField";
 import { useBuildUI } from "providers/BuildUIContext";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
@@ -22,6 +24,7 @@ import {
 } from "react-admin";
 import { IUIGroup } from "types/uiGroups";
 import { handleLocalizedStrings } from "utils";
+import UiModeField from "./UiModeField";
 
 export const UiGroupEdit = (props: EditProps): JSX.Element => {
   const { refetchData } = useBuildUI();
@@ -97,16 +100,7 @@ export const UiGroupEdit = (props: EditProps): JSX.Element => {
         </ReferenceInput>
         <TextInput source="name" fullWidth required />
         <TranslatableField source="header_text_loc_admin" />
-        <RadioButtonGroupInput
-          source="ui_mode"
-          key="ui-mode-filter"
-          alwaysOn
-          choices={[
-            { id: "listen", name: "Listen" },
-            { id: "speak", name: "Speak" },
-            { id: "browse", name: "Browse" },
-          ]}
-        />
+        <UiModeField />
         <RadioButtonGroupInput
           source="select"
           fullWidth
@@ -125,9 +119,26 @@ export const UiGroupEdit = (props: EditProps): JSX.Element => {
 };
 
 export const UiGroupCreate = (props: CreateProps): JSX.Element => {
-  const { refetchData, uiGroups } = useBuildUI();
+  const { refetchData, uiGroups, setUiMode } = useBuildUI();
   const dataProvider = useRoundwareDataProvider();
   const { selectedProject } = useProjects();
+
+  const refresh = useRefresh();
+  const redirect = useRedirect();
+  const refreshData = () => {
+    refetchData();
+    refresh();
+    redirect(`list`, `/uigroups`);
+  };
+
+  const newIndex = useMemo(() => {
+    const lastIndex: number = uiGroups.reduce<number>((lastIndex, el) => {
+      if (el.index > lastIndex) lastIndex = el.index;
+      return lastIndex;
+    }, 0);
+    return lastIndex + 1;
+  }, [uiGroups]);
+
   const transform = async (record: Record): Promise<Record> => {
     const r = record as Omit<Partial<IUIGroup>, `header_text_loc`> & {
       header_text_loc: number[];
@@ -146,33 +157,21 @@ export const UiGroupCreate = (props: CreateProps): JSX.Element => {
         dataProvider
       );
 
+    r.index = newIndex;
     delete r.header_text_loc_admin;
     return r as Record;
   };
-  const refresh = useRefresh();
-  const redirect = useRedirect();
-  const refreshData = () => {
-    refetchData();
-    refresh();
-    redirect(`list`, `/uigroups`);
-  };
-
-  const newIndex = useMemo(() => {
-    const lastIndex: number = uiGroups.reduce<number>((lastIndex, el) => {
-      if (el.index > lastIndex) lastIndex = el.index;
-      return lastIndex;
-    }, 0);
-    return lastIndex + 1;
-  }, [uiGroups]);
-
   return (
     <Create {...props} transform={transform} onSuccess={refreshData}>
       <SimpleForm warnWhenUnsavedChanges>
-        <NumberInput
-          source="index"
+        <TextField
           fullWidth
           required
-          defaultValue={newIndex}
+          disabled
+          variant="filled"
+          type="number"
+          label="Index"
+          value={newIndex.toString()}
           helperText="It is recommended to not modify this field here but use drag and drop feature instead."
         />
 
@@ -186,17 +185,7 @@ export const UiGroupCreate = (props: CreateProps): JSX.Element => {
         </ReferenceInput>
         <TextInput source="name" fullWidth required />
         <TranslatableField source="header_text_loc_admin" />
-        <RadioButtonGroupInput
-          source="ui_mode"
-          key="ui-mode-filter"
-          alwaysOn
-          defaultValue="speak"
-          choices={[
-            { id: "listen", name: "Listen" },
-            { id: "speak", name: "Speak" },
-            { id: "browse", name: "Browse" },
-          ]}
-        />
+        <UiModeField />
         <RadioButtonGroupInput
           source="select"
           fullWidth
