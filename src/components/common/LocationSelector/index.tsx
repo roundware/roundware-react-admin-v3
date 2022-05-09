@@ -24,11 +24,6 @@ const containerStyle = {
   height: "400px",
 };
 
-const center = {
-  lat: -3.745,
-  lng: -38.523,
-};
-
 const LocationSelector = (props: Props): JSX.Element => {
   const [latStr, setLat] = useFieldValue(props.fieldNames.latitude);
   const [lngStr, setLng] = useFieldValue(props.fieldNames.longitude);
@@ -44,12 +39,15 @@ const LocationSelector = (props: Props): JSX.Element => {
   });
 
   const onLoad = React.useCallback(function callback(map: google.maps.Map) {
-    const bounds = new window.google.maps.LatLngBounds();
-    map.fitBounds(bounds);
     map.setCenter({
       lat,
       lng,
     });
+    map.panTo({
+      lat,
+      lng,
+    });
+    map.setZoom(16);
   }, []);
 
   // const onUnmount = React.useCallback(function callback() {}, []);
@@ -99,9 +97,8 @@ const LocationSelector = (props: Props): JSX.Element => {
                   <Grid item>
                     <GoogleMap
                       mapContainerStyle={containerStyle}
-                      center={center}
-                      zoom={10}
                       onLoad={onLoad}
+
                       // onUnmount={onUnmount}
                     >
                       <SelectorPin
