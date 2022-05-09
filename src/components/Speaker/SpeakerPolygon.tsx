@@ -31,6 +31,7 @@ import {
   googleMapPathToGeoJSONPath,
 } from "utilities";
 import useDebounce from "hooks/useDebounce";
+import { isEqual } from "lodash";
 interface Props {
   speaker: ISpeaker;
 }
@@ -111,16 +112,26 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
   const handleDragStart = () => setDragging(true);
   const updatePolygon = (e: google.maps.MapMouseEvent) => {
     if (e) console.log(`Polygon edited`);
+
     setDragging(false);
     let newPath = polygon
       ?.getPath()
       .getArray()
       .map((p) => [p.lng(), p.lat()]);
 
+    const editedPoint = [e.latLng?.lng(), e.latLng?.lat()];
+
     if (Array.isArray(newPath)) {
+      const isLastPointEdited = isEqual(
+        newPath[newPath.length - 1],
+        editedPoint
+      );
+
       // form closed ring;
-      if (newPath[0] != newPath[newPath.length - 1]) {
-        newPath = [...newPath, newPath[0]];
+      if (!isEqual(newPath[0], newPath[newPath.length - 1])) {
+        if (isLastPointEdited)
+          newPath = [newPath[newPath.length - 1], ...newPath.slice(1)];
+        else newPath = [...newPath, newPath[0]];
       }
       const newMultiPolygon = multiPolygon([[newPath]]).geometry;
       setShape(newMultiPolygon);
