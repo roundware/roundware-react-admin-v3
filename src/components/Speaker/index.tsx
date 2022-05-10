@@ -72,7 +72,7 @@ export const SpeakerEdit = (props: EditProps): JSX.Element => {
 
 export const SpeakerCreate = (props: CreateProps): JSX.Element => {
   const { selectedProject } = useProjects();
-  const { fetchData } = useSpeakers();
+  const { fetchData, setSelectedSpeaker } = useSpeakers();
   const transform = (data: Record) => {
     data.project = selectedProject?.id;
     if (typeof data?.file?.src == "string") {
@@ -92,10 +92,11 @@ export const SpeakerCreate = (props: CreateProps): JSX.Element => {
       {...props}
       transform={transform}
       // mutationMode="pessimistic"
-      onSuccess={() => {
+      onSuccess={(e: { data: Record }) => {
         fetchData();
         refresh();
         redirect(`list`, `/speakers`);
+        setSelectedSpeaker(parseInt(e.data.id.toString()));
       }}
     >
       <SimpleForm warnWhenUnsavedChanges>
