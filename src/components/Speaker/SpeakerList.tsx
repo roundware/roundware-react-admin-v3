@@ -86,9 +86,7 @@ const SpeakerHighter = () => {
   return (
     <Tooltip title={isSelected ? "Unselect" : `Select On Map`} placement="left">
       <IconButton
-        onClick={() =>
-          setSelectedSpeaker((prev) => (prev == id ? null : Number(id)))
-        }
+        onClick={() => setSelectedSpeaker(isSelected ? null : Number(id))}
       >
         {isSelected ? <LocationOnIcon /> : <LocationOnOutlinedIcon />}
       </IconButton>
