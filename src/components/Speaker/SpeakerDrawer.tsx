@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSpeakers } from "providers/SpeakersContext";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import { DrawingManager, DrawingManagerProps } from "@react-google-maps/api";
@@ -23,8 +23,13 @@ type googleMapDrawnShapes =
   | google.maps.Rectangle
   | null;
 const SpeakerDrawer = (): JSX.Element | null => {
-  const { selectedSpeaker, speakers, fetchData, setSelectedSpeaker } =
-    useSpeakers();
+  const {
+    selectedSpeaker,
+    speakers,
+    fetchData,
+    setSelectedSpeaker,
+    setIsCurrentSpeakerSaved,
+  } = useSpeakers();
   const dataProvider = useRoundwareDataProvider();
   // `selectedSpeaker` is just an id,
   // full data by finding the speaker
@@ -198,9 +203,15 @@ const SpeakerDrawer = (): JSX.Element | null => {
         setSelectedSpeaker(null);
         /** get new saved speakers data */
         fetchData();
+        setIsCurrentSpeakerSaved(true);
       })
       .finally(() => setSaving(false));
   };
+
+  useEffect(() => {
+    if (selectedSpeaker && !selectedSpeakerData?.shape)
+      setIsCurrentSpeakerSaved(false);
+  }, []);
 
   /** removes current shape */
   const handleRedraw = () => setCurrentShape(null);
