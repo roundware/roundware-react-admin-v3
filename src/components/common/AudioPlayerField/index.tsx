@@ -112,6 +112,11 @@ const AudioPlayerField = ({
       wavesurferRef.current.load(file);
     }
   }, [file]);
+  useEffect(() => {
+    return () => {
+      if (wavesurferRef && wavesurferRef.current) wavesurferRef.current.pause();
+    };
+  }, []);
 
   if (!file) return null;
   return (
