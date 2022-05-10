@@ -39,8 +39,13 @@ interface Props {
  * this will render all the necesarry polygons for an individual speaker
  */
 const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
-  const { selectedSpeaker, fetchData, setSelectedSpeaker, setSpeakers } =
-    useSpeakers();
+  const {
+    selectedSpeaker,
+    fetchData,
+    setSelectedSpeaker,
+    setSpeakers,
+    setIsCurrentSpeakerSaved,
+  } = useSpeakers();
   const isSelected = selectedSpeaker == speaker.id;
   const map = useGoogleMap();
   const [shape, setShape] = useState(speaker.shape);
@@ -112,7 +117,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
   const handleDragStart = () => setDragging(true);
   const updatePolygon = (e: google.maps.MapMouseEvent) => {
     if (e) console.log(`Polygon edited`);
-
+    setIsCurrentSpeakerSaved(false);
     setDragging(false);
     let newPath = polygon
       ?.getPath()
@@ -159,7 +164,10 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
           ...speaker,
         },
       })
-      .then(() => fetchData())
+      .then(() => {
+        fetchData();
+        setIsCurrentSpeakerSaved(true);
+      })
       .finally(() => setSaving(false));
   };
 
@@ -179,6 +187,8 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       map?.fitBounds(polygon.getBounds());
+    } else {
+      handleDiscard();
     }
   }, [isSelected, polygon, speaker]);
 
@@ -198,14 +208,19 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
     ],
   };
 
-  const handleDiscard = () => setShape(speaker.shape);
+  const handleDiscard = () => {
+    setShape(speaker.shape);
+    setIsCurrentSpeakerSaved(true);
+  };
 
   const handleDelete = () => {
     const confirmation = window.confirm(
       `Deleting a speaker will only allow you to draw a new shape`
     );
+
     if (confirmation) {
       setSpeakers((s) => {
+        setIsCurrentSpeakerSaved(false);
         const sps = [...(s || [])].filter((s) => s?.id != selectedSpeaker);
         sps.push({
           ...s?.find((s) => s.id == selectedSpeaker),
