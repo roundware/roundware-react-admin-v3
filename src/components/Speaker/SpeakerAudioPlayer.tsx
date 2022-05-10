@@ -104,6 +104,12 @@ const SpeakerAudioPlayer = ({
     }
   }, [src, wavesurferRef]);
 
+  useEffect(() => {
+    return () => {
+      if (wavesurferRef && wavesurferRef.current) wavesurferRef.current.pause();
+    };
+  }, []);
+
   const [currentVolume, setCurrentVolume] = useState(maxvolume);
 
   useEffect(() => {
