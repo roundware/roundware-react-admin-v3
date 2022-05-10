@@ -159,6 +159,11 @@ const ProjectEdit = (props: EditProps): JSX.Element => {
             ]}
           />
         </CardBox>
+        <TranslatableField
+          source="legal_agreement_loc_admin"
+          fromProject
+          label="Legal Agreement"
+        />
         <Grid container spacing={2} style={{ width: "100%" }}>
           <Grid item xs={12} md={6}>
             <CardBox title="Sharing">
@@ -208,11 +213,7 @@ const ProjectEdit = (props: EditProps): JSX.Element => {
           />
         </CardBox>
 
-        <TranslatableField
-          source="legal_agreement_loc_admin"
-          fromProject
-          label="Legal Agreement"
-        />
+        
       </SimpleForm>
     </Edit>
   );
