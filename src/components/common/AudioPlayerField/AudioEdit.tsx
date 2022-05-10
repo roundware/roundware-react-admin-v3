@@ -110,6 +110,12 @@ const AudioEditField = ({
   };
 
   useEffect(() => {
+    return () => {
+      if (wavesurferRef && wavesurferRef.current) wavesurferRef.current.pause();
+    };
+  }, []);
+
+  useEffect(() => {
     if (wavesurferRef && wavesurferRef.current && audioSrc) {
       setLoading(true);
       const audioDuration = wavesurferRef.current.getDuration()?.toFixed(2);
