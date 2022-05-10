@@ -165,6 +165,11 @@ const ProjectCreate = (props: CreateProps): JSX.Element => {
             style={{ visibility: "hidden", position: "absolute" }}
           />
         </CardBox>
+        <TranslatableField
+          source="legal_agreement_loc_admin"
+          fromProject
+          label="Legal Agreement"
+        />
         <Grid container spacing={2} style={{ width: "100%" }}>
           <Grid item xs={12} md={6}>
             <CardBox title="Sharing">
@@ -213,12 +218,6 @@ const ProjectCreate = (props: CreateProps): JSX.Element => {
             label="Demo Stream Message"
           />
         </CardBox>
-
-        <TranslatableField
-          source="legal_agreement_loc_admin"
-          fromProject
-          label="Legal Agreement"
-        />
       </SimpleForm>
     </Create>
   );
