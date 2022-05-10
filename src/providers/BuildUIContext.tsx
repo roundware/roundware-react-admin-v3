@@ -79,8 +79,8 @@ export const BuildUIContextProvider = ({
       })
       .then(() =>
         Promise.all(promises).then(() => {
-          setUiItemsList(uiItems);
-          setUiItemsTree(list_to_tree(uiItems));
+          setUiItemsList(uiItems.filter((i) => i.active));
+          setUiItemsTree(list_to_tree(uiItems.filter((i) => i.active)));
           setLoading(false);
         })
       );
