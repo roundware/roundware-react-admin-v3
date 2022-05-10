@@ -46,7 +46,7 @@ export const TagList = (props: ListProps): JSX.Element => {
           <TextField source="id" />
           <TextField source="value" />
           <TextField source="description" />
-          <TextField source="filter" />
+          <TextField source="msg_loc" label="Message" />
           <ReferenceField
             source="tag_category_id"
             reference="tagcategories"
