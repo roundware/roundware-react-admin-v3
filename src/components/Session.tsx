@@ -23,7 +23,7 @@ import {
 } from "react-admin";
 import { useProjects } from "../providers/ProjectsContext";
 
-export const SessionList = (props: ListProps): JSX.Element => {
+export const SessionList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
     <List filter={{ project_id: selectedProject?.id }}>

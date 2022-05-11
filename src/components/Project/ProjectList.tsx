@@ -13,7 +13,7 @@ import React, { useEffect, useState } from "react";
 import { List, ListProps } from "react-admin";
 import { IProject, useProjects } from "../../providers/ProjectsContext";
 import SearchIcon from "@mui/icons-material/Search";
-const ProjectList = (props: ListProps): JSX.Element => {
+const ProjectList = (): JSX.Element => {
   return (
     <List
       hasCreate={false}

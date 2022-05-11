@@ -11,7 +11,7 @@ import {
   TextInput,
 } from "react-admin";
 import { useProjects } from "../providers/ProjectsContext";
-export const EnvelopeList = (props: ListProps): JSX.Element => {
+export const EnvelopeList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
     <List filter={{ project_id: selectedProject?.id }}>

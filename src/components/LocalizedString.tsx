@@ -11,7 +11,7 @@ import {
   TextInput,
 } from "react-admin";
 
-export const LocalizedStringList = (props: ListProps): JSX.Element => {
+export const LocalizedStringList = (): JSX.Element => {
   return (
     <List>
       <Datagrid rowClick="edit"></Datagrid>

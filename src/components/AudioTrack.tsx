@@ -18,7 +18,7 @@ import {
   useRecordContext,
 } from "react-admin";
 import RangeSlider from "./common/RangeSlider";
-export const AudioTrackList = (props: ListProps): JSX.Element => {
+export const AudioTrackList = (): JSX.Element => {
   return (
     <List
       filters={

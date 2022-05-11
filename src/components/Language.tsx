@@ -12,7 +12,7 @@ import {
 } from "react-admin";
 
 import { useProjects } from "../providers/ProjectsContext";
-export const LanguageList = (props: ListProps): JSX.Element => {
+export const LanguageList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
     <List filter={{ project_id: selectedProject?.id }}>

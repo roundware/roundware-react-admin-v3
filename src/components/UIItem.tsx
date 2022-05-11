@@ -11,7 +11,7 @@ import {
   TextInput,
 } from "react-admin";
 
-export const UiItemList = (props: ListProps): JSX.Element => {
+export const UiItemList = (): JSX.Element => {
   return (
     <List>
       <Datagrid></Datagrid>

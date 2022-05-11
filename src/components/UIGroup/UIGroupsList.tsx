@@ -21,7 +21,7 @@ import DeleteUiGroupButton from "./DeleteUiGroupButton";
 import { DraggableDatagrid } from "./DraggableDatagrid";
 import UIGroupListActions from "./UIGroupListActions";
 import UIItemsTreeView from "./UIItemsTreeView";
-export const UiGroupList = (props: ListProps): JSX.Element => {
+export const UiGroupList = (): JSX.Element => {
   const { setUiMode } = useBuildUI();
   return (
     <>
@@ -101,17 +101,17 @@ export const UiGroupList = (props: ListProps): JSX.Element => {
   );
 };
 
-const RowActions = (props: DatagridRowProps): JSX.Element => {
+const RowActions = (): JSX.Element => {
   return (
     <Grid container spacing={1} direction="row" wrap="nowrap">
       <Grid item>
-        <EditButton record={props.record} size="small" label="" />
+        <EditButton size="small" label="" />
       </Grid>
       <Grid item>
         <AddCommonItem {...props} />
       </Grid>
       <Grid item>
-        <DeleteUiGroupButton record={props.record} />
+        <DeleteUiGroupButton />
       </Grid>
     </Grid>
   );

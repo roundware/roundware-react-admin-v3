@@ -22,7 +22,7 @@ import {
 } from "react-admin";
 import { useProjects } from "../providers/ProjectsContext";
 
-export const ListenEventsList = (props: ListProps): JSX.Element => {
+export const ListenEventsList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
     <List

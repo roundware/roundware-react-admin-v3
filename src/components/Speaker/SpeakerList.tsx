@@ -17,7 +17,7 @@ import {
 } from "react-admin";
 import { SpeakerEdit } from ".";
 import SpeakerShapesControl from "./SpeakerShapesControl";
-const SpeakerList = (props: ListProps): JSX.Element => {
+const SpeakerList = (): JSX.Element => {
   const rc = useResourceContext();
   const { selectedProject } = useProjects();
   if (!selectedProject) return <>No Project Selected.</>;

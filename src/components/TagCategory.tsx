@@ -17,7 +17,7 @@ import {
   useRecordContext,
   useRedirect,
 } from "react-admin";
-export const TagCategoryList = (props: ListProps): JSX.Element => {
+export const TagCategoryList = (): JSX.Element => {
   return (
     <List>
       <Datagrid optimized>

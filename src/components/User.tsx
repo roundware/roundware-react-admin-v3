@@ -13,7 +13,7 @@ import {
   Record,
 } from "react-admin";
 import { useProjects } from "../providers/ProjectsContext";
-export const UserList = (props: ListProps): JSX.Element => {
+export const UserList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
     <List filter={{ project_id: selectedProject?.id }}>

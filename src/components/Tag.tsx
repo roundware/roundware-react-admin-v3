@@ -25,7 +25,7 @@ import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import { handleLocalizedStrings } from "utils";
 import { useBuildUI } from "providers/BuildUIContext";
 
-export const TagList = (props: ListProps): JSX.Element => {
+export const TagList = (): JSX.Element => {
   return (
     <Box pt={3}>
       <List

@@ -21,7 +21,7 @@ import {
 } from "react-admin";
 import AudioPlayerField from "./common/AudioPlayerField";
 
-export const TimedAssetList = (props: ListProps): JSX.Element => {
+export const TimedAssetList = (): JSX.Element => {
   return (
     <List
       filters={[

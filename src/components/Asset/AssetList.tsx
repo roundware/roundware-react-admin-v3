@@ -23,7 +23,7 @@ import {
 import { useProjects } from "../../providers/ProjectsContext";
 import AudioPlayerField from "../common/AudioPlayerField";
 
-export const AssetList = (props: ListProps): JSX.Element => {
+export const AssetList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
     <List
