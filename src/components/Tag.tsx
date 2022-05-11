@@ -130,7 +130,7 @@ export const TagEdit = (): JSX.Element => {
   );
 };
 
-export const TagCreate = (props: CreateProps): JSX.Element => {
+export const TagCreate = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
   const transform = async (record: Record): Promise<Record> => {
     const r = record as Partial<ITag>;

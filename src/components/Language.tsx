@@ -31,7 +31,7 @@ export const LanguageEdit = (): JSX.Element => {
   );
 };
 
-export const LanguageCreate = (props: CreateProps): JSX.Element => {
+export const LanguageCreate = (): JSX.Element => {
   return (
     <Create>
       <SimpleForm warnWhenUnsavedChanges>

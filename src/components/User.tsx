@@ -54,7 +54,7 @@ export const UserEdit = (): JSX.Element => {
   );
 };
 
-export const UserCreate = (props: CreateProps): JSX.Element => {
+export const UserCreate = (): JSX.Element => {
   return (
     <Create>
       <SimpleForm

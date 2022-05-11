@@ -138,7 +138,7 @@ export const AudioTrackEdit = (): JSX.Element => {
   );
 };
 
-export const AudioTrackCreate = (props: CreateProps): JSX.Element => {
+export const AudioTrackCreate = (): JSX.Element => {
   return (
     <Create>
       <SimpleForm warnWhenUnsavedChanges>

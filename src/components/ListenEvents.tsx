@@ -78,7 +78,7 @@ export const ListenEventsEdit = (): JSX.Element => {
   );
 };
 
-export const ListenEventsCreate = (props: CreateProps): JSX.Element => {
+export const ListenEventsCreate = (): JSX.Element => {
   return (
     <Create>
       <SimpleForm warnWhenUnsavedChanges>

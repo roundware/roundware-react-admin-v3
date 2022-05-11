@@ -62,7 +62,7 @@ export const TagCategoryEdit = (): JSX.Element => {
   );
 };
 
-export const TagCategoryCreate = (props: CreateProps): JSX.Element => {
+export const TagCategoryCreate = (): JSX.Element => {
   return (
     <Create>
       <SimpleForm warnWhenUnsavedChanges>

@@ -29,7 +29,7 @@ export const UiItemEdit = (): JSX.Element => {
   );
 };
 
-export const UserCreate = (props: CreateProps): JSX.Element => {
+export const UserCreate = (): JSX.Element => {
   return (
     <Create>
       <SimpleForm warnWhenUnsavedChanges>

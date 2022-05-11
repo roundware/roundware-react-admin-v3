@@ -22,7 +22,7 @@ import {
 } from "react-admin";
 import { LocalizedString } from "types";
 import { handleLocalizedStrings } from "utils";
-const ProjectCreate = (props: CreateProps): JSX.Element => {
+const ProjectCreate = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
   const redirect = useRedirect();
   const transform = async (r: Record) => {

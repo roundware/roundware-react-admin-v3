@@ -119,7 +119,7 @@ export const UiGroupEdit = (): JSX.Element => {
   );
 };
 
-export const UiGroupCreate = (props: CreateProps): JSX.Element => {
+export const UiGroupCreate = (): JSX.Element => {
   const { refetchData, uiGroups, setUiMode } = useBuildUI();
   const dataProvider = useRoundwareDataProvider();
   const { selectedProject } = useProjects();

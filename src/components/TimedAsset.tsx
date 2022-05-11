@@ -88,7 +88,7 @@ export const TimedAssetEdit = (): JSX.Element => {
   );
 };
 
-export const TimedAssetCreate = (props: CreateProps): JSX.Element => {
+export const TimedAssetCreate = (): JSX.Element => {
   return (
     <Create>
       <SimpleForm warnWhenUnsavedChanges>

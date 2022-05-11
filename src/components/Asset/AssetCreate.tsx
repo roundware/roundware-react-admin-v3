@@ -20,7 +20,7 @@ import { handleLocalizedStrings } from "utils";
 import { useProjects } from "../../providers/ProjectsContext";
 import AudioOptions from "../common/AudioOptions";
 
-const AssetCreate = (props: CreateProps): JSX.Element => {
+const AssetCreate = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
   const { selectedProject } = useProjects();
   const redirect = useRedirect();

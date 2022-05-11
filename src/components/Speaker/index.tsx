@@ -71,7 +71,7 @@ export const SpeakerEdit = (): JSX.Element => {
   );
 };
 
-export const SpeakerCreate = (props: CreateProps): JSX.Element => {
+export const SpeakerCreate = (): JSX.Element => {
   const { selectedProject } = useProjects();
   const { fetchData, setSelectedSpeaker } = useSpeakers();
   const transform = (data: Record) => {

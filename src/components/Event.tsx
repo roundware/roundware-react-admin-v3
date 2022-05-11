@@ -30,7 +30,7 @@ export const EventsEdit = (): JSX.Element => {
   );
 };
 
-export const EventsCreate = (props: CreateProps): JSX.Element => {
+export const EventsCreate = (): JSX.Element => {
   return (
     <Create>
       <SimpleForm warnWhenUnsavedChanges>

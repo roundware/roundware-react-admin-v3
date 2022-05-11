@@ -66,7 +66,7 @@ export const SessionEdit = (): JSX.Element => {
   );
 };
 
-export const SessionCreate = (props: CreateProps): JSX.Element => {
+export const SessionCreate = (): JSX.Element => {
   return (
     <Create>
       <SimpleForm warnWhenUnsavedChanges>
