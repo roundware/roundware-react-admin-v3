@@ -40,7 +40,7 @@ export const SpeakerEdit = (props: EditProps): JSX.Element => {
   return (
     <Edit
       mutationMode="pessimistic"
-      queryOptions={{
+      mutationOptions={{
         onSuccess: () => {
           fetchData();
           refresh();
@@ -91,12 +91,12 @@ export const SpeakerCreate = (props: CreateProps): JSX.Element => {
   return (
     <Create
       transform={transform}
-      queryOptions={{
-        onSuccess: (e: { data: Record }) => {
+      mutationOptions={{
+        onSuccess: (data: Record) => {
           fetchData();
           refresh();
           redirect(`list`, `/speakers`);
-          setSelectedSpeaker(parseInt(e.data.id.toString()));
+          setSelectedSpeaker(parseInt(data.id.toString()));
         },
       }}
     >

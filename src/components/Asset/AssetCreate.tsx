@@ -84,7 +84,7 @@ const AssetCreate = (props: CreateProps): JSX.Element => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       transform={transform}
-      queryOptions={{
+      mutationOptions={{
         onSuccess: () => redirect(`list`, `/assets`),
       }}
     >

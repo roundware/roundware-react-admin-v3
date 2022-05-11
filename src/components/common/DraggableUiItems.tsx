@@ -29,6 +29,7 @@ const DraggableUiItems = ({ record }: Props): JSX.Element => {
     {
       // https://marmelab.com/react-admin/Actions.html#optimistic-rendering-and-undo
       mutationMode: "undoable",
+
       onSuccess: () => {
         notify("Items reordered", "info", {}, true);
       },

@@ -50,7 +50,7 @@ const ProjectCreate = (props: CreateProps): JSX.Element => {
   return (
     <Create
       title="Create a new project"
-      queryOptions={{
+      mutationOptions={{
         onSuccess: () => redirect(`list`, `/projects`),
       }}
       transform={transform}

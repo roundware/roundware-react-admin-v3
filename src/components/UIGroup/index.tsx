@@ -165,7 +165,7 @@ export const UiGroupCreate = (props: CreateProps): JSX.Element => {
   return (
     <Create
       transform={transform}
-      queryOptions={{
+      mutationOptions={{
         onSuccess: () => refreshData(),
       }}
     >

@@ -118,7 +118,7 @@ const AssetEdit = (props: EditProps): JSX.Element => {
       // @ts-ignore
       transform={transform}
       mutationMode="optimistic"
-      queryOptions={{
+      mutationOptions={{
         onSuccess: () => redirect(`list`, `/assets`),
       }}
     >
