@@ -44,10 +44,10 @@ const SpeakerList = (props: ListProps): JSX.Element => {
             height: "80vh",
           }}
         >
-          <List title="Speakers" component="div" bulkActionButtons={false}>
+          <List title="Speakers" component="div">
             <Datagrid
               expand={<SpeakerEdit />}
-              hasBulkActions={false}
+              bulkActionButtons={false}
               style={{ flexShrink: 1 }}
             >
               <SpeakerHighter />

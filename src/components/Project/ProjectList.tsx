@@ -21,7 +21,6 @@ const ProjectList = (props: ListProps): JSX.Element => {
       hasShow
       pagination={false}
       perPage={0}
-      bulkActionButtons={false}
       component={ProjectListWrapper}
     >
       <ProjectCard />
@@ -61,7 +60,7 @@ const useCardStyles = makeStyles((theme) => ({
   },
   cardContent: {
     height: "100%",
-    padding: theme.spacing(2),
+    padding: 2,
   },
 }));
 const ProjectCardWrapper = ({ children }: { children: React.ReactNode }) => {

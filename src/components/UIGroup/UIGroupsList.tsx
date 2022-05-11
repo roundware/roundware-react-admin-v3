@@ -60,11 +60,11 @@ export const UiGroupList = (props: ListProps): JSX.Element => {
                 ui_mode: "speak",
               }}
               actions={<UIGroupListActions />}
-              bulkActionButtons={false}
             >
               <DraggableDatagrid
                 rowClick="edit"
-                currentSort={{ field: "index", order: "ASC" }}
+                sort={{ field: "index", order: "ASC" }}
+                bulkActionButtons={false}
               >
                 {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                 {/* @ts-ignore */}
