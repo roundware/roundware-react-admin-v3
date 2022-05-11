@@ -247,9 +247,6 @@ function App(): JSX.Element {
       // @ts-ignore
       dataProvider={dataProvider}
       authProvider={authProvider}
-      // customRoutes={[
-      //   <Route component={BuildUi} key="buildui" path={`/buildui`} />,
-      // ]}
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       dashboard={selectedProject && Dashboard}
