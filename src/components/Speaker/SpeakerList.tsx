@@ -44,12 +44,7 @@ const SpeakerList = (props: ListProps): JSX.Element => {
             height: "80vh",
           }}
         >
-          <List
-            {...props}
-            title="Speakers"
-            component="div"
-            bulkActionButtons={false}
-          >
+          <List title="Speakers" component="div" bulkActionButtons={false}>
             <Datagrid
               expand={<SpeakerEdit />}
               hasBulkActions={false}
@@ -87,7 +82,8 @@ const SpeakerHighter = () => {
     <Tooltip title={isSelected ? "Unselect" : `Select On Map`} placement="left">
       <IconButton
         onClick={() => setSelectedSpeaker(isSelected ? null : Number(id))}
-        size="large">
+        size="large"
+      >
         {isSelected ? <LocationOnIcon /> : <LocationOnOutlinedIcon />}
       </IconButton>
     </Tooltip>

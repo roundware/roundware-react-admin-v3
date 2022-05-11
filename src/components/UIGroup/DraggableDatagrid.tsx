@@ -3,8 +3,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { CircularProgress, Fade } from "@mui/material";
 import { Theme } from "@mui/material/styles";
-import createStyles from '@mui/styles/createStyles';
-import makeStyles from '@mui/styles/makeStyles';
+import createStyles from "@mui/styles/createStyles";
+import makeStyles from "@mui/styles/makeStyles";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
@@ -33,11 +33,7 @@ import {
 } from "react-beautiful-dnd";
 
 export const DraggableDatagrid = (props: DatagridProps): JSX.Element => (
-  <Datagrid
-    {...props}
-    header={<DatagridHeader />}
-    body={<DraggableDatagridBody />}
-  />
+  <Datagrid header={<DatagridHeader />} body={<DraggableDatagridBody />} />
 );
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -201,7 +197,6 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
           {(provided) => (
             <>
               <DatagridBody
-                {...props}
                 {...provided.droppableProps}
                 ref={provided.innerRef}
                 row={<DraggableDatagridRow />}

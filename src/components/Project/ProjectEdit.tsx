@@ -45,7 +45,6 @@ const ProjectEdit = (props: EditProps): JSX.Element => {
   return (
     <Edit
       title="Edit a project"
-      {...props}
       mutationMode="optimistic"
       onSuccess={() => redirect(`/`)}
       transform={transform}
@@ -212,8 +211,6 @@ const ProjectEdit = (props: EditProps): JSX.Element => {
             label="Demo Stream Message"
           />
         </CardBox>
-
-        
       </SimpleForm>
     </Edit>
   );

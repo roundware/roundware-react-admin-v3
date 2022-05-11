@@ -32,7 +32,7 @@ export const EventsEdit = (props: EditProps): JSX.Element => {
 
 export const EventsCreate = (props: CreateProps): JSX.Element => {
   return (
-    <Create {...props}>
+    <Create>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>

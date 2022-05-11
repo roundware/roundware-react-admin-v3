@@ -36,7 +36,6 @@ export const UiGroupList = (props: ListProps): JSX.Element => {
           </Grid>
           <Grid item xs={12} md={6}>
             <List
-              {...props}
               filters={[
                 <RadioButtonGroupInput
                   source="ui_mode"

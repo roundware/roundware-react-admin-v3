@@ -50,7 +50,6 @@ const ProjectCreate = (props: CreateProps): JSX.Element => {
   return (
     <Create
       title="Create a new project"
-      {...props}
       onSuccess={() => redirect(`list`, `/projects`)}
       transform={transform}
     >

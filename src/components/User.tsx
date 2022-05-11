@@ -56,7 +56,7 @@ export const UserEdit = (props: EditProps): JSX.Element => {
 
 export const UserCreate = (props: CreateProps): JSX.Element => {
   return (
-    <Create {...props}>
+    <Create>
       <SimpleForm
         transform={(r: Record) => {
           if (!r.device_id) {

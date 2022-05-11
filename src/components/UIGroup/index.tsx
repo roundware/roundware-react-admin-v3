@@ -59,7 +59,6 @@ export const UiGroupEdit = (props: EditProps): JSX.Element => {
 
   return (
     <Edit
-      {...props}
       transform={transform}
       mutationMode="pessimistic"
       onSuccess={refreshData}
@@ -162,7 +161,7 @@ export const UiGroupCreate = (props: CreateProps): JSX.Element => {
     return r as Record;
   };
   return (
-    <Create {...props} transform={transform} onSuccess={refreshData}>
+    <Create transform={transform} onSuccess={refreshData}>
       <SimpleForm warnWhenUnsavedChanges>
         <TextField
           fullWidth

@@ -31,7 +31,7 @@ export const UiItemEdit = (props: EditProps): JSX.Element => {
 
 export const UserCreate = (props: CreateProps): JSX.Element => {
   return (
-    <Create {...props}>
+    <Create>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>

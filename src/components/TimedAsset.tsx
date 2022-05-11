@@ -24,7 +24,6 @@ import AudioPlayerField from "./common/AudioPlayerField";
 export const TimedAssetList = (props: ListProps): JSX.Element => {
   return (
     <List
-      {...props}
       filters={[
         <NumberInput
           source="start__gte"
@@ -91,7 +90,7 @@ export const TimedAssetEdit = (props: EditProps): JSX.Element => {
 
 export const TimedAssetCreate = (props: CreateProps): JSX.Element => {
   return (
-    <Create {...props}>
+    <Create>
       <SimpleForm warnWhenUnsavedChanges>
         <ReferenceInput source="asset_id" reference="assets">
           <SelectInput optionText={(record) => `${record?.id}`} />

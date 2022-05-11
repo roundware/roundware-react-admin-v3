@@ -68,7 +68,7 @@ export const SessionEdit = (props: EditProps): JSX.Element => {
 
 export const SessionCreate = (props: CreateProps): JSX.Element => {
   return (
-    <Create {...props}>
+    <Create>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
         <TextInput source="device" required />

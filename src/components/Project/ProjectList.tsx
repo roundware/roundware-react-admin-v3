@@ -1,5 +1,11 @@
-import { CardActionArea, Grid, Typography, TextField, Container } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import {
+  CardActionArea,
+  Grid,
+  Typography,
+  TextField,
+  Container,
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import Card from "@mui/material/Card";
 import AddIcon from "@mui/icons-material/Add";
 import { useListContext, useRedirect } from "ra-core";
@@ -17,7 +23,6 @@ const ProjectList = (props: ListProps): JSX.Element => {
       perPage={0}
       bulkActionButtons={false}
       component={ProjectListWrapper}
-      {...props}
     >
       <ProjectCard />
     </List>

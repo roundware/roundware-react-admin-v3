@@ -27,7 +27,6 @@ export const AssetList = (props: ListProps): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
     <List
-      {...props}
       filter={{ project_id: selectedProject?.id }}
       filters={[
         <DateTimeInput

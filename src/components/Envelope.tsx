@@ -32,7 +32,7 @@ export const EnvelopeEdit = (props: EditProps): JSX.Element => {
 
 export const EnvelopeCreate = (props: CreateProps): JSX.Element => {
   return (
-    <Create {...props}>
+    <Create>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>

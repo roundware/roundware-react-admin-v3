@@ -81,7 +81,6 @@ const AssetCreate = (props: CreateProps): JSX.Element => {
   return (
     <Create
       title="Create an asset"
-      {...props}
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       transform={transform}

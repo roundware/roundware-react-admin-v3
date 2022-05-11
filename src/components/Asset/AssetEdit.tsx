@@ -115,7 +115,6 @@ const AssetEdit = (props: EditProps): JSX.Element => {
   return (
     <Edit
       title="Edit an asset"
-      {...props}
       // @ts-ignore
       transform={transform}
       mutationMode="optimistic"

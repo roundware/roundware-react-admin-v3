@@ -29,7 +29,6 @@ export const TagList = (props: ListProps): JSX.Element => {
   return (
     <Box pt={3}>
       <List
-        {...props}
         filters={[
           <ReferenceInput
             source="tag_category_id"
@@ -87,7 +86,6 @@ export const TagEdit = (props: EditProps): JSX.Element => {
   const refresh = useRefresh();
   return (
     <Edit
-      {...props}
       mutationMode="pessimistic"
       onSuccess={() => {
         refresh();
@@ -152,7 +150,6 @@ export const TagCreate = (props: CreateProps): JSX.Element => {
   const { refetchData } = useBuildUI();
   return (
     <Create
-      {...props}
       transform={transform}
       onSuccess={() => {
         refresh();

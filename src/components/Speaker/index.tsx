@@ -39,7 +39,6 @@ export const SpeakerEdit = (props: EditProps): JSX.Element => {
   const refresh = useRefresh();
   return (
     <Edit
-      {...props}
       mutationMode="pessimistic"
       onSuccess={() => {
         fetchData();
@@ -89,7 +88,6 @@ export const SpeakerCreate = (props: CreateProps): JSX.Element => {
   const refresh = useRefresh();
   return (
     <Create
-      {...props}
       transform={transform}
       // mutationMode="pessimistic"
       onSuccess={(e: { data: Record }) => {

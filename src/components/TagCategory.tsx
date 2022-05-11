@@ -62,7 +62,7 @@ export const TagCategoryEdit = (props: EditProps): JSX.Element => {
 
 export const TagCategoryCreate = (props: CreateProps): JSX.Element => {
   return (
-    <Create {...props}>
+    <Create>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="name" required />
         <TextInput source="data" />

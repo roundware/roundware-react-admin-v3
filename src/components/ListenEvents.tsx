@@ -26,7 +26,6 @@ export const ListenEventsList = (props: ListProps): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
     <List
-      {...props}
       filter={{ project_id: selectedProject?.id }}
       filters={[
         <DateTimeInput
@@ -81,7 +80,7 @@ export const ListenEventsEdit = (props: EditProps): JSX.Element => {
 
 export const ListenEventsCreate = (props: CreateProps): JSX.Element => {
   return (
-    <Create {...props}>
+    <Create>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" disabled />
         <NumberInput source="duration_in_seconds" required />

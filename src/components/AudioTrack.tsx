@@ -20,7 +20,6 @@ import RangeSlider from "./common/RangeSlider";
 export const AudioTrackList = (props: ListProps): JSX.Element => {
   return (
     <List
-      {...props}
       filters={
         [`duration`, `deadair`].flatMap((k) => [
           <NumberInput
@@ -139,7 +138,7 @@ export const AudioTrackEdit = (props: EditProps): JSX.Element => {
 
 export const AudioTrackCreate = (props: CreateProps): JSX.Element => {
   return (
-    <Create {...props}>
+    <Create>
       <SimpleForm warnWhenUnsavedChanges>
         <RangeSlider
           source="volume"

@@ -31,7 +31,7 @@ export const LocalizedStringEdit = (props: EditProps): JSX.Element => {
 
 export const LocalizedStringCreate = (props: CreateProps): JSX.Element => {
   return (
-    <Create {...props}>
+    <Create>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>
