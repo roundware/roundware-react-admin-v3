@@ -10,13 +10,14 @@ import {
   useMediaQuery,
   Link,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { useProjects } from "providers/ProjectsContext";
 import { AppBarProps, HideOnScroll } from "ra-ui-materialui";
 import React, { memo, useState } from "react";
-import { useRedirect, UserMenu } from "react-admin";
+import { useRedirect, UserMenu, useUserMenu } from "react-admin";
 import { SidebarToggleButton } from "./SidebarToggleButton";
-const AppBar = (props: AppBarProps): JSX.Element => {
+const AppBar = (): JSX.Element => {
+  const props = useUserMenu();
   const {
     className,
     color = "secondary",
@@ -33,7 +34,7 @@ const AppBar = (props: AppBarProps): JSX.Element => {
     menuButtonIconOpen: classes.menuButtonIconOpen,
   };
   const isXSmall = useMediaQuery<Theme>((theme) =>
-    theme.breakpoints.down('sm')
+    theme.breakpoints.down("sm")
   );
 
   const redirect = useRedirect();
@@ -42,10 +43,7 @@ const AppBar = (props: AppBarProps): JSX.Element => {
   const [isCreate, setIsCreate] = useState(false);
 
   const handleOnChange = (
-    event: React.ChangeEvent<{
-      name?: string | undefined;
-      value: unknown;
-    }>,
+    event: React.ChangeEvent<{}>,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     child: React.ReactNode
   ) => {
@@ -89,7 +87,8 @@ const AppBar = (props: AppBarProps): JSX.Element => {
                 color: "#fff",
                 marginLeft: selectedProject ? 0 : 16,
               }}
-              underline="hover">
+              underline="hover"
+            >
               {title}
             </Link>
             <InputLabel variant="standard" className={classes.label}>
@@ -118,7 +117,7 @@ const AppBar = (props: AppBarProps): JSX.Element => {
               </Select>
             </FormControl>
           </div>
-          <UserMenu logout={logout} />
+          <UserMenu />
         </Toolbar>
       </MuiAppBar>
     </HideOnScroll>
@@ -151,8 +150,8 @@ const useStyles = makeStyles(
     },
     select: {},
     label: {
-      marginRight: theme.spacing(1),
-      marginLeft: theme.spacing(2),
+      marginRight: 1,
+      marginLeft: 2,
     },
     appBar: {},
     toolbarInner: {},
