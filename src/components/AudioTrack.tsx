@@ -77,7 +77,7 @@ const RangeDisplay = ({ record, source }: FieldProps) => {
 };
 export const AudioTrackEdit = (props: EditProps): JSX.Element => {
   return (
-    <Edit {...props}>
+    <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required disabled />
         <RangeSlider

@@ -63,7 +63,7 @@ export const ListenEventsList = (props: ListProps): JSX.Element => {
 
 export const ListenEventsEdit = (props: EditProps): JSX.Element => {
   return (
-    <Edit {...props}>
+    <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" disabled />
         <NumberInput source="duration_in_seconds" />

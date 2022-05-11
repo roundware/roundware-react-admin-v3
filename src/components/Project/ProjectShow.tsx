@@ -27,7 +27,7 @@ const ProjectShow = (props: Props): JSX.Element => {
   }, [selectedProject]);
 
   return (
-    <Show {...props} title="Project Details">
+    <Show title="Project Details">
       <SimpleShowLayout>
         <Typography variant="h5">Project Details</Typography>
         <TextField source="id" />

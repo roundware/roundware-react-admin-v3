@@ -13,7 +13,7 @@ import {
 
 export const LocalizedStringList = (props: ListProps): JSX.Element => {
   return (
-    <List {...props}>
+    <List>
       <Datagrid rowClick="edit"></Datagrid>
     </List>
   );
@@ -21,7 +21,7 @@ export const LocalizedStringList = (props: ListProps): JSX.Element => {
 
 export const LocalizedStringEdit = (props: EditProps): JSX.Element => {
   return (
-    <Edit {...props}>
+    <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>

@@ -13,7 +13,7 @@ import {
 
 export const UiItemList = (props: ListProps): JSX.Element => {
   return (
-    <List {...props}>
+    <List>
       <Datagrid></Datagrid>
     </List>
   );
@@ -21,7 +21,7 @@ export const UiItemList = (props: ListProps): JSX.Element => {
 
 export const UiItemEdit = (props: EditProps): JSX.Element => {
   return (
-    <Edit {...props}>
+    <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>

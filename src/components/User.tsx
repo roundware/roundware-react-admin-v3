@@ -16,7 +16,7 @@ import { useProjects } from "../providers/ProjectsContext";
 export const UserList = (props: ListProps): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
-    <List {...props} filter={{ project_id: selectedProject?.id }}>
+    <List filter={{ project_id: selectedProject?.id }}>
       <Datagrid rowClick={"edit"}>
         <TextField source="id" />
         <TextField source="username" />
@@ -32,7 +32,7 @@ export const UserList = (props: ListProps): JSX.Element => {
 
 export const UserEdit = (props: EditProps): JSX.Element => {
   return (
-    <Edit {...props}>
+    <Edit>
       <SimpleForm
         warnWhenUnsavedChanges
         transform={(r: Record) => {

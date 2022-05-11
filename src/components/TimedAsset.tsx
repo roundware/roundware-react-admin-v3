@@ -74,7 +74,7 @@ export const TimedAssetList = (props: ListProps): JSX.Element => {
 
 export const TimedAssetEdit = (props: EditProps): JSX.Element => {
   return (
-    <Edit {...props}>
+    <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" disabled />
         <ReferenceInput source="asset_id" reference="assets">

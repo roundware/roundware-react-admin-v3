@@ -26,7 +26,7 @@ import { useProjects } from "../providers/ProjectsContext";
 export const SessionList = (props: ListProps): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
-    <List {...props} filter={{ project_id: selectedProject?.id }}>
+    <List filter={{ project_id: selectedProject?.id }}>
       <Datagrid rowClick="edit">
         <NumberField source="id" />
         <TextField source="device_id" />
@@ -47,7 +47,7 @@ export const SessionList = (props: ListProps): JSX.Element => {
 
 export const SessionEdit = (props: EditProps): JSX.Element => {
   return (
-    <Edit {...props}>
+    <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" disabled />
         <TextInput source="device" required />

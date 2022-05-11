@@ -18,7 +18,7 @@ import {
 } from "react-admin";
 export const TagCategoryList = (props: ListProps): JSX.Element => {
   return (
-    <List {...props}>
+    <List>
       <Datagrid optimized>
         <TextField source="id" />
         <TextField source="name" />
@@ -50,7 +50,7 @@ const RedirectButton = (props: DatagridCellProps) => {
 
 export const TagCategoryEdit = (props: EditProps): JSX.Element => {
   return (
-    <Edit {...props}>
+    <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required disabled />
         <TextInput source="name" required />
