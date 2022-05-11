@@ -14,7 +14,7 @@ import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { useField } from "react-final-form";
+import { useField } from "react-hook-form";
 import { Region, WaveForm, WaveSurfer } from "wavesurfer-react";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -33,18 +33,17 @@ const AudioEditField = ({
   size = "medium",
   buttons,
 }: PropTypes): JSX.Element | null => {
-  const {
-    input: { value },
-  } = useField(`file`);
-  const {
-    input: { value: start_time, onChange: changeStartTime },
-  } = useField(`start_time`);
-  const {
-    input: { value: end_time, onChange: changeEndTime },
-  } = useField(`end_time`);
-  const {
-    input: { value: id },
-  } = useField(`id`);
+  const [value] = useFieldValue<
+    | {
+        src: string;
+      }
+    | string
+  >(`file`);
+  const [start_time, changeStartTime] = useFieldValue<number>(`start_time`);
+
+  const [end_time, changeEndTime] = useFieldValue<number>(`end_time`);
+
+  const [id] = useFieldValue<number>(`id`);
   const [, setDurationInSec] = useFieldValue(`audio_length_in_seconds`);
 
   const plugins = [

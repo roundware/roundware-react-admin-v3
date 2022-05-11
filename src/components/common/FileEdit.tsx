@@ -3,17 +3,21 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useEffect } from "react";
 import { FileField, FileInput } from "react-admin";
-import { useField } from "react-final-form";
-import AudioEdit from "./AudioPlayerField/AudioEdit";
-export const FileEdit = (): JSX.Element => {
-  const {
-    input: { onChange, value },
-  } = useField(`file`);
-  const handleDelete = () => onChange({ target: { value: null } });
 
-  const {
-    input: { value: mediaType },
-  } = useField(`media_type`);
+import AudioEdit from "./AudioPlayerField/AudioEdit";
+import useFieldValue from "hooks/useFieldValue";
+import { IAsset } from "types/asset";
+export const FileEdit = (): JSX.Element => {
+  const [value, setFile] = useFieldValue<
+    | string
+    | {
+        src: string;
+      }
+    | null
+  >(`file`);
+  const handleDelete = () => setFile(null);
+
+  const [mediaType] = useFieldValue<IAsset[`media_type`]>(`media_type`);
 
   useEffect(() => {
     const fileExt =
@@ -23,7 +27,7 @@ export const FileEdit = (): JSX.Element => {
         ? value?.src?.split(`.`)?.reverse()[0]
         : false;
     if (fileExt && !getFileExtensions(mediaType)?.some((f) => f == fileExt)) {
-      onChange(null);
+      setFile(null);
     }
   }, [mediaType]);
 
@@ -39,7 +43,8 @@ export const FileEdit = (): JSX.Element => {
                   key="del"
                   style={{ color: "#dc004e" }}
                   onClick={handleDelete}
-                  size="large">
+                  size="large"
+                >
                   <DeleteIcon />
                 </IconButton>,
               ]}

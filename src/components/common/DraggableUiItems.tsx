@@ -1,5 +1,5 @@
 import React from "react";
-import { FieldArray } from "react-final-form-arrays";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import { TextInput, NumberInput, useNotify, useMutation } from "react-admin";
 import Add from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
@@ -12,6 +12,7 @@ import DragHandleIcon from "@mui/icons-material/DragHandle";
 import { Draggable, DragDropContext, Droppable } from "react-beautiful-dnd";
 import { OnDragEndResponder } from "react-beautiful-dnd";
 import { IUIGroup } from "types/uiGroups";
+
 interface Props {
   record: IUIGroup;
 }
@@ -67,91 +68,83 @@ const DraggableUiItems = ({ record }: Props): JSX.Element => {
     // Call mutation function
     reorder(newArray);
   };
+  const { control } = useFormContext();
+  const { fields, remove, push } = useFieldArray({
+    control,
+    name: "questions",
+  });
 
   return (
-    <FieldArray name="questions">
-      {(fieldProps) => {
-        return (
-          <DragDropContext
-            onDragEnd={onDragEnd} // modified
-          >
-            <TableContainer>
-              <Table aria-label="questions list">
-                <Droppable droppableId="droppable-questions" type="QUESTION">
-                  {(provided, snapshot) => (
-                    <TableBody
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
+    <DragDropContext
+      onDragEnd={onDragEnd} // modified
+    >
+      <TableContainer>
+        <Table aria-label="questions list">
+          <Droppable droppableId="droppable-questions" type="QUESTION">
+            {(provided, snapshot) => (
+              <TableBody ref={provided.innerRef} {...provided.droppableProps}>
+                {fields.map((question, index) => {
+                  return (
+                    <Draggable
+                      key={String(question.id)}
+                      draggableId={String(question.id)}
+                      index={index}
                     >
-                      {fieldProps.fields.map((question, index) => {
-                        return (
-                          <Draggable
-                            key={String(fieldProps.fields.value[index].id)}
-                            draggableId={String(
-                              fieldProps.fields.value[index].id
-                            )}
-                            index={index}
-                          >
-                            {(provided, snapshot) => (
-                              <TableRow
-                                hover
-                                tabIndex={-1}
-                                key={index}
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                              >
-                                <TableCell {...provided.dragHandleProps}>
-                                  <DragHandleIcon />
-                                </TableCell>
-                                <TableCell align="left">
-                                  <NumberInput
-                                    helperText="Unique id"
-                                    label="Question ID"
-                                    source={`questions[${index}].id`}
-                                  />
-                                </TableCell>
-                                <TableCell align="left">
-                                  <TextInput
-                                    helperText="i.e. How do you do?"
-                                    label="Question Text"
-                                    source={`questions[${index}].text`}
-                                  />
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Button
-                                    style={{ color: "red" }}
-                                    type="button"
-                                    onClick={() =>
-                                      fieldProps.fields.remove(index)
-                                    }
-                                  >
-                                    Remove
-                                  </Button>
-                                </TableCell>
-                              </TableRow>
-                            )}
-                          </Draggable>
-                        );
-                      })}
-                      {provided.placeholder}
-                    </TableBody>
-                  )}
-                </Droppable>
-              </Table>
-              <Button
-                type="button"
-                onClick={() => fieldProps.fields.push({ id: "", question: "" })}
-                color="secondary"
-                variant="contained"
-                style={{ marginTop: "16px" }}
-              >
-                <Add />
-              </Button>
-            </TableContainer>
-          </DragDropContext>
-        );
-      }}
-    </FieldArray>
+                      {(provided, snapshot) => (
+                        <TableRow
+                          hover
+                          tabIndex={-1}
+                          key={index}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                        >
+                          <TableCell {...provided.dragHandleProps}>
+                            <DragHandleIcon />
+                          </TableCell>
+                          <TableCell align="left">
+                            <NumberInput
+                              helperText="Unique id"
+                              label="Question ID"
+                              source={`questions[${index}].id`}
+                            />
+                          </TableCell>
+                          <TableCell align="left">
+                            <TextInput
+                              helperText="i.e. How do you do?"
+                              label="Question Text"
+                              source={`questions[${index}].text`}
+                            />
+                          </TableCell>
+                          <TableCell align="right">
+                            <Button
+                              style={{ color: "red" }}
+                              type="button"
+                              onClick={() => remove(index)}
+                            >
+                              Remove
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </Draggable>
+                  );
+                })}
+                {provided.placeholder}
+              </TableBody>
+            )}
+          </Droppable>
+        </Table>
+        <Button
+          type="button"
+          onClick={() => push({ id: "", question: "" })}
+          color="secondary"
+          variant="contained"
+          style={{ marginTop: "16px" }}
+        >
+          <Add />
+        </Button>
+      </TableContainer>
+    </DragDropContext>
   );
 };
 
