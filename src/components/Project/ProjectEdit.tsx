@@ -46,8 +46,10 @@ const ProjectEdit = (props: EditProps): JSX.Element => {
     <Edit
       title="Edit a project"
       mutationMode="optimistic"
-      onSuccess={() => redirect(`/`)}
       transform={transform}
+      queryOptions={{
+        onSuccess: () => redirect(`/`),
+      }}
     >
       <SimpleForm warnWhenUnsavedChanges>
         <CardBox title="Project Config">

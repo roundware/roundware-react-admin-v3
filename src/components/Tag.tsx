@@ -153,10 +153,11 @@ export const TagCreate = (props: CreateProps): JSX.Element => {
   return (
     <Create
       transform={transform}
-      queryOptions={{}}
-      onSuccess={() => {
-        refresh();
-        refetchData();
+      queryOptions={{
+        onSuccess: () => {
+          refresh();
+          refetchData();
+        },
       }}
     >
       <SimpleForm warnWhenUnsavedChanges>

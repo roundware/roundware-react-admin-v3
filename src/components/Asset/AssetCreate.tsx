@@ -84,7 +84,9 @@ const AssetCreate = (props: CreateProps): JSX.Element => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       transform={transform}
-      onSuccess={() => redirect(`list`, `/assets`)}
+      queryOptions={{
+        onSuccess: () => redirect(`list`, `/assets`),
+      }}
     >
       <SimpleForm warnWhenUnsavedChanges>
         <SelectInput

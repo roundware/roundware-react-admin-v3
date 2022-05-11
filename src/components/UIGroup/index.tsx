@@ -61,7 +61,9 @@ export const UiGroupEdit = (props: EditProps): JSX.Element => {
     <Edit
       transform={transform}
       mutationMode="pessimistic"
-      onSuccess={refreshData}
+      queryOptions={{
+        onSuccess: refreshData,
+      }}
     >
       <SimpleForm warnWhenUnsavedChanges>
         {/* <ArrayInput label="UI Items" source="ui_items">
@@ -161,7 +163,12 @@ export const UiGroupCreate = (props: CreateProps): JSX.Element => {
     return r as Record;
   };
   return (
-    <Create transform={transform} onSuccess={refreshData}>
+    <Create
+      transform={transform}
+      queryOptions={{
+        onSuccess: () => refreshData(),
+      }}
+    >
       <SimpleForm warnWhenUnsavedChanges>
         <TextField
           fullWidth

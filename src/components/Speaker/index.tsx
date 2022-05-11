@@ -40,10 +40,12 @@ export const SpeakerEdit = (props: EditProps): JSX.Element => {
   return (
     <Edit
       mutationMode="pessimistic"
-      onSuccess={() => {
-        fetchData();
-        refresh();
-        redirect("list", `/speakers`);
+      queryOptions={{
+        onSuccess: () => {
+          fetchData();
+          refresh();
+          redirect("list", `/speakers`);
+        },
       }}
       transform={transform}
     >
@@ -89,12 +91,13 @@ export const SpeakerCreate = (props: CreateProps): JSX.Element => {
   return (
     <Create
       transform={transform}
-      // mutationMode="pessimistic"
-      onSuccess={(e: { data: Record }) => {
-        fetchData();
-        refresh();
-        redirect(`list`, `/speakers`);
-        setSelectedSpeaker(parseInt(e.data.id.toString()));
+      queryOptions={{
+        onSuccess: (e: { data: Record }) => {
+          fetchData();
+          refresh();
+          redirect(`list`, `/speakers`);
+          setSelectedSpeaker(parseInt(e.data.id.toString()));
+        },
       }}
     >
       <SimpleForm warnWhenUnsavedChanges>

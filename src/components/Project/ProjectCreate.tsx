@@ -50,7 +50,9 @@ const ProjectCreate = (props: CreateProps): JSX.Element => {
   return (
     <Create
       title="Create a new project"
-      onSuccess={() => redirect(`list`, `/projects`)}
+      queryOptions={{
+        onSuccess: () => redirect(`list`, `/projects`),
+      }}
       transform={transform}
     >
       <SimpleForm warnWhenUnsavedChanges>

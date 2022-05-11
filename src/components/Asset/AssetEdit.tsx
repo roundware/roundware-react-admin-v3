@@ -118,7 +118,9 @@ const AssetEdit = (props: EditProps): JSX.Element => {
       // @ts-ignore
       transform={transform}
       mutationMode="optimistic"
-      onSuccess={() => redirect(`list`, `/assets`)}
+      queryOptions={{
+        onSuccess: () => redirect(`list`, `/assets`),
+      }}
     >
       <SimpleForm redirect={false} warnWhenUnsavedChanges>
         <TextInput source="id" disabled fullWidth />
