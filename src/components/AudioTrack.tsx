@@ -15,6 +15,7 @@ import {
   TextInput,
   NumberInput,
   TextField,
+  useRecordContext,
 } from "react-admin";
 import RangeSlider from "./common/RangeSlider";
 export const AudioTrackList = (props: ListProps): JSX.Element => {
@@ -65,7 +66,8 @@ export const AudioTrackList = (props: ListProps): JSX.Element => {
     </List>
   );
 };
-const RangeDisplay = ({ record, source }: FieldProps) => {
+const RangeDisplay = ({ source }: FieldProps) => {
+  const record = useRecordContext();
   const min = record?.[`min${source}`];
   const max = record?.[`max${source}`];
   return (

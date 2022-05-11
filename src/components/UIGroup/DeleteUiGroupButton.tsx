@@ -10,7 +10,7 @@ import {
   Button,
   LinearProgress,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Record,
@@ -19,10 +19,12 @@ import {
   UpdateResult,
   DeleteResult,
   useNotify,
+  useRecordContext,
 } from "react-admin";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 
-const DeleteUiGroupButton = ({ record }: DeleteButtonProps): JSX.Element => {
+const DeleteUiGroupButton = (): JSX.Element => {
+  const record = useRecordContext();
   const { refetchData, uiGroups, uiItemsList } = useBuildUI();
   const [showConfirm, setShowConfirm] = useState(false);
   const handleClose = () => setShowConfirm(false);

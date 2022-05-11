@@ -14,6 +14,7 @@ import {
   SimpleForm,
   TextField,
   TextInput,
+  useRecordContext,
   useRedirect,
 } from "react-admin";
 export const TagCategoryList = (props: ListProps): JSX.Element => {
@@ -33,10 +34,11 @@ export const TagCategoryList = (props: ListProps): JSX.Element => {
 
 const RedirectButton = (props: DatagridCellProps) => {
   const redirect = useRedirect();
+  const record = useRecordContext();
   const handleOnViewTags = () => {
     redirect(
       `list`,
-      `/tags?filter=${JSON.stringify({ tag_category_id: props?.record?.id })}`,
+      `/tags?filter=${JSON.stringify({ tag_category_id: record?.id })}`,
       undefined,
       {}
     );
