@@ -9,8 +9,8 @@ import {
   Toolbar,
   useMediaQuery,
   Link,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { useProjects } from "providers/ProjectsContext";
 import { AppBarProps, HideOnScroll } from "ra-ui-materialui";
 import React, { memo, useState } from "react";
@@ -33,7 +33,7 @@ const AppBar = (props: AppBarProps): JSX.Element => {
     menuButtonIconOpen: classes.menuButtonIconOpen,
   };
   const isXSmall = useMediaQuery<Theme>((theme) =>
-    theme.breakpoints.down("xs")
+    theme.breakpoints.down('sm')
   );
 
   const redirect = useRedirect();
@@ -89,7 +89,7 @@ const AppBar = (props: AppBarProps): JSX.Element => {
                 color: "#fff",
                 marginLeft: selectedProject ? 0 : 16,
               }}
-            >
+              underline="hover">
               {title}
             </Link>
             <InputLabel variant="standard" className={classes.label}>

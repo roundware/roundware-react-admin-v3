@@ -20,7 +20,7 @@ import {
 } from "react-admin";
 import TranslatableField from "./common/TranslatableField";
 import { ITag } from "types/tags";
-import { Box } from "@material-ui/core";
+import { Box } from "@mui/material";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import { handleLocalizedStrings } from "utils";
 import { useBuildUI } from "providers/BuildUIContext";

@@ -1,5 +1,6 @@
-import { Box, CircularProgress, Grid, makeStyles } from "@material-ui/core";
-import { Skeleton } from "@material-ui/lab";
+import { Box, CircularProgress, Grid } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import { Skeleton } from '@mui/material';
 import subDays from "date-fns/fp/subDays/index.js";
 import { GetListParams } from "ra-core";
 import React, { useCallback, useEffect, useState } from "react";
@@ -144,7 +145,7 @@ const Dashboard = (): JSX.Element => {
         <Grid container spacing={3}>
           {[1, 2, 3, 4].map((e) => (
             <Grid item xs={6} md={3} key={e}>
-              <Skeleton variant="rect" height={200} />
+              <Skeleton variant="rectangular" height={200} />
             </Grid>
           ))}
         </Grid>

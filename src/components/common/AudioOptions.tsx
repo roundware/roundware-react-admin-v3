@@ -1,17 +1,12 @@
-import {
-  CardContent,
-  Grid,
-  makeStyles,
-  TextField,
-  Typography,
-} from "@material-ui/core";
-import Card from "@material-ui/core/Card";
+import { CardContent, Grid, TextField, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import Card from "@mui/material/Card";
 import React, { useEffect } from "react";
 import useFieldValue from "../../hooks/useFieldValue";
 import CustomSlider from "./CustomSlider";
 import { FileEdit } from "./FileEdit";
 import VolumeSlider from "./VolumeSlider";
-import LineWeightIcon from "@material-ui/icons/LineWeight";
+import LineWeightIcon from "@mui/icons-material/LineWeight";
 
 const AudioOptions = (): JSX.Element => {
   const [mediaType] = useFieldValue(`media_type`);

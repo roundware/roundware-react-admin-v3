@@ -10,9 +10,9 @@ import {
   Tooltip,
   Typography,
   CircularProgress,
-} from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import CloseIcon from "@material-ui/icons/Close";
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
 import { useBuildUI } from "providers/BuildUIContext";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import React, { useCallback, useMemo, useState } from "react";
@@ -204,58 +204,56 @@ const AddCommonItem = (props: DatagridRowProps): JSX.Element => {
       })}`
     );
 
-  return (
-    <>
-      <Tooltip title="Add Common item at all levels">
-        <IconButton size="small" onClick={handleOpen}>
-          <AddIcon />
-        </IconButton>
-      </Tooltip>
-      <Dialog keepMounted={false} open={showDialog}>
-        <DialogContent>
-          <Grid container direction="column" spacing={2}>
-            <Grid item container spacing={4} wrap="nowrap" alignItems="center">
-              <Grid item>
-                <Typography variant="h6">
-                  Add Common Item at all levels
-                </Typography>
-              </Grid>
-              <Grid item>
-                <IconButton onClick={handleClose}>
-                  <CloseIcon />
-                </IconButton>
-              </Grid>
+  return <>
+    <Tooltip title="Add Common item at all levels">
+      <IconButton size="small" onClick={handleOpen}>
+        <AddIcon />
+      </IconButton>
+    </Tooltip>
+    <Dialog keepMounted={false} open={showDialog}>
+      <DialogContent>
+        <Grid container direction="column" spacing={2}>
+          <Grid item container spacing={4} wrap="nowrap" alignItems="center">
+            <Grid item>
+              <Typography variant="h6">
+                Add Common Item at all levels
+              </Typography>
             </Grid>
-
-            <Grid item container direction="column">
-              {tagsToDisplay?.map((i, index) => (
-                <Grid item key={i.id}>
-                  <FormControlLabel
-                    label={`${i?.value} (${getTagCount(i)}/${
-                      prevGroup ? previousGroupItems?.length : 1
-                    })`}
-                    control={
-                      <Checkbox
-                        checked={checkboxValues[index]}
-                        onChange={(_e, checked) => handleOnChange(i, checked)}
-                      />
-                    }
-                    disabled={Boolean(disabledItems?.length)}
-                  />
-                </Grid>
-              ))}
+            <Grid item>
+              <IconButton onClick={handleClose} size="large">
+                <CloseIcon />
+              </IconButton>
             </Grid>
           </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button color="primary" onClick={handleAddMore}>
-            Create more Tags in this category?
-          </Button>
-          <Button onClick={handleClose}>Close</Button>
-        </DialogActions>
-      </Dialog>
-    </>
-  );
+
+          <Grid item container direction="column">
+            {tagsToDisplay?.map((i, index) => (
+              <Grid item key={i.id}>
+                <FormControlLabel
+                  label={`${i?.value} (${getTagCount(i)}/${
+                    prevGroup ? previousGroupItems?.length : 1
+                  })`}
+                  control={
+                    <Checkbox
+                      checked={checkboxValues[index]}
+                      onChange={(_e, checked) => handleOnChange(i, checked)}
+                    />
+                  }
+                  disabled={Boolean(disabledItems?.length)}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button color="primary" onClick={handleAddMore}>
+          Create more Tags in this category?
+        </Button>
+        <Button onClick={handleClose}>Close</Button>
+      </DialogActions>
+    </Dialog>
+  </>;
 };
 
 export default AddCommonItem;

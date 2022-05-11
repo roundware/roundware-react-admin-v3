@@ -7,8 +7,8 @@ import {
   CardContent,
   Grid,
   TextField,
-} from "@material-ui/core";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
+} from "@mui/material";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import PlacesAutoComplete from "./PlacesAutoComplete";
 import SelectorPin from "./SelectorPin";

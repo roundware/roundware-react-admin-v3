@@ -4,13 +4,13 @@ import {
   IconButton,
   Slider,
   Tooltip,
-} from "@material-ui/core";
-import PauseIcon from "@material-ui/icons/Pause";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import VolumeDown from "@material-ui/icons/VolumeDown";
-import VolumeUp from "@material-ui/icons/VolumeUp";
-import ZoomInIcon from "@material-ui/icons/ZoomIn";
-import ZoomOutIcon from "@material-ui/icons/ZoomOut";
+} from "@mui/material";
+import PauseIcon from "@mui/icons-material/Pause";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import VolumeDown from "@mui/icons-material/VolumeDown";
+import VolumeUp from "@mui/icons-material/VolumeUp";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
+import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import useFieldValue from "hooks/useFieldValue";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
@@ -178,14 +178,14 @@ const SpeakerAudioPlayer = ({
               <>
                 <Grid item>
                   <Tooltip title="Play at Min Volume">
-                    <IconButton onClick={() => setCurrentVolume(minvolume)}>
+                    <IconButton onClick={() => setCurrentVolume(minvolume)} size="large">
                       <VolumeDown />
                     </IconButton>
                   </Tooltip>
                 </Grid>
                 <Grid item>
                   <Tooltip title="Play at Max Volume">
-                    <IconButton onClick={() => setCurrentVolume(maxvolume)}>
+                    <IconButton onClick={() => setCurrentVolume(maxvolume)} size="large">
                       <VolumeUp />
                     </IconButton>
                   </Tooltip>

@@ -11,7 +11,7 @@ import {
   useShowController,
 } from "react-admin";
 import React from "react";
-import { Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
 import { useProjects } from "../../providers/ProjectsContext";
 
 type Props = ShowProps;

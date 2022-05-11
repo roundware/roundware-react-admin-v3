@@ -8,9 +8,9 @@ import {
   IconButton,
   Tooltip,
   CircularProgress,
-} from "@material-ui/core";
-import SaveIcon from "@material-ui/icons/Save";
-import HistoryIcon from "@material-ui/icons/History";
+} from "@mui/material";
+import SaveIcon from "@mui/icons-material/Save";
+import HistoryIcon from "@mui/icons-material/History";
 import MapControl from "components/common/MapControl";
 import {
   getSpeakerGeoJSONObjectsForPath,
@@ -233,14 +233,14 @@ const SpeakerDrawer = (): JSX.Element | null => {
           <Grid direction="column" spacing={1}>
             <Grid item>
               <Tooltip title="Save" placement="right">
-                <IconButton onClick={handleSave} disabled={saving}>
+                <IconButton onClick={handleSave} disabled={saving} size="large">
                   {saving ? <CircularProgress /> : <SaveIcon />}
                 </IconButton>
               </Tooltip>
             </Grid>
             <Grid item>
               <Tooltip title="Redraw" placement="right">
-                <IconButton onClick={handleRedraw}>
+                <IconButton onClick={handleRedraw} size="large">
                   <HistoryIcon />
                 </IconButton>
               </Tooltip>

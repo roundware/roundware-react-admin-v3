@@ -14,15 +14,15 @@ import {
   DialogContent,
   LinearProgress,
   Button,
-} from "@material-ui/core";
+} from "@mui/material";
 import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
-import DragHandleSharpIcon from "@material-ui/icons/DragHandleSharp";
-import DeleteIcon from "@material-ui/icons/Delete";
-import CloseIcon from "@material-ui/icons/Close";
+import DragHandleSharpIcon from "@mui/icons-material/DragHandleSharp";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CloseIcon from "@mui/icons-material/Close";
 import { useBuildUI } from "providers/BuildUIContext";
 import { Confirm, useNotify, useRefresh, useRedirect } from "react-admin";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import { ITag } from "types/tags";
 interface Props {
   uiItem: UiItemNode;
@@ -222,7 +222,7 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
           {canNestItems && (
             <Grid item>
               <Tooltip title="Nest Items">
-                <IconButton onClick={handleOpenNestingDialog}>
+                <IconButton onClick={handleOpenNestingDialog} size="large">
                   <PlaylistAddIcon />
                 </IconButton>
               </Tooltip>
@@ -244,7 +244,7 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <IconButton onClick={handleCloseNestDialog}>
+                          <IconButton onClick={handleCloseNestDialog} size="large">
                             <CloseIcon />
                           </IconButton>
                         </Grid>
@@ -306,7 +306,7 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
 
           <Grid item>
             <Tooltip title="Delete Ui Item">
-              <IconButton onClick={handleOpenConfirm}>
+              <IconButton onClick={handleOpenConfirm} size="large">
                 <DeleteIcon />
               </IconButton>
             </Tooltip>

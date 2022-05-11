@@ -1,9 +1,9 @@
 import * as React from "react";
-import { Box, Card, CardActions, Button, Typography } from "@material-ui/core";
-import HomeIcon from "@material-ui/icons/Home";
-import CodeIcon from "@material-ui/icons/Code";
+import { Box, Card, CardActions, Button, Typography } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
+import CodeIcon from "@mui/icons-material/Code";
 import { EditButton, ShowButton } from "react-admin";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import { useTranslate } from "react-admin";
 import { useProjects } from "../../../providers/ProjectsContext";
 
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "auto",
   },
   actions: {
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down('lg')]: {
       padding: 0,
       flexWrap: "wrap",
       "& a": {

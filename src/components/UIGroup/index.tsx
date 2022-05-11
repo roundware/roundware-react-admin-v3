@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { TextField } from "@material-ui/core";
+import { TextField } from "@mui/material";
 import TranslatableField from "components/common/TranslatableField";
 import { useBuildUI } from "providers/BuildUIContext";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";

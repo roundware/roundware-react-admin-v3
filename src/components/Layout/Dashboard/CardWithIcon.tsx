@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Box, Card, Divider, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Box, Card, Divider, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import * as React from "react";
 import { createElement, FC, ReactNode } from "react";
 import { useRedirect } from "react-admin";
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
     "& .icon": {
-      color: theme.palette.type === "dark" ? "inherit" : "#dc2440",
+      color: theme.palette.mode === "dark" ? "inherit" : "#dc2440",
     },
   }),
   title: {},

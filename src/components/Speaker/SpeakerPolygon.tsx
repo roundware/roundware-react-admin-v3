@@ -7,11 +7,11 @@ import {
   Popover,
   Box,
   TextField,
-} from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
-import HistoryIcon from "@material-ui/icons/History";
-import SaveIcon from "@material-ui/icons/Save";
-import BlurCircularIcon from "@material-ui/icons/BlurCircular";
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import HistoryIcon from "@mui/icons-material/History";
+import SaveIcon from "@mui/icons-material/Save";
+import BlurCircularIcon from "@mui/icons-material/BlurCircular";
 import {
   Polygon,
   PolygonProps,
@@ -283,28 +283,28 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
             <Grid direction="column" spacing={1}>
               <Grid item>
                 <Tooltip title="Save Changes" placement="right">
-                  <IconButton onClick={handleSave} disabled={saving}>
+                  <IconButton onClick={handleSave} disabled={saving} size="large">
                     {saving ? <CircularProgress /> : <SaveIcon />}
                   </IconButton>
                 </Tooltip>
               </Grid>
               <Grid item>
                 <Tooltip title="Discard Changes" placement="right">
-                  <IconButton onClick={handleDiscard}>
+                  <IconButton onClick={handleDiscard} size="large">
                     <HistoryIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
               <Grid item>
                 <Tooltip title="Delete Shape" placement="right">
-                  <IconButton onClick={handleDelete}>
+                  <IconButton onClick={handleDelete} size="large">
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
               <Grid item>
                 <Tooltip title="Attenuation Distance" placement="right">
-                  <IconButton onClick={handleOpenAD}>
+                  <IconButton onClick={handleOpenAD} size="large">
                     <BlurCircularIcon />
                   </IconButton>
                 </Tooltip>

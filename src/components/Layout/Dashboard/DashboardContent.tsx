@@ -6,13 +6,13 @@ import {
   Card,
   CardHeader,
   CardContent,
-} from "@material-ui/core";
+} from "@mui/material";
 import {
   Hearing,
   RecordVoiceOver,
   WatchLater,
   Person,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import { IProject } from "../../../providers/ProjectsContext";
 import CardWithIcon from "./CardWithIcon";
 import { GetListResult, Record } from "react-admin";

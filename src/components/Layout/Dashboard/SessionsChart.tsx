@@ -11,7 +11,7 @@ import {
   Select,
   Toolbar,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import { DatePicker } from "@material-ui/pickers";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
 import React, { useEffect, useState } from "react";
@@ -205,7 +205,7 @@ const SessionsChart = ({ sessions }: Props) => {
           <>
             <Grid
               container
-              justify="center"
+              justifyContent="center"
               spacing={2}
               style={{ marginBottom: 16 }}
             >

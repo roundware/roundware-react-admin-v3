@@ -8,13 +8,14 @@ import {
   Paper,
   Typography,
   LinearProgress,
-} from "@material-ui/core";
-import { alpha, makeStyles, Theme } from "@material-ui/core/styles";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import DragHandleSharpIcon from "@material-ui/icons/DragHandleSharp";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import TreeItem from "@material-ui/lab/TreeItem";
-import TreeView from "@material-ui/lab/TreeView";
+} from "@mui/material";
+import { alpha, Theme } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import DragHandleSharpIcon from "@mui/icons-material/DragHandleSharp";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import TreeItem from "@mui/lab/TreeItem";
+import TreeView from "@mui/lab/TreeView";
 import { useBuildUI } from "providers/BuildUIContext";
 import React, { useCallback, useState } from "react";
 import {

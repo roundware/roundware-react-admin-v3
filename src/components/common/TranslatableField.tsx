@@ -6,7 +6,7 @@ import {
   Tab,
   Tabs,
   TextField,
-} from "@material-ui/core";
+} from "@mui/material";
 import useFieldValue from "hooks/useFieldValue";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import { useProjects } from "providers/ProjectsContext";

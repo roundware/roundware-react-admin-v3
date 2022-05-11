@@ -14,7 +14,7 @@ import {
   TagFaces,
   Translate,
   WebAsset,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import { SpeakerCreate, SpeakerEdit } from "components/Speaker";
 import SpeakerList from "components/Speaker/SpeakerList";
 import { TagCreate, TagEdit, TagList } from "components/Tag";

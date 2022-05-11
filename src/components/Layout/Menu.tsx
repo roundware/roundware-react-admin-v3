@@ -1,6 +1,7 @@
-import { makeStyles, useMediaQuery } from "@material-ui/core";
-import { AccountTree } from "@material-ui/icons";
-import DefaultIcon from "@material-ui/icons/ViewList";
+import { useMediaQuery } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import { AccountTree } from "@mui/icons-material";
+import DefaultIcon from "@mui/icons-material/ViewList";
 import * as React from "react";
 import {
   DashboardMenuItem,

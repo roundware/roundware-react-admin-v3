@@ -14,7 +14,7 @@ import {
   Checkbox,
   FormControlLabel,
   CircularProgress,
-} from "@material-ui/core";
+} from "@mui/material";
 import {
   format,
   subDays,
@@ -206,7 +206,7 @@ const ListenEventsChart = ({ events }: Props) => {
           <>
             <Grid
               container
-              justify="center"
+              justifyContent="center"
               spacing={2}
               style={{ marginBottom: 16 }}
             >

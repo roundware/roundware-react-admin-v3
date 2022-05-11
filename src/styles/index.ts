@@ -1,6 +1,6 @@
-import { createTheme } from "@material-ui/core/styles";
+import { createTheme, adaptV4Theme } from "@mui/material/styles";
 
-const adminTheme = createTheme({
+const adminTheme = createTheme(adaptV4Theme({
   palette: {
     secondary: {
       main: "#6b96d8",
@@ -18,6 +18,6 @@ const adminTheme = createTheme({
         disableRipple: true
       }
     }
-});
+}));
 
 export default adminTheme;

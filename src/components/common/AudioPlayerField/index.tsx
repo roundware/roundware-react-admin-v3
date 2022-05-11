@@ -5,9 +5,9 @@ import { WaveSurfer, WaveForm, Region } from "wavesurfer-react";
 // @ts-ignore
 import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions";
 import { useRecordContext, Record } from "react-admin";
-import { IconButton, Grid, LinearProgress } from "@material-ui/core";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import PauseIcon from "@material-ui/icons/Pause";
+import { IconButton, Grid, LinearProgress } from "@mui/material";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
 import useFieldValue from "hooks/useFieldValue";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 const plugins = [

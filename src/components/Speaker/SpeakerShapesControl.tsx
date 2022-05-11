@@ -4,8 +4,8 @@ import {
   CircularProgress,
   Grid,
   Typography,
-} from "@material-ui/core";
-import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
+} from "@mui/material";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { useSpeakers } from "providers/SpeakersContext";
 import React from "react";

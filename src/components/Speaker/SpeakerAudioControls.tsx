@@ -7,8 +7,8 @@ import {
   Tab,
   Tabs,
   Typography,
-} from "@material-ui/core";
-import VolumeUpIcon from "@material-ui/icons/VolumeUp";
+} from "@mui/material";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import useFieldValue from "hooks/useFieldValue";
 import React, { useState } from "react";
 import { FileField, FileInput, TextInput } from "react-admin";

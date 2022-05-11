@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Box, Divider, Grid } from "@material-ui/core";
+import { Box, Divider, Grid } from "@mui/material";
 import BuildUIHeader from "components/UIGroup/BuildUIHeader";
 import { useBuildUI } from "providers/BuildUIContext";
 import React from "react";

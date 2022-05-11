@@ -6,12 +6,12 @@ import {
   Slider,
   Tooltip,
   Typography,
-} from "@material-ui/core";
-import PauseIcon from "@material-ui/icons/Pause";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import ResetIcon from "@material-ui/icons/Restore";
-import ZoomInIcon from "@material-ui/icons/ZoomIn";
-import ZoomOutIcon from "@material-ui/icons/ZoomOut";
+} from "@mui/material";
+import PauseIcon from "@mui/icons-material/Pause";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import ResetIcon from "@mui/icons-material/Restore";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
+import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useField } from "react-final-form";
@@ -218,7 +218,7 @@ const AudioEditField = ({
               <>
                 <Grid item>
                   <Tooltip title="Reset Range">
-                    <IconButton onClick={resetRange}>
+                    <IconButton onClick={resetRange} size="large">
                       <ResetIcon />
                     </IconButton>
                   </Tooltip>

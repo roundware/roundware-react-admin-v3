@@ -9,9 +9,9 @@ import {
   Typography,
   Button,
   LinearProgress,
-  makeStyles,
-} from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Record,
   DeleteButtonProps,

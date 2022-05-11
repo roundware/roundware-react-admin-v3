@@ -1,5 +1,6 @@
-import { Grid, Slider, Typography, withStyles } from "@material-ui/core";
-import VolumeUp from "@material-ui/icons/VolumeUp";
+import { Grid, Slider, Typography } from "@mui/material";
+import withStyles from '@mui/styles/withStyles';
+import VolumeUp from "@mui/icons-material/VolumeUp";
 import React from "react";
 import useFieldValue from "../../hooks/useFieldValue";
 interface Props {

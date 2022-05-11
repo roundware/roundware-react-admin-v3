@@ -1,18 +1,12 @@
-import {
-  CardActionArea,
-  Grid,
-  makeStyles,
-  Typography,
-  TextField,
-  Container,
-} from "@material-ui/core";
-import Card from "@material-ui/core/Card";
-import AddIcon from "@material-ui/icons/Add";
+import { CardActionArea, Grid, Typography, TextField, Container } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import Card from "@mui/material/Card";
+import AddIcon from "@mui/icons-material/Add";
 import { useListContext, useRedirect } from "ra-core";
 import React, { useEffect, useState } from "react";
 import { List, ListProps } from "react-admin";
 import { IProject, useProjects } from "../../providers/ProjectsContext";
-import SearchIcon from "@material-ui/icons/Search";
+import SearchIcon from "@mui/icons-material/Search";
 const ProjectList = (props: ListProps): JSX.Element => {
   return (
     <List

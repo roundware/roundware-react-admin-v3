@@ -1,6 +1,6 @@
-import { Grid } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
+import { Grid } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useEffect } from "react";
 import { FileField, FileInput } from "react-admin";
 import { useField } from "react-final-form";
@@ -39,7 +39,7 @@ export const FileEdit = (): JSX.Element => {
                   key="del"
                   style={{ color: "#dc004e" }}
                   onClick={handleDelete}
-                >
+                  size="large">
                   <DeleteIcon />
                 </IconButton>,
               ]}

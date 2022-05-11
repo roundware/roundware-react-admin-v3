@@ -1,6 +1,6 @@
-import { Grid, IconButton, Paper, Tooltip } from "@material-ui/core";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
-import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
+import { Grid, IconButton, Paper, Tooltip } from "@mui/material";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { useProjects } from "providers/ProjectsContext";
 import { useSpeakers } from "providers/SpeakersContext";
 import React from "react";
@@ -87,7 +87,7 @@ const SpeakerHighter = () => {
     <Tooltip title={isSelected ? "Unselect" : `Select On Map`} placement="left">
       <IconButton
         onClick={() => setSelectedSpeaker(isSelected ? null : Number(id))}
-      >
+        size="large">
         {isSelected ? <LocationOnIcon /> : <LocationOnOutlinedIcon />}
       </IconButton>
     </Tooltip>
