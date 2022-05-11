@@ -87,9 +87,11 @@ export const TagEdit = (props: EditProps): JSX.Element => {
   return (
     <Edit
       mutationMode="pessimistic"
-      onSuccess={() => {
-        refresh();
-        refetchData();
+      queryOptions={{
+        onSuccess: () => {
+          refresh();
+          refetchData();
+        },
       }}
       transform={transform}
     >
@@ -151,6 +153,7 @@ export const TagCreate = (props: CreateProps): JSX.Element => {
   return (
     <Create
       transform={transform}
+      queryOptions={{}}
       onSuccess={() => {
         refresh();
         refetchData();

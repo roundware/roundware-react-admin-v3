@@ -215,7 +215,6 @@ const DraggableDatagridRow = ({
   resource,
   id,
   children,
-  basePath,
 }: DatagridRowProps) => (
   <>
     <Draggable
@@ -234,7 +233,7 @@ const DraggableDatagridRow = ({
             <TableCell key={`${id}-${field?.props?.source}`}>
               {React.cloneElement(field!, {
                 record,
-                basePath,
+
                 resource,
               })}
             </TableCell>

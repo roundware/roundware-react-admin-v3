@@ -105,18 +105,13 @@ const RowActions = (props: DatagridRowProps): JSX.Element => {
   return (
     <Grid container spacing={1} direction="row" wrap="nowrap">
       <Grid item>
-        <EditButton
-          record={props.record}
-          basePath={props.basePath}
-          size="small"
-          label=""
-        />
+        <EditButton record={props.record} size="small" label="" />
       </Grid>
       <Grid item>
         <AddCommonItem {...props} />
       </Grid>
       <Grid item>
-        <DeleteUiGroupButton record={props.record} basePath={props.basePath} />
+        <DeleteUiGroupButton record={props.record} />
       </Grid>
     </Grid>
   );

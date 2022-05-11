@@ -60,8 +60,8 @@ const SpeakerList = (props: ListProps): JSX.Element => {
       <TextField source="shape.type" />
       <TextField source="boundary.type" /> */}
 
-              <EditButton label="" style={{ margin: 0 }} basePath="/speakers" />
-              <DeleteButton label="" basePath="/speakers" />
+              <EditButton label="" style={{ margin: 0 }} />
+              <DeleteButton label="" />
             </Datagrid>
           </List>
         </Grid>

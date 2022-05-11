@@ -53,8 +53,8 @@ export const ListenEventsList = (props: ListProps): JSX.Element => {
         <ReferenceField source="asset_id" reference="assets">
           <TextField source="filename" />
         </ReferenceField>
-        <EditButton basePath="/assets" />
-        <DeleteButton basePath="/assets" />
+        <EditButton />
+        <DeleteButton />
       </Datagrid>
     </List>
   );

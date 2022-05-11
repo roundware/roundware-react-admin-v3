@@ -3,7 +3,7 @@ import { Box, Card, CardActions, Button, Typography } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import CodeIcon from "@mui/icons-material/Code";
 import { EditButton, ShowButton } from "react-admin";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { useTranslate } from "react-admin";
 import { useProjects } from "../../../providers/ProjectsContext";
 
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "auto",
   },
   actions: {
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down("lg")]: {
       padding: 0,
       flexWrap: "wrap",
       "& a": {
@@ -42,13 +42,11 @@ const ProjectDetails = () => {
       </Box>
       <Box>
         <EditButton
-          basePath="/projects"
           resource="projects"
           label="Edit Project"
           record={selectedProject!}
         />
         <ShowButton
-          basePath="/projects"
           resource="projects"
           label="View Details"
           record={selectedProject!}

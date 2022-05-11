@@ -107,8 +107,8 @@ export const AssetList = (props: ListProps): JSX.Element => {
           source="audio_length_in_seconds"
           options={{ maximumFractionDigits: 3 }}
         />
-        <EditButton basePath="/assets" />
-        <DeleteButton basePath="/assets" />
+        <EditButton />
+        <DeleteButton />
       </Datagrid>
     </List>
   );
