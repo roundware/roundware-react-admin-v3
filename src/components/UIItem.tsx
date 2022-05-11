@@ -19,7 +19,7 @@ export const UiItemList = (): JSX.Element => {
   );
 };
 
-export const UiItemEdit = (props: EditProps): JSX.Element => {
+export const UiItemEdit = (): JSX.Element => {
   return (
     <Edit>
       <SimpleForm warnWhenUnsavedChanges>

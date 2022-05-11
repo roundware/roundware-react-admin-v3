@@ -19,7 +19,7 @@ export const LocalizedStringList = (): JSX.Element => {
   );
 };
 
-export const LocalizedStringEdit = (props: EditProps): JSX.Element => {
+export const LocalizedStringEdit = (): JSX.Element => {
   return (
     <Edit>
       <SimpleForm warnWhenUnsavedChanges>

@@ -76,7 +76,7 @@ const RangeDisplay = ({ source }: FieldProps) => {
     </Typography>
   );
 };
-export const AudioTrackEdit = (props: EditProps): JSX.Element => {
+export const AudioTrackEdit = (): JSX.Element => {
   return (
     <Edit>
       <SimpleForm warnWhenUnsavedChanges>

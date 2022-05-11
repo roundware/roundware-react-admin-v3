@@ -45,7 +45,7 @@ export const SessionList = (): JSX.Element => {
   );
 };
 
-export const SessionEdit = (props: EditProps): JSX.Element => {
+export const SessionEdit = (): JSX.Element => {
   return (
     <Edit>
       <SimpleForm warnWhenUnsavedChanges>

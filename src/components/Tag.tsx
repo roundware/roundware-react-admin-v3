@@ -61,7 +61,7 @@ export const TagList = (): JSX.Element => {
   );
 };
 
-export const TagEdit = (props: EditProps): JSX.Element => {
+export const TagEdit = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
   const transform = async (record: Record): Promise<Record> => {
     const r = record as Partial<ITag>;

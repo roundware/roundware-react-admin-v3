@@ -30,7 +30,7 @@ export const UserList = (): JSX.Element => {
   );
 };
 
-export const UserEdit = (props: EditProps): JSX.Element => {
+export const UserEdit = (): JSX.Element => {
   return (
     <Edit>
       <SimpleForm

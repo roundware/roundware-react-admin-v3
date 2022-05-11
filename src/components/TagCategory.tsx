@@ -50,7 +50,7 @@ const RedirectButton = (props: DatagridCellProps) => {
   );
 };
 
-export const TagCategoryEdit = (props: EditProps): JSX.Element => {
+export const TagCategoryEdit = (): JSX.Element => {
   return (
     <Edit>
       <SimpleForm warnWhenUnsavedChanges>

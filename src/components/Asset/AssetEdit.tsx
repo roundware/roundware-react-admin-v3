@@ -25,7 +25,7 @@ import { handleLocalizedStrings } from "utils";
 import { IAsset } from "../../types/asset";
 import AudioOptions from "../common/AudioOptions";
 
-const AssetEdit = (props: EditProps): JSX.Element => {
+const AssetEdit = (): JSX.Element => {
   const redirect = useRedirect();
   const editControl = useEditController(props);
   const dataProvider = useRoundwareDataProvider();

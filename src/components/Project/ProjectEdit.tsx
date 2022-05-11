@@ -21,7 +21,7 @@ import {
 } from "react-admin";
 import { LocalizedString } from "types";
 import { handleLocalizedStrings } from "utils";
-const ProjectEdit = (props: EditProps): JSX.Element => {
+const ProjectEdit = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
   const redirect = useRedirect();
   const transform = async (r: Record) => {

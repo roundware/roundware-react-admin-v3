@@ -26,7 +26,7 @@ import { IUIGroup } from "types/uiGroups";
 import { handleLocalizedStrings } from "utils";
 import UiModeField from "./UiModeField";
 
-export const UiGroupEdit = (props: EditProps): JSX.Element => {
+export const UiGroupEdit = (): JSX.Element => {
   const { refetchData } = useBuildUI();
   const dataProvider = useRoundwareDataProvider();
   const transform = async (record: Record): Promise<Record> => {

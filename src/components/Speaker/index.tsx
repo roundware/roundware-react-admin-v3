@@ -18,7 +18,7 @@ import { useProjects } from "providers/ProjectsContext";
 import { useSpeakers } from "providers/SpeakersContext";
 import SpeakerAudioControls from "./SpeakerAudioControls";
 
-export const SpeakerEdit = (props: EditProps): JSX.Element => {
+export const SpeakerEdit = (): JSX.Element => {
   const { selectedProject } = useProjects();
   const { fetchData } = useSpeakers();
 

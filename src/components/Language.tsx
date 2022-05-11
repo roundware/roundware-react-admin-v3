@@ -21,7 +21,7 @@ export const LanguageList = (): JSX.Element => {
   );
 };
 
-export const LanguageEdit = (props: EditProps): JSX.Element => {
+export const LanguageEdit = (): JSX.Element => {
   return (
     <Edit>
       <SimpleForm warnWhenUnsavedChanges>

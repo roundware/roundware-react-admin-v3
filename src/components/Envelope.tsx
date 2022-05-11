@@ -20,7 +20,7 @@ export const EnvelopeList = (): JSX.Element => {
   );
 };
 
-export const EnvelopeEdit = (props: EditProps): JSX.Element => {
+export const EnvelopeEdit = (): JSX.Element => {
   return (
     <Edit>
       <SimpleForm warnWhenUnsavedChanges>
