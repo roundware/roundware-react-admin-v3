@@ -85,7 +85,13 @@ const SpeakerDrawer = (): JSX.Element | null => {
   const handleOnPolygonComplete = (polygon: google.maps.Polygon) => {
     setCurrentShape(polygon);
     /** listeners for edit changes */
-    const polygonListeners = [`insert_at`, `remove_at`, `set_at`].map((e) =>
+    const polygonListeners = [
+      `insert_at`,
+      `remove_at`,
+      `set_at`,
+      `dragend`,
+      `mouseup`,
+    ].map((e) =>
       google.maps.event.addListener(polygon, e, () =>
         getPathFromPolygon(polygon)
       )
@@ -95,8 +101,10 @@ const SpeakerDrawer = (): JSX.Element | null => {
   };
 
   /** gets path from given polygon */
-  const getPathFromPolygon = (polygon: google.maps.Polygon) =>
+  const getPathFromPolygon = (polygon: google.maps.Polygon) => {
+    console.log(`Shape updated`);
     setDrawnPaths(googleMapPathToGeoJSONPath(polygon.getPath().getArray()));
+  };
 
   /** on new rectangle shape */
   const handleOnRectangleComplete = (rectangle: google.maps.Rectangle) => {
@@ -197,13 +205,13 @@ const SpeakerDrawer = (): JSX.Element | null => {
         },
       })
       .then(() => {
+        setIsCurrentSpeakerSaved(true);
         /** remove drawn shape */
         handleRedraw();
         /** deselect speaker */
         setSelectedSpeaker(null);
         /** get new saved speakers data */
         fetchData();
-        setIsCurrentSpeakerSaved(true);
       })
       .finally(() => setSaving(false));
   };

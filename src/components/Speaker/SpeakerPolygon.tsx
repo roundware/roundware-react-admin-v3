@@ -91,6 +91,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
   const debouncedDistance = useDebounce(distance, 1000);
   // the inner border, should not be editable
   const attenuationBorderPath: google.maps.LatLng[] | null = useMemo(() => {
+    if (!shape) return null;
     let polygon;
     try {
       console.log(shape.coordinates);
@@ -100,7 +101,8 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
     } catch (e) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      alert(JSON.stringify(e?.message));
+      alert("Attenuation Border Path: " + JSON.stringify(e?.message));
+      console.error(e);
     }
 
     /** just use previous shape as something goes wrong */
@@ -139,6 +141,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
         else newPath = [...newPath, newPath[0]];
       }
       const newMultiPolygon = multiPolygon([[newPath]]).geometry;
+
       setShape(newMultiPolygon);
     }
   };
