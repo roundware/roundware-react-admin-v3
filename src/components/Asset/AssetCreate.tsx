@@ -2,26 +2,24 @@ import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
 import LocationSelector from "components/common/LocationSelector";
 import TagIdSelector from "components/common/TagIdSelector";
 import TranslatableField from "components/common/TranslatableField";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import React from "react";
 import {
   BooleanInput,
   Create,
-  CreateProps,
   RaRecord,
   ReferenceInput,
   SelectInput,
   SimpleForm,
   TextInput,
+  useDataProvider,
   useRedirect,
 } from "react-admin";
-import { LocalizedString } from "types";
 import { handleLocalizedStrings } from "utils";
 import { useProjects } from "../../providers/ProjectsContext";
 import AudioOptions from "../common/AudioOptions";
 
 const AssetCreate = (): JSX.Element => {
-  const dataProvider = useRoundwareDataProvider();
+  const dataProvider = useDataProvider();
   const { selectedProject } = useProjects();
   const redirect = useRedirect();
   const transform = async (data: RaRecord) => {
