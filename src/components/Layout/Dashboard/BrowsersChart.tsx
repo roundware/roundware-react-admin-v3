@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Card, CardContent, CardHeader } from "@mui/material";
 import React from "react";
-import { GetListResult, Record } from "react-admin";
+import { GetListResult, RaRecord } from "react-admin";
 import {
   Cell,
   Legend,
@@ -14,7 +14,7 @@ import {
 import { CenteredLoading } from ".";
 
 interface Props {
-  sessions: GetListResult<Record> | null;
+  sessions: GetListResult<RaRecord> | null;
 }
 const getKeyName = (system: string) => {
   system = system?.toLowerCase();

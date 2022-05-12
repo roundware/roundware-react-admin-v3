@@ -13,7 +13,7 @@ import {
   EditProps,
   NumberInput,
   RadioButtonGroupInput,
-  Record,
+  RaRecord,
   ReferenceInput,
   SelectInput,
   SimpleForm,
@@ -29,12 +29,12 @@ import UiModeField from "./UiModeField";
 export const UiGroupEdit = (): JSX.Element => {
   const { refetchData } = useBuildUI();
   const dataProvider = useRoundwareDataProvider();
-  const transform = async (record: Record): Promise<Record> => {
+  const transform = async (record: RaRecord): Promise<RaRecord> => {
     const r = record as Omit<Partial<IUIGroup>, `header_text_loc`> & {
       header_text_loc: number[];
       ui_items: number[];
     };
-    const promises: Promise<UpdateResult<Record>>[] = [];
+    const promises: Promise<UpdateResult<RaRecord>>[] = [];
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -46,7 +46,7 @@ export const UiGroupEdit = (): JSX.Element => {
         dataProvider
       );
     delete r.header_text_loc_admin;
-    return r as Record;
+    return r as RaRecord;
   };
 
   const refresh = useRefresh();
@@ -140,7 +140,7 @@ export const UiGroupCreate = (): JSX.Element => {
     return lastIndex + 1;
   }, [uiGroups]);
 
-  const transform = async (record: Record): Promise<Record> => {
+  const transform = async (record: RaRecord): Promise<RaRecord> => {
     const r = record as Omit<Partial<IUIGroup>, `header_text_loc`> & {
       header_text_loc: number[];
       ui_items: number[];
@@ -160,7 +160,7 @@ export const UiGroupCreate = (): JSX.Element => {
 
     r.index = newIndex;
     delete r.header_text_loc_admin;
-    return r as Record;
+    return r as RaRecord;
   };
   return (
     <Create

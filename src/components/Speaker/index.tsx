@@ -10,7 +10,7 @@ import {
   SelectInput,
   SimpleForm,
   TextInput,
-  Record,
+  RaRecord,
   useRedirect,
   useRefresh,
 } from "react-admin";
@@ -22,7 +22,7 @@ export const SpeakerEdit = (): JSX.Element => {
   const { selectedProject } = useProjects();
   const { fetchData } = useSpeakers();
 
-  const transform = (data: Record) => {
+  const transform = (data: RaRecord) => {
     data.project = selectedProject?.id;
     if (typeof data?.file?.src == "string") {
       data.file = data.file.rawFile;
@@ -92,7 +92,7 @@ export const SpeakerCreate = (): JSX.Element => {
     <Create
       transform={transform}
       mutationOptions={{
-        onSuccess: (data: Record) => {
+        onSuccess: (data: RaRecord) => {
           fetchData();
           refresh();
           redirect(`list`, `/speakers`);

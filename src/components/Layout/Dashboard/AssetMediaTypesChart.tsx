@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, CardContent, CardHeader } from "@mui/material";
 import React from "react";
-import { GetListResult, Record, useRedirect } from "react-admin";
+import { GetListResult, RaRecord, useRedirect } from "react-admin";
 import {
   Cell,
   Legend,
@@ -13,9 +13,9 @@ import {
 import { CenteredLoading } from ".";
 import { ResourceList } from "../../../App";
 interface Props {
-  assets: GetListResult<Record> | null;
+  assets: GetListResult<RaRecord> | null;
 }
-const getMediaTypes = (assets: GetListResult<Record>) => {
+const getMediaTypes = (assets: GetListResult<RaRecord>) => {
   const chartDataMap = new Map<string, number>();
 
   assets.data.forEach((s) => {

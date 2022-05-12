@@ -8,7 +8,7 @@ import {
   BooleanInput,
   DateTimeInput,
   NumberInput,
-  Record,
+  RaRecord,
   ReferenceArrayInput,
   required,
   SelectArrayInput,
@@ -24,7 +24,7 @@ import { handleLocalizedStrings } from "utils";
 const ProjectEdit = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
   const redirect = useRedirect();
-  const transform = async (r: Record) => {
+  const transform = async (r: RaRecord) => {
     const data = { ...r };
 
     const fields = [

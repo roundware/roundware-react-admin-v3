@@ -17,7 +17,7 @@ import {
   SelectInput,
   SimpleForm,
   TextInput,
-  Record,
+  RaRecord,
   useRedirect,
 } from "react-admin";
 import { LocalizedString } from "types";
@@ -25,7 +25,7 @@ import { handleLocalizedStrings } from "utils";
 const ProjectCreate = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
   const redirect = useRedirect();
-  const transform = async (r: Record) => {
+  const transform = async (r: RaRecord) => {
     const data = { ...r };
 
     const fields = [

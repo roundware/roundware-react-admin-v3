@@ -17,6 +17,7 @@ import {
   useRefresh,
   EditButton,
   DeleteButton,
+  RaRecord,
 } from "react-admin";
 import TranslatableField from "./common/TranslatableField";
 import { ITag } from "types/tags";
@@ -63,7 +64,7 @@ export const TagList = (): JSX.Element => {
 
 export const TagEdit = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
-  const transform = async (record: Record): Promise<Record> => {
+  const transform = async (record: RaRecord): Promise<RaRecord> => {
     const r = record as Partial<ITag>;
 
     if (r.loc_msg_admin) {
@@ -78,7 +79,7 @@ export const TagEdit = (): JSX.Element => {
 
     delete r.loc_msg_admin;
     delete r.loc_description_admin;
-    return r as Record;
+    return r as RaRecord;
   };
 
   const { refetchData } = useBuildUI();
@@ -132,7 +133,7 @@ export const TagEdit = (): JSX.Element => {
 
 export const TagCreate = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
-  const transform = async (record: Record): Promise<Record> => {
+  const transform = async (record: RaRecord): Promise<RaRecord> => {
     const r = record as Partial<ITag>;
 
     if (r.loc_msg_admin)
@@ -146,7 +147,7 @@ export const TagCreate = (): JSX.Element => {
 
     delete r.loc_msg_admin;
     delete r.loc_description_admin;
-    return r as Record;
+    return r as RaRecord;
   };
   const refresh = useRefresh();
   const { refetchData } = useBuildUI();

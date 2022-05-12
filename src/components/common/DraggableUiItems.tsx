@@ -1,6 +1,12 @@
 import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { TextInput, NumberInput, useNotify, useMutation } from "react-admin";
+import {
+  TextInput,
+  NumberInput,
+  useNotify,
+  useMutation,
+  useRecordContext,
+} from "react-admin";
 import Add from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import Table from "@mui/material/Table";
@@ -13,10 +19,8 @@ import { Draggable, DragDropContext, Droppable } from "react-beautiful-dnd";
 import { OnDragEndResponder } from "react-beautiful-dnd";
 import { IUIGroup } from "types/uiGroups";
 
-interface Props {
-  record: IUIGroup;
-}
-const DraggableUiItems = ({ record }: Props): JSX.Element => {
+const DraggableUiItems = (): JSX.Element => {
+  const record = useRecordContext();
   const notify = useNotify();
   const [mutate, { loading }] = useMutation(
     {

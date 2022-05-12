@@ -15,7 +15,7 @@ import {
 import { DatePicker } from "@material-ui/pickers";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
 import React, { useEffect, useState } from "react";
-import { GetListResult, Record, useRedirect } from "react-admin";
+import { GetListResult, RaRecord, useRedirect } from "react-admin";
 import {
   Bar,
   Brush,
@@ -32,7 +32,7 @@ import {
 import { CenteredLoading } from ".";
 import { ResourceList } from "../../../App";
 interface Props {
-  sessions: GetListResult<Record> | null;
+  sessions: GetListResult<RaRecord> | null;
 }
 
 export const isWithinRange = (date: Date, range: Date[]): boolean => {

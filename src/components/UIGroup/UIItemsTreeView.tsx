@@ -10,7 +10,7 @@ import {
   LinearProgress,
 } from "@mui/material";
 import { alpha, Theme } from "@mui/material/styles";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DragHandleSharpIcon from "@mui/icons-material/DragHandleSharp";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -27,7 +27,7 @@ import {
 } from "react-beautiful-dnd";
 import { UiItemNode } from "types/uiGroups";
 import TreeItemLabel from "./TreeItemLabel";
-import { UpdateResult, Record, useRefresh, useNotify } from "react-admin";
+import { UpdateResult, RaRecord, useRefresh, useNotify } from "react-admin";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 const UIItemsTreeView = (): JSX.Element => {
   const {
@@ -180,7 +180,7 @@ const UIItemsTreeView = (): JSX.Element => {
     console.log(movedDirection);
 
     // promises of dataProvider calls
-    const promises: Promise<UpdateResult<Record>>[] = [];
+    const promises: Promise<UpdateResult<RaRecord>>[] = [];
 
     // list of items need to possibly modified
     const possiblyAffectedItems = uiItemsList.filter(

@@ -15,7 +15,7 @@ import {
 } from "@mui/icons-material";
 import { IProject } from "../../../providers/ProjectsContext";
 import CardWithIcon from "./CardWithIcon";
-import { GetListResult, Record } from "react-admin";
+import { GetListResult, RaRecord } from "react-admin";
 import { ResourceList } from "../../../App";
 import SessionsChart from "./SessionsChart";
 import AssetsChart from "./AssetsChart";
@@ -25,9 +25,9 @@ import ListenEventsChart from "./ListenEventsChart";
 import AssetMediaTypesChart from "./AssetMediaTypesChart";
 
 interface Props {
-  sessions: GetListResult<Record> | null;
-  assets: GetListResult<Record> | null;
-  listenEvents: GetListResult<Record> | null;
+  sessions: GetListResult<RaRecord> | null;
+  assets: GetListResult<RaRecord> | null;
+  listenEvents: GetListResult<RaRecord> | null;
   ranges: { [resrouce: string]: string };
 }
 

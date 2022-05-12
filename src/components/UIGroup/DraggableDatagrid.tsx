@@ -19,7 +19,7 @@ import {
   DatagridHeaderProps,
   DatagridProps,
   DatagridRowProps,
-  Record,
+  RaRecord,
   UpdateResult,
   useListContext,
   useNotify,
@@ -97,8 +97,8 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
     console.log(movedDirection);
 
     // promises of dataProvider calls
-    const promises: Promise<UpdateResult<Record>>[] = [];
-    const deletePromises: Promise<void | DeleteResult<Record>>[] = [];
+    const promises: Promise<UpdateResult<RaRecord>>[] = [];
+    const deletePromises: Promise<void | DeleteResult<RaRecord>>[] = [];
 
     /** affected ui group ids */
     const affectedUiGroupIds: number[] = [];

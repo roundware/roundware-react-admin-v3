@@ -1,10 +1,10 @@
 import { Box, CircularProgress, Grid } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
-import { Skeleton } from '@mui/material';
+import makeStyles from "@mui/styles/makeStyles";
+import { Skeleton } from "@mui/material";
 import subDays from "date-fns/fp/subDays/index.js";
 import { GetListParams } from "ra-core";
 import React, { useCallback, useEffect, useState } from "react";
-import { GetListResult, Record, useDataProvider } from "react-admin";
+import { GetListResult, RaRecord, useDataProvider } from "react-admin";
 import { useProjects } from "../../../providers/ProjectsContext";
 import DashboardContent from "./DashboardContent";
 import ProjectDetails from "./ProjectDetails";
@@ -26,10 +26,10 @@ const Dashboard = (): JSX.Element => {
 
   const [loading, setLoading] = useState(true);
 
-  const [session, setSession] = useState<GetListResult<Record> | null>(null);
+  const [session, setSession] = useState<GetListResult<RaRecord> | null>(null);
   const [listenEvents, setListenEvents] =
-    useState<GetListResult<Record> | null>(null);
-  const [assets, setAssets] = useState<GetListResult<Record> | null>(null);
+    useState<GetListResult<RaRecord> | null>(null);
+  const [assets, setAssets] = useState<GetListResult<RaRecord> | null>(null);
 
   const dataProvider = useDataProvider();
 
@@ -75,7 +75,7 @@ const Dashboard = (): JSX.Element => {
         Promise.all([
           dataProvider
             .getList(`sessions`, params)
-            .then((data: GetListResult<Record>) => {
+            .then((data: GetListResult<RaRecord>) => {
               setResourcesRanges((prev) => ({ ...prev, sessions: `Total` }));
               setSession(data);
             }),
@@ -88,7 +88,7 @@ const Dashboard = (): JSX.Element => {
                 start_time__gte: subDays(30, new Date()).toISOString(),
               },
             })
-            .then((data: GetListResult<Record>) => {
+            .then((data: GetListResult<RaRecord>) => {
               if (!data) return;
               setListenEvents((prev) => ({
                 ...prev,
@@ -105,7 +105,7 @@ const Dashboard = (): JSX.Element => {
             .getList(`assets`, {
               ...params,
             })
-            .then((data: GetListResult<Record>) => {
+            .then((data: GetListResult<RaRecord>) => {
               if (!data) return;
               setAssets((prev) => ({
                 ...prev,

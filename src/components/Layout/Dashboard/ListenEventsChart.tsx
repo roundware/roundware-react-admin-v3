@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { GetListResult, Record, useRedirect } from "react-admin";
+import { GetListResult, RaRecord, useRedirect } from "react-admin";
 import {
   Card,
   CardHeader,
@@ -46,7 +46,7 @@ import {
 import { ResourceList } from "../../../App";
 import { CenteredLoading } from ".";
 interface Props {
-  events: GetListResult<Record> | null;
+  events: GetListResult<RaRecord> | null;
 }
 
 export const isWithinRange = (date: Date, range: Date[]) => {

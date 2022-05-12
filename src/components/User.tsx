@@ -10,7 +10,7 @@ import {
   SimpleForm,
   TextInput,
   TextField,
-  Record,
+  RaRecord,
 } from "react-admin";
 import { useProjects } from "../providers/ProjectsContext";
 export const UserList = (): JSX.Element => {
@@ -35,7 +35,7 @@ export const UserEdit = (): JSX.Element => {
     <Edit>
       <SimpleForm
         warnWhenUnsavedChanges
-        transform={(r: Record) => {
+        transform={(r: RaRecord) => {
           if (!r.device_id) {
             delete r.device_id;
           }
@@ -58,7 +58,7 @@ export const UserCreate = (): JSX.Element => {
   return (
     <Create>
       <SimpleForm
-        transform={(r: Record) => {
+        transform={(r: RaRecord) => {
           if (!r.device_id) {
             delete r.device_id;
           }

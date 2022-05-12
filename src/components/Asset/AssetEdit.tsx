@@ -17,7 +17,7 @@ import {
   SimpleForm,
   TextInput,
   useRedirect,
-  Record,
+  RaRecord,
   useEditController,
   Identifier,
 } from "react-admin";

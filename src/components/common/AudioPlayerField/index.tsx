@@ -4,7 +4,7 @@ import { WaveSurfer, WaveForm, Region } from "wavesurfer-react";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions";
-import { useRecordContext, Record } from "react-admin";
+import { useRecordContext, RaRecord } from "react-admin";
 import { IconButton, Grid, LinearProgress } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
@@ -26,7 +26,7 @@ interface PropTypes {
 
 const useEditContext = ({ source }: PropTypes) => {
   const [assetId] = useFieldValue<string>(source);
-  const [asset, setAsset] = useState<Record>({
+  const [asset, setAsset] = useState<RaRecord>({
     file: "",
     start_time: 0,
     end_time: 0,

@@ -13,7 +13,7 @@ import {
 import makeStyles from "@mui/styles/makeStyles";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
-  Record,
+  RaRecord,
   DeleteButtonProps,
   useRefresh,
   UpdateResult,
@@ -39,8 +39,9 @@ const DeleteUiGroupButton = (): JSX.Element => {
   const handleDelete = async () => {
     try {
       setLoading(true);
-      const promises: Promise<UpdateResult<Record> | DeleteResult<Record>>[] =
-        [];
+      const promises: Promise<
+        UpdateResult<RaRecord> | DeleteResult<RaRecord>
+      >[] = [];
       uiGroups.forEach((g) => {
         if (g.index > record!.index) {
           const updateProm = dataProvider.update(`uigroups`, {
@@ -58,7 +59,7 @@ const DeleteUiGroupButton = (): JSX.Element => {
         if (i.ui_group_id == record?.id) {
           const deleteProm = dataProvider.delete(`uiitems`, {
             id: i.id,
-            previousData: i as Record,
+            previousData: i as RaRecord,
           });
           promises.push(deleteProm);
         }
@@ -66,7 +67,7 @@ const DeleteUiGroupButton = (): JSX.Element => {
 
       const deleteProm = dataProvider.delete(`uigroups`, {
         id: record!.id,
-        previousData: record as Record,
+        previousData: record as RaRecord,
       });
       await Promise.all([...promises, deleteProm]);
       notify(`Successfully deleted!`, {

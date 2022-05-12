@@ -8,7 +8,7 @@ import {
   BooleanInput,
   Create,
   CreateProps,
-  Record,
+  RaRecord,
   ReferenceInput,
   SelectInput,
   SimpleForm,
@@ -24,7 +24,7 @@ const AssetCreate = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
   const { selectedProject } = useProjects();
   const redirect = useRedirect();
-  const transform = async (data: Record) => {
+  const transform = async (data: RaRecord) => {
     try {
       // use the file blob as file property
       data.file = data.file.rawFile;
