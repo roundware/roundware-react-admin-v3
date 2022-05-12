@@ -121,27 +121,12 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
     if (e) console.log(`Polygon edited`);
     setIsCurrentSpeakerSaved(false);
     setDragging(false);
-    let newPath = polygon
-      ?.getPath()
-      .getArray()
-      .map((p) => [p.lng(), p.lat()]);
-
-    const editedPoint = [e.latLng?.lng(), e.latLng?.lat()];
+    let newPath = polygon?.getPath().getArray();
 
     if (Array.isArray(newPath)) {
-      const isLastPointEdited = isEqual(
-        newPath[newPath.length - 1],
-        editedPoint
-      );
-
-      // form closed ring;
-      if (!isEqual(newPath[0], newPath[newPath.length - 1])) {
-        if (isLastPointEdited)
-          newPath = [newPath[newPath.length - 1], ...newPath.slice(1)];
-        else newPath = [...newPath, newPath[0]];
-      }
-      const newMultiPolygon = multiPolygon([[newPath]]).geometry;
-
+      const newMultiPolygon = multiPolygon([
+        [googleMapPathToGeoJSONPath(newPath)],
+      ]).geometry;
       setShape(newMultiPolygon);
     }
   };
@@ -286,7 +271,11 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
             <Grid direction="column" spacing={1}>
               <Grid item>
                 <Tooltip title="Save Changes" placement="right">
-                  <IconButton onClick={handleSave} disabled={saving} size="large">
+                  <IconButton
+                    onClick={handleSave}
+                    disabled={saving}
+                    size="large"
+                  >
                     {saving ? <CircularProgress /> : <SaveIcon />}
                   </IconButton>
                 </Tooltip>
