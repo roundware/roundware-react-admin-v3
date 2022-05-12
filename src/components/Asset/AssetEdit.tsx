@@ -4,22 +4,20 @@ import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
 import LocationSelector from "components/common/LocationSelector";
 import TagIdSelector from "components/common/TagIdSelector";
 import TranslatableField from "components/common/TranslatableField";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import React, { useEffect } from "react";
 import {
   BooleanInput,
   DateTimeInput,
   Edit,
-  EditProps,
   NumberInput,
   ReferenceInput,
   SelectInput,
   SimpleForm,
   TextInput,
-  useRedirect,
-  RaRecord,
+  useDataProvider,
   useEditController,
-  Identifier,
+  useRecordContext,
+  useRedirect,
 } from "react-admin";
 import { handleLocalizedStrings } from "utils";
 import { IAsset } from "../../types/asset";
@@ -27,13 +25,13 @@ import AudioOptions from "../common/AudioOptions";
 
 const AssetEdit = (): JSX.Element => {
   const redirect = useRedirect();
-  const editControl = useEditController(props);
-  const dataProvider = useRoundwareDataProvider();
-
+  const editControl = useEditController();
+  const dataProvider = useDataProvider();
+  const record = useRecordContext();
   useEffect(() => {
     // revalidate to get the localized strings
     dataProvider
-      .getOneJson(`assets`, props.id!, { admin: 1 }, true)
+      .getOneJson(`assets`, record.id!, { admin: 1 }, true)
       .then(() => editControl.refetch());
   }, []);
 

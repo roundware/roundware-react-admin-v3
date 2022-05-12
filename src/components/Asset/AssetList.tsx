@@ -2,23 +2,21 @@ import TagIdSelector from "components/common/TagIdSelector";
 import React from "react";
 import {
   BooleanField,
+  BooleanInput,
   ChipField,
   Datagrid,
   DateField,
   DateTimeInput,
   DeleteButton,
   EditButton,
-  FieldProps,
   List,
-  ListProps,
   NumberField,
+  NumberInput,
   ReferenceArrayField,
+  SelectInput,
   SingleFieldList,
   TextField,
   useRecordContext,
-  BooleanInput,
-  NumberInput,
-  SelectInput,
 } from "react-admin";
 import { useProjects } from "../../providers/ProjectsContext";
 import AudioPlayerField from "../common/AudioPlayerField";
@@ -78,24 +76,13 @@ export const AssetList = (): JSX.Element => {
       <Datagrid optimized>
         <TextField source="id" />
         <BooleanField source="submitted" />
-        <AssetPreview source="file" />
+        <AssetPreview />
         <DateField source="created" />
-        {/* <ReferenceField
-          label="Project"
-          source="project_id"
-          reference="projects"
-        >
-          <TextField source="name" />
-        </ReferenceField> */}
-        {/* <ReferenceField label="User" source="user.id" reference="users">
-          <TextField source="username" />
-        </ReferenceField> */}
         <NumberField source="latitude" options={{ maximumFractionDigits: 8 }} />
         <NumberField
           source="longitude"
           options={{ maximumFractionDigits: 8 }}
         />
-        {/* <AudioPlayerField source="file" label="Source" /> */}
 
         <ReferenceArrayField label="Tags" reference="tags" source="tag_ids">
           <SingleFieldList>
@@ -118,7 +105,6 @@ export default AssetList;
 
 const AssetPreview = () => {
   const record = useRecordContext();
-
   if (!record?.file) return <span>No File</span>;
   switch (record.media_type) {
     case "photo":
