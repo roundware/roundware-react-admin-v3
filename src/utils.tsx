@@ -1,6 +1,5 @@
-import { RoundwareDataProvider } from "ra-data-roundware-drf";
 import { LocalizedString } from "types";
-import { RaRecord } from "react-admin";
+import { DataProvider, RaRecord } from "react-admin";
 export const dateFormatter = (v: string): string | undefined => {
   if (!v) return;
   return new Date(v).toISOString();
@@ -8,7 +7,7 @@ export const dateFormatter = (v: string): string | undefined => {
 
 export const handleLocalizedStrings = async (
   messages: LocalizedString[],
-  dataProvider: RoundwareDataProvider
+  dataProvider: DataProvider
 ): Promise<number[]> => {
   // update, delete or create the localized string
   // if empty text then just delete
