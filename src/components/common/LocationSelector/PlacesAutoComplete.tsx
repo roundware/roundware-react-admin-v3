@@ -1,12 +1,13 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete from "@mui/material/Autocomplete";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import parse from "autosuggest-highlight/parse";
 import throttle from "lodash/throttle";
+import { Theme } from "@mui/material";
 
 interface Props {
   onSelect: (lat: number, lng: number) => void;
@@ -114,7 +115,7 @@ export default function PlacesAutoComplete({ onSelect }: Props) {
           fullWidth
         />
       )}
-      renderOption={(option) => {
+      renderOption={(p, option) => {
         const matches =
           option.structured_formatting.main_text_matched_substrings;
         const parts = parse(
@@ -151,7 +152,7 @@ export default function PlacesAutoComplete({ onSelect }: Props) {
 }
 const autocompleteService = { current: null };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   icon: {
     color: theme.palette.text.secondary,
     marginRight: theme.spacing(2),
