@@ -40,7 +40,7 @@ export const polygonToGoogleMapPaths = (
   let coordinates;
   if (polygon.type == "MultiPolygon") coordinates = polygon.coordinates[0][0];
   else coordinates = polygon.coordinates[0];
-  let sanitized: Position[] = [];
+  const sanitized: Position[] = [];
 
   for (let i = 0; i < coordinates.length; i++) {
     const prev = coordinates[i - 1];
