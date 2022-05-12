@@ -1,5 +1,5 @@
-import { CardContent, Grid, TextField, Typography } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import { CardContent, Grid, TextField, Theme, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import Card from "@mui/material/Card";
 import React, { useEffect } from "react";
 import useFieldValue from "../../hooks/useFieldValue";
@@ -94,7 +94,7 @@ const AudioOptions = (): JSX.Element => {
 
 export default AudioOptions;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   inputLeft: {
     borderTopRightRadius: 0,
     borderBottomLeftRadius: 0,
