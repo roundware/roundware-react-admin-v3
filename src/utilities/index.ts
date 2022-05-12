@@ -59,7 +59,7 @@ export const polygonToGoogleMapPaths = (
 /** converts googleMap LatLng paths to GeoJSON paths (reverses the coordinates) */
 export const googleMapPathToGeoJSONPath = (
   paths: google.maps.LatLng[]
-): number[][] => {
+): Position[] => {
   const coordinates = paths.map((p) => [p.lng(), p.lat()]);
   const sanitized: Position[] = [];
   for (let i = 0; i < coordinates.length; i++) {
