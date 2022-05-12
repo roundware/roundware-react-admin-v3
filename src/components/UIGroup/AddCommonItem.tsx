@@ -170,7 +170,7 @@ const AddCommonItem = (props: DatagridRowProps): JSX.Element => {
           dataProvider.delete(`uiitems`, {
             id: i,
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            previousData: undefined! as Record,
+            previousData: undefined! as RaRecord,
           })
         );
 

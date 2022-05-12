@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Grid } from "@mui/material";
+import { Box, CircularProgress, Grid, Theme } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import { Skeleton } from "@mui/material";
 import subDays from "date-fns/fp/subDays/index.js";
@@ -9,7 +9,7 @@ import { useProjects } from "../../../providers/ProjectsContext";
 import DashboardContent from "./DashboardContent";
 import ProjectDetails from "./ProjectDetails";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   container: {
     marginTop: theme.spacing(4),
   },

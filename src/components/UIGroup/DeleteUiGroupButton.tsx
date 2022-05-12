@@ -9,6 +9,7 @@ import {
   Typography,
   Button,
   LinearProgress,
+  Theme,
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -111,7 +112,7 @@ const DeleteUiGroupButton = (): JSX.Element => {
   );
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     color: theme.palette.error.main,
   },

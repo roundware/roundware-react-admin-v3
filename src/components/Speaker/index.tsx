@@ -74,7 +74,7 @@ export const SpeakerEdit = (): JSX.Element => {
 export const SpeakerCreate = (): JSX.Element => {
   const { selectedProject } = useProjects();
   const { fetchData, setSelectedSpeaker } = useSpeakers();
-  const transform = (data: Record) => {
+  const transform = (data: RaRecord) => {
     data.project = selectedProject?.id;
     if (typeof data?.file?.src == "string") {
       data.file = data.file.rawFile;

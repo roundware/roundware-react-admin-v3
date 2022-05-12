@@ -1,13 +1,10 @@
-import * as React from "react";
-import { Box, Card, CardActions, Button, Typography } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
-import CodeIcon from "@mui/icons-material/Code";
-import { EditButton, ShowButton } from "react-admin";
+import { Box, Theme, Typography } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
-import { useTranslate } from "react-admin";
+import * as React from "react";
+import { EditButton, ShowButton } from "react-admin";
 import { useProjects } from "../../../providers/ProjectsContext";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     color: "#000000",
     padding: 10,

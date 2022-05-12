@@ -3,24 +3,21 @@ import CardBox from "components/common/CardBox";
 import LocationSelector from "components/common/LocationSelector";
 import TranslatableField from "components/common/TranslatableField";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import { useProjects } from "providers/ProjectsContext";
 import React from "react";
 import {
   BooleanInput,
   Create,
-  CreateProps,
   DateTimeInput,
   NumberInput,
+  RaRecord,
   ReferenceArrayInput,
   required,
   SelectArrayInput,
   SelectInput,
   SimpleForm,
   TextInput,
-  RaRecord,
   useRedirect,
 } from "react-admin";
-import { LocalizedString } from "types";
 import { handleLocalizedStrings } from "utils";
 const ProjectCreate = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();

@@ -37,12 +37,7 @@ import {
   Brush,
 } from "recharts";
 
-import {
-  DatePicker,
-  TimePicker,
-  DateTimePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
+import { DatePicker, TimePicker, DateTimePicker } from "@mui/lab";
 import { ResourceList } from "../../../App";
 import { CenteredLoading } from ".";
 interface Props {
@@ -216,7 +211,7 @@ const ListenEventsChart = ({ events }: Props) => {
                   variant="inline"
                   inputVariant="outlined"
                   value={startDate}
-                  views={["year", "month", "date"]}
+                  views={["year", "month", "day"]}
                   onChange={(date) => {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore

@@ -12,7 +12,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { DatePicker } from "@material-ui/pickers";
+import { DatePicker } from "@mui/lab";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { GetListResult, RaRecord, useRedirect } from "react-admin";
@@ -215,7 +215,7 @@ const SessionsChart = ({ sessions }: Props) => {
                   variant="inline"
                   inputVariant="outlined"
                   value={startDate}
-                  views={["year", "month", "date"]}
+                  views={["year", "month", "day"]}
                   onChange={(date) => {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore

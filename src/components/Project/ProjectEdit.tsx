@@ -7,6 +7,7 @@ import React from "react";
 import {
   BooleanInput,
   DateTimeInput,
+  Edit,
   NumberInput,
   RaRecord,
   ReferenceArrayInput,
@@ -16,11 +17,9 @@ import {
   SimpleForm,
   TextInput,
   useRedirect,
-  Edit,
-  EditProps,
 } from "react-admin";
-import { LocalizedString } from "types";
 import { handleLocalizedStrings } from "utils";
+
 const ProjectEdit = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
   const redirect = useRedirect();
