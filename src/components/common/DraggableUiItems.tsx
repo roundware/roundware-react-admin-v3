@@ -4,7 +4,7 @@ import {
   TextInput,
   NumberInput,
   useNotify,
-  useMutation,
+  useUpdate,
   useRecordContext,
 } from "react-admin";
 import Add from "@mui/icons-material/Add";
@@ -17,39 +17,20 @@ import TableRow from "@mui/material/TableRow";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 import { Draggable, DragDropContext, Droppable } from "react-beautiful-dnd";
 import { OnDragEndResponder } from "react-beautiful-dnd";
-import { IUIGroup } from "types/uiGroups";
+import { IUIGroup, IUIItems } from "types/uiGroups";
 
 const DraggableUiItems = (): JSX.Element => {
   const record = useRecordContext();
   const notify = useNotify();
-  const [mutate, { loading }] = useMutation(
-    {
-      type: `update`,
-      resource: `uiitems`,
-      payload: {
-        id: record.id,
-        data: {},
-      },
-    },
-    {
-      // https://marmelab.com/react-admin/Actions.html#optimistic-rendering-and-undo
-      mutationMode: "undoable",
-
-      onSuccess: () => {
-        notify("Items reordered", "info", {}, true);
-      },
-      onFailure: (error) => notify(`Error: ${error.message}`, "warning"),
-    }
-  );
+  const [update, { isLoading }] = useUpdate(`uiitems`, {
+    id: record.id,
+    data: {},
+  });
 
   const reorder = (newUiItems: IUIGroup[`ui_items`]) =>
-    mutate({
-      type: "update",
-      resource: "uigroups",
-      payload: {
-        id: record.id,
-        data: { uiitems: newUiItems },
-      },
+    update(`uigroups`, {
+      id: record.id,
+      data: { uiitems: newUiItems },
     });
 
   const onDragEnd: OnDragEndResponder = (result, provided) => {
@@ -63,7 +44,7 @@ const DraggableUiItems = (): JSX.Element => {
 
     // Remove item from array
     const newArray = record.ui_items.filter(
-      (el, index) => index !== source.index
+      (el: IUIItems, index: number) => index !== source.index
     );
 
     // Insert item at destination
@@ -73,7 +54,7 @@ const DraggableUiItems = (): JSX.Element => {
     reorder(newArray);
   };
   const { control } = useFormContext();
-  const { fields, remove, push } = useFieldArray({
+  const { fields, remove, insert } = useFieldArray({
     control,
     name: "questions",
   });
@@ -140,7 +121,7 @@ const DraggableUiItems = (): JSX.Element => {
         </Table>
         <Button
           type="button"
-          onClick={() => push({ id: "", question: "" })}
+          onClick={() => insert(fields.length, { id: "", question: "" })}
           color="secondary"
           variant="contained"
           style={{ marginTop: "16px" }}
