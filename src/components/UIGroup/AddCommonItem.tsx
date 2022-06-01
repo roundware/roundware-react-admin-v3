@@ -26,9 +26,9 @@ import {
 } from "react-admin";
 import { ITag } from "types/tags";
 import { IUIGroup, IUIItems, UiItemNode } from "types/uiGroups";
-const AddCommonItem = (): JSX.Element => {
+const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
+  const currentGroup = group;
   /**  selected group */
-  const currentGroup = useRecordContext<IUIGroup>();
   if (!currentGroup) return <></>;
 
   const { uiItemsList, uiGroups, tags, refetchData, dummyPatchForGroup } =

@@ -101,14 +101,14 @@ export const UiGroupList = (): JSX.Element => {
   );
 };
 
-const RowActions = (): JSX.Element => {
+const RowActions = (props: DatagridRowProps): JSX.Element => {
   return (
     <Grid container spacing={1} direction="row" wrap="nowrap">
       <Grid item>
         <EditButton size="small" label="" />
       </Grid>
       <Grid item>
-        <AddCommonItem />
+        <AddCommonItem group={props.record as IUIGroup} />
       </Grid>
       <Grid item>
         <DeleteUiGroupButton />

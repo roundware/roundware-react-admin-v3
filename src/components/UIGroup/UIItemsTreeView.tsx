@@ -253,7 +253,7 @@ const UIItemsTreeView = (): JSX.Element => {
       collapseItem(i.id);
     });
   };
-
+  console.log(`ui items`, uiItemsTree);
   return (
     <Grid container spacing={3} direction="column">
       <Grid item xs={12} alignItems="center">
