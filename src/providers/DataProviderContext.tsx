@@ -1,16 +1,16 @@
 import React from "react";
-import { DataProvider, fetchUtils } from "react-admin";
+import { DataProvider, fetchUtils, Options } from "react-admin";
 import { AllowChildrenOnlyProps } from "./ProjectsContext";
-import simpleRestProvider from "ra-data-simple-rest";
+import { RoundwareDataProvider } from "ra-data-roundware-drf";
 import { createOptionsFromToken } from "./AuthProvider";
-export const dataProvider = simpleRestProvider(
+export const dataProvider = new RoundwareDataProvider(
   `${process.env.REACT_APP_SERVER_URL}/api/2`,
-  (url, options = {}) => {
+  (url: string, options: Options = {}) => {
     options.user = createOptionsFromToken().user;
 
     return fetchUtils.fetchJson(url, options);
   },
-  ""
+  false
 );
 
 export const RoundwareDataProviderContext =
@@ -23,11 +23,8 @@ export const useRoundwareDataProvider = (): DataProvider =>
 export const RoundwareDataProviderContextProvider = ({
   children,
 }: AllowChildrenOnlyProps): JSX.Element => {
-  const rDataProvider: DataProvider = {
-    ...dataProvider,
-  };
   return (
-    <RoundwareDataProviderContext.Provider value={rDataProvider}>
+    <RoundwareDataProviderContext.Provider value={dataProvider}>
       {children}
     </RoundwareDataProviderContext.Provider>
   );

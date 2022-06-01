@@ -5,6 +5,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import { Stack } from "@mui/material";
 import { useBuildUI } from "providers/BuildUIContext";
 import { IUIGroup } from "types/uiGroups";
 const UiModeField = (): JSX.Element => {
@@ -27,9 +28,11 @@ const UiModeField = (): JSX.Element => {
           setUiMode(v as IUIGroup[`ui_mode`]);
         }}
       >
-        <FormControlLabel value="speak" control={<Radio />} label="Speak" />
-        <FormControlLabel value="listen" control={<Radio />} label="Listen" />
-        <FormControlLabel value="browse" control={<Radio />} label="Browse" />
+        <Stack direction="row">
+          <FormControlLabel value="speak" control={<Radio />} label="Speak" />
+          <FormControlLabel value="listen" control={<Radio />} label="Listen" />
+          <FormControlLabel value="browse" control={<Radio />} label="Browse" />
+        </Stack>
       </RadioGroup>
     </FormControl>
   );

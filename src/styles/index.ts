@@ -1,6 +1,6 @@
-import { createTheme, adaptV4Theme } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 
-const adminTheme = createTheme(adaptV4Theme({
+const adminTheme = createTheme({
   palette: {
     secondary: {
       main: "#6b96d8",
@@ -10,14 +10,8 @@ const adminTheme = createTheme(adaptV4Theme({
     },
   },
   shape: {
-        borderRadius: 8,
-    },
-
-  props: {
-    MuiButtonBase: {
-        disableRipple: true
-      }
-    }
-}));
+    borderRadius: 8,
+  },
+});
 
 export default adminTheme;

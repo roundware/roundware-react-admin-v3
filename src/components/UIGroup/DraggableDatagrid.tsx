@@ -24,6 +24,8 @@ import {
   useListContext,
   useNotify,
   DeleteResult,
+  useRecordContext,
+  useResourceContext,
 } from "react-admin";
 import {
   DragDropContext,
@@ -33,7 +35,11 @@ import {
 } from "react-beautiful-dnd";
 
 export const DraggableDatagrid = (props: DatagridProps): JSX.Element => (
-  <Datagrid header={<DatagridHeader />} body={<DraggableDatagridBody />} />
+  <Datagrid
+    header={<DatagridHeader />}
+    body={<DraggableDatagridBody />}
+    {...props}
+  />
 );
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -204,6 +210,7 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
                 row={<DraggableDatagridRow />}
+                {...props}
               />
               {provided.placeholder}
             </>
@@ -214,38 +221,37 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
   );
 };
 
-const DraggableDatagridRow = ({
-  record,
-  resource,
-  id,
-  children,
-}: DatagridRowProps) => (
-  <>
-    <Draggable
-      key={id || ""}
-      draggableId={id?.toString()!}
-      index={record?.index!}
-    >
-      {(provided) => (
-        <TableRow ref={provided.innerRef} {...provided.draggableProps}>
-          {/* first column: selection checkbox */}
-          <TableCell {...provided.dragHandleProps}>
-            <ReorderIcon />
-          </TableCell>
-          {/* data columns based on children */}
-          {React.Children.map(children, (field: any) => (
-            <TableCell key={`${id}-${field?.props?.source}`}>
-              {React.cloneElement(field!, {
-                record,
+const DraggableDatagridRow = React.memo(
+  ({ children, record, id, resource }: DatagridRowProps) => {
+    return (
+      <>
+        <Draggable
+          key={id || ""}
+          draggableId={id?.toString()!}
+          index={record?.index!}
+        >
+          {(provided) => (
+            <TableRow ref={provided.innerRef} {...provided.draggableProps}>
+              {/* first column: selection checkbox */}
+              <TableCell {...provided.dragHandleProps}>
+                <ReorderIcon />
+              </TableCell>
+              {/* data columns based on children */}
+              {React.Children.map(children, (field: any) => (
+                <TableCell key={`${id}-${field?.props?.source}`}>
+                  {React.cloneElement(field!, {
+                    record,
 
-                resource,
-              })}
-            </TableCell>
-          ))}
-        </TableRow>
-      )}
-    </Draggable>
-  </>
+                    resource,
+                  })}
+                </TableCell>
+              ))}
+            </TableRow>
+          )}
+        </Draggable>
+      </>
+    );
+  }
 );
 function capitalizeFirstLetter(string: string) {
   return string?.charAt(0).toUpperCase() + string.slice(1);

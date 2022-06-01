@@ -1,16 +1,13 @@
 import React from "react";
 import {
-  CreateProps,
-  ListProps,
-  EditProps,
-  List,
   Create,
-  Edit,
   Datagrid,
-  SimpleForm,
-  TextInput,
-  TextField,
+  Edit,
+  List,
   RaRecord,
+  SimpleForm,
+  TextField,
+  TextInput,
 } from "react-admin";
 import { useProjects } from "../providers/ProjectsContext";
 export const UserList = (): JSX.Element => {

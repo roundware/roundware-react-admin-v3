@@ -4,65 +4,37 @@ import {
   Typography,
   TextField,
   Container,
+  CardContent,
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import Card from "@mui/material/Card";
 import AddIcon from "@mui/icons-material/Add";
 import { useListContext, useRedirect } from "ra-core";
 import React, { useEffect, useState } from "react";
-import { List, ListProps } from "react-admin";
+import { List, useRecordContext } from "react-admin";
 import { IProject, useProjects } from "../../providers/ProjectsContext";
 import SearchIcon from "@mui/icons-material/Search";
 const ProjectList = (): JSX.Element => {
+  const { setProjectsList } = useProjects();
   return (
     <List
       hasCreate={false}
       hasEdit={false}
       hasShow
       pagination={false}
-      perPage={0}
-      component={ProjectListWrapper}
+      queryOptions={{
+        onSuccess: (data) => {
+          console.log(`projec list`, data);
+          setProjectsList(data.data);
+        },
+      }}
+      component={ProjectCardWrapper}
     >
       <ProjectCard />
     </List>
   );
 };
 
-const ProjectListWrapper = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <>
-      <ProjectCardWrapper>{children}</ProjectCardWrapper>
-    </>
-  );
-};
-
-const useCardStyles = makeStyles((theme) => ({
-  root: {
-    width: 275,
-    height: 160,
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)",
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
-  createContent: {
-    display: "flex",
-    justifyContent: "center",
-    flexDirection: "column",
-    height: "100%",
-  },
-  cardContent: {
-    height: "100%",
-    padding: 2,
-  },
-}));
 const ProjectCardWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <Container>
@@ -73,7 +45,8 @@ const ProjectCardWrapper = ({ children }: { children: React.ReactNode }) => {
   );
 };
 const ProjectCard = () => {
-  const { data } = useListContext<IProject>();
+  const record = useRecordContext();
+  console.log(`record`, record);
   const redirect = useRedirect();
   const classes = useCardStyles();
   const { selectProject, setProjectsList, projectsList } = useProjects();
@@ -82,20 +55,6 @@ const ProjectCard = () => {
     selectProject(p);
     redirect(`/`);
   };
-
-  useEffect(() => {
-    if (Array.isArray(Object.values(data))) {
-      setProjectsList(
-        Object.values(data)?.filter((p) =>
-          process.env.REACT_APP_INCLUDE_PROJECT_IDS === `all`
-            ? true
-            : process.env.REACT_APP_INCLUDE_PROJECT_IDS?.split(`,`).includes(
-                p?.id?.toString()
-              )
-        )
-      );
-    }
-  }, [data]);
 
   const [textFilter, setTextFilter] = useState("");
   return (
@@ -169,3 +128,35 @@ const CreateProjectCard = () => {
 };
 
 export default ProjectList;
+
+const useCardStyles = makeStyles((theme) => ({
+  root: {
+    width: 275,
+    height: 160,
+  },
+  bullet: {
+    display: "inline-block",
+    margin: "0 2px",
+    transform: "scale(0.8)",
+  },
+  title: {
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
+  },
+  createContent: {
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "column",
+    height: "100%",
+  },
+  cardContent: {
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "column",
+
+    height: "100%",
+    padding: 2,
+  },
+}));

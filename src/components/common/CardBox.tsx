@@ -7,7 +7,7 @@ interface Props {
 
 const CardBox = ({ title, children }: Props): JSX.Element => {
   return (
-    <Card variant="outlined" style={{ margin: "8px 0" }}>
+    <Card variant="elevation" style={{ margin: "8px 0", width: "100%" }}>
       <CardHeader title={title} />
 
       <CardContent>{children}</CardContent>

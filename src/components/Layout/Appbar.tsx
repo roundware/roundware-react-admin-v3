@@ -10,6 +10,7 @@ import {
   Theme,
   Toolbar,
   useMediaQuery,
+  Stack,
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import { useProjects } from "providers/ProjectsContext";
@@ -48,9 +49,13 @@ const AppBar = (): JSX.Element => {
 
   return (
     <HideOnScroll>
-      <MuiAppBar color={"secondary"}>
-        <Toolbar disableGutters variant={isXSmall ? "regular" : "dense"}>
-          <div>
+      <MuiAppBar color={"secondary"} sx={{ padding: 1 }} position="fixed">
+        <Toolbar
+          disableGutters
+          variant={isXSmall ? "regular" : "dense"}
+          sx={{ justifyContent: "space-between" }}
+        >
+          <Stack spacing={2} direction="row" alignItems="center">
             {selectedProject && <SidebarToggleButton />}
             <Link
               onClick={(e) => {
@@ -67,29 +72,32 @@ const AppBar = (): JSX.Element => {
             >
               Roundware Admin
             </Link>
-            <InputLabel variant="standard">Project: </InputLabel>
-            <FormControl>
-              <Select
-                defaultValue={selectedProject?.id || "none"}
-                id="grouped-select"
-                value={isCreate ? `create` : selectedProject?.id || "none"}
-                onChange={handleOnChange}
-              >
-                <MenuItem value="none">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={"create"}>Create New Project</MenuItem>
-                {Array.isArray(projectsList) && projectsList.length > 0 && (
-                  <ListSubheader>Recent</ListSubheader>
-                )}
-                {projectsList?.map((p) => (
-                  <MenuItem key={p?.id} value={p?.id}>
-                    {p?.name}
+            <Stack direction="row" spacing={1} alignItems="center">
+              <InputLabel variant="standard">Project: </InputLabel>
+              <FormControl>
+                <Select
+                  defaultValue={selectedProject?.id || "none"}
+                  id="grouped-select"
+                  value={isCreate ? `create` : selectedProject?.id || "none"}
+                  onChange={handleOnChange}
+                  size="small"
+                >
+                  <MenuItem value="none">
+                    <em>None</em>
                   </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </div>
+                  <MenuItem value={"create"}>Create New Project</MenuItem>
+                  {Array.isArray(projectsList) && projectsList.length > 0 && (
+                    <ListSubheader>Recent</ListSubheader>
+                  )}
+                  {projectsList?.map((p) => (
+                    <MenuItem key={p?.id} value={p?.id}>
+                      {p?.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Stack>
+          </Stack>
           <UserMenu />
         </Toolbar>
       </MuiAppBar>

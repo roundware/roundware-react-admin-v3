@@ -24,7 +24,7 @@ const TranslatableField = ({
   fromProject,
 }: Props): JSX.Element => {
   const [value, setValue] = useFieldValue<LocalizedString[]>(source);
-  const [language_ids] = useFieldValue<number[]>(`language_ids`);
+  const [language_ids] = useFieldValue<number[]>(`language_ids`, []);
 
   const [loading, setLoading] = useState(true);
   const [languages, setLanguages] = useState<ILanguage[]>([]);
@@ -48,9 +48,8 @@ const TranslatableField = ({
         },
       })
       .then((res) => {
-        const neededIds = fromProject
-          ? language_ids
-          : selectedProject?.language_ids || [];
+        const neededIds =
+          (fromProject ? language_ids : selectedProject?.language_ids) || [];
         const thisProjectLanguages = res.data.filter((l) => {
           return neededIds.includes(Number(l.id));
         }) as ILanguage[];
@@ -75,7 +74,7 @@ const TranslatableField = ({
     );
 
   return (
-    <Card variant="outlined" style={{ marginBottom: 16 }}>
+    <Card variant="outlined" style={{ marginBottom: 16, width: "100%" }}>
       <Box p={2}>
         <FormLabel>{label}</FormLabel>
       </Box>
