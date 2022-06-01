@@ -25,10 +25,10 @@ import {
   useRecordContext,
 } from "react-admin";
 import { ITag } from "types/tags";
-import { IUIItems, UiItemNode } from "types/uiGroups";
+import { IUIGroup, IUIItems, UiItemNode } from "types/uiGroups";
 const AddCommonItem = (): JSX.Element => {
   /**  selected group */
-  const currentGroup = useRecordContext();
+  const currentGroup = useRecordContext<IUIGroup>();
   if (!currentGroup) return <></>;
 
   const { uiItemsList, uiGroups, tags, refetchData, dummyPatchForGroup } =
@@ -39,7 +39,7 @@ const AddCommonItem = (): JSX.Element => {
     /** filter them by tag_category of the group */
     const tempTagsToDisplay: ITag[] = tags?.filter(
       (t) =>
-        t.tag_category_id && t.tag_category_id === props.record?.tag_category_id
+        t.tag_category_id && t.tag_category_id === currentGroup?.tag_category_id
     );
 
     return tempTagsToDisplay;
@@ -201,7 +201,7 @@ const AddCommonItem = (): JSX.Element => {
     redirect(
       `create`,
       `/tags?filter=${JSON.stringify({
-        tag_category_id: `%d${props?.record?.tag_category_id}`,
+        tag_category_id: `%d${currentGroup?.tag_category_id}`,
       })}`
     );
 
