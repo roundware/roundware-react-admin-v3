@@ -26,7 +26,7 @@ import {
 import { UiGroupCreate, UiGroupEdit } from "components/UIGroup/index";
 import { UiGroupList } from "components/UIGroup/UIGroupsList";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import { tokenAuthProvider } from "ra-data-roundware-drf";
+
 import React from "react";
 import { Admin, EditGuesser, ListGuesser, Resource } from "react-admin";
 import AssetCreate from "./components/Asset/AssetCreate";
@@ -57,11 +57,43 @@ import {
 } from "components/TimedAsset";
 import { useProjects } from "./providers/ProjectsContext";
 import adminTheme from "./styles";
+import authProvider from "./providers/AuthProvider";
 
-const authProvider = tokenAuthProvider({
-  obtainAuthTokenUrl: `${process.env.REACT_APP_SERVER_URL}/api/2/login/`,
-});
+function App(): JSX.Element {
+  const { selectedProject } = useProjects();
+  const dataProvider = useRoundwareDataProvider();
+  return (
+    <Admin
+      theme={adminTheme}
+      layout={CustomLayout}
+      title="Roundware Admin"
+      dataProvider={dataProvider}
+      authProvider={authProvider}
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      dashboard={selectedProject && Dashboard}
+      // eslint-disable-next-line react/no-children-prop
+      children={[
+        <Resource
+          name="projects"
+          key="projects"
+          list={ProjectList}
+          create={ProjectCreate}
+          edit={ProjectEdit}
+          show={ProjectShow}
+          icon={AccountTree}
+        />,
+        ...(process.env.REACT_APP_INCLUDE_TABS === "all"
+          ? Object.values(resourceLookup)
+          : process.env.REACT_APP_INCLUDE_TABS?.split(`,`)
+              ?.filter((r) => Object.keys(resourceLookup).includes(r))
+              .map((r) => resourceLookup[r]) || []),
+      ]}
+    />
+  );
+}
 
+export default App;
 const resourceLookup: { [index: string]: React.ReactNode } = {
   assets: (
     <Resource
@@ -234,41 +266,3 @@ export const ResourceList = [
         Object.keys(resourceLookup).includes(r)
       ) || []),
 ];
-
-function App(): JSX.Element {
-  const { selectedProject } = useProjects();
-  const dataProvider = useRoundwareDataProvider();
-  return (
-    <Admin
-      theme={adminTheme}
-      layout={CustomLayout}
-      title="Roundware Admin"
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      dataProvider={dataProvider}
-      authProvider={authProvider}
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      dashboard={selectedProject && Dashboard}
-      // eslint-disable-next-line react/no-children-prop
-      children={[
-        <Resource
-          name="projects"
-          key="projects"
-          list={ProjectList}
-          create={ProjectCreate}
-          edit={ProjectEdit}
-          show={ProjectShow}
-          icon={AccountTree}
-        />,
-        ...(process.env.REACT_APP_INCLUDE_TABS === "all"
-          ? Object.values(resourceLookup)
-          : process.env.REACT_APP_INCLUDE_TABS?.split(`,`)
-              ?.filter((r) => Object.keys(resourceLookup).includes(r))
-              .map((r) => resourceLookup[r]) || []),
-      ]}
-    />
-  );
-}
-
-export default App;
