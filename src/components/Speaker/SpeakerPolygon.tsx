@@ -121,7 +121,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
     if (e) console.log(`Polygon edited`);
     setIsCurrentSpeakerSaved(false);
     setDragging(false);
-    let newPath = polygon?.getPath().getArray();
+    const newPath = polygon?.getPath().getArray();
 
     if (Array.isArray(newPath)) {
       const newMultiPolygon = multiPolygon([

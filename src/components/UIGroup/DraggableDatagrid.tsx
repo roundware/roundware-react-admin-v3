@@ -221,38 +221,41 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
   );
 };
 
-const DraggableDatagridRow = React.memo(
-  ({ children, record, id, resource }: DatagridRowProps) => {
-    return (
-      <>
-        <Draggable
-          key={id || ""}
-          draggableId={id?.toString()!}
-          index={record?.index!}
-        >
-          {(provided) => (
-            <TableRow ref={provided.innerRef} {...provided.draggableProps}>
-              {/* first column: selection checkbox */}
-              <TableCell {...provided.dragHandleProps}>
-                <ReorderIcon />
-              </TableCell>
-              {/* data columns based on children */}
-              {React.Children.map(children, (field: any) => (
-                <TableCell key={`${id}-${field?.props?.source}`}>
-                  {React.cloneElement(field!, {
-                    record,
+const DraggableDatagridRow = ({
+  children,
+  record,
+  id,
+  resource,
+}: DatagridRowProps) => {
+  return (
+    <>
+      <Draggable
+        key={id || ""}
+        draggableId={id?.toString()!}
+        index={record?.index!}
+      >
+        {(provided) => (
+          <TableRow ref={provided.innerRef} {...provided.draggableProps}>
+            {/* first column: selection checkbox */}
+            <TableCell {...provided.dragHandleProps}>
+              <ReorderIcon />
+            </TableCell>
+            {/* data columns based on children */}
+            {React.Children.map(children, (field: any) => (
+              <TableCell key={`${id}-${field?.props?.source}`}>
+                {React.cloneElement(field!, {
+                  record,
 
-                    resource,
-                  })}
-                </TableCell>
-              ))}
-            </TableRow>
-          )}
-        </Draggable>
-      </>
-    );
-  }
-);
+                  resource,
+                })}
+              </TableCell>
+            ))}
+          </TableRow>
+        )}
+      </Draggable>
+    </>
+  );
+};
 function capitalizeFirstLetter(string: string) {
   return string?.charAt(0).toUpperCase() + string.slice(1);
 }
