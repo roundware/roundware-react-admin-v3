@@ -11,6 +11,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  TextField,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -35,7 +36,7 @@ import { CenteredLoading } from ".";
 import { ResourceList } from "../../../App";
 
 interface Props {
-  assets: GetListResult<Record> | null;
+  assets: GetListResult<RaRecord> | null;
 }
 
 const mediaTypes = [`audio`, `photo`, `text`];
@@ -250,24 +251,24 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
               <Grid item xs={5}>
                 <DatePicker
                   label="Start Date"
-                  inputVariant="outlined"
                   value={startDate}
                   views={["year", "month", "day"]}
                   onChange={(date) => {
                     // @ts-ignore
                     setStartDate(date);
                   }}
+                  renderInput={(props) => <TextField {...props} />}
                 />
               </Grid>
               <Grid item xs={5}>
                 <DatePicker
                   label="End Date"
-                  inputVariant="outlined"
                   value={endDate}
                   onChange={(date) => {
                     // @ts-ignore
                     setEndDate(date);
                   }}
+                  renderInput={(props) => <TextField {...props} />}
                 />
               </Grid>
             </Grid>

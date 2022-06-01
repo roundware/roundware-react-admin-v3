@@ -168,12 +168,16 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
           .then(() => {
             refetch();
             refetchData();
-            notify(`Changed UI Groups order`, `info`);
+            notify(`Changed UI Groups order`, {
+              type: "info",
+            });
           })
           .catch(() =>
             notify(
               `Couldn't change order. Something went wrong. Please try again.`,
-              `error`
+              {
+                type: "error",
+              }
             )
           )
           .finally(() => setLoading(false))

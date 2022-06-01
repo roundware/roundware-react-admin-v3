@@ -1,26 +1,33 @@
 import React from "react";
-import {
-  fetchJsonWithAuthToken,
-  RoundwareDataProvider,
-} from "ra-data-roundware-drf";
+import { DataProvider, fetchUtils } from "react-admin";
 import { AllowChildrenOnlyProps } from "./ProjectsContext";
-const dataProvider = new RoundwareDataProvider(
+import simpleRestProvider from "ra-data-simple-rest";
+import { createOptionsFromToken } from "./AuthProvider";
+export const dataProvider = simpleRestProvider(
   `${process.env.REACT_APP_SERVER_URL}/api/2`,
-  fetchJsonWithAuthToken
+  (url, options = {}) => {
+    options.user = createOptionsFromToken().user;
+
+    return fetchUtils.fetchJson(url, options);
+  },
+  ""
 );
 
 export const RoundwareDataProviderContext =
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  React.createContext<RoundwareDataProvider>(undefined!);
+  React.createContext<DataProvider>(undefined!);
 
-export const useRoundwareDataProvider = (): RoundwareDataProvider =>
+export const useRoundwareDataProvider = (): DataProvider =>
   React.useContext(RoundwareDataProviderContext);
 
 export const RoundwareDataProviderContextProvider = ({
   children,
 }: AllowChildrenOnlyProps): JSX.Element => {
+  const rDataProvider: DataProvider = {
+    ...dataProvider,
+  };
   return (
-    <RoundwareDataProviderContext.Provider value={dataProvider}>
+    <RoundwareDataProviderContext.Provider value={rDataProvider}>
       {children}
     </RoundwareDataProviderContext.Provider>
   );

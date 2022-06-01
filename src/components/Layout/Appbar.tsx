@@ -2,37 +2,23 @@ import {
   AppBar as MuiAppBar,
   FormControl,
   InputLabel,
+  Link,
   ListSubheader,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Theme,
   Toolbar,
   useMediaQuery,
-  Link,
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import { useProjects } from "providers/ProjectsContext";
-import { AppBarProps, HideOnScroll } from "ra-ui-materialui";
 import React, { memo, useState } from "react";
-import { useRedirect, UserMenu, useUserMenu } from "react-admin";
+import { HideOnScroll, useRedirect, UserMenu, useUserMenu } from "react-admin";
 import { SidebarToggleButton } from "./SidebarToggleButton";
 const AppBar = (): JSX.Element => {
   const props = useUserMenu();
-  const {
-    className,
-    color = "secondary",
-    logout,
 
-    title,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    classes: propsClasses,
-    ...rest
-  } = props;
-  const classes = useStyles(props);
-  const sidebarToggleButtonClasses = {
-    menuButtonIconClosed: classes.menuButtonIconClosed,
-    menuButtonIconOpen: classes.menuButtonIconOpen,
-  };
   const isXSmall = useMediaQuery<Theme>((theme) =>
     theme.breakpoints.down("sm")
   );
@@ -43,8 +29,7 @@ const AppBar = (): JSX.Element => {
   const [isCreate, setIsCreate] = useState(false);
 
   const handleOnChange = (
-    event: React.ChangeEvent<{}>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    event: SelectChangeEvent<string | number>,
     child: React.ReactNode
   ) => {
     setIsCreate(false);
@@ -63,19 +48,10 @@ const AppBar = (): JSX.Element => {
 
   return (
     <HideOnScroll>
-      <MuiAppBar className={className} color={color} {...rest}>
-        <Toolbar
-          disableGutters
-          variant={isXSmall ? "regular" : "dense"}
-          className={classes.toolbar}
-        >
-          <div className={classes.leftContent}>
-            {selectedProject && (
-              <SidebarToggleButton
-                className={classes.menuButton}
-                classes={sidebarToggleButtonClasses}
-              />
-            )}
+      <MuiAppBar color={"secondary"}>
+        <Toolbar disableGutters variant={isXSmall ? "regular" : "dense"}>
+          <div>
+            {selectedProject && <SidebarToggleButton />}
             <Link
               onClick={(e) => {
                 e.preventDefault();
@@ -89,16 +65,13 @@ const AppBar = (): JSX.Element => {
               }}
               underline="hover"
             >
-              {title}
+              Roundware Admin
             </Link>
-            <InputLabel variant="standard" className={classes.label}>
-              Project:{" "}
-            </InputLabel>
-            <FormControl className={classes.formControl}>
+            <InputLabel variant="standard">Project: </InputLabel>
+            <FormControl>
               <Select
                 defaultValue={selectedProject?.id || "none"}
                 id="grouped-select"
-                className={classes.select}
                 value={isCreate ? `create` : selectedProject?.id || "none"}
                 onChange={handleOnChange}
               >

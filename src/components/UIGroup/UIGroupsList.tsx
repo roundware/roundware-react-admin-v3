@@ -108,7 +108,7 @@ const RowActions = (): JSX.Element => {
         <EditButton size="small" label="" />
       </Grid>
       <Grid item>
-        <AddCommonItem {...props} />
+        <AddCommonItem />
       </Grid>
       <Grid item>
         <DeleteUiGroupButton />

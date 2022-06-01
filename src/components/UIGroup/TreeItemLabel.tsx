@@ -49,11 +49,15 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
         previousData: uiItem,
       });
       await dummyPatchForGroup(uiItem.ui_group_id);
-      notify(`Deleted successfully!`, `success`);
+      notify(`Deleted successfully!`, {
+        type: "success",
+      });
       refetchData();
       refresh();
     } catch {
-      notify(`Failed to delete!`, `error`);
+      notify(`Failed to delete!`, {
+        type: "error",
+      });
     } finally {
       setDeleting(false);
       handleCloseConfirm();
@@ -75,12 +79,16 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
         previousData: i,
       });
       await dummyPatchForGroup(uiItem.ui_group_id);
-      notify(`Updated successfully!`, `success`);
+      notify(`Updated successfully!`, {
+        type: "success",
+      });
       refetchData();
       refresh();
     } catch {
       setUpdating(true);
-      notify(`Failed to update!`, `error`);
+      notify(`Failed to update!`, {
+        type: "error",
+      });
     }
   };
 
@@ -170,9 +178,13 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
       await dummyPatchForGroup(nestedGroup.id);
       refetchData();
       refresh();
-      notify(`Successfully nested item.`, `success`);
+      notify(`Successfully nested item.`, {
+        type: "success",
+      });
     } catch {
-      notify(`Sorry, something went wrong. Please try again.`, `error`);
+      notify(`Sorry, something went wrong. Please try again.`, {
+        type: "error",
+      });
     } finally {
       setLoadingTags(false);
     }
@@ -244,7 +256,10 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
                           </Typography>
                         </Grid>
                         <Grid item>
-                          <IconButton onClick={handleCloseNestDialog} size="large">
+                          <IconButton
+                            onClick={handleCloseNestDialog}
+                            size="large"
+                          >
                             <CloseIcon />
                           </IconButton>
                         </Grid>

@@ -4,6 +4,7 @@ import {
   IconButton,
   Slider,
   Tooltip,
+  SliderProps,
 } from "@mui/material";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -118,10 +119,9 @@ const SpeakerAudioPlayer = ({
     }
   }, [currentVolume]);
 
-  const handleOnZoom = (
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    event: React.ChangeEvent<{}>,
-    value: number | number[]
+  const handleOnZoom: SliderProps<typeof Slider>[`onChange`] = (
+    event,
+    value
   ) => {
     if (wavesurferRef?.current && event && !Array.isArray(value)) {
       wavesurferRef.current?.zoom(value * (value / 10));
@@ -178,14 +178,20 @@ const SpeakerAudioPlayer = ({
               <>
                 <Grid item>
                   <Tooltip title="Play at Min Volume">
-                    <IconButton onClick={() => setCurrentVolume(minvolume)} size="large">
+                    <IconButton
+                      onClick={() => setCurrentVolume(minvolume)}
+                      size="large"
+                    >
                       <VolumeDown />
                     </IconButton>
                   </Tooltip>
                 </Grid>
                 <Grid item>
                   <Tooltip title="Play at Max Volume">
-                    <IconButton onClick={() => setCurrentVolume(maxvolume)} size="large">
+                    <IconButton
+                      onClick={() => setCurrentVolume(maxvolume)}
+                      size="large"
+                    >
                       <VolumeUp />
                     </IconButton>
                   </Tooltip>

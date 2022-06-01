@@ -1,10 +1,9 @@
 import * as React from "react";
-import { IconButton, Tooltip } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import { IconButton, Theme, Tooltip } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useTranslate } from "ra-core";
 import { useToggleSidebar } from "./useToggleSidebar";
-import { ClassesOverride } from "react-admin";
 
 /**
  * A button that toggles the sidebar. Used by default in the <AppBar>.
@@ -27,9 +26,10 @@ export const SidebarToggleButton = (props: SidebarToggleButtonProps) => {
     >
       <IconButton
         color="inherit"
-        onClick={() => toggleSidebar()}
+        onClick={() => toggleSidebar(!open)}
         className={className}
-        size="large">
+        size="large"
+      >
         <MenuIcon
           classes={{
             root: open
@@ -43,7 +43,7 @@ export const SidebarToggleButton = (props: SidebarToggleButtonProps) => {
 };
 
 const useStyles = makeStyles(
-  (theme) => ({
+  (theme: Theme) => ({
     menuButtonIconClosed: {
       transition: theme.transitions.create(["transform"], {
         easing: theme.transitions.easing.sharp,
@@ -64,5 +64,4 @@ const useStyles = makeStyles(
 
 export type SidebarToggleButtonProps = {
   className?: string;
-  classes?: ClassesOverride<typeof useStyles>;
 };

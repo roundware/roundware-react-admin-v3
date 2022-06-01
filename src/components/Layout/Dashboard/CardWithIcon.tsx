@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Box, Card, Divider, Typography } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import { Box, Card, Divider, Theme, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
 import { createElement, FC, ReactNode } from "react";
 import { useRedirect } from "react-admin";
@@ -14,7 +14,7 @@ interface Props {
   bgColor?: string;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   card: {
     minHeight: 52,
     display: "flex",
@@ -54,8 +54,7 @@ const CardWithIcon = (props: Props): JSX.Element => {
   const redirect = useRedirect();
 
   const handleClick = () => {
-    if (!to) return;
-    redirect(to);
+    if (to && typeof to == "string") redirect(to);
   };
   return (
     <Card className={classes.card} style={{ backgroundColor: bgColor }}>

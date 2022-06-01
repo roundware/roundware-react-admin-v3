@@ -22,12 +22,13 @@ import {
   useRedirect,
   useRefresh,
   RaRecord,
+  useRecordContext,
 } from "react-admin";
 import { ITag } from "types/tags";
 import { IUIItems, UiItemNode } from "types/uiGroups";
-const AddCommonItem = (props: DatagridRowProps): JSX.Element => {
+const AddCommonItem = (): JSX.Element => {
   /**  selected group */
-  const currentGroup = props.record;
+  const currentGroup = useRecordContext();
   if (!currentGroup) return <></>;
 
   const { uiItemsList, uiGroups, tags, refetchData, dummyPatchForGroup } =

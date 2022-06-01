@@ -7,14 +7,11 @@ import { FileField, FileInput } from "react-admin";
 import AudioEdit from "./AudioPlayerField/AudioEdit";
 import useFieldValue from "hooks/useFieldValue";
 import { IAsset } from "types/asset";
+type FileType2 = {
+  src: string;
+};
 export const FileEdit = (): JSX.Element => {
-  const [value, setFile] = useFieldValue<
-    | string
-    | {
-        src: string;
-      }
-    | null
-  >(`file`);
+  const [value, setFile] = useFieldValue<string | FileType2 | null>(`file`);
   const handleDelete = () => setFile(null);
 
   const [mediaType] = useFieldValue<IAsset[`media_type`]>(`media_type`);
@@ -58,7 +55,7 @@ export const FileEdit = (): JSX.Element => {
                 height="300px"
                 width="300px"
                 style={{ objectFit: "contain" }}
-                src={value?.src ? value.src : value}
+                src={typeof value == "string" ? value : value?.src}
               />
             </>
           )}

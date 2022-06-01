@@ -14,6 +14,7 @@ import {
   Checkbox,
   FormControlLabel,
   CircularProgress,
+  TextField,
 } from "@mui/material";
 import {
   format,
@@ -208,8 +209,6 @@ const ListenEventsChart = ({ events }: Props) => {
               <Grid item xs={5}>
                 <DatePicker
                   label="Start Date"
-                  variant="inline"
-                  inputVariant="outlined"
                   value={startDate}
                   views={["year", "month", "day"]}
                   onChange={(date) => {
@@ -217,19 +216,19 @@ const ListenEventsChart = ({ events }: Props) => {
                     // @ts-ignore
                     setStartDate(date);
                   }}
+                  renderInput={(p) => <TextField {...p} />}
                 />
               </Grid>
               <Grid item xs={5}>
                 <DatePicker
                   label="End Date"
-                  variant="inline"
-                  inputVariant="outlined"
                   value={endDate}
                   onChange={(date) => {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     setEndDate(date);
                   }}
+                  renderInput={(p) => <TextField {...p} />}
                 />
               </Grid>
             </Grid>
