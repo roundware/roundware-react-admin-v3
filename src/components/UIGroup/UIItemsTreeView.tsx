@@ -228,11 +228,17 @@ const UIItemsTreeView = (): JSX.Element => {
     Promise.all(promises)
       .then(() => dummyPatchForGroup(draggedItem.ui_group_id))
       .then(() => refetchData())
-      .then(() => notify(`Changed UI Items order`, `info`))
+      .then(() =>
+        notify(`Changed UI Items order`, {
+          type: "info",
+        })
+      )
       .catch(() =>
         notify(
           `Couldn't change order. Something went wrong. Please try again.`,
-          `error`
+          {
+            type: "error",
+          }
         )
       )
       .finally(() => setReorderingGroup(undefined));
