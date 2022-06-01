@@ -1,30 +1,26 @@
+import { Box } from "@mui/material";
+import { useBuildUI } from "providers/BuildUIContext";
+import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import React from "react";
 import {
-  CreateProps,
-  ListProps,
-  EditProps,
-  List,
   Create,
-  Edit,
   Datagrid,
-  SimpleForm,
-  TextInput,
+  DeleteButton,
+  Edit,
+  EditButton,
+  List,
+  RaRecord,
+  ReferenceField,
   ReferenceInput,
   SelectInput,
+  SimpleForm,
   TextField,
-  ReferenceField,
-  Record,
+  TextInput,
   useRefresh,
-  EditButton,
-  DeleteButton,
-  RaRecord,
 } from "react-admin";
-import TranslatableField from "./common/TranslatableField";
 import { ITag } from "types/tags";
-import { Box } from "@mui/material";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import { handleLocalizedStrings } from "utils";
-import { useBuildUI } from "providers/BuildUIContext";
+import TranslatableField from "./common/TranslatableField";
 
 export const TagList = (): JSX.Element => {
   return (
