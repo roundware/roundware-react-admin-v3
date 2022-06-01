@@ -14,10 +14,10 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { DatePicker } from "@material-ui/pickers";
+import { DatePicker } from "@mui/lab";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
 import React, { useEffect, useState } from "react";
-import { GetListResult, Record, useRedirect } from "react-admin";
+import { GetListResult, RaRecord, useRedirect } from "react-admin";
 import {
   Bar,
   Brush,
@@ -250,10 +250,9 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
               <Grid item xs={5}>
                 <DatePicker
                   label="Start Date"
-                  variant="inline"
                   inputVariant="outlined"
                   value={startDate}
-                  views={["year", "month", "date"]}
+                  views={["year", "month", "day"]}
                   onChange={(date) => {
                     // @ts-ignore
                     setStartDate(date);
@@ -263,7 +262,6 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
               <Grid item xs={5}>
                 <DatePicker
                   label="End Date"
-                  variant="inline"
                   inputVariant="outlined"
                   value={endDate}
                   onChange={(date) => {

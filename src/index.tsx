@@ -1,16 +1,17 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
-import { ProjectsProvider } from "./providers/ProjectsContext";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+import { LocalizationProvider } from "@mui/lab";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import { BuildUIContextProvider } from "providers/BuildUIContext";
 import { RoundwareDataProviderContextProvider } from "providers/DataProviderContext";
 import { SpeakersProvider } from "providers/SpeakersContext";
-import { BuildUIContextProvider } from "providers/BuildUIContext";
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+import "./index.css";
+import { ProjectsProvider } from "./providers/ProjectsContext";
+
 ReactDOM.render(
   <React.StrictMode>
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
       <RoundwareDataProviderContextProvider>
         <ProjectsProvider>
           <SpeakersProvider>
@@ -20,7 +21,7 @@ ReactDOM.render(
           </SpeakersProvider>
         </ProjectsProvider>
       </RoundwareDataProviderContextProvider>
-    </MuiPickersUtilsProvider>
+    </LocalizationProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
