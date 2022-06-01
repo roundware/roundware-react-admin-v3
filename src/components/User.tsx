@@ -32,16 +32,15 @@ export const UserList = (): JSX.Element => {
 
 export const UserEdit = (): JSX.Element => {
   return (
-    <Edit>
-      <SimpleForm
-        warnWhenUnsavedChanges
-        transform={(r: RaRecord) => {
-          if (!r.device_id) {
-            delete r.device_id;
-          }
-          return r;
-        }}
-      >
+    <Edit
+      transform={(r: RaRecord) => {
+        if (!r.device_id) {
+          delete r.device_id;
+        }
+        return r;
+      }}
+    >
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" disabled />
         <TextInput source="username" />
         <TextInput source="fist_name" />
@@ -56,16 +55,15 @@ export const UserEdit = (): JSX.Element => {
 
 export const UserCreate = (): JSX.Element => {
   return (
-    <Create>
-      <SimpleForm
-        transform={(r: RaRecord) => {
-          if (!r.device_id) {
-            delete r.device_id;
-          }
-          return r;
-        }}
-        warnWhenUnsavedChanges
-      >
+    <Create
+      transform={(r: RaRecord) => {
+        if (!r.device_id) {
+          delete r.device_id;
+        }
+        return r;
+      }}
+    >
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="username" />
         <TextInput source="first_name" />
         <TextInput source="last_name" />
