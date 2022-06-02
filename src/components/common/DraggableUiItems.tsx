@@ -35,7 +35,6 @@ const DraggableUiItems = (): JSX.Element => {
 
   const onDragEnd: OnDragEndResponder = (result, provided) => {
     const { source, destination } = result;
-    console.log(provided, result);
 
     if (!destination?.index) return;
 

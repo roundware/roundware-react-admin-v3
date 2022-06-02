@@ -24,7 +24,6 @@ const ProjectList = (): JSX.Element => {
       pagination={false}
       queryOptions={{
         onSuccess: (data) => {
-          console.log(`projec list`, data);
           setProjectsList(data.data);
         },
       }}
@@ -46,7 +45,7 @@ const ProjectCardWrapper = ({ children }: { children: React.ReactNode }) => {
 };
 const ProjectCard = () => {
   const record = useRecordContext();
-  console.log(`record`, record);
+
   const redirect = useRedirect();
   const classes = useCardStyles();
   const { selectProject, setProjectsList, projectsList } = useProjects();

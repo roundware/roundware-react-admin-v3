@@ -85,7 +85,6 @@ export const getSpeakerGeoJSONObjectsForPath = (
   attenuation_border: LineString | MultiLineString;
   boundary: MultiLineString;
 } => {
-  console.log(`path before sani`, p);
   const path: Position[] = [];
   for (let i = 0; i < p.length; i++) {
     const prev = p[i - 1];
@@ -98,7 +97,6 @@ export const getSpeakerGeoJSONObjectsForPath = (
   if (!isEqual(path[0], path[path.length - 1])) {
     path.push(path[0]);
   }
-  console.log(`path after sani`, path);
 
   /** get multipolygon with single polygon forom the path */
   const shape = multiPolygon([[path]]).geometry;

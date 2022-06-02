@@ -106,7 +106,7 @@ const getRecordingsPerDay = (assets: IAsset[], range: Date[]) => {
       ...val,
     });
   });
-  console.log(chartData);
+
   return chartData.sort((s1, s2) =>
     (s1?.date || 0) > (s2?.date || 0) ? 1 : -1
   );
@@ -149,7 +149,6 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
 
     const leastDate = subDays(new Date(), Number(value));
     setRange([leastDate, new Date()]);
-    // console.log(range);
   };
 
   useEffect(() => {

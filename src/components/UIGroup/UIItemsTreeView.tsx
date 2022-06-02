@@ -177,8 +177,6 @@ const UIItemsTreeView = (): JSX.Element => {
     const movedDirection =
       destination!.index - source.index < 0 ? `up` : `down`;
 
-    console.log(movedDirection);
-
     // promises of dataProvider calls
     const promises: Promise<UpdateResult<RaRecord>>[] = [];
 
@@ -253,7 +251,7 @@ const UIItemsTreeView = (): JSX.Element => {
       collapseItem(i.id);
     });
   };
-  console.log(`ui items`, uiItemsTree);
+  
   return (
     <Grid container spacing={3} direction="column">
       <Grid item xs={12} alignItems="center">

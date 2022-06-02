@@ -100,8 +100,6 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
     const movedDirection =
       destination!.index - source.index < 0 ? `up` : `down`;
 
-    console.log(movedDirection);
-
     // promises of dataProvider calls
     const promises: Promise<UpdateResult<RaRecord>>[] = [];
     const deletePromises: Promise<void | DeleteResult<RaRecord>>[] = [];
@@ -134,7 +132,7 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
       /** if its affected  */
       if (typeof newIndex == "number") {
         /** 1. update its index to new index */
-        console.log(g.index, `changed to`, newIndex);
+        console.info(g.index, `changed to`, newIndex);
         const prom = dataProvider.update(`uigroups`, {
           data: {
             index: newIndex,
@@ -161,14 +159,14 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
           id: i.id,
           previousData: i,
         })
-        .catch(() => console.log(`its ok to be not found`));
+        .catch(() => {});
       deletePromises.push(deleteProm);
     });
 
     // resolve all prmises
     setLoading(true);
     Promise.all(deletePromises)
-      .catch(() => console.log(`its ok to be not found`))
+      .catch(() => {})
       .finally(() =>
         Promise.all(promises)
           .then(() => {

@@ -131,9 +131,8 @@ const Dashboard = (): JSX.Element => {
     const controller = new AbortController();
     try {
       updateData(controller.signal);
-      console.log(`Refetching`);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
     return () => controller.abort();
   }, [selectedProject]);

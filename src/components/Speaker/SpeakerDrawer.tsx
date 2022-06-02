@@ -64,7 +64,6 @@ const SpeakerDrawer = (): JSX.Element | null => {
 
   /** calculate paths from given circle */
   const getPathsFromCircle = (circle: google.maps.Circle) => {
-    console.log(`calculating path for circle`);
     const numPts = 64;
     const path: google.maps.LatLng[] = [];
     for (let i = 0; i < numPts; i++) {
@@ -102,7 +101,6 @@ const SpeakerDrawer = (): JSX.Element | null => {
 
   /** gets path from given polygon */
   const getPathFromPolygon = (polygon: google.maps.Polygon) => {
-    console.log(`Shape updated`);
     setDrawnPaths(googleMapPathToGeoJSONPath(polygon.getPath().getArray()));
   };
 

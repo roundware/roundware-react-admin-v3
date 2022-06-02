@@ -113,7 +113,6 @@ const SessionsChart = ({ sessions }: Props) => {
 
     const leastDate = subDays(new Date(), Number(value));
     setRange([leastDate, new Date()]);
-    // console.log(range);
   };
 
   useEffect(() => {

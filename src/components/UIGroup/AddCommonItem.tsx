@@ -101,7 +101,6 @@ const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
   const handleOnChange = async (t: ITag, checked: boolean) => {
     try {
       setLoadingOn(t.id);
-      console.log(t, checked);
 
       if (checked) {
         const itemsToBeCreated: Omit<IUIItems, "id">[] = [];
@@ -154,7 +153,6 @@ const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
         /**resolve all create requests */
         await Promise.all(promises);
       } else {
-        console.log(`delete`);
         /** need to delete on unselect */
         const itemsIdsToBeDeleted = currentGroupItems?.reduce<number[]>(
           (acc, crr) => {

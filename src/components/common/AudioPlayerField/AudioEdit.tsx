@@ -79,14 +79,6 @@ const AudioEditField = ({
         wavesurferRef.current.on("loading", (p: number) => {
           setProgress(p);
         });
-
-        // wavesurferRef.current.on("region-removed", (region) => {
-        //   console.log("region-removed --> ", region);
-        // });
-
-        // wavesurferRef.current.on("loading", (data) => {
-        //   console.log("loading --> ", data);
-        // });
       }
     },
     [value]
@@ -139,7 +131,6 @@ const AudioEditField = ({
   }, [volume]);
 
   const onRangeUpdate = ({ start, end }: any) => {
-    console.log(start, end);
     changeStartTime(Number(start?.toFixed(2)));
     changeEndTime(Number(end?.toFixed(2)));
   };

@@ -80,14 +80,6 @@ const AudioPlayerField = ({
         wavesurferRef.current.on("loading", (n: number) => {
           setProgress(n);
         });
-
-        // wavesurferRef.current.on("region-removed", (region) => {
-        //   console.log("region-removed --> ", region);
-        // });
-
-        // wavesurferRef.current.on("loading", (data) => {
-        //   console.log("loading --> ", data);
-        // });
       }
     },
     [file]

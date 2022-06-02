@@ -94,7 +94,6 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
     if (!shape) return null;
     let polygon;
     try {
-      console.log(shape.coordinates);
       polygon = buffer(shape, -distance, {
         units: "meters",
       });
@@ -118,7 +117,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
 
   const handleDragStart = () => setDragging(true);
   const updatePolygon = (e: google.maps.MapMouseEvent) => {
-    if (e) console.log(`Polygon edited`);
+    if (e) console.info(`Polygon edited`);
     setIsCurrentSpeakerSaved(false);
     setDragging(false);
     const newPath = polygon?.getPath().getArray();
