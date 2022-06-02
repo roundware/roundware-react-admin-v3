@@ -5,7 +5,6 @@ import {
   Build,
   Email,
   Event,
-  FeaturedPlayList,
   Hearing,
   Label,
   Language,
@@ -15,6 +14,11 @@ import {
   Translate,
   WebAsset,
 } from "@mui/icons-material";
+import {
+  AudioTrackCreate,
+  AudioTrackEdit,
+  AudioTrackList,
+} from "components/AudioTrack";
 import { SpeakerCreate, SpeakerEdit } from "components/Speaker";
 import SpeakerList from "components/Speaker/SpeakerList";
 import { TagCreate, TagEdit, TagList } from "components/Tag";
@@ -23,10 +27,15 @@ import {
   TagCategoryEdit,
   TagCategoryList,
 } from "components/TagCategory";
+import {
+  TimedAssetCreate,
+  TimedAssetEdit,
+  TimedAssetList,
+} from "components/TimedAsset";
 import { UiGroupCreate, UiGroupEdit } from "components/UIGroup/index";
 import { UiGroupList } from "components/UIGroup/UIGroupsList";
+import { UserCreate, UserEdit, UserList } from "components/User";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
-
 import React from "react";
 import { Admin, EditGuesser, ListGuesser, Resource } from "react-admin";
 import AssetCreate from "./components/Asset/AssetCreate";
@@ -44,20 +53,9 @@ import ProjectEdit from "./components/Project/ProjectEdit";
 import ProjectList from "./components/Project/ProjectList";
 import ProjectShow from "./components/Project/ProjectShow";
 import { SessionCreate, SessionEdit, SessionList } from "./components/Session";
-import {
-  AudioTrackList,
-  AudioTrackEdit,
-  AudioTrackCreate,
-} from "components/AudioTrack";
-import { UserList, UserCreate, UserEdit } from "components/User";
-import {
-  TimedAssetList,
-  TimedAssetCreate,
-  TimedAssetEdit,
-} from "components/TimedAsset";
+import authProvider from "./providers/AuthProvider";
 import { useProjects } from "./providers/ProjectsContext";
 import adminTheme from "./styles";
-import authProvider from "./providers/AuthProvider";
 
 function App(): JSX.Element {
   const { selectedProject } = useProjects();

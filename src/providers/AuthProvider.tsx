@@ -1,8 +1,4 @@
-import { AuthProvider } from "react-admin";
-
-export interface Options {
-  obtainAuthTokenUrl?: string;
-}
+import { AuthProvider, Options } from "react-admin";
 
 const opts = {
   obtainAuthTokenUrl: `${process.env.REACT_APP_SERVER_URL}/api/2/login/`,
@@ -46,7 +42,7 @@ const tokenAuthProvider: AuthProvider = {
   },
 };
 
-export function createOptionsFromToken() {
+export function createOptionsFromToken(): Options {
   const token = localStorage.getItem("token");
   if (!token) {
     return {};

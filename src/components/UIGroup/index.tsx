@@ -8,9 +8,7 @@ import React, { useMemo } from "react";
 import {
   BooleanInput,
   Create,
-  CreateProps,
   Edit,
-  EditProps,
   NumberInput,
   RadioButtonGroupInput,
   RaRecord,
@@ -22,7 +20,7 @@ import {
   useRedirect,
   useRefresh,
 } from "react-admin";
-import { IUIGroup } from "types/uiGroups";
+import { IUIGroup, IUIItems } from "types/uiGroups";
 import { handleLocalizedStrings } from "utils";
 import UiModeField from "./UiModeField";
 
@@ -30,15 +28,20 @@ export const UiGroupEdit = (): JSX.Element => {
   const { refetchData } = useBuildUI();
   const dataProvider = useRoundwareDataProvider();
   const transform = async (record: RaRecord): Promise<RaRecord> => {
-    const r = record as Omit<Partial<IUIGroup>, `header_text_loc`> & {
+    const r = record as Omit<
+      Partial<IUIGroup>,
+      `header_text_loc` | `ui_items`
+    > & {
       header_text_loc: number[];
       ui_items: number[];
     };
-    const promises: Promise<UpdateResult<RaRecord>>[] = [];
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    r.ui_items = r?.ui_items?.map((i) => i.id) || [];
+    r.ui_items =
+      r?.ui_items?.map(
+        (i) =>
+          // @ts-ignore
+          i.id
+      ) || [];
 
     if (r.header_text_loc_admin?.length)
       r.header_text_loc = await handleLocalizedStrings(

@@ -18,9 +18,6 @@ const ProjectList = (): JSX.Element => {
   const { setProjectsList } = useProjects();
   return (
     <List
-      hasCreate={false}
-      hasEdit={false}
-      hasShow
       pagination={false}
       queryOptions={{
         onSuccess: (data) => {

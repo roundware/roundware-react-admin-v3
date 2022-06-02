@@ -13,24 +13,24 @@ interface Props {
   onSelect: (lat: number, lng: number) => void;
 }
 
-export default function PlacesAutoComplete({ onSelect }: Props) {
+const PlacesAutoComplete = ({ onSelect }: Props): JSX.Element => {
   const classes = useStyles();
-  const [value, setValue] = React.useState<PlaceType | null>(null);
+  const [value, setValue] =
+    React.useState<google.maps.places.AutocompletePrediction | null>(null);
   const [inputValue, setInputValue] = React.useState("");
   const [options, setOptions] = React.useState<PlaceType[]>([]);
-  const loaded = React.useRef(true);
 
   const fetch = React.useMemo(
     () =>
       throttle(
         (
           request: { input: string },
-          callback: (results?: PlaceType[]) => void
+          callback: (
+            a: google.maps.places.AutocompletePrediction[] | null,
+            b: google.maps.places.PlacesServiceStatus
+          ) => void
         ) => {
-          (autocompleteService.current as any).getPlacePredictions(
-            request,
-            callback
-          );
+          autocompleteService.current?.getPlacePredictions(request, callback);
         },
         200
       ),
@@ -40,10 +40,9 @@ export default function PlacesAutoComplete({ onSelect }: Props) {
   React.useEffect(() => {
     let active = true;
 
-    if (!autocompleteService.current && (window as any).google) {
-      autocompleteService.current = new (
-        window as any
-      ).google.maps.places.AutocompleteService();
+    if (!autocompleteService.current && window.google) {
+      autocompleteService.current =
+        new window.google.maps.places.AutocompleteService();
     }
     if (!autocompleteService.current) {
       return undefined;
@@ -54,21 +53,24 @@ export default function PlacesAutoComplete({ onSelect }: Props) {
       return undefined;
     }
 
-    fetch({ input: inputValue }, (results?: PlaceType[]) => {
-      if (active) {
-        let newOptions = [] as PlaceType[];
+    fetch(
+      { input: inputValue },
+      (results: google.maps.places.AutocompletePrediction[] | null) => {
+        if (active) {
+          let newOptions: google.maps.places.AutocompletePrediction[] = [];
 
-        if (value) {
-          newOptions = [value];
+          if (value) {
+            newOptions = [value];
+          }
+
+          if (results) {
+            newOptions = [...newOptions, ...results];
+          }
+
+          setOptions(newOptions);
         }
-
-        if (results) {
-          newOptions = [...newOptions, ...results];
-        }
-
-        setOptions(newOptions);
       }
-    });
+    );
 
     return () => {
       active = false;
@@ -88,7 +90,7 @@ export default function PlacesAutoComplete({ onSelect }: Props) {
       includeInputInList
       filterSelectedOptions
       value={value}
-      onChange={(event: any, newValue: PlaceType | null) => {
+      onChange={(_e, newValue: PlaceType | null) => {
         setOptions(newValue ? [newValue, ...options] : options);
         setValue(newValue);
         if (!newValue) return;
@@ -120,10 +122,7 @@ export default function PlacesAutoComplete({ onSelect }: Props) {
           option.structured_formatting.main_text_matched_substrings;
         const parts = parse(
           option.structured_formatting.main_text,
-          matches.map((match: any) => [
-            match.offset,
-            match.offset + match.length,
-          ])
+          matches.map((match) => [match.offset, match.offset + match.length])
         );
 
         return (
@@ -149,8 +148,10 @@ export default function PlacesAutoComplete({ onSelect }: Props) {
       }}
     />
   );
-}
-const autocompleteService = { current: null };
+};
+const autocompleteService: {
+  current: null | google.maps.places.AutocompleteService;
+} = { current: null };
 
 const useStyles = makeStyles((theme: Theme) => ({
   icon: {
@@ -159,17 +160,5 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface PlaceType {
-  description: string;
-  place_id: string;
-  structured_formatting: {
-    main_text: string;
-    secondary_text: string;
-    main_text_matched_substrings: [
-      {
-        offset: number;
-        length: number;
-      }
-    ];
-  };
-}
+type PlaceType = google.maps.places.AutocompletePrediction;
+export default PlacesAutoComplete;

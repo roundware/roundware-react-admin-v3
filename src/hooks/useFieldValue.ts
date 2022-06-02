@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 const useFieldValue = <T>(
@@ -7,6 +8,10 @@ const useFieldValue = <T>(
   const ctx = useFormContext();
   const value: T = ctx.watch(fieldName);
   const setValue = (newValue: T) => ctx.setValue(fieldName, newValue);
+  useEffect(() => {
+    if (typeof value == "undefined" && defaultValue) setValue(defaultValue);
+  }, [value]);
+
   return [value, setValue];
 };
 

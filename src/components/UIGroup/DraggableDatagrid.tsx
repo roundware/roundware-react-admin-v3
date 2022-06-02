@@ -159,14 +159,14 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
           id: i.id,
           previousData: i,
         })
-        .catch(() => {});
+        .catch((e) => console.error(e));
       deletePromises.push(deleteProm);
     });
 
     // resolve all prmises
     setLoading(true);
     Promise.all(deletePromises)
-      .catch(() => {})
+      .catch((e) => console.error(e))
       .finally(() =>
         Promise.all(promises)
           .then(() => {

@@ -60,18 +60,16 @@ const AudioPlayerField = ({
   const [loading, setLoading] = useState(true);
 
   const [progress, setProgress] = useState(0);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const wavesurferRef = React.useRef<any>();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+  const wavesurferRef = React.useRef<WaveSurfer>();
+
   const handleMount = React.useCallback(
-    (waveSurfer: any) => {
+    (waveSurfer: WaveSurfer) => {
       wavesurferRef.current = waveSurfer;
       if (wavesurferRef.current) {
         if (file) {
           wavesurferRef.current.load(file);
         }
-
-        // wavesurferRef.current.on("region-created", regionCreatedHandler);
 
         wavesurferRef.current.on("ready", () => {
           setLoading(false);
@@ -87,11 +85,12 @@ const AudioPlayerField = ({
 
   const [playing, setPlaying] = useState(false);
   const handlePlay = () => {
+    if (!wavesurferRef.current) return;
     if (playing) {
       setPlaying(false);
-      return wavesurferRef.current.pause();
+      return wavesurferRef.current?.pause();
     }
-    const region = Object.values(wavesurferRef.current.regions.list)[0];
+    const region = Object.values(wavesurferRef.current?.regions.list || {})[0];
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     region.play();

@@ -10,7 +10,7 @@ import useFieldValue from "hooks/useFieldValue";
 import React, { useState } from "react";
 import { NumberInput, ReferenceInput } from "react-admin";
 
-const EnvelopeIdSelector = () => {
+const EnvelopeIdSelector = (): JSX.Element => {
   const [envelope_ids, setEnvelope_ids] = useFieldValue(`envelope_ids`);
 
   const [mode, setMode] = useState<`manual` | `createNew`>(
