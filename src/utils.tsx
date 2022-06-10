@@ -9,6 +9,7 @@ export const handleLocalizedStrings = async (
   messages: LocalizedString[],
   dataProvider: DataProvider
 ): Promise<number[]> => {
+  if (!messages) return [];
   // update, delete or create the localized string
   // if empty text then just delete
   // if no id then create

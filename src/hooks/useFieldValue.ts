@@ -12,8 +12,9 @@ const useFieldValue = <T>(
       shouldDirty: true,
     });
   useEffect(() => {
-    if (typeof value == "undefined" && typeof defaultValue != "undefined")
-      setValue(defaultValue);
+    if (typeof value == "undefined" && typeof defaultValue != "undefined") {
+      ctx.setValue(fieldName, defaultValue);
+    }
   }, [value]);
 
   const rV = (typeof value == "undefined" ? defaultValue : value) as T;
