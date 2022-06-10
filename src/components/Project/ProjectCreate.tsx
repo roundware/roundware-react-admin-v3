@@ -3,7 +3,7 @@ import CardBox from "components/common/CardBox";
 import LocationSelector from "components/common/LocationSelector";
 import TranslatableField from "components/common/TranslatableField";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import { useProjects } from "providers/ProjectsContext";
+import { IProject, useProjects } from "providers/ProjectsContext";
 import React from "react";
 import {
   BooleanInput,
@@ -48,9 +48,10 @@ const ProjectCreate = (): JSX.Element => {
     <Create
       title="Create a new project"
       mutationOptions={{
-        onSuccess: () => {
-          pc.refetch();
-          redirect(`/dashboard`);
+        onSuccess: (data: IProject) => {
+          pc.refetch()
+            .then(() => pc.selectProject(data))
+            .then(() => redirect(`/`));
         },
       }}
       transform={transform}

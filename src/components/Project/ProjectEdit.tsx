@@ -55,7 +55,7 @@ const ProjectEdit = (): JSX.Element => {
       mutationOptions={{
         onSuccess: () => {
           setWarn(false);
-          pc.refetch().then(() => redirect(`/dashboard`));
+          pc.refetch().then(() => redirect(`/`));
         },
       }}
       queryOptions={{}}

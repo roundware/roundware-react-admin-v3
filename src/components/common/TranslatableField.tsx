@@ -69,6 +69,7 @@ const TranslatableField = ({
         label={label}
         disabled
         variant="outlined"
+        fullWidth
         helperText="Please add languages to this project to enable this field."
       />
     );
