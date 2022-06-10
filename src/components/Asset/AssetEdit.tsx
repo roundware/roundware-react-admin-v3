@@ -29,11 +29,12 @@ const AssetEdit = (): JSX.Element => {
   const dataProvider = useDataProvider();
   const record = useRecordContext();
   useEffect(() => {
+    if (!record) return;
     // revalidate to get the localized strings
     dataProvider
       .getOneJson(`assets`, record.id!, { admin: 1 }, true)
       .then(() => editControl.refetch());
-  }, []);
+  }, [record?.id]);
 
   const transform = async (data: Partial<IAsset>) => {
     if (!data.file) {
