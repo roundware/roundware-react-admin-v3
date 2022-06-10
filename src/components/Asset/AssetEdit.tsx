@@ -116,7 +116,7 @@ const AssetEdit = (): JSX.Element => {
       title="Edit an asset"
       // @ts-ignore
       transform={transform}
-      mutationMode="optimistic"
+      mutationMode="pessimistic"
       mutationOptions={{
         onSuccess: () => redirect(`list`, `/assets`),
       }}

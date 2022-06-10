@@ -3,6 +3,7 @@ import CardBox from "components/common/CardBox";
 import LocationSelector from "components/common/LocationSelector";
 import TranslatableField from "components/common/TranslatableField";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import { useProjects } from "providers/ProjectsContext";
 import React from "react";
 import {
   BooleanInput,
@@ -30,25 +31,27 @@ const ProjectCreate = (): JSX.Element => {
       `out_of_range_message_loc`,
       `legal_agreement_loc`,
       `demo_stream_message_loc`,
+      `description_loc`,
     ];
 
-    const promises = fields.map((f) => {
-      return async () => {
-        data[f] = await handleLocalizedStrings(
-          data[f + "_admin"],
-          dataProvider
-        );
-      };
-    });
+    const promises = fields.map((f) =>
+      handleLocalizedStrings(data[f + "_admin"], dataProvider).then(
+        (ids) => (data[f] = ids)
+      )
+    );
 
     await Promise.all(promises);
     return data;
   };
+  const pc = useProjects();
   return (
     <Create
       title="Create a new project"
       mutationOptions={{
-        onSuccess: () => redirect(`list`, `/projects`),
+        onSuccess: () => {
+          pc.refetch();
+          redirect(`/dashboard`);
+        },
       }}
       transform={transform}
     >
@@ -61,7 +64,21 @@ const ProjectCreate = (): JSX.Element => {
             // validate={required()}
             required
           />
-          <TextInput multiline source="description" fullWidth />
+          <ReferenceArrayInput
+            source="language_ids"
+            reference="languages"
+            label="Languages"
+            validate={required()}
+            fullWidth
+            helperText="Projects can have multiple Languages assigned to them"
+          >
+            <SelectArrayInput optionText="name" />
+          </ReferenceArrayInput>
+          <TranslatableField
+            label="Description"
+            fromProject
+            source="description_loc_admin"
+          />
           {/* <NumberInput source="latitude" validate={required()} /> */}
           {/* <NumberInput source="longitude" validate={required()} /> */}
           <LocationSelector
@@ -79,16 +96,7 @@ const ProjectCreate = (): JSX.Element => {
             required
             fullWidth
           />
-          <ReferenceArrayInput
-            source="language_ids"
-            reference="languages"
-            label="Languages"
-            validate={required()}
-            fullWidth
-            helperText="Projects can have multiple Languages assigned to them"
-          >
-            <SelectArrayInput optionText="name" />
-          </ReferenceArrayInput>
+
           <BooleanInput source="listen_questions_dynamic" fullWidth />
           <BooleanInput source="speak_questions_dynamic" fullWidth />
         </CardBox>

@@ -7,14 +7,15 @@ const useFieldValue = <T>(
 ): [T, (newValue: T) => void] => {
   const ctx = useFormContext();
   const value: T = ctx.watch(fieldName);
-  const setValue = (newValue: T) => ctx.setValue(fieldName, newValue);
+  const setValue = (newValue: T) =>
+    ctx.setValue(fieldName, newValue, {
+      shouldDirty: true,
+    });
   useEffect(() => {
     if (typeof value == "undefined" && defaultValue) setValue(defaultValue);
   }, [value]);
 
-  const rV = (
-    typeof value == "undefined" ? defaultValue || undefined : value
-  ) as T;
+  const rV = (typeof value == "undefined" ? defaultValue : value) as T;
   return [rV, setValue];
 };
 

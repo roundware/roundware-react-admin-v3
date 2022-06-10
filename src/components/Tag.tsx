@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { useBuildUI } from "providers/BuildUIContext";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
+
 import React from "react";
 import {
   Create,
@@ -16,6 +16,7 @@ import {
   SimpleForm,
   TextField,
   TextInput,
+  useDataProvider,
   useRefresh,
 } from "react-admin";
 import { ITag } from "types/tags";
@@ -59,7 +60,7 @@ export const TagList = (): JSX.Element => {
 };
 
 export const TagEdit = (): JSX.Element => {
-  const dataProvider = useRoundwareDataProvider();
+  const dataProvider = useDataProvider();
   const transform = async (record: RaRecord): Promise<RaRecord> => {
     const r = record as Partial<ITag>;
 
@@ -128,7 +129,7 @@ export const TagEdit = (): JSX.Element => {
 };
 
 export const TagCreate = (): JSX.Element => {
-  const dataProvider = useRoundwareDataProvider();
+  const dataProvider = useDataProvider();
   const transform = async (record: RaRecord): Promise<RaRecord> => {
     const r = record as Partial<ITag>;
 

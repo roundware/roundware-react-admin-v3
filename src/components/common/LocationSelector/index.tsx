@@ -13,6 +13,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import PlacesAutoComplete from "./PlacesAutoComplete";
 import SelectorPin from "./SelectorPin";
+import { mapLibraries } from "utils";
 interface Props {
   fieldNames: {
     latitude: string;
@@ -45,7 +46,7 @@ const LocationSelector = (props: Props): JSX.Element => {
     id: "google-map-script",
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY!,
-    libraries: ["places", "drawing"],
+    libraries: mapLibraries,
   });
 
   const onLoad = React.useCallback(function callback(map: google.maps.Map) {

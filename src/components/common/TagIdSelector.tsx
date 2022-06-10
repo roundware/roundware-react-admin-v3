@@ -1,8 +1,9 @@
 import { LinearProgress, TextField } from "@mui/material";
 import { Autocomplete } from "@mui/material";
 import useFieldValue from "hooks/useFieldValue";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
+
 import React, { useEffect, useState } from "react";
+import { useDataProvider } from "react-admin";
 import { ITag, ITagCategory } from "types/tags";
 interface Props {
   source: string;
@@ -27,7 +28,7 @@ type TagWithCategory = Exclude<ITag, "tag_category_id"> & {
 const TagIdSelector = ({ label, source, multiple }: Props): JSX.Element => {
   const [loading, setLoading] = useState(true);
   const [tags, setTags] = useState<TagWithCategory[]>([]);
-  const dataProvider = useRoundwareDataProvider();
+  const dataProvider = useDataProvider();
   const [value, setValue] = useFieldValue<number | number[] | undefined>(
     source
   );

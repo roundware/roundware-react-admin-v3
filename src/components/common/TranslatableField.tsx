@@ -8,9 +8,9 @@ import {
   TextField,
 } from "@mui/material";
 import useFieldValue from "hooks/useFieldValue";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import { useProjects } from "providers/ProjectsContext";
 import React, { useEffect, useState } from "react";
+import { useDataProvider } from "react-admin";
 import { ILanguage, LocalizedString } from "types";
 
 interface Props {
@@ -23,13 +23,13 @@ const TranslatableField = ({
   label = "",
   fromProject,
 }: Props): JSX.Element => {
-  const [value, setValue] = useFieldValue<LocalizedString[]>(source);
+  const [value, setValue] = useFieldValue<LocalizedString[]>(source, []);
   const [language_ids] = useFieldValue<number[]>(`language_ids`, []);
 
   const [loading, setLoading] = useState(true);
   const [languages, setLanguages] = useState<ILanguage[]>([]);
   const { selectedProject } = useProjects();
-  const dataProvider = useRoundwareDataProvider();
+  const dataProvider = useDataProvider();
   useEffect(() => {
     if (!fromProject && !selectedProject) return;
 
@@ -68,7 +68,7 @@ const TranslatableField = ({
       <TextField
         label={label}
         disabled
-        variant="filled"
+        variant="outlined"
         helperText="Please add languages to this project to enable this field."
       />
     );

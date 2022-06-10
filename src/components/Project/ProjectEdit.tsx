@@ -3,7 +3,8 @@ import CardBox from "components/common/CardBox";
 import LocationSelector from "components/common/LocationSelector";
 import TranslatableField from "components/common/TranslatableField";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import React from "react";
+import { useProjects } from "providers/ProjectsContext";
+import React, { useState } from "react";
 import {
   BooleanInput,
   DateTimeInput,
@@ -19,10 +20,11 @@ import {
   useRedirect,
 } from "react-admin";
 import { handleLocalizedStrings } from "utils";
-
+import { useFormContext } from "react-hook-form";
 const ProjectEdit = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
   const redirect = useRedirect();
+  const pc = useProjects();
   const transform = async (r: RaRecord) => {
     const data = { ...r };
 
@@ -31,26 +33,34 @@ const ProjectEdit = (): JSX.Element => {
       `out_of_range_message_loc`,
       `legal_agreement_loc`,
       `demo_stream_message_loc`,
+      `description_loc`,
     ];
 
-    const promises = fields.map((f) => async () => {
-      data[f] = await handleLocalizedStrings(data[f + "_admin"], dataProvider);
-    });
+    const promises = fields.map((f) =>
+      handleLocalizedStrings(data[f + "_admin"], dataProvider).then(
+        (ids) => (data[f] = ids)
+      )
+    );
 
     await Promise.all(promises);
     return data;
   };
+  const [warn, setWarn] = useState(true);
 
   return (
     <Edit
       title="Edit a project"
-      mutationMode="optimistic"
+      mutationMode="pessimistic"
       transform={transform}
       mutationOptions={{
-        onSuccess: () => redirect(`/`),
+        onSuccess: () => {
+          setWarn(false);
+          pc.refetch().then(() => redirect(`/dashboard`));
+        },
       }}
+      queryOptions={{}}
     >
-      <SimpleForm warnWhenUnsavedChanges>
+      <SimpleForm warnWhenUnsavedChanges={warn}>
         <CardBox title="Project Config">
           <TextInput
             source="name"
@@ -59,7 +69,21 @@ const ProjectEdit = (): JSX.Element => {
             // validate={required()}
             required
           />
-          <TextInput multiline source="description" fullWidth />
+          <ReferenceArrayInput
+            source="language_ids"
+            reference="languages"
+            label="Languages"
+            validate={required()}
+            fullWidth
+            helperText="Projects can have multiple Languages assigned to them"
+          >
+            <SelectArrayInput optionText="name" />
+          </ReferenceArrayInput>
+          <TranslatableField
+            label="Description"
+            fromProject
+            source="description_loc_admin"
+          />
           {/* <NumberInput source="latitude" validate={required()} /> */}
           {/* <NumberInput source="longitude" validate={required()} /> */}
           <LocationSelector
@@ -77,16 +101,7 @@ const ProjectEdit = (): JSX.Element => {
             required
             fullWidth
           />
-          <ReferenceArrayInput
-            source="language_ids"
-            reference="languages"
-            label="Languages"
-            validate={required()}
-            fullWidth
-            helperText="Projects can have multiple Languages assigned to them"
-          >
-            <SelectArrayInput optionText="name" />
-          </ReferenceArrayInput>
+
           <BooleanInput source="listen_questions_dynamic" fullWidth />
           <BooleanInput source="speak_questions_dynamic" fullWidth />
         </CardBox>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRoundwareDataProvider } from "./DataProviderContext";
 export interface IProject {
   id: number;
@@ -40,6 +40,7 @@ export interface IProjectsContext {
   projectsList: IProject[] | null;
   selectProject: (project: IProject | null) => void;
   setProjectsList: React.Dispatch<React.SetStateAction<IProject[] | null>>;
+  refetch: () => Promise<void>;
 }
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const ProjectsContext = React.createContext<IProjectsContext>(undefined!);
@@ -65,6 +66,30 @@ export const ProjectsProvider = ({
     setProject(project);
   };
 
+  useEffect(() => {
+    refetch();
+  }, []);
+
+  const refetch = () =>
+    dataProvider
+      .getList(`projects`, {
+        filter: {},
+        pagination: {
+          perPage: 0,
+          page: 0,
+        },
+        sort: {
+          field: "id",
+          order: "ASC",
+        },
+      })
+      .then((r) => {
+        if (r.data) {
+          setProjectsList(r.data);
+          if (project) setProject(r.data.find((p) => p.id == project.id));
+        }
+      });
+
   return (
     <ProjectsContext.Provider
       value={{
@@ -72,6 +97,7 @@ export const ProjectsProvider = ({
         projectsList,
         selectProject,
         setProjectsList,
+        refetch,
       }}
     >
       {children}
