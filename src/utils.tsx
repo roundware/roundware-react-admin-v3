@@ -32,3 +32,5 @@ export const handleLocalizedStrings = async (
     .filter((r) => !messages.some((m) => m.text == "" && m.id == r.data.id))
     .map((r) => parseInt(r.data.id.toString()));
 };
+
+export const mapLibraries: ["places", "drawing"] = ["places", "drawing"];
