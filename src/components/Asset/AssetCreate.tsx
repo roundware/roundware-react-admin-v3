@@ -2,29 +2,27 @@ import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
 import LocationSelector from "components/common/LocationSelector";
 import TagIdSelector from "components/common/TagIdSelector";
 import TranslatableField from "components/common/TranslatableField";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import React from "react";
 import {
   BooleanInput,
   Create,
-  CreateProps,
-  Record,
+  RaRecord,
   ReferenceInput,
   SelectInput,
   SimpleForm,
   TextInput,
+  useDataProvider,
   useRedirect,
 } from "react-admin";
-import { LocalizedString } from "types";
 import { handleLocalizedStrings } from "utils";
 import { useProjects } from "../../providers/ProjectsContext";
 import AudioOptions from "../common/AudioOptions";
 
-const AssetCreate = (props: CreateProps): JSX.Element => {
-  const dataProvider = useRoundwareDataProvider();
+const AssetCreate = (): JSX.Element => {
+  const dataProvider = useDataProvider();
   const { selectedProject } = useProjects();
   const redirect = useRedirect();
-  const transform = async (data: Record) => {
+  const transform = async (data: RaRecord) => {
     try {
       // use the file blob as file property
       data.file = data.file.rawFile;
@@ -81,11 +79,12 @@ const AssetCreate = (props: CreateProps): JSX.Element => {
   return (
     <Create
       title="Create an asset"
-      {...props}
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       transform={transform}
-      onSuccess={() => redirect(`list`, `/assets`)}
+      mutationOptions={{
+        onSuccess: () => redirect(`list`, `/assets`),
+      }}
     >
       <SimpleForm warnWhenUnsavedChanges>
         <SelectInput

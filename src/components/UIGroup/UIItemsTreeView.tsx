@@ -8,13 +8,14 @@ import {
   Paper,
   Typography,
   LinearProgress,
-} from "@material-ui/core";
-import { alpha, makeStyles, Theme } from "@material-ui/core/styles";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import DragHandleSharpIcon from "@material-ui/icons/DragHandleSharp";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import TreeItem from "@material-ui/lab/TreeItem";
-import TreeView from "@material-ui/lab/TreeView";
+} from "@mui/material";
+import { alpha, Theme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import DragHandleSharpIcon from "@mui/icons-material/DragHandleSharp";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import TreeItem from "@mui/lab/TreeItem";
+import TreeView from "@mui/lab/TreeView";
 import { useBuildUI } from "providers/BuildUIContext";
 import React, { useCallback, useState } from "react";
 import {
@@ -26,7 +27,7 @@ import {
 } from "react-beautiful-dnd";
 import { UiItemNode } from "types/uiGroups";
 import TreeItemLabel from "./TreeItemLabel";
-import { UpdateResult, Record, useRefresh, useNotify } from "react-admin";
+import { UpdateResult, RaRecord, useRefresh, useNotify } from "react-admin";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 const UIItemsTreeView = (): JSX.Element => {
   const {
@@ -176,10 +177,8 @@ const UIItemsTreeView = (): JSX.Element => {
     const movedDirection =
       destination!.index - source.index < 0 ? `up` : `down`;
 
-    console.log(movedDirection);
-
     // promises of dataProvider calls
-    const promises: Promise<UpdateResult<Record>>[] = [];
+    const promises: Promise<UpdateResult<RaRecord>>[] = [];
 
     // list of items need to possibly modified
     const possiblyAffectedItems = uiItemsList.filter(
@@ -227,11 +226,17 @@ const UIItemsTreeView = (): JSX.Element => {
     Promise.all(promises)
       .then(() => dummyPatchForGroup(draggedItem.ui_group_id))
       .then(() => refetchData())
-      .then(() => notify(`Changed UI Items order`, `info`))
+      .then(() =>
+        notify(`Changed UI Items order`, {
+          type: "info",
+        })
+      )
       .catch(() =>
         notify(
           `Couldn't change order. Something went wrong. Please try again.`,
-          `error`
+          {
+            type: "error",
+          }
         )
       )
       .finally(() => setReorderingGroup(undefined));
@@ -246,7 +251,7 @@ const UIItemsTreeView = (): JSX.Element => {
       collapseItem(i.id);
     });
   };
-
+  
   return (
     <Grid container spacing={3} direction="column">
       <Grid item xs={12} alignItems="center">

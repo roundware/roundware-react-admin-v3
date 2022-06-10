@@ -11,7 +11,7 @@ import {
   useShowController,
 } from "react-admin";
 import React from "react";
-import { Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
 import { useProjects } from "../../providers/ProjectsContext";
 
 type Props = ShowProps;
@@ -27,7 +27,7 @@ const ProjectShow = (props: Props): JSX.Element => {
   }, [selectedProject]);
 
   return (
-    <Show {...props} title="Project Details">
+    <Show title="Project Details">
       <SimpleShowLayout>
         <Typography variant="h5">Project Details</Typography>
         <TextField source="id" />

@@ -4,38 +4,37 @@ import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
 import LocationSelector from "components/common/LocationSelector";
 import TagIdSelector from "components/common/TagIdSelector";
 import TranslatableField from "components/common/TranslatableField";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import React, { useEffect } from "react";
 import {
   BooleanInput,
   DateTimeInput,
   Edit,
-  EditProps,
   NumberInput,
   ReferenceInput,
   SelectInput,
   SimpleForm,
   TextInput,
-  useRedirect,
-  Record,
+  useDataProvider,
   useEditController,
-  Identifier,
+  useRecordContext,
+  useRedirect,
 } from "react-admin";
 import { handleLocalizedStrings } from "utils";
 import { IAsset } from "../../types/asset";
 import AudioOptions from "../common/AudioOptions";
 
-const AssetEdit = (props: EditProps): JSX.Element => {
+const AssetEdit = (): JSX.Element => {
   const redirect = useRedirect();
-  const editControl = useEditController(props);
-  const dataProvider = useRoundwareDataProvider();
-
+  const editControl = useEditController();
+  const dataProvider = useDataProvider();
+  const record = useRecordContext();
   useEffect(() => {
+    if (!record) return;
     // revalidate to get the localized strings
     dataProvider
-      .getOneJson(`assets`, props.id!, { admin: 1 }, true)
+      .getOneJson(`assets`, record.id!, { admin: 1 }, true)
       .then(() => editControl.refetch());
-  }, []);
+  }, [record?.id]);
 
   const transform = async (data: Partial<IAsset>) => {
     if (!data.file) {
@@ -115,11 +114,12 @@ const AssetEdit = (props: EditProps): JSX.Element => {
   return (
     <Edit
       title="Edit an asset"
-      {...props}
       // @ts-ignore
       transform={transform}
-      mutationMode="optimistic"
-      onSuccess={() => redirect(`list`, `/assets`)}
+      mutationMode="pessimistic"
+      mutationOptions={{
+        onSuccess: () => redirect(`list`, `/assets`),
+      }}
     >
       <SimpleForm redirect={false} warnWhenUnsavedChanges>
         <TextInput source="id" disabled fullWidth />

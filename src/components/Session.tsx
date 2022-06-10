@@ -23,10 +23,10 @@ import {
 } from "react-admin";
 import { useProjects } from "../providers/ProjectsContext";
 
-export const SessionList = (props: ListProps): JSX.Element => {
+export const SessionList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
-    <List {...props} filter={{ project_id: selectedProject?.id }}>
+    <List filter={{ project_id: selectedProject?.id }}>
       <Datagrid rowClick="edit">
         <NumberField source="id" />
         <TextField source="device_id" />
@@ -45,9 +45,9 @@ export const SessionList = (props: ListProps): JSX.Element => {
   );
 };
 
-export const SessionEdit = (props: EditProps): JSX.Element => {
+export const SessionEdit = (): JSX.Element => {
   return (
-    <Edit {...props}>
+    <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" disabled />
         <TextInput source="device" required />
@@ -66,9 +66,9 @@ export const SessionEdit = (props: EditProps): JSX.Element => {
   );
 };
 
-export const SessionCreate = (props: CreateProps): JSX.Element => {
+export const SessionCreate = (): JSX.Element => {
   return (
-    <Create {...props}>
+    <Create>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
         <TextInput source="device" required />

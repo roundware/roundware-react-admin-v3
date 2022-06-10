@@ -5,7 +5,6 @@ import {
   Build,
   Email,
   Event,
-  FeaturedPlayList,
   Hearing,
   Label,
   Language,
@@ -14,7 +13,12 @@ import {
   TagFaces,
   Translate,
   WebAsset,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
+import {
+  AudioTrackCreate,
+  AudioTrackEdit,
+  AudioTrackList,
+} from "components/AudioTrack";
 import { SpeakerCreate, SpeakerEdit } from "components/Speaker";
 import SpeakerList from "components/Speaker/SpeakerList";
 import { TagCreate, TagEdit, TagList } from "components/Tag";
@@ -23,10 +27,15 @@ import {
   TagCategoryEdit,
   TagCategoryList,
 } from "components/TagCategory";
+import {
+  TimedAssetCreate,
+  TimedAssetEdit,
+  TimedAssetList,
+} from "components/TimedAsset";
 import { UiGroupCreate, UiGroupEdit } from "components/UIGroup/index";
 import { UiGroupList } from "components/UIGroup/UIGroupsList";
+import { UserCreate, UserEdit, UserList } from "components/User";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import { tokenAuthProvider } from "ra-data-roundware-drf";
 import React from "react";
 import { Admin, EditGuesser, ListGuesser, Resource } from "react-admin";
 import AssetCreate from "./components/Asset/AssetCreate";
@@ -44,24 +53,45 @@ import ProjectEdit from "./components/Project/ProjectEdit";
 import ProjectList from "./components/Project/ProjectList";
 import ProjectShow from "./components/Project/ProjectShow";
 import { SessionCreate, SessionEdit, SessionList } from "./components/Session";
-import {
-  AudioTrackList,
-  AudioTrackEdit,
-  AudioTrackCreate,
-} from "components/AudioTrack";
-import { UserList, UserCreate, UserEdit } from "components/User";
-import {
-  TimedAssetList,
-  TimedAssetCreate,
-  TimedAssetEdit,
-} from "components/TimedAsset";
+import authProvider from "./providers/AuthProvider";
 import { useProjects } from "./providers/ProjectsContext";
 import adminTheme from "./styles";
 
-const authProvider = tokenAuthProvider({
-  obtainAuthTokenUrl: `${process.env.REACT_APP_SERVER_URL}/api/2/login/`,
-});
+function App(): JSX.Element {
+  const { selectedProject } = useProjects();
+  const dataProvider = useRoundwareDataProvider();
+  return (
+    <Admin
+      theme={adminTheme}
+      layout={CustomLayout}
+      title="Roundware Admin"
+      dataProvider={dataProvider}
+      authProvider={authProvider}
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      dashboard={selectedProject && Dashboard}
+      // eslint-disable-next-line react/no-children-prop
+      children={[
+        <Resource
+          name="projects"
+          key="projects"
+          list={ProjectList}
+          create={ProjectCreate}
+          edit={ProjectEdit}
+          show={ProjectShow}
+          icon={AccountTree}
+        />,
+        ...(process.env.REACT_APP_INCLUDE_TABS === "all"
+          ? Object.values(resourceLookup)
+          : process.env.REACT_APP_INCLUDE_TABS?.split(`,`)
+              ?.filter((r) => Object.keys(resourceLookup).includes(r))
+              .map((r) => resourceLookup[r]) || []),
+      ]}
+    />
+  );
+}
 
+export default App;
 const resourceLookup: { [index: string]: React.ReactNode } = {
   assets: (
     <Resource
@@ -234,44 +264,3 @@ export const ResourceList = [
         Object.keys(resourceLookup).includes(r)
       ) || []),
 ];
-
-function App(): JSX.Element {
-  const { selectedProject } = useProjects();
-  const dataProvider = useRoundwareDataProvider();
-  return (
-    <Admin
-      theme={adminTheme}
-      layout={CustomLayout}
-      title="Roundware Admin"
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      dataProvider={dataProvider}
-      authProvider={authProvider}
-      // customRoutes={[
-      //   <Route component={BuildUi} key="buildui" path={`/buildui`} />,
-      // ]}
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      dashboard={selectedProject && Dashboard}
-      // eslint-disable-next-line react/no-children-prop
-      children={[
-        <Resource
-          name="projects"
-          key="projects"
-          list={ProjectList}
-          create={ProjectCreate}
-          edit={ProjectEdit}
-          show={ProjectShow}
-          icon={AccountTree}
-        />,
-        ...(process.env.REACT_APP_INCLUDE_TABS === "all"
-          ? Object.values(resourceLookup)
-          : process.env.REACT_APP_INCLUDE_TABS?.split(`,`)
-              ?.filter((r) => Object.keys(resourceLookup).includes(r))
-              .map((r) => resourceLookup[r]) || []),
-      ]}
-    />
-  );
-}
-
-export default App;

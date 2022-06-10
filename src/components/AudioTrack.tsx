@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
 import React from "react";
 import {
   BooleanField,
@@ -15,12 +15,12 @@ import {
   TextInput,
   NumberInput,
   TextField,
+  useRecordContext,
 } from "react-admin";
 import RangeSlider from "./common/RangeSlider";
-export const AudioTrackList = (props: ListProps): JSX.Element => {
+export const AudioTrackList = (): JSX.Element => {
   return (
     <List
-      {...props}
       filters={
         [`duration`, `deadair`].flatMap((k) => [
           <NumberInput
@@ -66,7 +66,8 @@ export const AudioTrackList = (props: ListProps): JSX.Element => {
     </List>
   );
 };
-const RangeDisplay = ({ record, source }: FieldProps) => {
+const RangeDisplay = ({ source }: FieldProps) => {
+  const record = useRecordContext();
   const min = record?.[`min${source}`];
   const max = record?.[`max${source}`];
   return (
@@ -75,9 +76,9 @@ const RangeDisplay = ({ record, source }: FieldProps) => {
     </Typography>
   );
 };
-export const AudioTrackEdit = (props: EditProps): JSX.Element => {
+export const AudioTrackEdit = (): JSX.Element => {
   return (
-    <Edit {...props}>
+    <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required disabled />
         <RangeSlider
@@ -137,9 +138,9 @@ export const AudioTrackEdit = (props: EditProps): JSX.Element => {
   );
 };
 
-export const AudioTrackCreate = (props: CreateProps): JSX.Element => {
+export const AudioTrackCreate = (): JSX.Element => {
   return (
-    <Create {...props}>
+    <Create>
       <SimpleForm warnWhenUnsavedChanges>
         <RangeSlider
           source="volume"

@@ -1,7 +1,7 @@
-import { Box, Grid } from "@material-ui/core";
-import Slider, { SliderProps } from "@material-ui/core/Slider";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import { Box, Grid } from "@mui/material";
+import Slider, { SliderProps } from "@mui/material/Slider";
+import makeStyles from '@mui/styles/makeStyles';
+import Typography from "@mui/material/Typography";
 import useFieldValue from "hooks/useFieldValue";
 import React from "react";
 import { NumberInput } from "react-admin";

@@ -10,7 +10,7 @@ import {
   SelectInput,
   SimpleForm,
   TextInput,
-  Record,
+  RaRecord,
   useRedirect,
   useRefresh,
 } from "react-admin";
@@ -18,11 +18,11 @@ import { useProjects } from "providers/ProjectsContext";
 import { useSpeakers } from "providers/SpeakersContext";
 import SpeakerAudioControls from "./SpeakerAudioControls";
 
-export const SpeakerEdit = (props: EditProps): JSX.Element => {
+export const SpeakerEdit = (): JSX.Element => {
   const { selectedProject } = useProjects();
   const { fetchData } = useSpeakers();
 
-  const transform = (data: Record) => {
+  const transform = (data: RaRecord) => {
     data.project = selectedProject?.id;
     if (typeof data?.file?.src == "string") {
       data.file = data.file.rawFile;
@@ -39,12 +39,13 @@ export const SpeakerEdit = (props: EditProps): JSX.Element => {
   const refresh = useRefresh();
   return (
     <Edit
-      {...props}
       mutationMode="pessimistic"
-      onSuccess={() => {
-        fetchData();
-        refresh();
-        redirect("list", `/speakers`);
+      mutationOptions={{
+        onSuccess: () => {
+          fetchData();
+          refresh();
+          redirect("list", `/speakers`);
+        },
       }}
       transform={transform}
     >
@@ -70,10 +71,10 @@ export const SpeakerEdit = (props: EditProps): JSX.Element => {
   );
 };
 
-export const SpeakerCreate = (props: CreateProps): JSX.Element => {
+export const SpeakerCreate = (): JSX.Element => {
   const { selectedProject } = useProjects();
   const { fetchData, setSelectedSpeaker } = useSpeakers();
-  const transform = (data: Record) => {
+  const transform = (data: RaRecord) => {
     data.project = selectedProject?.id;
     if (typeof data?.file?.src == "string") {
       data.file = data.file.rawFile;
@@ -89,14 +90,14 @@ export const SpeakerCreate = (props: CreateProps): JSX.Element => {
   const refresh = useRefresh();
   return (
     <Create
-      {...props}
       transform={transform}
-      // mutationMode="pessimistic"
-      onSuccess={(e: { data: Record }) => {
-        fetchData();
-        refresh();
-        redirect(`list`, `/speakers`);
-        setSelectedSpeaker(parseInt(e.data.id.toString()));
+      mutationOptions={{
+        onSuccess: (data: RaRecord) => {
+          fetchData();
+          refresh();
+          redirect(`list`, `/speakers`);
+          setSelectedSpeaker(parseInt(data.id.toString()));
+        },
       }}
     >
       <SimpleForm warnWhenUnsavedChanges>

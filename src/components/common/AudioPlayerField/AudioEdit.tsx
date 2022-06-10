@@ -6,15 +6,15 @@ import {
   Slider,
   Tooltip,
   Typography,
-} from "@material-ui/core";
-import PauseIcon from "@material-ui/icons/Pause";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import ResetIcon from "@material-ui/icons/Restore";
-import ZoomInIcon from "@material-ui/icons/ZoomIn";
-import ZoomOutIcon from "@material-ui/icons/ZoomOut";
+  SliderProps,
+} from "@mui/material";
+import PauseIcon from "@mui/icons-material/Pause";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import ResetIcon from "@mui/icons-material/Restore";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
+import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { useField } from "react-final-form";
 import { Region, WaveForm, WaveSurfer } from "wavesurfer-react";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -28,23 +28,19 @@ interface PropTypes {
   size?: "small" | "medium";
   buttons?: React.ReactNode[];
 }
-
+type FileType2 = {
+  src: string;
+};
 const AudioEditField = ({
   size = "medium",
   buttons,
 }: PropTypes): JSX.Element | null => {
-  const {
-    input: { value },
-  } = useField(`file`);
-  const {
-    input: { value: start_time, onChange: changeStartTime },
-  } = useField(`start_time`);
-  const {
-    input: { value: end_time, onChange: changeEndTime },
-  } = useField(`end_time`);
-  const {
-    input: { value: id },
-  } = useField(`id`);
+  const [value] = useFieldValue<string | FileType2>(`file`);
+  const [start_time, changeStartTime] = useFieldValue<number>(`start_time`);
+
+  const [end_time, changeEndTime] = useFieldValue<number>(`end_time`);
+
+  const [id] = useFieldValue<number>(`id`);
   const [, setDurationInSec] = useFieldValue(`audio_length_in_seconds`);
 
   const plugins = [
@@ -62,7 +58,7 @@ const AudioEditField = ({
 
   const [volume] = useFieldValue<number>(`volume`);
   const [progress, setProgress] = useState(0);
-  const audioSrc = typeof value?.src === "string" ? value.src : value;
+  const audioSrc = typeof value != "string" ? value.src : value;
   const [loading, setLoading] = useState(true);
   const wavesurferRef = React.useRef<any>();
   const handleMount = React.useCallback(
@@ -83,14 +79,6 @@ const AudioEditField = ({
         wavesurferRef.current.on("loading", (p: number) => {
           setProgress(p);
         });
-
-        // wavesurferRef.current.on("region-removed", (region) => {
-        //   console.log("region-removed --> ", region);
-        // });
-
-        // wavesurferRef.current.on("loading", (data) => {
-        //   console.log("loading --> ", data);
-        // });
       }
     },
     [value]
@@ -143,7 +131,6 @@ const AudioEditField = ({
   }, [volume]);
 
   const onRangeUpdate = ({ start, end }: any) => {
-    console.log(start, end);
     changeStartTime(Number(start?.toFixed(2)));
     changeEndTime(Number(end?.toFixed(2)));
   };
@@ -153,10 +140,9 @@ const AudioEditField = ({
     changeEndTime(Number(wavesurferRef?.current?.getDuration()?.toFixed(2)));
   };
 
-  const handleOnZoom = (
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    event: React.ChangeEvent<{}>,
-    value: number | number[]
+  const handleOnZoom: SliderProps<typeof Slider>[`onChange`] = (
+    event,
+    value
   ) => {
     if (wavesurferRef?.current && event && !Array.isArray(value)) {
       wavesurferRef.current?.zoom(value * (value / 10));
@@ -218,7 +204,7 @@ const AudioEditField = ({
               <>
                 <Grid item>
                   <Tooltip title="Reset Range">
-                    <IconButton onClick={resetRange}>
+                    <IconButton onClick={resetRange} size="large">
                       <ResetIcon />
                     </IconButton>
                   </Tooltip>

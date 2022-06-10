@@ -1,13 +1,10 @@
+import { Box, Theme, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
-import { Box, Card, CardActions, Button, Typography } from "@material-ui/core";
-import HomeIcon from "@material-ui/icons/Home";
-import CodeIcon from "@material-ui/icons/Code";
 import { EditButton, ShowButton } from "react-admin";
-import { makeStyles } from "@material-ui/core/styles";
-import { useTranslate } from "react-admin";
 import { useProjects } from "../../../providers/ProjectsContext";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     color: "#000000",
     padding: 10,
@@ -18,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "auto",
   },
   actions: {
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("lg")]: {
       padding: 0,
       flexWrap: "wrap",
       "& a": {
@@ -42,13 +39,11 @@ const ProjectDetails = () => {
       </Box>
       <Box>
         <EditButton
-          basePath="/projects"
           resource="projects"
           label="Edit Project"
           record={selectedProject!}
         />
         <ShowButton
-          basePath="/projects"
           resource="projects"
           label="View Details"
           record={selectedProject!}

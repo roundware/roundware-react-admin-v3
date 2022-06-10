@@ -21,10 +21,9 @@ import {
 } from "react-admin";
 import AudioPlayerField from "./common/AudioPlayerField";
 
-export const TimedAssetList = (props: ListProps): JSX.Element => {
+export const TimedAssetList = (): JSX.Element => {
   return (
     <List
-      {...props}
       filters={[
         <NumberInput
           source="start__gte"
@@ -72,9 +71,9 @@ export const TimedAssetList = (props: ListProps): JSX.Element => {
   );
 };
 
-export const TimedAssetEdit = (props: EditProps): JSX.Element => {
+export const TimedAssetEdit = (): JSX.Element => {
   return (
-    <Edit {...props}>
+    <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" disabled />
         <ReferenceInput source="asset_id" reference="assets">
@@ -89,9 +88,9 @@ export const TimedAssetEdit = (props: EditProps): JSX.Element => {
   );
 };
 
-export const TimedAssetCreate = (props: CreateProps): JSX.Element => {
+export const TimedAssetCreate = (): JSX.Element => {
   return (
-    <Create {...props}>
+    <Create>
       <SimpleForm warnWhenUnsavedChanges>
         <ReferenceInput source="asset_id" reference="assets">
           <SelectInput optionText={(record) => `${record?.id}`} />

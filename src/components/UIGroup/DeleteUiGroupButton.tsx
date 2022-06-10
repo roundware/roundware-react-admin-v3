@@ -9,20 +9,23 @@ import {
   Typography,
   Button,
   LinearProgress,
-  makeStyles,
-} from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
+  Theme,
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
-  Record,
+  RaRecord,
   DeleteButtonProps,
   useRefresh,
   UpdateResult,
   DeleteResult,
   useNotify,
+  useRecordContext,
 } from "react-admin";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 
-const DeleteUiGroupButton = ({ record }: DeleteButtonProps): JSX.Element => {
+const DeleteUiGroupButton = (): JSX.Element => {
+  const record = useRecordContext();
   const { refetchData, uiGroups, uiItemsList } = useBuildUI();
   const [showConfirm, setShowConfirm] = useState(false);
   const handleClose = () => setShowConfirm(false);
@@ -37,8 +40,9 @@ const DeleteUiGroupButton = ({ record }: DeleteButtonProps): JSX.Element => {
   const handleDelete = async () => {
     try {
       setLoading(true);
-      const promises: Promise<UpdateResult<Record> | DeleteResult<Record>>[] =
-        [];
+      const promises: Promise<
+        UpdateResult<RaRecord> | DeleteResult<RaRecord>
+      >[] = [];
       uiGroups.forEach((g) => {
         if (g.index > record!.index) {
           const updateProm = dataProvider.update(`uigroups`, {
@@ -56,7 +60,7 @@ const DeleteUiGroupButton = ({ record }: DeleteButtonProps): JSX.Element => {
         if (i.ui_group_id == record?.id) {
           const deleteProm = dataProvider.delete(`uiitems`, {
             id: i.id,
-            previousData: i as Record,
+            previousData: i as RaRecord,
           });
           promises.push(deleteProm);
         }
@@ -64,7 +68,7 @@ const DeleteUiGroupButton = ({ record }: DeleteButtonProps): JSX.Element => {
 
       const deleteProm = dataProvider.delete(`uigroups`, {
         id: record!.id,
-        previousData: record as Record,
+        previousData: record as RaRecord,
       });
       await Promise.all([...promises, deleteProm]);
       notify(`Successfully deleted!`, {
@@ -108,7 +112,7 @@ const DeleteUiGroupButton = ({ record }: DeleteButtonProps): JSX.Element => {
   );
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     color: theme.palette.error.main,
   },

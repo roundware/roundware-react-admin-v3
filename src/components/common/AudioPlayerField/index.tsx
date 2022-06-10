@@ -4,10 +4,10 @@ import { WaveSurfer, WaveForm, Region } from "wavesurfer-react";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions";
-import { useRecordContext, Record } from "react-admin";
-import { IconButton, Grid, LinearProgress } from "@material-ui/core";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import PauseIcon from "@material-ui/icons/Pause";
+import { useRecordContext, RaRecord } from "react-admin";
+import { IconButton, Grid, LinearProgress } from "@mui/material";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
 import useFieldValue from "hooks/useFieldValue";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 const plugins = [
@@ -26,7 +26,7 @@ interface PropTypes {
 
 const useEditContext = ({ source }: PropTypes) => {
   const [assetId] = useFieldValue<string>(source);
-  const [asset, setAsset] = useState<Record>({
+  const [asset, setAsset] = useState<RaRecord>({
     file: "",
     start_time: 0,
     end_time: 0,
@@ -60,18 +60,16 @@ const AudioPlayerField = ({
   const [loading, setLoading] = useState(true);
 
   const [progress, setProgress] = useState(0);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const wavesurferRef = React.useRef<any>();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+  const wavesurferRef = React.useRef<WaveSurfer>();
+
   const handleMount = React.useCallback(
-    (waveSurfer: any) => {
+    (waveSurfer: WaveSurfer) => {
       wavesurferRef.current = waveSurfer;
       if (wavesurferRef.current) {
         if (file) {
           wavesurferRef.current.load(file);
         }
-
-        // wavesurferRef.current.on("region-created", regionCreatedHandler);
 
         wavesurferRef.current.on("ready", () => {
           setLoading(false);
@@ -80,14 +78,6 @@ const AudioPlayerField = ({
         wavesurferRef.current.on("loading", (n: number) => {
           setProgress(n);
         });
-
-        // wavesurferRef.current.on("region-removed", (region) => {
-        //   console.log("region-removed --> ", region);
-        // });
-
-        // wavesurferRef.current.on("loading", (data) => {
-        //   console.log("loading --> ", data);
-        // });
       }
     },
     [file]
@@ -95,11 +85,12 @@ const AudioPlayerField = ({
 
   const [playing, setPlaying] = useState(false);
   const handlePlay = () => {
+    if (!wavesurferRef.current) return;
     if (playing) {
       setPlaying(false);
-      return wavesurferRef.current.pause();
+      return wavesurferRef.current?.pause();
     }
-    const region = Object.values(wavesurferRef.current.regions.list)[0];
+    const region = Object.values(wavesurferRef.current?.regions.list || {})[0];
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     region.play();

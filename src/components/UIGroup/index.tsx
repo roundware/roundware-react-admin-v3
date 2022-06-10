@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { TextField } from "@material-ui/core";
+import { TextField } from "@mui/material";
 import TranslatableField from "components/common/TranslatableField";
 import { useBuildUI } from "providers/BuildUIContext";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
@@ -8,12 +8,10 @@ import React, { useMemo } from "react";
 import {
   BooleanInput,
   Create,
-  CreateProps,
   Edit,
-  EditProps,
   NumberInput,
   RadioButtonGroupInput,
-  Record,
+  RaRecord,
   ReferenceInput,
   SelectInput,
   SimpleForm,
@@ -22,23 +20,28 @@ import {
   useRedirect,
   useRefresh,
 } from "react-admin";
-import { IUIGroup } from "types/uiGroups";
+import { IUIGroup, IUIItems } from "types/uiGroups";
 import { handleLocalizedStrings } from "utils";
 import UiModeField from "./UiModeField";
 
-export const UiGroupEdit = (props: EditProps): JSX.Element => {
+export const UiGroupEdit = (): JSX.Element => {
   const { refetchData } = useBuildUI();
   const dataProvider = useRoundwareDataProvider();
-  const transform = async (record: Record): Promise<Record> => {
-    const r = record as Omit<Partial<IUIGroup>, `header_text_loc`> & {
+  const transform = async (record: RaRecord): Promise<RaRecord> => {
+    const r = record as Omit<
+      Partial<IUIGroup>,
+      `header_text_loc` | `ui_items`
+    > & {
       header_text_loc: number[];
       ui_items: number[];
     };
-    const promises: Promise<UpdateResult<Record>>[] = [];
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    r.ui_items = r?.ui_items?.map((i) => i.id) || [];
+    r.ui_items =
+      r?.ui_items?.map(
+        (i) =>
+          // @ts-ignore
+          i.id
+      ) || [];
 
     if (r.header_text_loc_admin?.length)
       r.header_text_loc = await handleLocalizedStrings(
@@ -46,7 +49,7 @@ export const UiGroupEdit = (props: EditProps): JSX.Element => {
         dataProvider
       );
     delete r.header_text_loc_admin;
-    return r as Record;
+    return r as RaRecord;
   };
 
   const refresh = useRefresh();
@@ -59,10 +62,11 @@ export const UiGroupEdit = (props: EditProps): JSX.Element => {
 
   return (
     <Edit
-      {...props}
       transform={transform}
       mutationMode="pessimistic"
-      onSuccess={refreshData}
+      queryOptions={{
+        onSuccess: refreshData,
+      }}
     >
       <SimpleForm warnWhenUnsavedChanges>
         {/* <ArrayInput label="UI Items" source="ui_items">
@@ -118,7 +122,7 @@ export const UiGroupEdit = (props: EditProps): JSX.Element => {
   );
 };
 
-export const UiGroupCreate = (props: CreateProps): JSX.Element => {
+export const UiGroupCreate = (): JSX.Element => {
   const { refetchData, uiGroups, setUiMode } = useBuildUI();
   const dataProvider = useRoundwareDataProvider();
   const { selectedProject } = useProjects();
@@ -139,7 +143,7 @@ export const UiGroupCreate = (props: CreateProps): JSX.Element => {
     return lastIndex + 1;
   }, [uiGroups]);
 
-  const transform = async (record: Record): Promise<Record> => {
+  const transform = async (record: RaRecord): Promise<RaRecord> => {
     const r = record as Omit<Partial<IUIGroup>, `header_text_loc`> & {
       header_text_loc: number[];
       ui_items: number[];
@@ -159,10 +163,15 @@ export const UiGroupCreate = (props: CreateProps): JSX.Element => {
 
     r.index = newIndex;
     delete r.header_text_loc_admin;
-    return r as Record;
+    return r as RaRecord;
   };
   return (
-    <Create {...props} transform={transform} onSuccess={refreshData}>
+    <Create
+      transform={transform}
+      mutationOptions={{
+        onSuccess: () => refreshData(),
+      }}
+    >
       <SimpleForm warnWhenUnsavedChanges>
         <TextField
           fullWidth

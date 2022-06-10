@@ -1,19 +1,20 @@
-import { Grid } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
+import { Grid } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useEffect } from "react";
 import { FileField, FileInput } from "react-admin";
-import { useField } from "react-final-form";
-import AudioEdit from "./AudioPlayerField/AudioEdit";
-export const FileEdit = (): JSX.Element => {
-  const {
-    input: { onChange, value },
-  } = useField(`file`);
-  const handleDelete = () => onChange({ target: { value: null } });
 
-  const {
-    input: { value: mediaType },
-  } = useField(`media_type`);
+import AudioEdit from "./AudioPlayerField/AudioEdit";
+import useFieldValue from "hooks/useFieldValue";
+import { IAsset } from "types/asset";
+type FileType2 = {
+  src: string;
+};
+export const FileEdit = (): JSX.Element => {
+  const [value, setFile] = useFieldValue<string | FileType2 | null>(`file`);
+  const handleDelete = () => setFile(null);
+
+  const [mediaType] = useFieldValue<IAsset[`media_type`]>(`media_type`);
 
   useEffect(() => {
     const fileExt =
@@ -23,7 +24,7 @@ export const FileEdit = (): JSX.Element => {
         ? value?.src?.split(`.`)?.reverse()[0]
         : false;
     if (fileExt && !getFileExtensions(mediaType)?.some((f) => f == fileExt)) {
-      onChange(null);
+      setFile(null);
     }
   }, [mediaType]);
 
@@ -39,6 +40,7 @@ export const FileEdit = (): JSX.Element => {
                   key="del"
                   style={{ color: "#dc004e" }}
                   onClick={handleDelete}
+                  size="large"
                 >
                   <DeleteIcon />
                 </IconButton>,
@@ -53,7 +55,7 @@ export const FileEdit = (): JSX.Element => {
                 height="300px"
                 width="300px"
                 style={{ objectFit: "contain" }}
-                src={value?.src ? value.src : value}
+                src={typeof value == "string" ? value : value?.src}
               />
             </>
           )}

@@ -1,4 +1,4 @@
-import { createTheme } from "@material-ui/core/styles";
+import { createTheme } from "@mui/material/styles";
 
 const adminTheme = createTheme({
   palette: {
@@ -10,14 +10,8 @@ const adminTheme = createTheme({
     },
   },
   shape: {
-        borderRadius: 8,
-    },
-
-  props: {
-    MuiButtonBase: {
-        disableRipple: true
-      }
-    }
+    borderRadius: 8,
+  },
 });
 
 export default adminTheme;

@@ -9,13 +9,14 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  TextField,
   Toolbar,
   Typography,
-} from "@material-ui/core";
-import { DatePicker } from "@material-ui/pickers";
+} from "@mui/material";
+import { DatePicker } from "@mui/lab";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
 import React, { useEffect, useState } from "react";
-import { GetListResult, Record, useRedirect } from "react-admin";
+import { GetListResult, RaRecord, useRedirect } from "react-admin";
 import {
   Bar,
   Brush,
@@ -32,7 +33,7 @@ import {
 import { CenteredLoading } from ".";
 import { ResourceList } from "../../../App";
 interface Props {
-  sessions: GetListResult<Record> | null;
+  sessions: GetListResult<RaRecord> | null;
 }
 
 export const isWithinRange = (date: Date, range: Date[]): boolean => {
@@ -112,7 +113,6 @@ const SessionsChart = ({ sessions }: Props) => {
 
     const leastDate = subDays(new Date(), Number(value));
     setRange([leastDate, new Date()]);
-    // console.log(range);
   };
 
   useEffect(() => {
@@ -205,35 +205,33 @@ const SessionsChart = ({ sessions }: Props) => {
           <>
             <Grid
               container
-              justify="center"
+              justifyContent="center"
               spacing={2}
               style={{ marginBottom: 16 }}
             >
               <Grid item xs={5}>
                 <DatePicker
                   label="Start Date"
-                  variant="inline"
-                  inputVariant="outlined"
                   value={startDate}
-                  views={["year", "month", "date"]}
+                  views={["year", "month", "day"]}
                   onChange={(date) => {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     setStartDate(date);
                   }}
+                  renderInput={(p) => <TextField {...p} />}
                 />
               </Grid>
               <Grid item xs={5}>
                 <DatePicker
                   label="End Date"
-                  variant="inline"
-                  inputVariant="outlined"
                   value={endDate}
                   onChange={(date) => {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     setEndDate(date);
                   }}
+                  renderInput={(p) => <TextField {...p} />}
                 />
               </Grid>
             </Grid>

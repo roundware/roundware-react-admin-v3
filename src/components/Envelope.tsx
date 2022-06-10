@@ -11,18 +11,18 @@ import {
   TextInput,
 } from "react-admin";
 import { useProjects } from "../providers/ProjectsContext";
-export const EnvelopeList = (props: ListProps): JSX.Element => {
+export const EnvelopeList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
-    <List {...props} filter={{ project_id: selectedProject?.id }}>
+    <List filter={{ project_id: selectedProject?.id }}>
       <Datagrid rowClick="edit"></Datagrid>
     </List>
   );
 };
 
-export const EnvelopeEdit = (props: EditProps): JSX.Element => {
+export const EnvelopeEdit = (): JSX.Element => {
   return (
-    <Edit {...props}>
+    <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>
@@ -30,9 +30,9 @@ export const EnvelopeEdit = (props: EditProps): JSX.Element => {
   );
 };
 
-export const EnvelopeCreate = (props: CreateProps): JSX.Element => {
+export const EnvelopeCreate = (): JSX.Element => {
   return (
-    <Create {...props}>
+    <Create>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>

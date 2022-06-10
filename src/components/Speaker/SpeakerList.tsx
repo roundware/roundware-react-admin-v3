@@ -1,6 +1,6 @@
-import { Grid, IconButton, Paper, Tooltip } from "@material-ui/core";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
-import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
+import { Grid, IconButton, Paper, Tooltip } from "@mui/material";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { useProjects } from "providers/ProjectsContext";
 import { useSpeakers } from "providers/SpeakersContext";
 import React from "react";
@@ -17,7 +17,7 @@ import {
 } from "react-admin";
 import { SpeakerEdit } from ".";
 import SpeakerShapesControl from "./SpeakerShapesControl";
-const SpeakerList = (props: ListProps): JSX.Element => {
+const SpeakerList = (): JSX.Element => {
   const rc = useResourceContext();
   const { selectedProject } = useProjects();
   if (!selectedProject) return <>No Project Selected.</>;
@@ -44,15 +44,10 @@ const SpeakerList = (props: ListProps): JSX.Element => {
             height: "80vh",
           }}
         >
-          <List
-            {...props}
-            title="Speakers"
-            component="div"
-            bulkActionButtons={false}
-          >
+          <List title="Speakers" component="div">
             <Datagrid
               expand={<SpeakerEdit />}
-              hasBulkActions={false}
+              bulkActionButtons={false}
               style={{ flexShrink: 1 }}
             >
               <SpeakerHighter />
@@ -65,8 +60,8 @@ const SpeakerList = (props: ListProps): JSX.Element => {
       <TextField source="shape.type" />
       <TextField source="boundary.type" /> */}
 
-              <EditButton label="" style={{ margin: 0 }} basePath="/speakers" />
-              <DeleteButton label="" basePath="/speakers" />
+              <EditButton label="" style={{ margin: 0 }} />
+              <DeleteButton label="" />
             </Datagrid>
           </List>
         </Grid>
@@ -87,6 +82,7 @@ const SpeakerHighter = () => {
     <Tooltip title={isSelected ? "Unselect" : `Select On Map`} placement="left">
       <IconButton
         onClick={() => setSelectedSpeaker(isSelected ? null : Number(id))}
+        size="large"
       >
         {isSelected ? <LocationOnIcon /> : <LocationOnOutlinedIcon />}
       </IconButton>

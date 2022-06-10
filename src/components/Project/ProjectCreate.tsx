@@ -1,31 +1,29 @@
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 import CardBox from "components/common/CardBox";
 import LocationSelector from "components/common/LocationSelector";
 import TranslatableField from "components/common/TranslatableField";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import { useProjects } from "providers/ProjectsContext";
+import { IProject, useProjects } from "providers/ProjectsContext";
 import React from "react";
 import {
   BooleanInput,
   Create,
-  CreateProps,
   DateTimeInput,
   NumberInput,
+  RaRecord,
   ReferenceArrayInput,
   required,
   SelectArrayInput,
   SelectInput,
   SimpleForm,
   TextInput,
-  Record,
   useRedirect,
 } from "react-admin";
-import { LocalizedString } from "types";
 import { handleLocalizedStrings } from "utils";
-const ProjectCreate = (props: CreateProps): JSX.Element => {
+const ProjectCreate = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
   const redirect = useRedirect();
-  const transform = async (r: Record) => {
+  const transform = async (r: RaRecord) => {
     const data = { ...r };
 
     const fields = [
@@ -33,25 +31,29 @@ const ProjectCreate = (props: CreateProps): JSX.Element => {
       `out_of_range_message_loc`,
       `legal_agreement_loc`,
       `demo_stream_message_loc`,
+      `description_loc`,
     ];
 
-    const promises = fields.map((f) => {
-      return async () => {
-        data[f] = await handleLocalizedStrings(
-          data[f + "_admin"],
-          dataProvider
-        );
-      };
-    });
+    const promises = fields.map((f) =>
+      handleLocalizedStrings(data[f + "_admin"], dataProvider).then(
+        (ids) => (data[f] = ids)
+      )
+    );
 
     await Promise.all(promises);
     return data;
   };
+  const pc = useProjects();
   return (
     <Create
       title="Create a new project"
-      {...props}
-      onSuccess={() => redirect(`list`, `/projects`)}
+      mutationOptions={{
+        onSuccess: (data: IProject) => {
+          pc.refetch()
+            .then(() => pc.selectProject(data))
+            .then(() => redirect(`/`));
+        },
+      }}
       transform={transform}
     >
       <SimpleForm warnWhenUnsavedChanges>
@@ -63,7 +65,21 @@ const ProjectCreate = (props: CreateProps): JSX.Element => {
             // validate={required()}
             required
           />
-          <TextInput multiline source="description" fullWidth />
+          <ReferenceArrayInput
+            source="language_ids"
+            reference="languages"
+            label="Languages"
+            validate={required()}
+            fullWidth
+            helperText="Projects can have multiple Languages assigned to them"
+          >
+            <SelectArrayInput optionText="name" />
+          </ReferenceArrayInput>
+          <TranslatableField
+            label="Description"
+            fromProject
+            source="description_loc_admin"
+          />
           {/* <NumberInput source="latitude" validate={required()} /> */}
           {/* <NumberInput source="longitude" validate={required()} /> */}
           <LocationSelector
@@ -81,16 +97,7 @@ const ProjectCreate = (props: CreateProps): JSX.Element => {
             required
             fullWidth
           />
-          <ReferenceArrayInput
-            source="language_ids"
-            reference="languages"
-            label="Languages"
-            validate={required()}
-            fullWidth
-            helperText="Projects can have multiple Languages assigned to them"
-          >
-            <SelectArrayInput optionText="name" />
-          </ReferenceArrayInput>
+
           <BooleanInput source="listen_questions_dynamic" fullWidth />
           <BooleanInput source="speak_questions_dynamic" fullWidth />
         </CardBox>

@@ -4,13 +4,14 @@ import {
   CircularProgress,
   Grid,
   Typography,
-} from "@material-ui/core";
-import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
+} from "@mui/material";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { useSpeakers } from "providers/SpeakersContext";
 import React from "react";
 import SpeakerDrawer from "./SpeakerDrawer";
 import SpeakerPolygonGroup from "./SpeakerPolygon";
+import { mapLibraries } from "utils";
 const containerStyle = {
   width: "100%",
   height: "60vh",
@@ -31,7 +32,7 @@ const SpeakerShapesControl = (): JSX.Element => {
     id: "google-map-script",
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY!,
-    libraries: ["places", "drawing"],
+    libraries: mapLibraries,
   });
 
   const [, setMap] = React.useState<google.maps.Map | null>(null);

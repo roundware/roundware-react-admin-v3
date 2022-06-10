@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { CircularProgress, Fade } from "@material-ui/core";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import ReorderIcon from "@material-ui/icons/DragHandle";
+import { CircularProgress, Fade } from "@mui/material";
+import { Theme } from "@mui/material/styles";
+import createStyles from "@mui/styles/createStyles";
+import makeStyles from "@mui/styles/makeStyles";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import ReorderIcon from "@mui/icons-material/DragHandle";
 import { useBuildUI } from "providers/BuildUIContext";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import React, { useMemo, useState } from "react";
@@ -17,11 +19,13 @@ import {
   DatagridHeaderProps,
   DatagridProps,
   DatagridRowProps,
-  Record,
+  RaRecord,
   UpdateResult,
   useListContext,
   useNotify,
   DeleteResult,
+  useRecordContext,
+  useResourceContext,
 } from "react-admin";
 import {
   DragDropContext,
@@ -32,9 +36,9 @@ import {
 
 export const DraggableDatagrid = (props: DatagridProps): JSX.Element => (
   <Datagrid
-    {...props}
     header={<DatagridHeader />}
     body={<DraggableDatagridBody />}
+    {...props}
   />
 );
 
@@ -96,11 +100,9 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
     const movedDirection =
       destination!.index - source.index < 0 ? `up` : `down`;
 
-    console.log(movedDirection);
-
     // promises of dataProvider calls
-    const promises: Promise<UpdateResult<Record>>[] = [];
-    const deletePromises: Promise<void | DeleteResult<Record>>[] = [];
+    const promises: Promise<UpdateResult<RaRecord>>[] = [];
+    const deletePromises: Promise<void | DeleteResult<RaRecord>>[] = [];
 
     /** affected ui group ids */
     const affectedUiGroupIds: number[] = [];
@@ -130,7 +132,7 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
       /** if its affected  */
       if (typeof newIndex == "number") {
         /** 1. update its index to new index */
-        console.log(g.index, `changed to`, newIndex);
+        console.info(g.index, `changed to`, newIndex);
         const prom = dataProvider.update(`uigroups`, {
           data: {
             index: newIndex,
@@ -157,25 +159,29 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
           id: i.id,
           previousData: i,
         })
-        .catch(() => console.log(`its ok to be not found`));
+        .catch((e) => console.error(e));
       deletePromises.push(deleteProm);
     });
 
     // resolve all prmises
     setLoading(true);
     Promise.all(deletePromises)
-      .catch(() => console.log(`its ok to be not found`))
+      .catch((e) => console.error(e))
       .finally(() =>
         Promise.all(promises)
           .then(() => {
             refetch();
             refetchData();
-            notify(`Changed UI Groups order`, `info`);
+            notify(`Changed UI Groups order`, {
+              type: "info",
+            });
           })
           .catch(() =>
             notify(
               `Couldn't change order. Something went wrong. Please try again.`,
-              `error`
+              {
+                type: "error",
+              }
             )
           )
           .finally(() => setLoading(false))
@@ -199,10 +205,10 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
           {(provided) => (
             <>
               <DatagridBody
-                {...props}
                 {...provided.droppableProps}
                 ref={provided.innerRef}
                 row={<DraggableDatagridRow />}
+                {...props}
               />
               {provided.placeholder}
             </>
@@ -214,39 +220,40 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
 };
 
 const DraggableDatagridRow = ({
-  record,
-  resource,
-  id,
   children,
-  basePath,
-}: DatagridRowProps) => (
-  <>
-    <Draggable
-      key={id || ""}
-      draggableId={id?.toString()!}
-      index={record?.index!}
-    >
-      {(provided) => (
-        <TableRow ref={provided.innerRef} {...provided.draggableProps}>
-          {/* first column: selection checkbox */}
-          <TableCell {...provided.dragHandleProps}>
-            <ReorderIcon />
-          </TableCell>
-          {/* data columns based on children */}
-          {React.Children.map(children, (field: any) => (
-            <TableCell key={`${id}-${field?.props?.source}`}>
-              {React.cloneElement(field!, {
-                record,
-                basePath,
-                resource,
-              })}
+  record,
+  id,
+  resource,
+}: DatagridRowProps) => {
+  return (
+    <>
+      <Draggable
+        key={id || ""}
+        draggableId={id?.toString()!}
+        index={record?.index!}
+      >
+        {(provided) => (
+          <TableRow ref={provided.innerRef} {...provided.draggableProps}>
+            {/* first column: selection checkbox */}
+            <TableCell {...provided.dragHandleProps}>
+              <ReorderIcon />
             </TableCell>
-          ))}
-        </TableRow>
-      )}
-    </Draggable>
-  </>
-);
+            {/* data columns based on children */}
+            {React.Children.map(children, (field: any) => (
+              <TableCell key={`${id}-${field?.props?.source}`}>
+                {React.cloneElement(field!, {
+                  record,
+
+                  resource,
+                })}
+              </TableCell>
+            ))}
+          </TableRow>
+        )}
+      </Draggable>
+    </>
+  );
+};
 function capitalizeFirstLetter(string: string) {
   return string?.charAt(0).toUpperCase() + string.slice(1);
 }

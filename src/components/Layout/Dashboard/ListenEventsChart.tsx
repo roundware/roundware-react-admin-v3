@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { GetListResult, Record, useRedirect } from "react-admin";
+import { GetListResult, RaRecord, useRedirect } from "react-admin";
 import {
   Card,
   CardHeader,
@@ -14,7 +14,8 @@ import {
   Checkbox,
   FormControlLabel,
   CircularProgress,
-} from "@material-ui/core";
+  TextField,
+} from "@mui/material";
 import {
   format,
   subDays,
@@ -37,16 +38,11 @@ import {
   Brush,
 } from "recharts";
 
-import {
-  DatePicker,
-  TimePicker,
-  DateTimePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
+import { DatePicker, TimePicker, DateTimePicker } from "@mui/lab";
 import { ResourceList } from "../../../App";
 import { CenteredLoading } from ".";
 interface Props {
-  events: GetListResult<Record> | null;
+  events: GetListResult<RaRecord> | null;
 }
 
 export const isWithinRange = (date: Date, range: Date[]) => {
@@ -125,7 +121,6 @@ const ListenEventsChart = ({ events }: Props) => {
 
     const leastDate = subDays(new Date(), Number(value));
     setRange([leastDate, new Date()]);
-    // console.log(range);
   };
 
   useEffect(() => {
@@ -206,35 +201,33 @@ const ListenEventsChart = ({ events }: Props) => {
           <>
             <Grid
               container
-              justify="center"
+              justifyContent="center"
               spacing={2}
               style={{ marginBottom: 16 }}
             >
               <Grid item xs={5}>
                 <DatePicker
                   label="Start Date"
-                  variant="inline"
-                  inputVariant="outlined"
                   value={startDate}
-                  views={["year", "month", "date"]}
+                  views={["year", "month", "day"]}
                   onChange={(date) => {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     setStartDate(date);
                   }}
+                  renderInput={(p) => <TextField {...p} />}
                 />
               </Grid>
               <Grid item xs={5}>
                 <DatePicker
                   label="End Date"
-                  variant="inline"
-                  inputVariant="outlined"
                   value={endDate}
                   onChange={(date) => {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     setEndDate(date);
                   }}
+                  renderInput={(p) => <TextField {...p} />}
                 />
               </Grid>
             </Grid>

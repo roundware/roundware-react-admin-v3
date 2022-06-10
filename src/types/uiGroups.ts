@@ -24,9 +24,8 @@ export interface IUIItems {
   parent_id: null | number;
 }
 
-export interface UiItemNode  extends IUIItems {
+export interface UiItemNode extends IUIItems {
   displayText: string;
-  
+
   children?: UiItemNode[];
 }
-

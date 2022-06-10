@@ -2,38 +2,26 @@ import {
   AppBar as MuiAppBar,
   FormControl,
   InputLabel,
+  Link,
   ListSubheader,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Theme,
   Toolbar,
   useMediaQuery,
-  Link,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+  Stack,
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import { useProjects } from "providers/ProjectsContext";
-import { AppBarProps, HideOnScroll } from "ra-ui-materialui";
 import React, { memo, useState } from "react";
-import { useRedirect, UserMenu } from "react-admin";
+import { HideOnScroll, useRedirect, UserMenu, useUserMenu } from "react-admin";
 import { SidebarToggleButton } from "./SidebarToggleButton";
-const AppBar = (props: AppBarProps): JSX.Element => {
-  const {
-    className,
-    color = "secondary",
-    logout,
+const AppBar = (): JSX.Element => {
+  const props = useUserMenu();
 
-    title,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    classes: propsClasses,
-    ...rest
-  } = props;
-  const classes = useStyles(props);
-  const sidebarToggleButtonClasses = {
-    menuButtonIconClosed: classes.menuButtonIconClosed,
-    menuButtonIconOpen: classes.menuButtonIconOpen,
-  };
   const isXSmall = useMediaQuery<Theme>((theme) =>
-    theme.breakpoints.down("xs")
+    theme.breakpoints.down("sm")
   );
 
   const redirect = useRedirect();
@@ -42,11 +30,7 @@ const AppBar = (props: AppBarProps): JSX.Element => {
   const [isCreate, setIsCreate] = useState(false);
 
   const handleOnChange = (
-    event: React.ChangeEvent<{
-      name?: string | undefined;
-      value: unknown;
-    }>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    event: SelectChangeEvent<string | number>,
     child: React.ReactNode
   ) => {
     setIsCreate(false);
@@ -65,19 +49,14 @@ const AppBar = (props: AppBarProps): JSX.Element => {
 
   return (
     <HideOnScroll>
-      <MuiAppBar className={className} color={color} {...rest}>
+      <MuiAppBar color={"secondary"} sx={{ padding: 1 }} position="fixed">
         <Toolbar
           disableGutters
           variant={isXSmall ? "regular" : "dense"}
-          className={classes.toolbar}
+          sx={{ justifyContent: "space-between" }}
         >
-          <div className={classes.leftContent}>
-            {selectedProject && (
-              <SidebarToggleButton
-                className={classes.menuButton}
-                classes={sidebarToggleButtonClasses}
-              />
-            )}
+          <Stack spacing={2} direction="row" alignItems="center">
+            {selectedProject && <SidebarToggleButton />}
             <Link
               onClick={(e) => {
                 e.preventDefault();
@@ -89,36 +68,37 @@ const AppBar = (props: AppBarProps): JSX.Element => {
                 color: "#fff",
                 marginLeft: selectedProject ? 0 : 16,
               }}
+              underline="hover"
             >
-              {title}
+              Roundware Admin
             </Link>
-            <InputLabel variant="standard" className={classes.label}>
-              Project:{" "}
-            </InputLabel>
-            <FormControl className={classes.formControl}>
-              <Select
-                defaultValue={selectedProject?.id || "none"}
-                id="grouped-select"
-                className={classes.select}
-                value={isCreate ? `create` : selectedProject?.id || "none"}
-                onChange={handleOnChange}
-              >
-                <MenuItem value="none">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={"create"}>Create New Project</MenuItem>
-                {Array.isArray(projectsList) && projectsList.length > 0 && (
-                  <ListSubheader>Recent</ListSubheader>
-                )}
-                {projectsList?.map((p) => (
-                  <MenuItem key={p?.id} value={p?.id}>
-                    {p?.name}
+            <Stack direction="row" spacing={1} alignItems="center">
+              <InputLabel variant="standard">Project: </InputLabel>
+              <FormControl>
+                <Select
+                  defaultValue={selectedProject?.id || "none"}
+                  id="grouped-select"
+                  value={isCreate ? `create` : selectedProject?.id || "none"}
+                  onChange={handleOnChange}
+                  size="small"
+                >
+                  <MenuItem value="none">
+                    <em>None</em>
                   </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </div>
-          <UserMenu logout={logout} />
+                  <MenuItem value={"create"}>Create New Project</MenuItem>
+                  {Array.isArray(projectsList) && projectsList.length > 0 && (
+                    <ListSubheader>Recent</ListSubheader>
+                  )}
+                  {projectsList?.map((p) => (
+                    <MenuItem key={p?.id} value={p?.id}>
+                      {p?.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Stack>
+          </Stack>
+          <UserMenu />
         </Toolbar>
       </MuiAppBar>
     </HideOnScroll>
@@ -151,8 +131,8 @@ const useStyles = makeStyles(
     },
     select: {},
     label: {
-      marginRight: theme.spacing(1),
-      marginLeft: theme.spacing(2),
+      marginRight: 1,
+      marginLeft: 2,
     },
     appBar: {},
     toolbarInner: {},

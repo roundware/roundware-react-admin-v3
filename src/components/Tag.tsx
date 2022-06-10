@@ -1,35 +1,32 @@
-import React from "react";
-import {
-  CreateProps,
-  ListProps,
-  EditProps,
-  List,
-  Create,
-  Edit,
-  Datagrid,
-  SimpleForm,
-  TextInput,
-  ReferenceInput,
-  SelectInput,
-  TextField,
-  ReferenceField,
-  Record,
-  useRefresh,
-  EditButton,
-  DeleteButton,
-} from "react-admin";
-import TranslatableField from "./common/TranslatableField";
-import { ITag } from "types/tags";
-import { Box } from "@material-ui/core";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import { handleLocalizedStrings } from "utils";
+import { Box } from "@mui/material";
 import { useBuildUI } from "providers/BuildUIContext";
 
-export const TagList = (props: ListProps): JSX.Element => {
+import React from "react";
+import {
+  Create,
+  Datagrid,
+  DeleteButton,
+  Edit,
+  EditButton,
+  List,
+  RaRecord,
+  ReferenceField,
+  ReferenceInput,
+  SelectInput,
+  SimpleForm,
+  TextField,
+  TextInput,
+  useDataProvider,
+  useRefresh,
+} from "react-admin";
+import { ITag } from "types/tags";
+import { handleLocalizedStrings } from "utils";
+import TranslatableField from "./common/TranslatableField";
+
+export const TagList = (): JSX.Element => {
   return (
     <Box pt={3}>
       <List
-        {...props}
         filters={[
           <ReferenceInput
             source="tag_category_id"
@@ -62,9 +59,9 @@ export const TagList = (props: ListProps): JSX.Element => {
   );
 };
 
-export const TagEdit = (props: EditProps): JSX.Element => {
-  const dataProvider = useRoundwareDataProvider();
-  const transform = async (record: Record): Promise<Record> => {
+export const TagEdit = (): JSX.Element => {
+  const dataProvider = useDataProvider();
+  const transform = async (record: RaRecord): Promise<RaRecord> => {
     const r = record as Partial<ITag>;
 
     if (r.loc_msg_admin) {
@@ -79,7 +76,7 @@ export const TagEdit = (props: EditProps): JSX.Element => {
 
     delete r.loc_msg_admin;
     delete r.loc_description_admin;
-    return r as Record;
+    return r as RaRecord;
   };
 
   const { refetchData } = useBuildUI();
@@ -87,11 +84,12 @@ export const TagEdit = (props: EditProps): JSX.Element => {
   const refresh = useRefresh();
   return (
     <Edit
-      {...props}
       mutationMode="pessimistic"
-      onSuccess={() => {
-        refresh();
-        refetchData();
+      mutationOptions={{
+        onSuccess: () => {
+          refresh();
+          refetchData();
+        },
       }}
       transform={transform}
     >
@@ -130,9 +128,9 @@ export const TagEdit = (props: EditProps): JSX.Element => {
   );
 };
 
-export const TagCreate = (props: CreateProps): JSX.Element => {
-  const dataProvider = useRoundwareDataProvider();
-  const transform = async (record: Record): Promise<Record> => {
+export const TagCreate = (): JSX.Element => {
+  const dataProvider = useDataProvider();
+  const transform = async (record: RaRecord): Promise<RaRecord> => {
     const r = record as Partial<ITag>;
 
     if (r.loc_msg_admin)
@@ -146,17 +144,18 @@ export const TagCreate = (props: CreateProps): JSX.Element => {
 
     delete r.loc_msg_admin;
     delete r.loc_description_admin;
-    return r as Record;
+    return r as RaRecord;
   };
   const refresh = useRefresh();
   const { refetchData } = useBuildUI();
   return (
     <Create
-      {...props}
       transform={transform}
-      onSuccess={() => {
-        refresh();
-        refetchData();
+      mutationOptions={{
+        onSuccess: () => {
+          refresh();
+          refetchData();
+        },
       }}
     >
       <SimpleForm warnWhenUnsavedChanges>

@@ -11,17 +11,17 @@ import {
   TextInput,
 } from "react-admin";
 
-export const LocalizedStringList = (props: ListProps): JSX.Element => {
+export const LocalizedStringList = (): JSX.Element => {
   return (
-    <List {...props}>
+    <List>
       <Datagrid rowClick="edit"></Datagrid>
     </List>
   );
 };
 
-export const LocalizedStringEdit = (props: EditProps): JSX.Element => {
+export const LocalizedStringEdit = (): JSX.Element => {
   return (
-    <Edit {...props}>
+    <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>
@@ -29,9 +29,9 @@ export const LocalizedStringEdit = (props: EditProps): JSX.Element => {
   );
 };
 
-export const LocalizedStringCreate = (props: CreateProps): JSX.Element => {
+export const LocalizedStringCreate = (): JSX.Element => {
   return (
-    <Create {...props}>
+    <Create>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>

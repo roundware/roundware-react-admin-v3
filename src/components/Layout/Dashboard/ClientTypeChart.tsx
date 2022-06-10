@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader } from "@material-ui/core";
+import { Card, CardContent, CardHeader } from "@mui/material";
 import React from "react";
-import { GetListResult, Record } from "react-admin";
+import { GetListResult, RaRecord } from "react-admin";
 import {
   Cell,
   Legend,
@@ -13,7 +13,7 @@ import { CenteredLoading } from ".";
 import { COLORS } from "./BrowsersChart";
 
 interface Props {
-  sessions: GetListResult<Record> | null;
+  sessions: GetListResult<RaRecord> | null;
 }
 
 const getKeyName = (clientType: string) => {

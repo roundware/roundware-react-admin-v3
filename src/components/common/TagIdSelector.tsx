@@ -1,8 +1,9 @@
-import { LinearProgress, TextField } from "@material-ui/core";
-import { Autocomplete } from "@material-ui/lab";
+import { LinearProgress, TextField } from "@mui/material";
+import { Autocomplete } from "@mui/material";
 import useFieldValue from "hooks/useFieldValue";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
+
 import React, { useEffect, useState } from "react";
+import { useDataProvider } from "react-admin";
 import { ITag, ITagCategory } from "types/tags";
 interface Props {
   source: string;
@@ -27,7 +28,7 @@ type TagWithCategory = Exclude<ITag, "tag_category_id"> & {
 const TagIdSelector = ({ label, source, multiple }: Props): JSX.Element => {
   const [loading, setLoading] = useState(true);
   const [tags, setTags] = useState<TagWithCategory[]>([]);
-  const dataProvider = useRoundwareDataProvider();
+  const dataProvider = useDataProvider();
   const [value, setValue] = useFieldValue<number | number[] | undefined>(
     source
   );
@@ -52,7 +53,7 @@ const TagIdSelector = ({ label, source, multiple }: Props): JSX.Element => {
           .then(() => setLoading(false));
       });
   }, []);
-  console.log(value);
+
   if (loading) return <LinearProgress />;
   return (
     <Autocomplete
@@ -62,7 +63,6 @@ const TagIdSelector = ({ label, source, multiple }: Props): JSX.Element => {
       getOptionLabel={(option: TagWithCategory) => option?.value}
       style={{ minWidth: 300, width: "100%", marginBottom: 16, marginTop: 16 }}
       onChange={(e, v: TagWithCategory[] | TagWithCategory | null) => {
-        console.log(v);
         setValue(
           multiple
             ? Array.isArray(v)

@@ -11,13 +11,14 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  TextField,
   Toolbar,
   Typography,
-} from "@material-ui/core";
-import { DatePicker } from "@material-ui/pickers";
+} from "@mui/material";
+import { DatePicker } from "@mui/lab";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
 import React, { useEffect, useState } from "react";
-import { GetListResult, Record, useRedirect } from "react-admin";
+import { GetListResult, RaRecord, useRedirect } from "react-admin";
 import {
   Bar,
   Brush,
@@ -35,7 +36,7 @@ import { CenteredLoading } from ".";
 import { ResourceList } from "../../../App";
 
 interface Props {
-  assets: GetListResult<Record> | null;
+  assets: GetListResult<RaRecord> | null;
 }
 
 const mediaTypes = [`audio`, `photo`, `text`];
@@ -105,7 +106,7 @@ const getRecordingsPerDay = (assets: IAsset[], range: Date[]) => {
       ...val,
     });
   });
-  console.log(chartData);
+
   return chartData.sort((s1, s2) =>
     (s1?.date || 0) > (s2?.date || 0) ? 1 : -1
   );
@@ -148,7 +149,6 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
 
     const leastDate = subDays(new Date(), Number(value));
     setRange([leastDate, new Date()]);
-    // console.log(range);
   };
 
   useEffect(() => {
@@ -243,33 +243,31 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
           <>
             <Grid
               container
-              justify="center"
+              justifyContent="center"
               spacing={2}
               style={{ marginBottom: 16 }}
             >
               <Grid item xs={5}>
                 <DatePicker
                   label="Start Date"
-                  variant="inline"
-                  inputVariant="outlined"
                   value={startDate}
-                  views={["year", "month", "date"]}
+                  views={["year", "month", "day"]}
                   onChange={(date) => {
                     // @ts-ignore
                     setStartDate(date);
                   }}
+                  renderInput={(props) => <TextField {...props} />}
                 />
               </Grid>
               <Grid item xs={5}>
                 <DatePicker
                   label="End Date"
-                  variant="inline"
-                  inputVariant="outlined"
                   value={endDate}
                   onChange={(date) => {
                     // @ts-ignore
                     setEndDate(date);
                   }}
+                  renderInput={(props) => <TextField {...props} />}
                 />
               </Grid>
             </Grid>

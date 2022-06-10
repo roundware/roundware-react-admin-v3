@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Box, Divider, Grid } from "@material-ui/core";
+import { Box, Divider, Grid } from "@mui/material";
 import BuildUIHeader from "components/UIGroup/BuildUIHeader";
 import { useBuildUI } from "providers/BuildUIContext";
 import React from "react";
@@ -21,7 +21,7 @@ import DeleteUiGroupButton from "./DeleteUiGroupButton";
 import { DraggableDatagrid } from "./DraggableDatagrid";
 import UIGroupListActions from "./UIGroupListActions";
 import UIItemsTreeView from "./UIItemsTreeView";
-export const UiGroupList = (props: ListProps): JSX.Element => {
+export const UiGroupList = (): JSX.Element => {
   const { setUiMode } = useBuildUI();
   return (
     <>
@@ -36,7 +36,6 @@ export const UiGroupList = (props: ListProps): JSX.Element => {
           </Grid>
           <Grid item xs={12} md={6}>
             <List
-              {...props}
               filters={[
                 <RadioButtonGroupInput
                   source="ui_mode"
@@ -61,11 +60,11 @@ export const UiGroupList = (props: ListProps): JSX.Element => {
                 ui_mode: "speak",
               }}
               actions={<UIGroupListActions />}
-              bulkActionButtons={false}
             >
               <DraggableDatagrid
                 rowClick="edit"
-                currentSort={{ field: "index", order: "ASC" }}
+                sort={{ field: "index", order: "ASC" }}
+                bulkActionButtons={false}
               >
                 {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                 {/* @ts-ignore */}
@@ -106,18 +105,13 @@ const RowActions = (props: DatagridRowProps): JSX.Element => {
   return (
     <Grid container spacing={1} direction="row" wrap="nowrap">
       <Grid item>
-        <EditButton
-          record={props.record}
-          basePath={props.basePath}
-          size="small"
-          label=""
-        />
+        <EditButton size="small" label="" />
       </Grid>
       <Grid item>
-        <AddCommonItem {...props} />
+        <AddCommonItem group={props.record as IUIGroup} />
       </Grid>
       <Grid item>
-        <DeleteUiGroupButton record={props.record} basePath={props.basePath} />
+        <DeleteUiGroupButton />
       </Grid>
     </Grid>
   );

@@ -10,9 +10,9 @@ import {
   Tooltip,
   Typography,
   CircularProgress,
-} from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import CloseIcon from "@material-ui/icons/Close";
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
 import { useBuildUI } from "providers/BuildUIContext";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import React, { useCallback, useMemo, useState } from "react";
@@ -21,13 +21,14 @@ import {
   useNotify,
   useRedirect,
   useRefresh,
-  Record,
+  RaRecord,
+  useRecordContext,
 } from "react-admin";
 import { ITag } from "types/tags";
-import { IUIItems, UiItemNode } from "types/uiGroups";
-const AddCommonItem = (props: DatagridRowProps): JSX.Element => {
+import { IUIGroup, IUIItems, UiItemNode } from "types/uiGroups";
+const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
+  const currentGroup = group;
   /**  selected group */
-  const currentGroup = props.record;
   if (!currentGroup) return <></>;
 
   const { uiItemsList, uiGroups, tags, refetchData, dummyPatchForGroup } =
@@ -38,7 +39,7 @@ const AddCommonItem = (props: DatagridRowProps): JSX.Element => {
     /** filter them by tag_category of the group */
     const tempTagsToDisplay: ITag[] = tags?.filter(
       (t) =>
-        t.tag_category_id && t.tag_category_id === props.record?.tag_category_id
+        t.tag_category_id && t.tag_category_id === currentGroup?.tag_category_id
     );
 
     return tempTagsToDisplay;
@@ -100,7 +101,6 @@ const AddCommonItem = (props: DatagridRowProps): JSX.Element => {
   const handleOnChange = async (t: ITag, checked: boolean) => {
     try {
       setLoadingOn(t.id);
-      console.log(t, checked);
 
       if (checked) {
         const itemsToBeCreated: Omit<IUIItems, "id">[] = [];
@@ -153,7 +153,6 @@ const AddCommonItem = (props: DatagridRowProps): JSX.Element => {
         /**resolve all create requests */
         await Promise.all(promises);
       } else {
-        console.log(`delete`);
         /** need to delete on unselect */
         const itemsIdsToBeDeleted = currentGroupItems?.reduce<number[]>(
           (acc, crr) => {
@@ -170,7 +169,7 @@ const AddCommonItem = (props: DatagridRowProps): JSX.Element => {
           dataProvider.delete(`uiitems`, {
             id: i,
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            previousData: undefined! as Record,
+            previousData: undefined! as RaRecord,
           })
         );
 
@@ -200,7 +199,7 @@ const AddCommonItem = (props: DatagridRowProps): JSX.Element => {
     redirect(
       `create`,
       `/tags?filter=${JSON.stringify({
-        tag_category_id: `%d${props?.record?.tag_category_id}`,
+        tag_category_id: `%d${currentGroup?.tag_category_id}`,
       })}`
     );
 
@@ -221,7 +220,7 @@ const AddCommonItem = (props: DatagridRowProps): JSX.Element => {
                 </Typography>
               </Grid>
               <Grid item>
-                <IconButton onClick={handleClose}>
+                <IconButton onClick={handleClose} size="large">
                   <CloseIcon />
                 </IconButton>
               </Grid>

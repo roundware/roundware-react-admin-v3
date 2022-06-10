@@ -1,5 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
-import { ReduxState, toggleSidebar } from "ra-core";
+import { useSidebarState } from "react-admin";
 
 /**
  * A hook that returns the sidebar open state and a function to toggle it.
@@ -16,14 +15,4 @@ import { ReduxState, toggleSidebar } from "ra-core";
  *         </Button>
  *     );
  */
-export const useToggleSidebar = (): UseToggleSidebarResult => {
-  const open = useSelector<ReduxState, boolean>(
-    (state) => state.admin.ui.sidebarOpen
-  );
-  const dispatch = useDispatch();
-
-  const toggle = () => dispatch(toggleSidebar());
-  return [open, toggle];
-};
-
-export type UseToggleSidebarResult = [boolean, () => void];
+export const useToggleSidebar = useSidebarState;

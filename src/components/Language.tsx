@@ -12,18 +12,18 @@ import {
 } from "react-admin";
 
 import { useProjects } from "../providers/ProjectsContext";
-export const LanguageList = (props: ListProps): JSX.Element => {
+export const LanguageList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
-    <List {...props} filter={{ project_id: selectedProject?.id }}>
+    <List filter={{ project_id: selectedProject?.id }}>
       <Datagrid rowClick="edit"></Datagrid>
     </List>
   );
 };
 
-export const LanguageEdit = (props: EditProps): JSX.Element => {
+export const LanguageEdit = (): JSX.Element => {
   return (
-    <Edit {...props}>
+    <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>
@@ -31,9 +31,9 @@ export const LanguageEdit = (props: EditProps): JSX.Element => {
   );
 };
 
-export const LanguageCreate = (props: CreateProps): JSX.Element => {
+export const LanguageCreate = (): JSX.Element => {
   return (
-    <Create {...props}>
+    <Create>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>

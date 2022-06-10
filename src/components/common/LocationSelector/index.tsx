@@ -1,5 +1,5 @@
 import useFieldValue from "hooks/useFieldValue";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   CircularProgress,
   Typography,
@@ -7,11 +7,13 @@ import {
   CardContent,
   Grid,
   TextField,
-} from "@material-ui/core";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
+  Stack,
+} from "@mui/material";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import PlacesAutoComplete from "./PlacesAutoComplete";
 import SelectorPin from "./SelectorPin";
+import { mapLibraries } from "utils";
 interface Props {
   fieldNames: {
     latitude: string;
@@ -25,17 +27,26 @@ const containerStyle = {
 };
 
 const LocationSelector = (props: Props): JSX.Element => {
-  const [latStr, setLat] = useFieldValue(props.fieldNames.latitude);
-  const [lngStr, setLng] = useFieldValue(props.fieldNames.longitude);
+  const [latValue, setLatValue] = useFieldValue<number>(
+    props.fieldNames.latitude,
+    0
+  );
+  const [lngValue, setLngValue] = useFieldValue<number>(
+    props.fieldNames.longitude,
+    0
+  );
 
-  const lat = Number(latStr) || 0;
-  const lng = Number(lngStr) || 0;
+  const [latStr, setLatStr] = useState(latValue.toString());
+  const [lngStr, setLngStr] = useState(lngValue.toString());
+
+  const lat = parseFloat(latStr);
+  const lng = parseFloat(lngStr);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY!,
-    libraries: ["places", "drawing"],
+    libraries: mapLibraries,
   });
 
   const onLoad = React.useCallback(function callback(map: google.maps.Map) {
@@ -53,9 +64,14 @@ const LocationSelector = (props: Props): JSX.Element => {
   // const onUnmount = React.useCallback(function callback() {}, []);
 
   const handleOnLocationChange = (newLat: number, newLng: number) => {
-    setLat(newLat);
-    setLng(newLng);
+    setLatStr(newLat.toString());
+    setLngStr(newLng.toString());
   };
+
+  useEffect(() => {
+    if (parseFloat(latStr) != latValue) setLatValue(parseFloat(latStr));
+    if (parseFloat(lngStr) != lngValue) setLngValue(parseFloat(lngStr));
+  }, [latStr, lngStr]);
 
   return (
     <Card variant="outlined">
@@ -70,22 +86,18 @@ const LocationSelector = (props: Props): JSX.Element => {
             </Grid>
           </Grid>
           <Grid item xs={12}>
-            {lat && lng ? (
-              <div>
-                <TextField
-                  value={lat}
-                  label="Latitude"
-                  onChange={(e) => setLat(Number(e.target.value))}
-                />
-                <TextField
-                  value={lng}
-                  label="Longitude"
-                  onChange={(e) => setLng(Number(e.target.value))}
-                />
-              </div>
-            ) : (
-              `No Location Selected`
-            )}
+            <Stack spacing={1} direction="row">
+              <TextField
+                value={latStr}
+                label="Latitude"
+                onChange={(e) => setLatStr(e.target.value)}
+              />
+              <TextField
+                value={lngStr}
+                label="Longitude"
+                onChange={(e) => setLngStr(e.target.value)}
+              />
+            </Stack>
           </Grid>
           <Grid item>
             {isLoaded ? (
@@ -103,8 +115,8 @@ const LocationSelector = (props: Props): JSX.Element => {
                     >
                       <SelectorPin
                         onChange={handleOnLocationChange}
-                        lat={Number(lat) || 0}
-                        lng={Number(lng) || 0}
+                        lat={lat || 0}
+                        lng={lng || 0}
                       />
                     </GoogleMap>
                   </Grid>

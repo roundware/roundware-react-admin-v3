@@ -11,17 +11,17 @@ import {
   TextInput,
 } from "react-admin";
 
-export const UiItemList = (props: ListProps): JSX.Element => {
+export const UiItemList = (): JSX.Element => {
   return (
-    <List {...props}>
+    <List>
       <Datagrid></Datagrid>
     </List>
   );
 };
 
-export const UiItemEdit = (props: EditProps): JSX.Element => {
+export const UiItemEdit = (): JSX.Element => {
   return (
-    <Edit {...props}>
+    <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>
@@ -29,9 +29,9 @@ export const UiItemEdit = (props: EditProps): JSX.Element => {
   );
 };
 
-export const UserCreate = (props: CreateProps): JSX.Element => {
+export const UserCreate = (): JSX.Element => {
   return (
-    <Create {...props}>
+    <Create>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
       </SimpleForm>

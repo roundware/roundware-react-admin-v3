@@ -1,22 +1,21 @@
-import { Toolbar } from "@material-ui/core";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import { makeStyles } from "@material-ui/core/styles";
+import { Toolbar } from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import ListSubheader from "@mui/material/ListSubheader";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import makeStyles from "@mui/styles/makeStyles";
 import React, { useEffect } from "react";
 import {
   AppBar,
   Layout,
   AppBarProps,
   LayoutProps,
-  ReduxState,
   Sidebar,
   SidebarProps,
   useRedirect,
+  useSidebarState,
 } from "react-admin";
-import { useSelector } from "react-redux";
 import { useProjects } from "../../providers/ProjectsContext";
 import Appbar from "./Appbar";
 import { Menu } from "./Menu";
@@ -29,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
   select: {},
   label: {
-    marginRight: theme.spacing(1),
+    marginRight: 2,
   },
   appBar: {},
   toolbar: {
@@ -40,20 +39,7 @@ const CustomAppBar = (props: AppBarProps) => {
   const classes = useStyles();
   const { projectsList, selectedProject, selectProject } = useProjects();
 
-  const handleOnChange = (
-    event: React.ChangeEvent<{
-      name?: string | undefined;
-      value: unknown;
-    }>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    child: React.ReactNode
-  ) => {
-    const { value } = event.target;
-    if (!value) return;
-    if (value === "create") return;
-    selectProject(projectsList?.find((p) => p?.id === value) || null);
-  };
-  const open = useSelector((state: ReduxState) => state.admin.ui.sidebarOpen);
+  const [open] = useSidebarState();
   return (
     <AppBar {...props} open={open} className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
@@ -66,7 +52,12 @@ const CustomAppBar = (props: AppBarProps) => {
             id="grouped-select"
             className={classes.select}
             value={selectedProject?.id || "none"}
-            onChange={handleOnChange}
+            onChange={(e, child) => {
+              const { value } = e.target;
+              if (!value) return;
+              if (value === "create") return;
+              selectProject(projectsList?.find((p) => p?.id === value) || null);
+            }}
           >
             <MenuItem value="none">
               <em>None</em>

@@ -1,16 +1,17 @@
-import { makeStyles, useMediaQuery } from "@material-ui/core";
-import { AccountTree } from "@material-ui/icons";
-import DefaultIcon from "@material-ui/icons/ViewList";
+import { useMediaQuery } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import { AccountTree } from "@mui/icons-material";
+import DefaultIcon from "@mui/icons-material/ViewList";
 import * as React from "react";
 import {
   DashboardMenuItem,
-  getResources,
   Menu as RAMenu,
   MenuItemLink,
   MenuProps,
-  setSidebarVisibility,
+  useResourceDefinitions,
+  useSidebarState,
 } from "react-admin";
-import { useDispatch, useSelector } from "react-redux";
+
 import { useProjects } from "../../providers/ProjectsContext";
 
 const useStyles = makeStyles(() => ({
@@ -21,18 +22,19 @@ const useStyles = makeStyles(() => ({
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const Menu = (props: MenuProps) => {
-  const resources = useSelector(getResources);
+  const resourcesDefinitions = useResourceDefinitions();
+  const resources = Object.keys(resourcesDefinitions).map(
+    (name) => resourcesDefinitions[name]
+  );
   const classes = useStyles();
   const { selectedProject } = useProjects();
-  const dispatch = useDispatch();
-  const openMenu = () => {
-    dispatch(setSidebarVisibility(true));
-  };
+  const [, setOpen] = useSidebarState();
+  const openMenu = () => setOpen(true);
 
   const isBigScreen = useMediaQuery(`(min-width:1024px)`);
   const closeMenu = () => {
     if (isBigScreen) return;
-    dispatch(setSidebarVisibility(false));
+    setOpen(false);
   };
 
   return (
