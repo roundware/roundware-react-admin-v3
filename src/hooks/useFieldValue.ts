@@ -12,7 +12,10 @@ const useFieldValue = <T>(
     if (typeof value == "undefined" && defaultValue) setValue(defaultValue);
   }, [value]);
 
-  return [value, setValue];
+  const rV = (
+    typeof value == "undefined" ? defaultValue || undefined : value
+  ) as T;
+  return [rV, setValue];
 };
 
 export default useFieldValue;
