@@ -13,16 +13,18 @@ export const handleLocalizedStrings = async (
   // if empty text then just delete
   // if no id then create
   // else update
-  const promises = messages.map((m) =>
-    dataProvider[m.id ? (m.text ? `update` : `delete`) : `create`](
-      `localizedstrings`,
-      {
-        id: m.id as RaRecord[`id`],
-        data: m,
-        previousData: m as RaRecord,
-      }
-    )
-  );
+  const promises = messages
+    .filter((m) => !!m)
+    .map((m) =>
+      dataProvider[m.id ? (m.text ? `update` : `delete`) : `create`](
+        `localizedstrings`,
+        {
+          id: m.id as RaRecord[`id`],
+          data: m,
+          previousData: m as RaRecord,
+        }
+      )
+    );
 
   // execute requests  in parallel
   const responses = await Promise.all(promises);
