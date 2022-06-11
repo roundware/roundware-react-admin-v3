@@ -32,11 +32,11 @@ const SpeakerAudioControls = (): JSX.Element => {
     setSourceMode(newValue);
   };
 
-  const [minVolume, setMinVolume] = useFieldValue<number>(`minvolume`);
-  const [maxVolume, setMaxVolume] = useFieldValue<number>(`maxvolume`);
+  const [minVolume, setMinVolume] = useFieldValue<number>(`minvolume`, 0.0);
+  const [maxVolume, setMaxVolume] = useFieldValue<number>(`maxvolume`, 1.0);
   const [range, setRange] = useState([
-    typeof minVolume == "number" ? minVolume : 0.1,
-    typeof maxVolume == "number" ? maxVolume : 0.5,
+    typeof minVolume == "number" ? minVolume : 0.0,
+    typeof maxVolume == "number" ? maxVolume : 1.0,
   ]);
 
   const handleRangeChange = (event: unknown, newValue: number | number[]) => {
@@ -94,7 +94,6 @@ const SpeakerAudioControls = (): JSX.Element => {
             <Grid item style={{ flexGrow: 1 }}>
               <Slider
                 value={range}
-                defaultValue={[0.1, 0.5]}
                 onChange={handleRangeChange}
                 valueLabelDisplay="auto"
                 step={0.01}
