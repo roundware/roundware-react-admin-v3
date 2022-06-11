@@ -45,11 +45,7 @@ const SpeakerList = (): JSX.Element => {
           }}
         >
           <List title="Speakers" component="div">
-            <Datagrid
-              expand={<SpeakerEdit />}
-              bulkActionButtons={false}
-              style={{ flexShrink: 1 }}
-            >
+            <Datagrid bulkActionButtons={false} style={{ flexShrink: 1 }}>
               <SpeakerHighter />
 
               <TextField source="id" />
@@ -65,7 +61,7 @@ const SpeakerList = (): JSX.Element => {
             </Datagrid>
           </List>
         </Grid>
-        <Grid xs={12} md={6} style={{ flexShrink: 1, flexGrow: 1 }}>
+        <Grid xs={12} md={6} item style={{ flexShrink: 1, flexGrow: 1 }}>
           <SpeakerShapesControl />
         </Grid>
       </Grid>
