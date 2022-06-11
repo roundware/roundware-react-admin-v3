@@ -8,18 +8,45 @@ import {
   Menu as RAMenu,
   MenuItemLink,
   MenuProps,
+  ResourceDefinition,
   useResourceDefinitions,
   useSidebarState,
 } from "react-admin";
 
 import { useProjects } from "../../providers/ProjectsContext";
-
+import SubMenu from "./SubMenu";
+import { capitalize } from "lodash";
+import PublicIcon from "@mui/icons-material/Public";
+import CategoryIcon from "@mui/icons-material/Category";
+import AdjustIcon from "@mui/icons-material/Adjust";
 const useStyles = makeStyles(() => ({
   raMenu: {
     paddingTop: "30px",
   },
 }));
 
+const uiOrder: {
+  [key: string]: string[];
+} = {
+  primary: [
+    "assets",
+    "audiotracks",
+    `speakers`,
+    `tags`,
+    `uigroups`,
+    `timedassets`,
+  ],
+  secondary: [`envelopes`, `listenevents`, `sessions`, `tagcategories`],
+  global: [`languages`, `localizedstrings`, `users`],
+};
+
+const icons: {
+  [index: string]: JSX.Element;
+} = {
+  primary: <CategoryIcon />,
+  secondary: <AdjustIcon />,
+  global: <PublicIcon />,
+};
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const Menu = (props: MenuProps) => {
   const resourcesDefinitions = useResourceDefinitions();
@@ -35,6 +62,20 @@ export const Menu = (props: MenuProps) => {
   const closeMenu = () => {
     if (isBigScreen) return;
     setOpen(false);
+  };
+
+  const [state, setState] = React.useState<{
+    [index: string]: boolean;
+  }>({
+    primary: true,
+    secondary: true,
+    global: true,
+  });
+
+  const [open] = useSidebarState();
+
+  const handleToggle = (menu: string) => {
+    setState((state) => ({ ...state, [menu]: !state[menu] }));
   };
 
   return (
@@ -55,36 +96,38 @@ export const Menu = (props: MenuProps) => {
           primaryText={selectedProject ? `Project` : `All Projects`}
           leftIcon={<AccountTree />}
         />
-        {/* {selectedProject && (
-          <MenuItemLink
-            key={"build-iui"}
-            to={{
-              pathname: `/buildui`,
-            }}
-            primaryText={"Build UI"}
-            leftIcon={<BuildIcon />}
-          />
-        )} */}
-        {selectedProject &&
-          resources
-            .filter((resource) => resource.name !== "projects")
-            .sort((a, b) => (a.name > b.name ? 1 : -1))
-            .map((resource) => (
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              //   @ts-ignore
-              <MenuItemLink
-                key={resource.name}
-                to={{
-                  pathname: `/${resource.name}`,
-                }}
-                primaryText={
-                  (resource.options && resource.options.label) ||
-                  resource.name.toString().charAt(0).toUpperCase() +
-                    resource.name.substr(1)
-                }
-                leftIcon={resource.icon ? <resource.icon /> : <DefaultIcon />}
-              />
-            ))}
+
+        {Object.keys(uiOrder).map((g) => (
+          <SubMenu
+            key={g}
+            isOpen={state[g]}
+            name={capitalize(g)}
+            dense={false}
+            handleToggle={() => handleToggle(g)}
+            icon={icons[g]}
+          >
+            {uiOrder[g]
+              .map((i) => resources.find((r) => r.name == i))
+              .map((resource) =>
+                resource ? (
+                  <MenuItemLink
+                    key={resource.name}
+                    to={{
+                      pathname: `/${resource.name}`,
+                    }}
+                    primaryText={
+                      (resource.options && resource.options.label) ||
+                      resource.name.toString().charAt(0).toUpperCase() +
+                        resource.name.substr(1)
+                    }
+                    leftIcon={
+                      resource.icon ? <resource.icon /> : <DefaultIcon />
+                    }
+                  />
+                ) : null
+              )}
+          </SubMenu>
+        ))}
       </div>
     </RAMenu>
   );
