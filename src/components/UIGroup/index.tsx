@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { TextField } from "@mui/material";
+import FormToolbar from "components/common/FormToolbar";
 import TranslatableField from "components/common/TranslatableField";
 import { useBuildUI } from "providers/BuildUIContext";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
@@ -172,7 +173,7 @@ export const UiGroupCreate = (): JSX.Element => {
         onSuccess: () => refreshData(),
       }}
     >
-      <SimpleForm warnWhenUnsavedChanges>
+      <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <TextField
           fullWidth
           required

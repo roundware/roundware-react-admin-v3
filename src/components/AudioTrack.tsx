@@ -17,6 +17,7 @@ import {
   TextField,
   useRecordContext,
 } from "react-admin";
+import FormToolbar from "./common/FormToolbar";
 import RangeSlider from "./common/RangeSlider";
 export const AudioTrackList = (): JSX.Element => {
   return (
@@ -141,7 +142,7 @@ export const AudioTrackEdit = (): JSX.Element => {
 export const AudioTrackCreate = (): JSX.Element => {
   return (
     <Create>
-      <SimpleForm warnWhenUnsavedChanges>
+      <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <RangeSlider
           source="volume"
           label="Volume"

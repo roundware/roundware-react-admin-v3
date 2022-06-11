@@ -1,17 +1,14 @@
-import React from "react";
 import {
-  CreateProps,
-  ListProps,
-  EditProps,
-  List,
   Create,
-  Edit,
   Datagrid,
+  Edit,
+  List,
   SimpleForm,
   TextInput,
 } from "react-admin";
 
 import { useProjects } from "../providers/ProjectsContext";
+import FormToolbar from "./common/FormToolbar";
 export const LanguageList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
@@ -34,7 +31,7 @@ export const LanguageEdit = (): JSX.Element => {
 export const LanguageCreate = (): JSX.Element => {
   return (
     <Create>
-      <SimpleForm warnWhenUnsavedChanges>
+      <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <TextInput source="id" required />
       </SimpleForm>
     </Create>

@@ -1,15 +1,11 @@
 import RangeSlider from "components/common/RangeSlider";
-import React from "react";
 import {
   Create,
-  CreateProps,
   Datagrid,
   DeleteButton,
   Edit,
   EditButton,
-  EditProps,
   List,
-  ListProps,
   NumberField,
   NumberInput,
   ReferenceField,
@@ -20,6 +16,7 @@ import {
   TextInput,
 } from "react-admin";
 import AudioPlayerField from "./common/AudioPlayerField";
+import FormToolbar from "./common/FormToolbar";
 
 export const TimedAssetList = (): JSX.Element => {
   return (
@@ -91,7 +88,7 @@ export const TimedAssetEdit = (): JSX.Element => {
 export const TimedAssetCreate = (): JSX.Element => {
   return (
     <Create>
-      <SimpleForm warnWhenUnsavedChanges>
+      <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <ReferenceInput source="asset_id" reference="assets">
           <SelectInput optionText={(record) => `${record?.id}`} />
         </ReferenceInput>

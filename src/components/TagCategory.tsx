@@ -1,22 +1,19 @@
 import { Button } from "@mui/material";
-import React from "react";
 import {
   Create,
-  CreateProps,
   Datagrid,
   DatagridCellProps,
   DeleteButton,
   Edit,
   EditButton,
-  EditProps,
   List,
-  ListProps,
   SimpleForm,
   TextField,
   TextInput,
   useRecordContext,
   useRedirect,
 } from "react-admin";
+import FormToolbar from "./common/FormToolbar";
 export const TagCategoryList = (): JSX.Element => {
   return (
     <List>
@@ -65,7 +62,7 @@ export const TagCategoryEdit = (): JSX.Element => {
 export const TagCategoryCreate = (): JSX.Element => {
   return (
     <Create>
-      <SimpleForm warnWhenUnsavedChanges>
+      <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <TextInput source="name" required />
         <TextInput source="data" />
       </SimpleForm>

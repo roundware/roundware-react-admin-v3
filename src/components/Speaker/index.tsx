@@ -17,6 +17,7 @@ import {
 import { useProjects } from "providers/ProjectsContext";
 import { useSpeakers } from "providers/SpeakersContext";
 import SpeakerAudioControls from "./SpeakerAudioControls";
+import FormToolbar from "components/common/FormToolbar";
 
 export const SpeakerEdit = (): JSX.Element => {
   const { selectedProject } = useProjects();
@@ -100,7 +101,7 @@ export const SpeakerCreate = (): JSX.Element => {
         },
       }}
     >
-      <SimpleForm warnWhenUnsavedChanges>
+      <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <BooleanInput source="activeyn" fullWidth defaultChecked />
         <TextInput source="code" fullWidth required />
 

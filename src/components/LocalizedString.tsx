@@ -10,6 +10,7 @@ import {
   SimpleForm,
   TextInput,
 } from "react-admin";
+import FormToolbar from "./common/FormToolbar";
 
 export const LocalizedStringList = (): JSX.Element => {
   return (
@@ -32,7 +33,7 @@ export const LocalizedStringEdit = (): JSX.Element => {
 export const LocalizedStringCreate = (): JSX.Element => {
   return (
     <Create>
-      <SimpleForm warnWhenUnsavedChanges>
+      <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <TextInput source="id" required />
       </SimpleForm>
     </Create>

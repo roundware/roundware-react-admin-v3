@@ -22,6 +22,7 @@ import {
   DeleteButton,
 } from "react-admin";
 import { useProjects } from "../providers/ProjectsContext";
+import FormToolbar from "./common/FormToolbar";
 
 export const SessionList = (): JSX.Element => {
   const { selectedProject } = useProjects();
@@ -69,7 +70,7 @@ export const SessionEdit = (): JSX.Element => {
 export const SessionCreate = (): JSX.Element => {
   return (
     <Create>
-      <SimpleForm warnWhenUnsavedChanges>
+      <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <TextInput source="id" required />
         <TextInput source="device" required />
         <DateTimeInput source="starttime" required defaultValue={new Date()} />

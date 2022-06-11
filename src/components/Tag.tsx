@@ -21,6 +21,7 @@ import {
 } from "react-admin";
 import { ITag } from "types/tags";
 import { handleLocalizedStrings } from "utils";
+import FormToolbar from "./common/FormToolbar";
 import TranslatableField from "./common/TranslatableField";
 
 export const TagList = (): JSX.Element => {
@@ -158,7 +159,7 @@ export const TagCreate = (): JSX.Element => {
         },
       }}
     >
-      <SimpleForm warnWhenUnsavedChanges>
+      <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <ReferenceInput
           source="tag_category_id"
           reference="tagcategories"

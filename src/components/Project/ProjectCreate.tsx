@@ -1,5 +1,6 @@
 import { Grid } from "@mui/material";
 import CardBox from "components/common/CardBox";
+import FormToolbar from "components/common/FormToolbar";
 import LocationSelector from "components/common/LocationSelector";
 import TranslatableField from "components/common/TranslatableField";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
@@ -56,7 +57,7 @@ const ProjectCreate = (): JSX.Element => {
       }}
       transform={transform}
     >
-      <SimpleForm warnWhenUnsavedChanges>
+      <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <CardBox title="Project Config">
           <TextInput
             source="name"

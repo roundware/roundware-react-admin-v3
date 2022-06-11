@@ -21,6 +21,7 @@ import {
   TextInput,
 } from "react-admin";
 import { useProjects } from "../providers/ProjectsContext";
+import FormToolbar from "./common/FormToolbar";
 
 export const ListenEventsList = (): JSX.Element => {
   const { selectedProject } = useProjects();
@@ -81,7 +82,7 @@ export const ListenEventsEdit = (): JSX.Element => {
 export const ListenEventsCreate = (): JSX.Element => {
   return (
     <Create>
-      <SimpleForm warnWhenUnsavedChanges>
+      <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <TextInput source="id" disabled />
         <NumberInput source="duration_in_seconds" required />
         <DateTimeInput source="starttime" label="Start Time" required />
