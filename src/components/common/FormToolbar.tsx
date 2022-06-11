@@ -2,9 +2,8 @@ import React from "react";
 import { Stack } from "@mui/material";
 import { Toolbar, useNotify, useRedirect, SaveButton } from "react-admin";
 import { useFormContext } from "react-hook-form";
-type Props = {};
 
-const FormToolbar = (props: Props) => {
+const FormToolbar = () => {
   const redirect = useRedirect();
   const notify = useNotify();
   const fc = useFormContext();
