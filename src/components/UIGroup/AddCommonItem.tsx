@@ -10,6 +10,7 @@ import {
   Tooltip,
   Typography,
   CircularProgress,
+  LinearProgress,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
@@ -182,7 +183,8 @@ const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
       refresh();
       refetchData();
       /** notify user! */
-      notify(`Request complete for "${t?.value}" 👍`, {
+
+      notify(`${checked ? `Added` : `Deleted`} item "${t?.value}" `, {
         type: "success",
       });
     } catch {
@@ -245,6 +247,7 @@ const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
               ))}
             </Grid>
           </Grid>
+          {disabledItems?.length > 0 && <LinearProgress />}
         </DialogContent>
         <DialogActions>
           <Button color="primary" onClick={handleAddMore}>
