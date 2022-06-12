@@ -86,7 +86,7 @@ export const FileEdit = (): JSX.Element => {
 export const getFileExtensions = (mediaType: string): string[] => {
   switch (mediaType) {
     case "audio":
-      return [`mp3`, `wav`];
+      return [`mp3`, `wav`, `m4a`];
     case `photo`:
       return [`jpg`, `png`, `gif`];
     case `text`:

@@ -17,6 +17,7 @@ import { useProjects } from "providers/ProjectsContext";
 import React, { memo, useState } from "react";
 import { HideOnScroll, useRedirect, UserMenu, useUserMenu } from "react-admin";
 import { SidebarToggleButton } from "./SidebarToggleButton";
+import RefreshButton from "./RefreshButton";
 const AppBar = (): JSX.Element => {
   const props = useUserMenu();
 
@@ -98,7 +99,10 @@ const AppBar = (): JSX.Element => {
               </FormControl>
             </Stack>
           </Stack>
-          <UserMenu />
+          <Stack spacing={1} direction="row">
+            <RefreshButton />
+            <UserMenu />
+          </Stack>
         </Toolbar>
       </MuiAppBar>
     </HideOnScroll>
