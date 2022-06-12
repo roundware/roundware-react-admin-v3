@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import AudioOptions from "components/common/AudioOptions";
 import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
+import FileDownloadButton from "components/common/FileDownloadButton";
 import LocationSelector from "components/common/LocationSelector";
 import TagIdSelector from "components/common/TagIdSelector";
 import TranslatableField from "components/common/TranslatableField";
-import React, { useEffect } from "react";
 import {
   BooleanInput,
   DateTimeInput,
@@ -15,26 +16,15 @@ import {
   SimpleForm,
   TextInput,
   useDataProvider,
-  useEditController,
-  useRecordContext,
   useRedirect,
 } from "react-admin";
 import { handleLocalizedStrings } from "utils";
 import { IAsset } from "../../types/asset";
-import AudioOptions from "../common/AudioOptions";
 
 const AssetEdit = (): JSX.Element => {
   const redirect = useRedirect();
-  const editControl = useEditController();
+
   const dataProvider = useDataProvider();
-  const record = useRecordContext();
-  useEffect(() => {
-    if (!record) return;
-    // revalidate to get the localized strings
-    dataProvider
-      .getOneJson(`assets`, record.id!, { admin: 1 }, true)
-      .then(() => editControl.refetch());
-  }, [record?.id]);
 
   const transform = async (data: Partial<IAsset>) => {
     if (!data.file) {
@@ -121,7 +111,7 @@ const AssetEdit = (): JSX.Element => {
         onSuccess: () => redirect(`list`, `/assets`),
       }}
     >
-      <SimpleForm redirect={false} warnWhenUnsavedChanges>
+      <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" disabled fullWidth />
         <ReferenceInput
           label="Project"
@@ -143,6 +133,7 @@ const AssetEdit = (): JSX.Element => {
         />
 
         <AudioOptions />
+        <FileDownloadButton source="file" />
         <LocationSelector
           fieldNames={{
             latitude: `latitude`,
