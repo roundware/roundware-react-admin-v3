@@ -1,5 +1,5 @@
-import { Grid, Slider, Typography } from "@mui/material";
-import withStyles from '@mui/styles/withStyles';
+import { Stack, Slider, Typography } from "@mui/material";
+import withStyles from "@mui/styles/withStyles";
 import React from "react";
 import useFieldValue from "../../hooks/useFieldValue";
 interface Props {
@@ -22,87 +22,33 @@ const CustomSlider = ({
     setValue(value || defaultValue);
   }, []);
   return (
-    <Grid
-      container
+    <Stack
       direction={vertical ? "column" : `row`}
       spacing={1}
       alignItems="center"
       justifyContent="center"
       style={{ height: "100%" }}
     >
-      <Grid item>
-        <Typography>{label}</Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Typography align="center" variant="subtitle1">
-          {Number(value)?.toFixed(0)}
-        </Typography>
-      </Grid>
-      {!vertical && <Grid item>{icon}</Grid>}
-      <Grid item style={{ flexGrow: 1 }}>
-        <CustomSliderVariant
-          orientation={vertical ? "vertical" : `horizontal`}
-          valueLabelDisplay="off"
-          value={value}
-          onChange={(e, v) => setValue(Number(v))}
-        />
-      </Grid>
-      {vertical && <Grid item>{icon}</Grid>}
-    </Grid>
+      <Typography>{label}</Typography>
+
+      <Typography align="center" variant="subtitle1">
+        {Number(value)?.toFixed(0)}
+      </Typography>
+
+      {!vertical ? icon : null}
+
+      <CustomSliderVariant
+        orientation={vertical ? "vertical" : `horizontal`}
+        valueLabelDisplay="off"
+        value={value}
+        onChange={(e, v) => setValue(Number(v))}
+      />
+
+      {vertical ? icon : null}
+    </Stack>
   );
 };
 
 export default CustomSlider;
 
-export const CustomSliderVariant = withStyles({
-  root: {
-    color: "#3f3dc0",
-    height: 8,
-    "&$vertical": {
-      width: 8,
-    },
-    width: "100%",
-    marginLeft: -4,
-  },
-  thumb: {
-    height: 24,
-    width: 24,
-    backgroundColor: "#fff",
-    border: "2px solid currentColor",
-    marginTop: -8,
-    marginLeft: -12,
-    "&:focus, &:hover": {
-      boxShadow: "0px 0px 0px 8px rgba(84, 199, 97, 0.16)",
-    },
-    "&$active": {
-      boxShadow: "0px 0px 0px 12px rgba(84, 199, 97, 0.16)",
-    },
-  },
-  active: {
-    transform: "rotate(-90deg)",
-  },
-  valueLabel: {
-    left: "calc(-50% + 4px)",
-    transform: "rotate(-90deg)",
-  },
-  track: {
-    height: 8,
-    borderRadius: 4,
-  },
-  rail: {
-    height: 8,
-    borderRadius: 4,
-  },
-  vertical: {
-    "& $rail": {
-      width: 8,
-    },
-    "& $track": {
-      width: 8,
-    },
-    "& $thumb": {
-      marginLeft: -8,
-      marginBottom: -11,
-    },
-  },
-})(Slider);
+export const CustomSliderVariant = withStyles({})(Slider);
