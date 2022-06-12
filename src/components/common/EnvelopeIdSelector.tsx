@@ -11,7 +11,9 @@ import React, { useState } from "react";
 import { NumberInput, ReferenceInput } from "react-admin";
 
 const EnvelopeIdSelector = (): JSX.Element => {
-  const [envelope_ids, setEnvelope_ids] = useFieldValue(`envelope_ids`);
+  const [envelope_ids, setEnvelope_ids] = useFieldValue<number[] | undefined>(
+    `envelope_ids`
+  );
 
   const [mode, setMode] = useState<`manual` | `createNew`>(
     (Array.isArray(envelope_ids) && envelope_ids.length > 0) ||
