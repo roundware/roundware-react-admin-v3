@@ -18,6 +18,7 @@ import { useProjects } from "providers/ProjectsContext";
 import { useSpeakers } from "providers/SpeakersContext";
 import SpeakerAudioControls from "./SpeakerAudioControls";
 import FormToolbar from "components/common/FormToolbar";
+import FileDownloadButton from "components/common/FileDownloadButton";
 
 export const SpeakerEdit = (): JSX.Element => {
   const { selectedProject } = useProjects();
@@ -55,6 +56,7 @@ export const SpeakerEdit = (): JSX.Element => {
         <BooleanInput source="activeyn" fullWidth />
         <TextInput source="code" fullWidth />
         <SpeakerAudioControls />
+        <FileDownloadButton source="uri" />
         <TextInput source="uri" fullWidth />
         <TextInput source="backupuri" fullWidth />
 
