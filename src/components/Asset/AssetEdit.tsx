@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import React from "react";
 import AudioOptions from "components/common/AudioOptions";
 import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
 import FileDownloadButton from "components/common/FileDownloadButton";
