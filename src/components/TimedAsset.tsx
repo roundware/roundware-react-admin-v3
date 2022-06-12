@@ -1,3 +1,4 @@
+import React from "react";
 import RangeSlider from "components/common/RangeSlider";
 import {
   Create,

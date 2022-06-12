@@ -1,18 +1,11 @@
-import React, { useState } from "react";
-import { CircularProgress, IconButton } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import {
-  useNotify,
-  useRefresh,
-  useResourceContext,
-  useResourceDefinition,
-} from "react-admin";
+import { CircularProgress, IconButton } from "@mui/material";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import React, { useState } from "react";
+import { useNotify, useRefresh } from "react-admin";
 import { useLocation } from "react-router-dom";
 
-type Props = {};
-
-const RefreshButton = (props: Props) => {
+const RefreshButton = () => {
   const refresh = useRefresh();
 
   const dataProvider = useRoundwareDataProvider();
