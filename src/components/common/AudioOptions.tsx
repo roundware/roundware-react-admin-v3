@@ -23,7 +23,7 @@ const AudioOptions = (): JSX.Element => {
 
   if (mediaType !== "audio") return <FileEdit />;
   return (
-    <Card variant="outlined" style={{ marginBottom: 28 }}>
+    <Card variant="outlined" style={{ marginBottom: 28, width: "100%" }}>
       <CardContent>
         <Typography variant="h6">Audio</Typography>
         <Grid container spacing={3}>
