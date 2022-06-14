@@ -92,8 +92,8 @@ const Dashboard = (): JSX.Element => {
               if (!data) return;
               setListenEvents((prev) => ({
                 ...prev,
-                data: [...(prev?.data || []), ...data?.data],
-                total: [...(prev?.data || []), ...data?.data].length,
+                data: [...(prev?.data || []), ...(data?.data || [])],
+                total: [...(prev?.data || []), ...(data?.data || [])].length,
               }));
               setResourcesRanges((prev) => ({
                 ...prev,
