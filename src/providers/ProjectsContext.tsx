@@ -72,7 +72,7 @@ export const ProjectsProvider = ({
 
   const refetch = () =>
     dataProvider
-      .getList(`projects`, {
+      .getList<IProject>(`projects`, {
         filter: {},
         pagination: {
           perPage: 0,
@@ -86,7 +86,8 @@ export const ProjectsProvider = ({
       .then((r) => {
         if (r.data) {
           setProjectsList(r.data);
-          if (project) setProject(r.data.find((p) => p.id == project.id));
+          if (project)
+            setProject(r.data.find((p) => p.id == project.id) || null);
         }
       });
 

@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -18,15 +14,13 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
+    "jsx": "react",
     "experimentalDecorators": true,
     "jsxImportSource": "react",
-    "baseUrl": "./src",
+    "baseUrl": "./src"
   },
   "rules": {
     "no-unused-vars": 0
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

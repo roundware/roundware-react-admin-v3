@@ -51,4 +51,4 @@ const CustomSlider = ({
 
 export default CustomSlider;
 
-export const CustomSliderVariant = withStyles({})(Slider);
+export const CustomSliderVariant = Slider;

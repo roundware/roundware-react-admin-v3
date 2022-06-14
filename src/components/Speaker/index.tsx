@@ -1,24 +1,28 @@
-import React from "react";
+import { LinearProgress, Stack, Typography } from "@mui/material";
+import FileDownloadButton from "components/common/FileDownloadButton";
+import FormToolbar from "components/common/FormToolbar";
+import { useProjects } from "providers/ProjectsContext";
+import { useSpeakers } from "providers/SpeakersContext";
+import React, { useState } from "react";
 import {
   BooleanInput,
   Create,
-  CreateProps,
   Edit,
-  EditProps,
   NumberInput,
+  RaRecord,
   ReferenceInput,
   SelectInput,
   SimpleForm,
+  SimpleFormProps,
   TextInput,
-  RaRecord,
+  useCreate,
+  useNotify,
+  useRecordContext,
   useRedirect,
   useRefresh,
+  useUpdate,
 } from "react-admin";
-import { useProjects } from "providers/ProjectsContext";
-import { useSpeakers } from "providers/SpeakersContext";
 import SpeakerAudioControls from "./SpeakerAudioControls";
-import FormToolbar from "components/common/FormToolbar";
-import FileDownloadButton from "components/common/FileDownloadButton";
 
 export const SpeakerEdit = (): JSX.Element => {
   const { selectedProject } = useProjects();
@@ -34,24 +38,54 @@ export const SpeakerEdit = (): JSX.Element => {
     delete data.shape;
     delete data.attenuation_border;
     delete data.boundary;
+
     return data;
   };
 
   const redirect = useRedirect();
   const refresh = useRefresh();
-  return (
-    <Edit
-      mutationMode="pessimistic"
-      mutationOptions={{
-        onSuccess: () => {
-          fetchData();
-          refresh();
-          redirect("list", `/speakers`);
+  const notify = useNotify();
+
+  const [progress, setProgress] = useState(0);
+  const [update] = useUpdate();
+  const save: SimpleFormProps[`onSubmit`] = async (values) => {
+    values = transform(values as RaRecord);
+    try {
+      await update(
+        `speakers`,
+        {
+          data: values,
+          previousData: values,
+          id: values.id,
+          meta: {
+            onProgress: (ev: { loaded: number; total: number }) => {
+              const newPercent = (ev.loaded / ev.total) * 100;
+              setProgress((prev) => (prev > newPercent ? prev : newPercent));
+            },
+          },
         },
-      }}
-      transform={transform}
-    >
-      <SimpleForm warnWhenUnsavedChanges>
+        {
+          returnPromise: true,
+          mutationMode: "pessimistic",
+          onSuccess: () => {
+            fetchData();
+            refresh();
+            redirect("list", `/speakers`);
+          },
+        }
+      );
+    } catch (e) {
+      notify(`Something went wrong!`, {
+        type: "error",
+      });
+    } finally {
+      setProgress(0);
+    }
+  };
+
+  return (
+    <Edit transform={transform}>
+      <SimpleForm warnWhenUnsavedChanges onSubmit={save}>
         <TextInput source="id" fullWidth />
         <BooleanInput source="activeyn" fullWidth />
         <TextInput source="code" fullWidth />
@@ -69,6 +103,19 @@ export const SpeakerEdit = (): JSX.Element => {
         >
           <SelectInput optionText="name" fullWidth />
         </ReferenceInput>
+
+        {progress > 0 && (
+          <Stack sx={{ width: "100%" }}>
+            <Typography variant="subtitle2">
+              Upload Progress: {progress.toFixed(2)} %{" "}
+            </Typography>
+            <LinearProgress
+              sx={{ width: "100%" }}
+              variant="determinate"
+              value={parseFloat(progress.toFixed(2))}
+            />
+          </Stack>
+        )}
       </SimpleForm>
     </Edit>
   );
@@ -91,19 +138,51 @@ export const SpeakerCreate = (): JSX.Element => {
 
   const redirect = useRedirect();
   const refresh = useRefresh();
-  return (
-    <Create
-      transform={transform}
-      mutationOptions={{
-        onSuccess: (data: RaRecord) => {
-          fetchData();
-          refresh();
-          redirect(`list`, `/speakers`);
-          setSelectedSpeaker(parseInt(data.id.toString()));
+
+  const [create] = useCreate();
+  const [progress, setProgress] = useState(0);
+  const notify = useNotify();
+
+  const save: SimpleFormProps[`onSubmit`] = async (values) => {
+    values = transform(values as RaRecord);
+    try {
+      await create(
+        `speakers`,
+        {
+          data: values,
+          meta: {
+            onProgress: (ev: { loaded: number; total: number }) => {
+              const newPercent = (ev.loaded / ev.total) * 100;
+              setProgress((prev) => (prev > newPercent ? prev : newPercent));
+            },
+          },
         },
-      }}
-    >
-      <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
+        {
+          returnPromise: true,
+          onSuccess: (data) => {
+            fetchData();
+            refresh();
+            redirect(`list`, `/speakers`);
+            setSelectedSpeaker(parseInt(data.id.toString()));
+          },
+        }
+      );
+    } catch (e) {
+      notify(`Something went wrong!`, {
+        type: "error",
+      });
+    } finally {
+      setProgress(0);
+    }
+  };
+
+  return (
+    <Create transform={transform}>
+      <SimpleForm
+        warnWhenUnsavedChanges
+        onSubmit={save}
+        toolbar={<FormToolbar />}
+      >
         <BooleanInput source="activeyn" fullWidth defaultChecked />
         <TextInput source="code" fullWidth required />
 
@@ -113,6 +192,18 @@ export const SpeakerCreate = (): JSX.Element => {
           fullWidth
           helperText="Meters"
         />
+        {progress > 0 && (
+          <Stack sx={{ width: "100%" }}>
+            <Typography variant="subtitle2">
+              Upload Progress: {progress.toFixed(2)} %{" "}
+            </Typography>
+            <LinearProgress
+              sx={{ width: "100%" }}
+              variant="determinate"
+              value={parseFloat(progress.toFixed(2))}
+            />
+          </Stack>
+        )}
       </SimpleForm>
     </Create>
   );
