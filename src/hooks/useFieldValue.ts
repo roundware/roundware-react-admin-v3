@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 
 const useFieldValue = <T>(
@@ -17,7 +17,10 @@ const useFieldValue = <T>(
     }
   }, [value]);
 
-  const rV = (typeof value == "undefined" ? defaultValue : value) as T;
+  const rV = useMemo(
+    () => (typeof value == "undefined" ? defaultValue : value) as T,
+    [value, defaultValue]
+  );
   return [rV, setValue];
 };
 
