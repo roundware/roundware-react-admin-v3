@@ -9,7 +9,7 @@ export interface IBuildUIContext {
   uiGroups: IUIGroup[];
   uiMode: IUIGroup[`ui_mode`];
   setUiMode: React.Dispatch<React.SetStateAction<IUIGroup[`ui_mode`]>>;
-  refetchData: () => void;
+  refetchData: () => Promise<void>;
   uiItemsTree: UiItemNode[];
   uiItemsList: UiItemNode[];
   tags: ITag[];
@@ -86,23 +86,25 @@ export const BuildUIContextProvider = ({
       );
   }, [uiGroups]);
 
-  const refetchData = useCallback(() => {
-    dataProvider
-      .getList(`uigroups`, {
-        pagination: {
-          perPage: 0,
-          page: 0,
-        },
-        filter: {
-          project_id: selectedProject?.id,
-        },
-        sort: {
-          field: "index",
-          order: "ASC",
-        },
-      })
-      .then((res) => setFetchedData(res.data as IUIGroup[]));
-  }, [selectedProject]);
+  const refetchData = useCallback(
+    () =>
+      dataProvider
+        .getList(`uigroups`, {
+          pagination: {
+            perPage: 0,
+            page: 0,
+          },
+          filter: {
+            project_id: selectedProject?.id,
+          },
+          sort: {
+            field: "index",
+            order: "ASC",
+          },
+        })
+        .then((res) => setFetchedData(res.data as IUIGroup[])),
+    [selectedProject]
+  );
 
   const dummyPatchForGroup = async (id: number) => {
     /** hack to get latest ui group object into cached resources */

@@ -67,6 +67,7 @@ const UIItemsTreeView = (): JSX.Element => {
 
       const group = uiGroups.find((g) => g.id == items?.[0]?.ui_group_id);
       if (!group) return null;
+      if (reorderingGroup == group.id) return <LinearProgress />;
       return (
         <DragDropContext
           onDragEnd={handleDragEnd}
@@ -107,14 +108,10 @@ const UIItemsTreeView = (): JSX.Element => {
                               group: classes.treeItemGroup,
                             }}
                             label={
-                              reorderingGroup == group.id ? (
-                                <LinearProgress />
-                              ) : (
-                                <TreeItemLabel
-                                  uiItem={i}
-                                  dragHandleProps={provided.dragHandleProps}
-                                />
-                              )
+                              <TreeItemLabel
+                                uiItem={i}
+                                dragHandleProps={provided.dragHandleProps}
+                              />
                             }
                             collapseIcon={
                               <ExpandMoreIcon
@@ -251,7 +248,7 @@ const UIItemsTreeView = (): JSX.Element => {
       collapseItem(i.id);
     });
   };
-  
+
   return (
     <Grid container spacing={3} direction="column">
       <Grid item xs={12} alignItems="center">

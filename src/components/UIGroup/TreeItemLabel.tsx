@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { UiItemNode, IUIItems } from "types/uiGroups";
 import {
   Box,
@@ -81,8 +81,8 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
       notify(`Deleted successfully!`, {
         type: "success",
       });
-      refetchData();
-      refresh();
+      await refetchData();
+      await refresh();
     } catch {
       notify(`Failed to delete!`, {
         type: "error",
