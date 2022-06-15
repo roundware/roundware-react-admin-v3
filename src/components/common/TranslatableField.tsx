@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import useFieldValue from "hooks/useFieldValue";
 import { useProjects } from "providers/ProjectsContext";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDataProvider } from "react-admin";
 import { ILanguage, LocalizedString } from "types";
 
@@ -31,6 +31,12 @@ const TranslatableField = ({
   const { selectedProject } = useProjects();
   const dataProvider = useDataProvider();
 
+  const dep = useMemo(
+    () =>
+      JSON.stringify(selectedProject?.language_ids) +
+      JSON.stringify(language_ids),
+    [selectedProject?.language_ids, language_ids]
+  );
   useEffect(() => {
     if (!fromProject && !selectedProject) return;
 
@@ -61,7 +67,7 @@ const TranslatableField = ({
       .finally(() => {
         setLoading(false);
       });
-  }, [selectedProject?.language_ids, language_ids]);
+  }, [dep]);
   const [selectedLanguage, setSelectedLanguage] = useState<number>(
     languages?.[0]?.id
   );
