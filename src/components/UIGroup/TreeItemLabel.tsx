@@ -44,10 +44,39 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
   const handleOnConfirmDelete = async () => {
     setDeleting(true);
     try {
+      const currentUiGroupItems = uiGroups.find(
+        (g) => (g.id = uiItem.ui_group_id)
+      )!.ui_items;
+
+      if (uiItem.index < currentUiGroupItems.length) {
+        // not last element
+        // TODO: decrement index of previous items after current;
+
+        // ui items having index greater than current
+        const uiItemsToBeUpdated = currentUiGroupItems.filter(
+          (i) => i.index > uiItem.index
+        );
+
+        // update with index - 1
+        await Promise.all(
+          uiItemsToBeUpdated.map((i) =>
+            dataProvider.update(`uiitems`, {
+              id: i.id,
+              data: {
+                index: i.index - 1,
+              },
+              previousData: i,
+              meta: {},
+            })
+          )
+        );
+      }
+      // last element delete with out issue
       await dataProvider.delete(`uiitems`, {
         id: uiItem.id,
         previousData: uiItem,
       });
+
       await dummyPatchForGroup(uiItem.ui_group_id);
       notify(`Deleted successfully!`, {
         type: "success",
