@@ -33,9 +33,9 @@ const TranslatableField = ({
 
   useEffect(() => {
     if (!fromProject && !selectedProject) return;
-    if (loading) return;
 
     setLoading(true);
+
     /** fetch all languages  */
     dataProvider
       .getList(`languages`, {
@@ -58,7 +58,9 @@ const TranslatableField = ({
         setLanguages(thisProjectLanguages);
         setSelectedLanguage(thisProjectLanguages?.[0]?.id);
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   }, [selectedProject?.language_ids, language_ids]);
   const [selectedLanguage, setSelectedLanguage] = useState<number>(
     languages?.[0]?.id
