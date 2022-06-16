@@ -11,6 +11,7 @@ import {
   Typography,
   CircularProgress,
   LinearProgress,
+  Switch,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
@@ -24,9 +25,21 @@ import {
   useRefresh,
   RaRecord,
   useRecordContext,
+  CreateResult,
+  DeleteResult,
+  UpdateResult,
 } from "react-admin";
 import { ITag } from "types/tags";
 import { IUIGroup, IUIItems, UiItemNode } from "types/uiGroups";
+import {
+  difference,
+  differenceBy,
+  groupBy,
+  isEqual,
+  remove,
+  sortBy,
+} from "lodash";
+import { LoadingButton } from "@mui/lab";
 const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
   const currentGroup = group;
   /**  selected group */
@@ -82,7 +95,7 @@ const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
       else acc.push(false);
       return acc;
     }, []);
-  }, [tagsToDisplay, previousGroupItems, prevGroup]);
+  }, [tagsToDisplay, previousGroupItems, prevGroup, getTagCount]);
 
   const [showDialog, setShowDialog] = useState(false);
   const handleOpen = () => setShowDialog(true);
@@ -90,111 +103,10 @@ const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
 
   const [disabledItems, setDisabledItems] = useState<number[]>([]);
 
-  const setLoadingOn = (tagId: ITag[`id`]) =>
-    setDisabledItems((prev) => [...prev, tagId]);
-  const setLoadingOff = (tagId: ITag[`id`]) =>
-    setDisabledItems((prev) => prev?.filter((i) => i !== tagId));
-
   const notify = useNotify();
   const refresh = useRefresh();
 
   const dataProvider = useRoundwareDataProvider();
-  const handleOnChange = async (t: ITag, checked: boolean) => {
-    try {
-      setLoadingOn(t.id);
-
-      if (checked) {
-        const itemsToBeCreated: Omit<IUIItems, "id">[] = [];
-
-        /** for fist level */
-        if (currentGroup.index === 1) {
-          if (!currentGroupItems?.some((cgi) => cgi.tag_id == t.id)) {
-            itemsToBeCreated.push({
-              active: true,
-              default: false,
-              parent_id: null,
-              tag_id: t.id,
-              index: currentGroupItems?.length + 1,
-              ui_group_id: Number(currentGroup.id),
-            });
-          }
-        } else {
-          /** need nest below all the items from parent element */
-          previousGroupItems?.forEach((i) => {
-            /** only if item with that tag id doesn't exists */
-            if (
-              !currentGroupItems?.some(
-                (cgi) => cgi.parent_id == i.id && cgi.tag_id == t.id
-              )
-            ) {
-              /** calculate new index */
-              const index = currentGroupItems?.reduce<number>((acc, crr) => {
-                if (crr.parent_id == i.id) return acc + 1;
-                return acc;
-              }, 1);
-
-              /** add to items to be created list */
-              itemsToBeCreated.push({
-                active: true,
-                default: false,
-                parent_id: i.id,
-                tag_id: t.id,
-                index,
-                ui_group_id: Number(currentGroup.id),
-              });
-            }
-          });
-        }
-
-        const promises = itemsToBeCreated?.map((i) =>
-          dataProvider.create(`uiitems`, {
-            data: i,
-          })
-        );
-        /**resolve all create requests */
-        await Promise.all(promises);
-      } else {
-        /** need to delete on unselect */
-        const itemsIdsToBeDeleted = currentGroupItems?.reduce<number[]>(
-          (acc, crr) => {
-            if (crr.tag_id == t.id) {
-              acc.push(crr.id);
-            }
-            return acc;
-          },
-          []
-        );
-
-        /** delete req promises */
-        const promises = itemsIdsToBeDeleted.map((i) =>
-          dataProvider.delete(`uiitems`, {
-            id: i,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            previousData: undefined! as RaRecord,
-          })
-        );
-
-        /** resolve al promises */
-        await Promise.all(promises);
-      }
-      /** get the latest ui items in the group object */
-      await dummyPatchForGroup(Number(currentGroup.id));
-      /** refresh the data */
-      refresh();
-      refetchData();
-      /** notify user! */
-
-      notify(`${checked ? `Added` : `Deleted`} item "${t?.value}" `, {
-        type: "success",
-      });
-    } catch {
-      notify(`Something went wrong. Sorry`, {
-        type: "error",
-      });
-    } finally {
-      setLoadingOff(t.id);
-    }
-  };
 
   const redirect = useRedirect();
   const handleAddMore = () =>
@@ -204,6 +116,142 @@ const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
         tag_category_id: `%d${currentGroup?.tag_category_id}`,
       })}`
     );
+
+  const alreadyCommonTags = useMemo(() => {
+    return tagsToDisplay?.filter((t, i) => checkboxValues[i]) || [];
+  }, [tagsToDisplay, checkboxValues]);
+
+  const [dirtyList, setDirtyList] = useState<ITag[]>(alreadyCommonTags);
+  const addItem = (t: ITag) => setDirtyList((prev) => [...prev, t]);
+  const removeItem = (t: ITag) =>
+    setDirtyList((prev) => [...prev].filter((i) => i.id != t.id));
+
+  const saveDisable = useMemo(
+    () =>
+      isEqual(
+        alreadyCommonTags.map((i) => i.id).sort((a, b) => (a > b ? 1 : -1)),
+        dirtyList.map((i) => i.id).sort((a, b) => (a > b ? 1 : -1))
+      ),
+    [alreadyCommonTags, dirtyList, currentGroupItems]
+  );
+
+  const [loading, setLoading] = useState(false);
+
+  const handleSave = async () => {
+    setLoading(true);
+
+    let newUiItemsList: IUIItems[] = currentGroupItems;
+
+    const tagsToBeCreated = differenceBy(dirtyList, alreadyCommonTags, "id");
+
+    tagsToBeCreated.forEach((t) => {
+      if (currentGroup.index == 1) {
+        const lastIndex = Math.max(...newUiItemsList.map((i) => i.index));
+
+        newUiItemsList.push({
+          id: undefined!,
+          tag_id: t.id,
+          active: true,
+          default: false,
+          index: lastIndex + 1,
+          ui_group_id: currentGroup.id,
+          parent_id: null,
+        });
+      } else {
+        previousGroupItems.forEach((pgi) => {
+          const lastIndex = Math.max(
+            ...newUiItemsList
+              .filter((i) => i.parent_id == pgi.id)
+              .map((i) => i.index)
+          );
+
+          newUiItemsList.push({
+            id: undefined!,
+            tag_id: t.id,
+            active: true,
+            default: false,
+            index: lastIndex + 1,
+            ui_group_id: currentGroup.id,
+            parent_id: pgi.id,
+          });
+        });
+      }
+    });
+
+    const tagsToBeDeleted = differenceBy(
+      Object.keys(groupBy(currentGroupItems, "tag_id"))
+        .map((t) => tagsToDisplay.find((dt) => dt.id == Number(t))!)
+        .filter((t) => !!t),
+      dirtyList,
+      "id"
+    );
+
+    newUiItemsList = newUiItemsList.filter(
+      (i) => !tagsToBeDeleted.some((t) => t.id == i.tag_id)
+    );
+
+    // indexes in sorted order;
+    const groupedItems = groupBy(newUiItemsList, "parent_id");
+
+    let promises: (
+      | Promise<CreateResult<RaRecord>>
+      | Promise<UpdateResult<RaRecord>>
+      | Promise<DeleteResult<RaRecord>>
+    )[] = [];
+
+    Object.values(groupedItems).forEach((g) => {
+      const sortedIndexWise = g.sort((a, b) => (a.index > b.index ? 1 : -1));
+      sortedIndexWise.forEach((i, index) => {
+        const expectedIndex = index + 1;
+
+        if (!i.id) {
+          promises.push(
+            dataProvider.create(`uiitems`, {
+              data: {
+                ...i,
+                index: expectedIndex,
+              },
+            })
+          );
+        } else if (i.index != expectedIndex) {
+          promises.push(
+            dataProvider.update(`uiitems`, {
+              id: i.id,
+              data: {
+                ...i,
+                index: expectedIndex,
+              },
+              previousData: i,
+            })
+          );
+        }
+      });
+    });
+
+    currentGroupItems.forEach((i) => {
+      if (tagsToBeDeleted.some((t) => t.id == i.tag_id)) {
+        promises.push(
+          dataProvider.delete(`uiitems`, {
+            id: i.id,
+          })
+        );
+      }
+    });
+
+    await Promise.all(promises);
+    /** get the latest ui items in the group object */
+    await dummyPatchForGroup(Number(currentGroup.id));
+    /** refresh the data */
+    await refetchData();
+    await refresh();
+    /** notify user! */
+
+    notify(`Saved changes successfully`, {
+      type: "success",
+    });
+    setLoading(false);
+    handleClose();
+  };
 
   return (
     <>
@@ -218,9 +266,10 @@ const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
             <Grid item container spacing={4} wrap="nowrap" alignItems="center">
               <Grid item>
                 <Typography variant="h6">
-                  Add Common Item at all levels
+                  Common Items For All Levels
                 </Typography>
               </Grid>
+
               <Grid item>
                 <IconButton onClick={handleClose} size="large">
                   <CloseIcon />
@@ -237,11 +286,12 @@ const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
                     })`}
                     control={
                       <Checkbox
-                        checked={checkboxValues[index]}
-                        onChange={(_e, checked) => handleOnChange(i, checked)}
+                        checked={dirtyList.some((t) => t.id == i.id)}
+                        onChange={(_e, checked) =>
+                          checked ? addItem(i) : removeItem(i)
+                        }
                       />
                     }
-                    disabled={Boolean(disabledItems?.length)}
                   />
                 </Grid>
               ))}
@@ -253,7 +303,14 @@ const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
           <Button color="primary" onClick={handleAddMore}>
             Create more Tags in this category?
           </Button>
-          <Button onClick={handleClose}>Close</Button>
+          <LoadingButton
+            loading={loading}
+            variant="contained"
+            disabled={saveDisable}
+            onClick={handleSave}
+          >
+            Save
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </>
