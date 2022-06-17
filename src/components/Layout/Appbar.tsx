@@ -18,6 +18,7 @@ import React, { memo, useState } from "react";
 import { HideOnScroll, useRedirect, UserMenu, useUserMenu } from "react-admin";
 import { SidebarToggleButton } from "./SidebarToggleButton";
 import RefreshButton from "./RefreshButton";
+import { useNavigate } from "react-router-dom";
 const AppBar = (): JSX.Element => {
   const props = useUserMenu();
 
@@ -29,7 +30,7 @@ const AppBar = (): JSX.Element => {
   const { projectsList, selectedProject, selectProject } = useProjects();
 
   const [isCreate, setIsCreate] = useState(false);
-
+  const navigate = useNavigate();
   const handleOnChange = (
     event: SelectChangeEvent<string | number>,
     child: React.ReactNode
@@ -46,6 +47,8 @@ const AppBar = (): JSX.Element => {
       return redirect(`create`, `/projects`);
     }
     selectProject(projectsList?.find((p) => p?.id === value) || null);
+    if ([`none`, `create`].includes(value.toString())) return;
+    navigate(`/project/${value}`);
   };
 
   return (

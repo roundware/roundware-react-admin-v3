@@ -1,27 +1,36 @@
 import { LocalizationProvider } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import ProjectRoute from "ProjectRoute";
 import { BuildUIContextProvider } from "providers/BuildUIContext";
 import { RoundwareDataProviderContextProvider } from "providers/DataProviderContext";
 import { SpeakersProvider } from "providers/SpeakersContext";
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import App from "./App";
 import "./index.css";
 import { ProjectsProvider } from "./providers/ProjectsContext";
 
 ReactDOM.render(
   <React.StrictMode>
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <RoundwareDataProviderContextProvider>
-        <ProjectsProvider>
-          <SpeakersProvider>
-            <BuildUIContextProvider>
-              <App />
-            </BuildUIContextProvider>
-          </SpeakersProvider>
-        </ProjectsProvider>
-      </RoundwareDataProviderContextProvider>
-    </LocalizationProvider>
+    <BrowserRouter>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <RoundwareDataProviderContextProvider>
+          <ProjectsProvider>
+            <SpeakersProvider>
+              <BuildUIContextProvider>
+                <Routes>
+                  <Route
+                    path={`/project/:projectId/*`}
+                    element={<ProjectRoute />}
+                  />
+                </Routes>
+              </BuildUIContextProvider>
+            </SpeakersProvider>
+          </ProjectsProvider>
+        </RoundwareDataProviderContextProvider>
+      </LocalizationProvider>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")
 );

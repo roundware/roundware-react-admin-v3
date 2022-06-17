@@ -14,6 +14,7 @@ import React, { useEffect, useState } from "react";
 import { List, useRecordContext } from "react-admin";
 import { IProject, useProjects } from "../../providers/ProjectsContext";
 import SearchIcon from "@mui/icons-material/Search";
+import { useNavigate } from "react-router-dom";
 const ProjectList = (): JSX.Element => {
   const { setProjectsList } = useProjects();
   return (
@@ -47,9 +48,10 @@ const ProjectCard = () => {
   const classes = useCardStyles();
   const { selectProject, setProjectsList, projectsList } = useProjects();
 
+  const navigate = useNavigate();
   const handleOnProjectSelect = (p: IProject) => {
     selectProject(p);
-    redirect(`/`);
+    navigate(`/project/${p.id}/`);
   };
 
   const [textFilter, setTextFilter] = useState("");

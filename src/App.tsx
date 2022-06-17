@@ -14,6 +14,7 @@ import {
   Translate,
   WebAsset,
 } from "@mui/icons-material";
+import { LinearProgress } from "@mui/material";
 import {
   AudioTrackCreate,
   AudioTrackEdit,
@@ -36,8 +37,9 @@ import { UiGroupCreate, UiGroupEdit } from "components/UIGroup/index";
 import { UiGroupList } from "components/UIGroup/UIGroupsList";
 import { UserCreate, UserEdit, UserList } from "components/User";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Admin, EditGuesser, ListGuesser, Resource } from "react-admin";
+import { useLocation, useParams, useRoutes } from "react-router-dom";
 import AssetCreate from "./components/Asset/AssetCreate";
 import AssetEdit from "./components/Asset/AssetEdit";
 import AssetList from "./components/Asset/AssetList";
@@ -56,10 +58,13 @@ import { SessionCreate, SessionEdit, SessionList } from "./components/Session";
 import authProvider from "./providers/AuthProvider";
 import { useProjects } from "./providers/ProjectsContext";
 import adminTheme from "./styles";
+import { createBrowserHistory } from "history";
 
+const history = createBrowserHistory();
 function App(): JSX.Element {
-  const { selectedProject } = useProjects();
+  const { selectedProject, selectProject, projectsList } = useProjects();
   const dataProvider = useRoundwareDataProvider();
+
   return (
     <Admin
       theme={adminTheme}
@@ -67,9 +72,11 @@ function App(): JSX.Element {
       title="Roundware Admin"
       dataProvider={dataProvider}
       authProvider={authProvider}
+      history={history}
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      dashboard={selectedProject && Dashboard}
+      dashboard={Dashboard}
+      basename={`/project/${selectedProject?.id}`}
       // eslint-disable-next-line react/no-children-prop
       children={[
         <Resource
@@ -81,7 +88,7 @@ function App(): JSX.Element {
           show={ProjectShow}
           icon={AccountTree}
         />,
-        ...(process.env.REACT_APP_INCLUDE_TABS === "all"
+        ...(selectedProject && process.env.REACT_APP_INCLUDE_TABS === "all"
           ? Object.values(resourceLookup)
           : process.env.REACT_APP_INCLUDE_TABS?.split(`,`)
               ?.filter((r) => Object.keys(resourceLookup).includes(r))
