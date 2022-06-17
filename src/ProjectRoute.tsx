@@ -5,9 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-admin";
 import { useParams } from "react-router-dom";
 
-type Props = {};
-
-const ProjectRoute = (props: Props) => {
+const ProjectRoute = () => {
   const { isLoading, authenticated } = useAuthState();
   const { projectId } = useParams();
   const { selectProject, projectsList } = useProjects();
