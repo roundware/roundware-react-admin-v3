@@ -193,7 +193,7 @@ const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
     // indexes in sorted order;
     const groupedItems = groupBy(newUiItemsList, "parent_id");
 
-    let promises: (
+    const promises: (
       | Promise<CreateResult<RaRecord>>
       | Promise<UpdateResult<RaRecord>>
       | Promise<DeleteResult<RaRecord>>
