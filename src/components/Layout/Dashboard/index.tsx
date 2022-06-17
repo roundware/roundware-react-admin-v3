@@ -4,7 +4,12 @@ import { Skeleton } from "@mui/material";
 import subDays from "date-fns/fp/subDays/index.js";
 import { GetListParams } from "ra-core";
 import React, { useCallback, useEffect, useState } from "react";
-import { GetListResult, RaRecord, useDataProvider } from "react-admin";
+import {
+  GetListResult,
+  RaRecord,
+  useDataProvider,
+  useRedirect,
+} from "react-admin";
 import { useProjects } from "../../../providers/ProjectsContext";
 import DashboardContent from "./DashboardContent";
 import ProjectDetails from "./ProjectDetails";
@@ -126,8 +131,9 @@ const Dashboard = (): JSX.Element => {
     [selectedProject?.id]
   );
 
+  const redirect = useRedirect();
   useEffect(() => {
-    if (!selectedProject) return;
+    if (!selectedProject) return redirect(`list`, `/projects`);
     const controller = new AbortController();
     try {
       updateData(controller.signal);

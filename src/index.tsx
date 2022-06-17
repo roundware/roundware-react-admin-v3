@@ -24,6 +24,10 @@ ReactDOM.render(
                     path={`/project/:projectId/*`}
                     element={<ProjectRoute />}
                   />
+                  <Route
+                    path={"*"}
+                    element={<Navigate to={`/project/undefined`} />}
+                  />
                 </Routes>
               </BuildUIContextProvider>
             </SpeakersProvider>
