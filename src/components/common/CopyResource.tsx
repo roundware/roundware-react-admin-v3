@@ -11,7 +11,9 @@ import {
 type Props = {
   onSuccess?: () => void;
 };
-const CopyResourceButton = ({ onSuccess = () => {} }: Props) => {
+const CopyResourceButton = ({
+  onSuccess = () => console.log(`copied`),
+}: Props) => {
   const [loading, setLoading] = useState(false);
   const record = useRecordContext();
   const dataProvider = useDataProvider();
@@ -30,6 +32,7 @@ const CopyResourceButton = ({ onSuccess = () => {} }: Props) => {
         type: `success`,
       });
       onSuccess();
+      refresh();
       await redirect(`edit`, `/speakers`, res.data.id);
     } catch {
       notify(`Something went wrong!`, {
