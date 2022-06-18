@@ -1,11 +1,9 @@
-import { LinearProgress } from "@mui/material";
 import App from "App";
+import SplashScreen from "components/Layout/SplashScreen";
 import tokenAuthProvider from "providers/AuthProvider";
 import { useProjects } from "providers/ProjectsContext";
 import React, { useEffect, useState } from "react";
-import { useAuthState } from "react-admin";
 import { useParams } from "react-router-dom";
-
 const ProjectRoute = () => {
   const { projectId } = useParams();
   const { selectProject, projectsList } = useProjects();
@@ -25,7 +23,7 @@ const ProjectRoute = () => {
       .catch(() => setLoading(false));
   }, [projectsList]);
 
-  if (loading) return <LinearProgress />;
+  if (loading) return <SplashScreen />;
 
   return <App />;
 };
