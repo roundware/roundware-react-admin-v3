@@ -6,8 +6,7 @@ import { RoundwareDataProviderContextProvider } from "providers/DataProviderCont
 import { SpeakersProvider } from "providers/SpeakersContext";
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import App from "./App";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./index.css";
 import { ProjectsProvider } from "./providers/ProjectsContext";
 

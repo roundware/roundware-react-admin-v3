@@ -1,3 +1,6 @@
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
+import { LoadingButton } from "@mui/lab";
 import {
   Button,
   Checkbox,
@@ -7,39 +10,25 @@ import {
   FormControlLabel,
   Grid,
   IconButton,
+  LinearProgress,
   Tooltip,
   Typography,
-  CircularProgress,
-  LinearProgress,
-  Switch,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import CloseIcon from "@mui/icons-material/Close";
+import { differenceBy, groupBy, isEqual } from "lodash";
 import { useBuildUI } from "providers/BuildUIContext";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import React, { useCallback, useMemo, useState } from "react";
 import {
-  DatagridRowProps,
+  CreateResult,
+  DeleteResult,
+  RaRecord,
+  UpdateResult,
   useNotify,
   useRedirect,
   useRefresh,
-  RaRecord,
-  useRecordContext,
-  CreateResult,
-  DeleteResult,
-  UpdateResult,
 } from "react-admin";
 import { ITag } from "types/tags";
 import { IUIGroup, IUIItems, UiItemNode } from "types/uiGroups";
-import {
-  difference,
-  differenceBy,
-  groupBy,
-  isEqual,
-  remove,
-  sortBy,
-} from "lodash";
-import { LoadingButton } from "@mui/lab";
 const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
   const currentGroup = group;
   /**  selected group */
@@ -100,8 +89,6 @@ const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
   const [showDialog, setShowDialog] = useState(false);
   const handleOpen = () => setShowDialog(true);
   const handleClose = () => setShowDialog(false);
-
-  const [disabledItems, setDisabledItems] = useState<number[]>([]);
 
   const notify = useNotify();
   const refresh = useRefresh();
@@ -297,7 +284,6 @@ const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
               ))}
             </Grid>
           </Grid>
-          {disabledItems?.length > 0 && <LinearProgress />}
         </DialogContent>
         <DialogActions>
           <Button color="primary" onClick={handleAddMore}>
