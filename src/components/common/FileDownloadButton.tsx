@@ -15,6 +15,7 @@ const FileDownloadButton = ({ source }: Props) => {
       startIcon={<DownloadIcon />}
       onClick={() => {
         const link = document.createElement("a");
+        link.target = `_self`;
         link.download = id + "_" + file.substring(file.lastIndexOf("/") + 1);
         link.href = file;
         // link.target = "_blank";

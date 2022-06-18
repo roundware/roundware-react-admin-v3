@@ -9,7 +9,7 @@ import {
   useRefresh,
 } from "react-admin";
 type Props = {
-  onSuccess: () => void;
+  onSuccess?: () => void;
 };
 const CopyResourceButton = ({ onSuccess = () => {} }: Props) => {
   const [loading, setLoading] = useState(false);
