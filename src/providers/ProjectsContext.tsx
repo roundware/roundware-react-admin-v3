@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { useAuthProvider, useAuthState } from "react-admin";
+import { useNavigate } from "react-router-dom";
+import tokenAuthProvider from "./AuthProvider";
 import { useRoundwareDataProvider } from "./DataProviderContext";
 export interface IProject {
   id: number;
@@ -58,11 +61,9 @@ export const ProjectsProvider = ({
   const [project, setProject] = useState<IProject | null>(null);
 
   const [projectsList, setProjectsList] = useState<IProject[] | null>(null);
-
+  const navigate = useNavigate();
   const selectProject = (project: IProject | null) => {
     if (dataProvider && project) dataProvider.currentProjectId = project?.id;
-
-    setProject(null); // this will trigger an unmount for previos project dashboard
     setProject(project);
   };
 
@@ -89,6 +90,11 @@ export const ProjectsProvider = ({
           if (project)
             setProject(r.data.find((p) => p.id == project.id) || null);
         }
+      })
+      .catch((e) => {
+        console.error(e);
+        tokenAuthProvider.logout({});
+        navigate(`/project/undefined`);
       });
 
   return (

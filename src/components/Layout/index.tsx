@@ -86,10 +86,7 @@ const CustomSidebar = (props: SidebarProps) => {
 const CustomLayout = (props: LayoutProps): JSX.Element => {
   const { selectedProject } = useProjects();
   const redirect = useRedirect();
-  useEffect(() => {
-    if (!selectedProject) redirect(`list`, `/projects`);
-    else redirect(`/`);
-  }, [selectedProject]);
+
   return (
     <Layout
       {...props}

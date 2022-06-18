@@ -89,45 +89,46 @@ export const Menu = (props: MenuProps) => {
           to={{
             pathname: `/${
               selectedProject
-                ? `projects/${selectedProject.id}/show`
-                : `projects`
+                ? `project/${selectedProject.id}/projects/${selectedProject.id}/show`
+                : `project/undefined`
             }`,
           }}
           primaryText={selectedProject ? `Project` : `All Projects`}
           leftIcon={<AccountTree />}
         />
 
-        {Object.keys(uiOrder).map((g) => (
-          <SubMenu
-            key={g}
-            isOpen={state[g]}
-            name={capitalize(g)}
-            dense={false}
-            handleToggle={() => handleToggle(g)}
-            icon={icons[g]}
-          >
-            {uiOrder[g]
-              .map((i) => resources.find((r) => r.name == i))
-              .map((resource) =>
-                resource ? (
-                  <MenuItemLink
-                    key={resource.name}
-                    to={{
-                      pathname: `/${resource.name}`,
-                    }}
-                    primaryText={
-                      (resource.options && resource.options.label) ||
-                      resource.name.toString().charAt(0).toUpperCase() +
-                        resource.name.substr(1)
-                    }
-                    leftIcon={
-                      resource.icon ? <resource.icon /> : <DefaultIcon />
-                    }
-                  />
-                ) : null
-              )}
-          </SubMenu>
-        ))}
+        {selectedProject &&
+          Object.keys(uiOrder).map((g) => (
+            <SubMenu
+              key={g}
+              isOpen={state[g]}
+              name={capitalize(g)}
+              dense={false}
+              handleToggle={() => handleToggle(g)}
+              icon={icons[g]}
+            >
+              {uiOrder[g]
+                .map((i) => resources.find((r) => r.name == i))
+                .map((resource) =>
+                  resource ? (
+                    <MenuItemLink
+                      key={resource.name}
+                      to={{
+                        pathname: `/project/${selectedProject.id}/${resource.name}`,
+                      }}
+                      primaryText={
+                        (resource.options && resource.options.label) ||
+                        resource.name.toString().charAt(0).toUpperCase() +
+                          resource.name.substr(1)
+                      }
+                      leftIcon={
+                        resource.icon ? <resource.icon /> : <DefaultIcon />
+                      }
+                    />
+                  ) : null
+                )}
+            </SubMenu>
+          ))}
       </div>
     </RAMenu>
   );
