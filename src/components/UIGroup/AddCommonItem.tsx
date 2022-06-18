@@ -10,7 +10,6 @@ import {
   FormControlLabel,
   Grid,
   IconButton,
-  LinearProgress,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -265,7 +264,7 @@ const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
             </Grid>
 
             <Grid item container direction="column">
-              {tagsToDisplay?.map((i, index) => (
+              {tagsToDisplay?.map((i) => (
                 <Grid item key={i.id}>
                   <FormControlLabel
                     label={`${i?.value} (${getTagCount(i)}/${
