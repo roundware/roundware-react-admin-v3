@@ -17,9 +17,11 @@ import {
 } from "react-admin";
 import { SpeakerEdit } from ".";
 import SpeakerShapesControl from "./SpeakerShapesControl";
+import CopyResourceButton from "components/common/CopyResource";
 const SpeakerList = (): JSX.Element => {
   const rc = useResourceContext();
   const { selectedProject } = useProjects();
+  const { fetchData } = useSpeakers();
   if (!selectedProject) return <>No Project Selected.</>;
   return (
     <>
@@ -57,6 +59,7 @@ const SpeakerList = (): JSX.Element => {
       <TextField source="boundary.type" /> */}
 
               <EditButton label="" style={{ margin: 0 }} />
+              <CopyResourceButton onSuccess={() => fetchData()} />
               <DeleteButton label="" />
             </Datagrid>
           </List>

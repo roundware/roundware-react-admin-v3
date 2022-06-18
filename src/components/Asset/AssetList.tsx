@@ -1,3 +1,4 @@
+import CopyResourceButton from "components/common/CopyResource";
 import TagIdSelector from "components/common/TagIdSelector";
 import React from "react";
 import {
@@ -95,6 +96,7 @@ export const AssetList = (): JSX.Element => {
           options={{ maximumFractionDigits: 3 }}
         />
         <EditButton />
+        <CopyResourceButton />
         <DeleteButton />
       </Datagrid>
     </List>

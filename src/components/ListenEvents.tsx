@@ -21,6 +21,7 @@ import {
   TextInput,
 } from "react-admin";
 import { useProjects } from "../providers/ProjectsContext";
+import CopyResourceButton from "./common/CopyResource";
 import FormToolbar from "./common/FormToolbar";
 
 export const ListenEventsList = (): JSX.Element => {
@@ -56,6 +57,7 @@ export const ListenEventsList = (): JSX.Element => {
         </ReferenceField>
         <EditButton />
         <DeleteButton />
+        <CopyResourceButton />
       </Datagrid>
     </List>
   );

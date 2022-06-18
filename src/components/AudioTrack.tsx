@@ -17,6 +17,7 @@ import {
   TextField,
   useRecordContext,
 } from "react-admin";
+import CopyResourceButton from "./common/CopyResource";
 import FormToolbar from "./common/FormToolbar";
 import RangeSlider from "./common/RangeSlider";
 export const AudioTrackList = (): JSX.Element => {
@@ -63,6 +64,7 @@ export const AudioTrackList = (): JSX.Element => {
           source="fadeout_when_filtered"
           label="Fade Out When Filtered"
         />
+        <CopyResourceButton />
       </Datagrid>
     </List>
   );

@@ -15,6 +15,7 @@ import {
   useRedirect,
 } from "react-admin";
 import FormToolbar from "./common/FormToolbar";
+import CopyResourceButton from "./common/CopyResource";
 export const TagCategoryList = (): JSX.Element => {
   return (
     <List>
@@ -24,6 +25,7 @@ export const TagCategoryList = (): JSX.Element => {
         <TextField source="data" />
         <RedirectButton />
         <EditButton />
+        <CopyResourceButton />
         <DeleteButton />
       </Datagrid>
     </List>

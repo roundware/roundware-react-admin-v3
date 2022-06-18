@@ -21,6 +21,7 @@ import {
 } from "react-admin";
 import { ITag } from "types/tags";
 import { handleLocalizedStrings } from "utils";
+import CopyResourceButton from "./common/CopyResource";
 import FormToolbar from "./common/FormToolbar";
 import TranslatableField from "./common/TranslatableField";
 
@@ -54,6 +55,7 @@ export const TagList = (): JSX.Element => {
           </ReferenceField>
           <EditButton />
           <DeleteButton />
+          <CopyResourceButton />
         </Datagrid>
       </List>
     </Box>
