@@ -1,5 +1,5 @@
 import useFieldValue from "hooks/useFieldValue";
-import React, { useEffect, useState } from "react";
+import React, { PropsWithChildren, useEffect, useState } from "react";
 import {
   CircularProgress,
   Typography,
@@ -26,7 +26,7 @@ const containerStyle = {
   height: "400px",
 };
 
-const LocationSelector = (props: Props): JSX.Element => {
+const LocationSelector = (props: PropsWithChildren<Props>): JSX.Element => {
   const [latValue, setLatValue] = useFieldValue<number>(
     props.fieldNames.latitude,
     0
@@ -118,6 +118,7 @@ const LocationSelector = (props: Props): JSX.Element => {
                         lat={lat || 0}
                         lng={lng || 0}
                       />
+                      {props.children || null}
                     </GoogleMap>
                   </Grid>
                 </Grid>

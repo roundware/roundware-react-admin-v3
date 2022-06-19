@@ -18,6 +18,7 @@ import {
 import { handleLocalizedStrings } from "utils";
 import { useProjects } from "../../providers/ProjectsContext";
 import AudioOptions from "../common/AudioOptions";
+import AssetShape from "./AssetShape";
 
 const AssetCreate = (): JSX.Element => {
   const dataProvider = useDataProvider();
@@ -100,7 +101,9 @@ const AssetCreate = (): JSX.Element => {
         <AudioOptions />
         <LocationSelector
           fieldNames={{ latitude: `latitude`, longitude: `longitude` }}
-        />
+        >
+          <AssetShape />
+        </LocationSelector>
         <TextInput multiline source="description" fullWidth minRows={2} />
         {/* <NumberInput source="latitude" />
         <NumberInput source="longitude" /> */}

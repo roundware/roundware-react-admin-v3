@@ -21,6 +21,7 @@ import {
 } from "react-admin";
 import { handleLocalizedStrings } from "utils";
 import { IAsset } from "../../types/asset";
+import AssetShape from "./AssetShape";
 
 const AssetEdit = (): JSX.Element => {
   const redirect = useRedirect();
@@ -140,7 +141,9 @@ const AssetEdit = (): JSX.Element => {
             latitude: `latitude`,
             longitude: `longitude`,
           }}
-        />
+        >
+          <AssetShape />
+        </LocationSelector>
 
         <NumberInput source="session_id" fullWidth />
         <ReferenceInput label="User" source="user.id" reference="users">
