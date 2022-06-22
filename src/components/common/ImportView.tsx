@@ -54,9 +54,6 @@ const ImportView = () => {
   const [data, setData] = useState<IAsset[]>([]);
   const total = data.length;
   const pc = useProjects();
-  const filters = [
-    <TextInput label="Search" source="q" size="small" alwaysOn />,
-  ];
 
   const filterValues = { q: filter };
   const setFilters = (filters: any) => setFilter(filters.q);
