@@ -1,4 +1,5 @@
 import CopyResourceButton from "components/common/CopyResource";
+import ListActions from "components/common/ListActions";
 import TagIdSelector from "components/common/TagIdSelector";
 import React from "react";
 import {
@@ -73,6 +74,7 @@ export const AssetList = (): JSX.Element => {
         field: "id",
         order: "DSC",
       }}
+      actions={<ListActions />}
     >
       <Datagrid optimized>
         <TextField source="id" />
