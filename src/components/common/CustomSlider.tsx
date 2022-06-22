@@ -27,7 +27,7 @@ const CustomSlider = ({
       spacing={1}
       alignItems="center"
       justifyContent="center"
-      style={{ height: "100%" }}
+      style={{ height: "100%", minHeight: 300 }}
     >
       <Typography>{label}</Typography>
 
