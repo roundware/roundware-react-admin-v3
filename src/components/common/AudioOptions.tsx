@@ -1,4 +1,11 @@
-import { CardContent, Grid, TextField, Theme, Typography } from "@mui/material";
+import {
+  CardContent,
+  Grid,
+  Stack,
+  TextField,
+  Theme,
+  Typography,
+} from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import Card from "@mui/material/Card";
 import React, { useEffect } from "react";
@@ -64,28 +71,17 @@ const AudioOptions = (): JSX.Element => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid
-            xs={12}
-            md={3}
-            container
-            item
-            direction="row"
-            spacing={3}
-            justifyContent="space-around"
-          >
-            <Grid item>
-              <VolumeSlider />
-            </Grid>
-            <Grid item>
-              <CustomSlider
-                vertical
-                icon={<LineWeightIcon />}
-                field={`weight`}
-                label="Weight"
-                defaultValue={50}
-              />
-            </Grid>
-          </Grid>
+          <Stack direction="row" spacing={3} justifyContent="space-around">
+            <VolumeSlider />
+
+            <CustomSlider
+              vertical
+              icon={<LineWeightIcon />}
+              field={`weight`}
+              label="Weight"
+              defaultValue={50}
+            />
+          </Stack>
         </Grid>
       </CardContent>
     </Card>
