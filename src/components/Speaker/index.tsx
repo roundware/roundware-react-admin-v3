@@ -111,7 +111,7 @@ export const SpeakerEdit = (): JSX.Element => {
             </Typography>
             <LinearProgress
               sx={{ width: "100%" }}
-              variant="determinate"
+              variant={progress == 100 ? `indeterminate` : "determinate"}
               value={parseFloat(progress.toFixed(2))}
             />
           </Stack>
@@ -199,7 +199,7 @@ export const SpeakerCreate = (): JSX.Element => {
             </Typography>
             <LinearProgress
               sx={{ width: "100%" }}
-              variant="determinate"
+              variant={progress == 100 ? `indeterminate` : "determinate"}
               value={parseFloat(progress.toFixed(2))}
             />
           </Stack>
