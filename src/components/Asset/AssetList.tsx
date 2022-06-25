@@ -1,6 +1,7 @@
 import CopyResourceButton from "components/common/CopyResource";
 import ListActions from "components/common/ListActions";
 import TagIdSelector from "components/common/TagIdSelector";
+import { useRoundwareDataProvider } from "providers/DataProviderContext";
 import React from "react";
 import {
   BooleanField,
@@ -18,6 +19,7 @@ import {
   SelectInput,
   SingleFieldList,
   TextField,
+  useDataProvider,
   useRecordContext,
 } from "react-admin";
 import { useProjects } from "../../providers/ProjectsContext";
@@ -25,6 +27,7 @@ import AudioPlayerField from "../common/AudioPlayerField";
 
 export const AssetList = (): JSX.Element => {
   const { selectedProject } = useProjects();
+  const dataProvider = useRoundwareDataProvider();
   return (
     <List
       filter={{ project_id: selectedProject?.id }}
@@ -98,7 +101,22 @@ export const AssetList = (): JSX.Element => {
           options={{ maximumFractionDigits: 3 }}
         />
         <EditButton />
-        <CopyResourceButton />
+        <CopyResourceButton
+          assignFirst={async () => {
+            const res = await dataProvider.create(`envelopes`, {
+              data: {
+                session_id: 1,
+              },
+            });
+            return { envelope_ids: Number(res.data.id) };
+          }}
+          transform={(a) => {
+            if (Array.isArray(a.tag_ids)) a.tag_ids = a.tag_ids.join(`,`);
+            a.session_id = 1;
+            a;
+            return a;
+          }}
+        />
         <DeleteButton />
       </Datagrid>
     </List>

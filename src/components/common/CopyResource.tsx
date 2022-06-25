@@ -2,6 +2,7 @@ import { IconButton, CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import CopyIcon from "@mui/icons-material/ContentCopy";
 import {
+  RaRecord,
   useDataProvider,
   useNotify,
   useRecordContext,
@@ -10,9 +11,13 @@ import {
 } from "react-admin";
 type Props = {
   onSuccess?: () => void;
+  assignFirst?: () => Promise<object>;
+  transform?: (d: RaRecord) => RaRecord;
 };
 const CopyResourceButton = ({
   onSuccess = () => console.log(`copied`),
+  assignFirst = async () => ({}),
+  transform = (a) => a,
 }: Props) => {
   const [loading, setLoading] = useState(false);
   const record = useRecordContext();
@@ -25,8 +30,11 @@ const CopyResourceButton = ({
     try {
       setLoading(true);
       const resourceName = window.location.pathname.split(`/`).reverse()[0];
+      const a = await assignFirst();
+      // @ts-ignore
+      if (record.id) delete record.id;
       const res = await dataProvider.create(resourceName, {
-        data: record,
+        data: Object.assign(transform(record), a),
       });
       notify(`Successfully copied ${resourceName} ${record.id}`, {
         type: `success`,
