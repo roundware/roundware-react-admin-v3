@@ -21,6 +21,7 @@ import {
 } from "react-admin";
 import { handleLocalizedStrings } from "utils";
 import { useFormContext } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 const ProjectEdit = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
   const redirect = useRedirect();
@@ -46,7 +47,7 @@ const ProjectEdit = (): JSX.Element => {
     return data;
   };
   const [warn, setWarn] = useState(true);
-
+  const navigate = useNavigate();
   return (
     <Edit
       title="Edit a project"
@@ -55,7 +56,9 @@ const ProjectEdit = (): JSX.Element => {
       mutationOptions={{
         onSuccess: () => {
           setWarn(false);
-          pc.refetch().then(() => redirect(`/`));
+          pc.refetch().then(() =>
+            navigate(`/project/${pc.selectedProject?.id}`)
+          );
         },
       }}
       queryOptions={{}}

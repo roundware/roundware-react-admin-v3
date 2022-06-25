@@ -20,6 +20,7 @@ import {
   TextInput,
   useRedirect,
 } from "react-admin";
+import { useNavigate } from "react-router-dom";
 import { handleLocalizedStrings } from "utils";
 const ProjectCreate = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
@@ -45,14 +46,14 @@ const ProjectCreate = (): JSX.Element => {
     return data;
   };
   const pc = useProjects();
+  const navigate = useNavigate();
   return (
     <Create
       title="Create a new project"
       mutationOptions={{
         onSuccess: (data: IProject) => {
-          pc.refetch()
-            .then(() => pc.selectProject(data))
-            .then(() => redirect(`/`));
+          pc.refetch().then(() => pc.selectProject(data));
+          navigate(`/project/${data.id}`);
         },
       }}
       transform={transform}
