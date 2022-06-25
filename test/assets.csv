@@ -1,4 +1,4 @@
-envelope_ids,filename,media_type,loc_description_admin,loc_alt_text_admin,latitude,longitude,submitted,tag_ids,volume,weight
--1,test1.mp3,audio,"[{ language_id: 1, text: ""desc1"" } , { language_id: 2, text: ""desc1"" }]","[{ language_id: 1, text: ""alt1"" } , { language_id: 2, text: ""alt1"" }]",20,30,TRUE,"3,4",1,1
-4,test2.mp3,audio,"[{ language_id: 1, text: ""desc2"" } , { language_id: 2, text: ""desc2"" }]","[{ language_id: 1, text: ""alt2"" } , { language_id: 2, text: ""alt2"" }]",20,30,TRUE,"3,4",0.5,1
-5,test3.mp3,audio,"[{ language_id: 1, text: ""desc1"" } , { language_id: 2, text: ""desc1"" }]","[{ language_id: 1, text: ""alt3"" } , { language_id: 2, text: ""alt3"" }]",20,30,TRUE,"3,4",0.8,1
+envelope_ids,filename,media_type,description,latitude,longitude,submitted,tag_ids,volume,weight
+,test1.mp3,audio,test description,20,30,TRUE,"3,4",1,1
+4,test2.mp3,audio,asset 2,49,43,TRUE,"3,4",0.5,1
+5,test3.mp3,audio,something,34,34,TRUE,"3,4",0.8,1

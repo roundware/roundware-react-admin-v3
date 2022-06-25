@@ -21,10 +21,11 @@ const ProjectShow = (props: Props): JSX.Element => {
   const redirect = useRedirect();
   const { record } = useShowController(props);
   React.useEffect(() => {
+    if (!record) return;
     if (record?.id !== selectedProject?.id) {
       redirect(`/projects/${selectedProject?.id}/show`);
     }
-  }, [selectedProject]);
+  }, [selectedProject, record]);
 
   return (
     <Show title="Project Details">

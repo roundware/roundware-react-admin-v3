@@ -35,48 +35,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
 }));
-const CustomAppBar = (props: AppBarProps) => {
-  const classes = useStyles();
-  const { projectsList, selectedProject, selectProject } = useProjects();
 
-  const [open] = useSidebarState();
-  return (
-    <AppBar {...props} open={open} className={classes.appBar}>
-      <Toolbar className={classes.toolbar}>
-        <InputLabel variant="standard" className={classes.label}>
-          Project:{" "}
-        </InputLabel>
-        <FormControl className={classes.formControl}>
-          <Select
-            defaultValue={selectedProject?.id || "none"}
-            id="grouped-select"
-            className={classes.select}
-            value={selectedProject?.id || "none"}
-            onChange={(e, child) => {
-              const { value } = e.target;
-              if (!value) return;
-              if (value === "create") return;
-              selectProject(projectsList?.find((p) => p?.id === value) || null);
-            }}
-          >
-            <MenuItem value="none">
-              <em>None</em>
-            </MenuItem>
-            <MenuItem value={"create"}>Create New Project</MenuItem>
-            {Array.isArray(projectsList) && projectsList.length > 0 && (
-              <ListSubheader>Recent</ListSubheader>
-            )}
-            {projectsList?.map((p) => (
-              <MenuItem key={p?.id} value={p?.id}>
-                {p?.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Toolbar>
-    </AppBar>
-  );
-};
 const CustomSidebar = (props: SidebarProps) => {
   const { selectedProject } = useProjects();
   if (!selectedProject) return null;
@@ -84,9 +43,6 @@ const CustomSidebar = (props: SidebarProps) => {
 };
 
 const CustomLayout = (props: LayoutProps): JSX.Element => {
-  const { selectedProject } = useProjects();
-  const redirect = useRedirect();
-
   return (
     <Layout
       {...props}

@@ -93,7 +93,7 @@ export const ProjectsProvider = ({
       .catch((e) => {
         console.error(e);
         tokenAuthProvider.logout({});
-        navigate(`/project/undefined`);
+        navigate(`/`);
       });
 
   return (

@@ -40,11 +40,12 @@ const AppBar = (): JSX.Element => {
 
     if (value == "none") {
       selectProject(null);
-      return redirect(`list`, `/projects`);
+      return navigate(`/projects`);
     }
     if (value === "create") {
       setIsCreate(true);
-      return redirect(`create`, `/projects`);
+      selectProject(null);
+      return navigate(`/projects/create`);
     }
     selectProject(projectsList?.find((p) => p?.id === value) || null);
     if ([`none`, `create`].includes(value.toString())) return;

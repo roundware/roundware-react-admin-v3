@@ -1,24 +1,25 @@
-import { useMediaQuery } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import { AccountTree } from "@mui/icons-material";
 import DefaultIcon from "@mui/icons-material/ViewList";
+import { MenuItem, useMediaQuery } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
 import {
   DashboardMenuItem,
   Menu as RAMenu,
   MenuItemLink,
   MenuProps,
-  ResourceDefinition,
   useResourceDefinitions,
   useSidebarState,
 } from "react-admin";
 
+import AdjustIcon from "@mui/icons-material/Adjust";
+import CategoryIcon from "@mui/icons-material/Category";
+import PublicIcon from "@mui/icons-material/Public";
+import { capitalize } from "lodash";
 import { useProjects } from "../../providers/ProjectsContext";
 import SubMenu from "./SubMenu";
-import { capitalize } from "lodash";
-import PublicIcon from "@mui/icons-material/Public";
-import CategoryIcon from "@mui/icons-material/Category";
-import AdjustIcon from "@mui/icons-material/Adjust";
+import { useNavigate } from "react-router-dom";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 const useStyles = makeStyles(() => ({
   raMenu: {
     paddingTop: "30px",
@@ -78,10 +79,21 @@ export const Menu = (props: MenuProps) => {
     setState((state) => ({ ...state, [menu]: !state[menu] }));
   };
 
+  const navigate = useNavigate();
+
   return (
     <RAMenu {...props} className={classes.raMenu}>
       <div onMouseEnter={openMenu} onMouseLeave={closeMenu}>
-        {selectedProject && <DashboardMenuItem />}
+        {selectedProject && (
+          <MenuItemLink
+            key={`dashboard`}
+            primaryText={`Dashboard`}
+            leftIcon={<DashboardIcon />}
+            to={{
+              pathname: `/project/${selectedProject.id}`,
+            }}
+          />
+        )}
         {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
         {/* @ts-ignore */}
         <MenuItemLink
@@ -90,7 +102,7 @@ export const Menu = (props: MenuProps) => {
             pathname: `/${
               selectedProject
                 ? `project/${selectedProject.id}/projects/${selectedProject.id}/show`
-                : `project/undefined`
+                : `projects`
             }`,
           }}
           primaryText={selectedProject ? `Project` : `All Projects`}

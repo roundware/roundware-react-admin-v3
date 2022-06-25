@@ -61,8 +61,8 @@ import adminTheme from "./styles";
 import { createBrowserHistory } from "history";
 
 const history = createBrowserHistory();
-function App(): JSX.Element {
-  const { selectedProject, selectProject, projectsList } = useProjects();
+function App({ basename }: { basename: string }): JSX.Element {
+  const { selectedProject } = useProjects();
   const dataProvider = useRoundwareDataProvider();
 
   return (
@@ -76,11 +76,14 @@ function App(): JSX.Element {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       dashboard={Dashboard}
-      basename={`/project/${selectedProject?.id}`}
+      basename={basename}
       // eslint-disable-next-line react/no-children-prop
       children={[
         <Resource
           name="projects"
+          options={{
+            label: `Projects`,
+          }}
           key="projects"
           list={ProjectList}
           create={ProjectCreate}
@@ -97,6 +100,7 @@ function App(): JSX.Element {
     />
   );
 }
+export const BaseApp = App;
 
 export default App;
 const resourceLookup: { [index: string]: React.ReactNode } = {

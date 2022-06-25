@@ -6,6 +6,7 @@ import { RoundwareDataProviderContextProvider } from "providers/DataProviderCont
 import { SpeakersProvider } from "providers/SpeakersContext";
 import React from "react";
 import ReactDOM from "react-dom";
+
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./index.css";
 import { ProjectsProvider } from "./providers/ProjectsContext";
@@ -23,10 +24,7 @@ ReactDOM.render(
                     path={`/project/:projectId/*`}
                     element={<ProjectRoute />}
                   />
-                  <Route
-                    path={"*"}
-                    element={<Navigate to={`/project/undefined`} />}
-                  />
+                  <Route path={`/*`} element={<ProjectRoute />} />
                 </Routes>
               </BuildUIContextProvider>
             </SpeakersProvider>
