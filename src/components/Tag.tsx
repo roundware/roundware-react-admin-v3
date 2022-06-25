@@ -17,6 +17,7 @@ import {
   TextField,
   TextInput,
   useDataProvider,
+  useRedirect,
   useRefresh,
 } from "react-admin";
 import { ITag } from "types/tags";
@@ -85,6 +86,7 @@ export const TagEdit = (): JSX.Element => {
   const { refetchData } = useBuildUI();
 
   const refresh = useRefresh();
+  const redirect = useRedirect();
   return (
     <Edit
       mutationMode="pessimistic"
@@ -92,8 +94,10 @@ export const TagEdit = (): JSX.Element => {
         onSuccess: () => {
           refresh();
           refetchData();
+          redirect(`list`, `/tags`);
         },
       }}
+      redirect="list"
       transform={transform}
     >
       <SimpleForm warnWhenUnsavedChanges>
@@ -151,15 +155,18 @@ export const TagCreate = (): JSX.Element => {
   };
   const refresh = useRefresh();
   const { refetchData } = useBuildUI();
+  const redirect = useRedirect();
   return (
     <Create
       transform={transform}
       mutationOptions={{
-        onSuccess: () => {
+        onSuccess: async () => {
           refresh();
           refetchData();
+          redirect(`list`, `/tags`);
         },
       }}
+      redirect="list"
     >
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <ReferenceInput
