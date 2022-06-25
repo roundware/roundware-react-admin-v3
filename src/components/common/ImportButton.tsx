@@ -1,20 +1,17 @@
-import React, { useState } from "react";
+import CloseIcon from "@mui/icons-material/Close";
+import FullScreenIcon from "@mui/icons-material/Fullscreen";
+import UploadIcon from "@mui/icons-material/Upload";
 import {
   Button,
   Dialog,
-  DialogContent,
-  DialogActions,
   DialogTitle,
+  Divider,
   IconButton,
   Stack,
-  Divider,
 } from "@mui/material";
-import UploadIcon from "@mui/icons-material/Upload";
-import CloseIcon from "@mui/icons-material/Close";
-import FullScreenIcon from "@mui/icons-material/Fullscreen";
-import { ListContextProvider, TextField, Datagrid } from "react-admin";
-import ImportView from "./ImportView";
 import useBoolean from "hooks/useBoolean";
+import React, { useState } from "react";
+import ImportView from "./ImportView";
 
 const ImportButton = () => {
   const [open, setOpen] = useState(false);
@@ -48,7 +45,7 @@ const ImportButton = () => {
             </Stack>
           </DialogTitle>
           <Divider />
-          <ImportView />
+          <ImportView handleClose={() => setOpen(false)} />
         </Dialog>
       )}
     </>

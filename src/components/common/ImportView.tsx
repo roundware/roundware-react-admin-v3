@@ -9,10 +9,11 @@ import {
   Stack,
   Typography,
   Slide,
+  LinearProgress,
 } from "@mui/material";
 import AssetShape from "components/Asset/AssetShape";
 import useBoolean from "hooks/useBoolean";
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   BooleanField,
   BooleanInput,
@@ -33,6 +34,7 @@ import {
   useNotify,
   useRecordContext,
   TextField,
+  useRefresh,
 } from "react-admin";
 import { IAsset } from "types/asset";
 import { csvToJSON } from "utils";
@@ -46,8 +48,9 @@ import ArrowLeft from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
 import { useProjects } from "providers/ProjectsContext";
 import { AssetPreview } from "components/Asset/AssetList";
+import { useRoundwareDataProvider } from "providers/DataProviderContext";
 const ReferenceArrayField = React.memo(RAF);
-const ImportView = () => {
+const ImportView = ({ handleClose }: { handleClose: () => void }) => {
   const [filter, setFilter] = useState("");
   const [page, setPage] = useState(1);
   const perPage = 10;
@@ -109,6 +112,72 @@ const ImportView = () => {
 
   const [editRecord, setEditRecord] = useState<IAsset | null>(null);
 
+  const saving = useBoolean();
+  const [assetProgress, setAssetProgress] = useState<
+    {
+      index: number;
+      progress: number;
+    }[]
+  >([]);
+
+  const getAvg = useCallback(
+    (
+      a: {
+        index: number;
+        progress: number;
+      }[]
+    ) => a.reduce((acc, el) => el.progress + acc, 0) / a.length,
+    []
+  );
+  const progress = useMemo(() => getAvg(assetProgress), [assetProgress]);
+  const dataProvider = useRoundwareDataProvider();
+  const refresh = useRefresh();
+  const handleSave = async () => {
+    try {
+      saving.setTrue();
+      const promises = data.map(async (d, index) => {
+        const file = await fetch(d.file as string).then((r) => r.blob());
+        if (!d.envelope_ids) {
+          d.envelope_ids = Number(
+            (
+              await dataProvider.create(`envelopes`, {
+                data: {
+                  session_id: 1,
+                },
+              })
+            ).data.id
+          );
+        }
+        d.session_id = 1;
+        await dataProvider.create(`assets`, {
+          data: {
+            ...d,
+            file,
+          },
+          meta: {
+            onProgress: (ev: { loaded: number; total: number }) => {
+              const newPercent = (ev.loaded / ev.total) * 100;
+              console.log(newPercent);
+              setAssetProgress((prev) => [
+                ...[...prev].filter((p) => p.index != index),
+                {
+                  index,
+                  progress: newPercent,
+                },
+              ]);
+            },
+          },
+        });
+      });
+      await Promise.all(promises);
+      await refresh();
+      handleClose();
+    } catch (e) {
+      notify(`Failed: ${e}`);
+    } finally {
+      saving.setFalse();
+    }
+  };
   return (
     <>
       {editRecord && (
@@ -183,6 +252,16 @@ const ImportView = () => {
                 </div>
               </ListContextProvider>
             </DialogContent>
+            {saving.value && (
+              <Stack spacing={1}>
+                {assetProgress.map((a) => (
+                  <LinearProgress
+                    value={a.progress}
+                    variant={a.progress < 100 ? `determinate` : `indeterminate`}
+                  />
+                ))}
+              </Stack>
+            )}
             <DialogActions>
               <LoadingButton
                 loading={processing.value}
@@ -198,7 +277,14 @@ const ImportView = () => {
                   multiple
                 />
               </LoadingButton>
-              <Button variant="contained">Save</Button>
+
+              <LoadingButton
+                loading={saving.value}
+                onClick={handleSave}
+                variant="contained"
+              >
+                Save
+              </LoadingButton>
             </DialogActions>
           </div>
         </Slide>
