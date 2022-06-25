@@ -125,7 +125,7 @@ export const AssetList = (): JSX.Element => {
 
 export default AssetList;
 
-const AssetPreview = () => {
+export const AssetPreview = () => {
   const record = useRecordContext();
   if (!record?.file) return <span>No File</span>;
   switch (record.media_type) {

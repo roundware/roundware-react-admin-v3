@@ -7,6 +7,7 @@ import {
   DialogTitle,
   IconButton,
   Stack,
+  Divider,
 } from "@mui/material";
 import UploadIcon from "@mui/icons-material/Upload";
 import CloseIcon from "@mui/icons-material/Close";
@@ -17,7 +18,7 @@ import useBoolean from "hooks/useBoolean";
 
 const ImportButton = () => {
   const [open, setOpen] = useState(false);
-  const fullScreen = useBoolean();
+  const fullScreen = useBoolean(true);
   return (
     <>
       <Button
@@ -46,6 +47,7 @@ const ImportButton = () => {
               </Stack>
             </Stack>
           </DialogTitle>
+          <Divider />
           <ImportView />
         </Dialog>
       )}

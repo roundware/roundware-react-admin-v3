@@ -45,6 +45,7 @@ import TranslatableField from "./TranslatableField";
 import ArrowLeft from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
 import { useProjects } from "providers/ProjectsContext";
+import { AssetPreview } from "components/Asset/AssetList";
 const ReferenceArrayField = React.memo(RAF);
 const ImportView = () => {
   const [filter, setFilter] = useState("");
@@ -68,18 +69,31 @@ const ImportView = () => {
       const files = Array.from(e.target.files);
       const csvFiles = files.filter((f) => f.type == `text/csv`);
 
-      const jsonData: Omit<IAsset, "project_id" | "id" | "created">[] = [];
+      const jsonData: Omit<IAsset, "project_id" | "id" | "created" | "file">[] =
+        [];
       const promises = csvFiles.map((f) =>
         f.text().then((s) => {
           csvToJSON<IAsset>(s).forEach((a) => jsonData.push(a));
         })
       );
       await Promise.all(promises);
+      console.log(files.map((f) => f.name));
+      let filesOk = true;
+      for (let index = 0; index < jsonData.length; index++) {
+        const element = jsonData[index];
+        if (!files.some((f) => f.name == element.filename)) {
+          alert(`Please also attach file '${element.filename}'`);
+          filesOk = false;
+          break;
+        }
+      }
+      if (!filesOk) return;
       setData(
         jsonData.map((r, index) => ({
           id: index,
           project_id: pc.selectedProject?.id as number,
           created: new Date().toISOString(),
+          file: URL.createObjectURL(files.find((f) => f.name == r.filename)!),
           ...r,
         }))
       );
@@ -138,9 +152,11 @@ const ImportView = () => {
               >
                 <div>
                   <Card>
-                    <Datagrid optimized>
+                    <Datagrid>
+                      <AssetPreview />
                       <BooleanField source="submitted" />
-
+                      <TextField source="description" />
+                      <TextField source="media_type" label="Media Type" />
                       <NumberField
                         source="latitude"
                         options={{ maximumFractionDigits: 8 }}
@@ -159,6 +175,7 @@ const ImportView = () => {
                           <ChipField source="msg_loc" />
                         </SingleFieldList>
                       </ReferenceArrayField>
+
                       <EditButton onEdit={(a) => setEditRecord(a)} />
                     </Datagrid>
                   </Card>
