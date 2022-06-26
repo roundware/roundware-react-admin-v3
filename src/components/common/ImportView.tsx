@@ -47,7 +47,7 @@ import TranslatableField from "./TranslatableField";
 import ArrowLeft from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
 import { useProjects } from "providers/ProjectsContext";
-import { AssetPreview } from "components/Asset/AssetList";
+import { AssetPreview } from "components/Asset/AssetDatagrid";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
 const ReferenceArrayField = React.memo(RAF);
 const ImportView = ({ handleClose }: { handleClose: () => void }) => {
@@ -93,11 +93,12 @@ const ImportView = ({ handleClose }: { handleClose: () => void }) => {
       if (!filesOk) return;
       setData(
         jsonData.map((r, index) => ({
-          id: index,
           project_id: pc.selectedProject?.id as number,
           created: new Date().toISOString(),
-          file: URL.createObjectURL(files.find((f) => f.name == r.filename)!),
+          id: index,
           ...r,
+          file: URL.createObjectURL(files.find((f) => f.name == r.filename)!),
+          tag_ids: r?.tag_ids?.map(Number),
         }))
       );
     } catch (e) {
@@ -178,6 +179,7 @@ const ImportView = ({ handleClose }: { handleClose: () => void }) => {
       saving.setFalse();
     }
   };
+  console.log(data?.map((d) => d.tag_ids));
   return (
     <>
       {editRecord && (
