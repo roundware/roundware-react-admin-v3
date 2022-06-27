@@ -26,9 +26,10 @@ const CopyResourceButton = ({
   const redirect = useRedirect();
   const notify = useNotify();
   const refresh = useRefresh();
-  const record = cloneDeep(r);
+
   const copy = async () => {
     try {
+      const record = cloneDeep(r);
       setLoading(true);
       const resourceName = window.location.pathname.split(`/`).reverse()[0];
       const a = await assignFirst();
