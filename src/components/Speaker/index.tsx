@@ -50,6 +50,7 @@ export const SpeakerEdit = (): JSX.Element => {
   const [progress, setProgress] = useState(0);
   const [update] = useUpdate();
   const navigate = useNavigate();
+  const success = useBoolean();
   const save: SimpleFormProps[`onSubmit`] = async (values) => {
     values = transform(values as RaRecord);
     try {
@@ -72,7 +73,7 @@ export const SpeakerEdit = (): JSX.Element => {
           onSuccess: () => {
             fetchData();
             refresh();
-            navigate(`/project/${selectedProject?.id}/speakers`);
+            success.setTrue();
           },
         }
       );
@@ -84,7 +85,8 @@ export const SpeakerEdit = (): JSX.Element => {
       setProgress(0);
     }
   };
-
+  if (success.value)
+    return <Navigate to={`/project/${selectedProject?.id}/speakers`} />;
   return (
     <Edit transform={transform}>
       <SimpleForm warnWhenUnsavedChanges onSubmit={save}>
