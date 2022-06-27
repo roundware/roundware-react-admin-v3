@@ -40,13 +40,13 @@ export const handleLocalizedStrings = async (
 export const mapLibraries: ["places", "drawing"] = ["places", "drawing"];
 
 export function csvToJSON<T>(csv: string): T[] {
-  const lines = csv.split("\n");
-
+  const lines = csv.split("\r\n");
+  console.log(lines);
   const result = [];
 
   const headers = lines[0].split(",");
   /* Iterate over the remaning data rows */
-  for (let i = 1; i < lines.length - 1; i++) {
+  for (let i = 1; i < lines.length; i++) {
     /* Empty object to store result in key value pair */
     const jsonObject: any = {};
     /* Store the current array element */

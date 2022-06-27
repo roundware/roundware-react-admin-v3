@@ -230,7 +230,7 @@ const ImportView = ({ handleClose }: { handleClose: () => void }) => {
                 }}
               >
                 <div>
-                  <Card>
+                  <Card sx={{ overflow: "scroll" }}>
                     <Datagrid>
                       <AssetPreview />
                       <BooleanField source="submitted" />
