@@ -9,6 +9,7 @@ import {
   useRedirect,
   useRefresh,
 } from "react-admin";
+import { cloneDeep } from "lodash";
 type Props = {
   onSuccess?: () => void;
   assignFirst?: () => Promise<object>;
@@ -20,12 +21,12 @@ const CopyResourceButton = ({
   transform = (a) => a,
 }: Props) => {
   const [loading, setLoading] = useState(false);
-  const record = useRecordContext();
+  const r = useRecordContext();
   const dataProvider = useDataProvider();
   const redirect = useRedirect();
   const notify = useNotify();
   const refresh = useRefresh();
-
+  const record = cloneDeep(r);
   const copy = async () => {
     try {
       setLoading(true);
@@ -41,7 +42,7 @@ const CopyResourceButton = ({
       });
       onSuccess();
       refresh();
-      await redirect(`edit`, `/speakers`, res.data.id);
+      await redirect(`edit`, `/${resourceName}`, res.data.id);
     } catch {
       notify(`Something went wrong!`, {
         type: `error`,
