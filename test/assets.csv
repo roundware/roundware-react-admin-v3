@@ -1,4 +1,4 @@
 envelope_ids,filename,media_type,description,latitude,longitude,submitted,tag_ids,volume,weight
 ,test1.mp3,audio,test description,20,30,TRUE,"3,4",1,1
 4,test2.mp3,audio,asset 2,49,43,TRUE,"3,4",0.5,1
-5,test3.mp3,audio,something,34,34,TRUE,"3,4",0.8,1
+5,test3.mp3,audio,something,34,34,TRUE,"7,8",0.8,1
