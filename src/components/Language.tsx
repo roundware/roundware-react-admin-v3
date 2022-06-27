@@ -30,7 +30,7 @@ export const LanguageEdit = (): JSX.Element => {
 
 export const LanguageCreate = (): JSX.Element => {
   return (
-    <Create>
+    <Create redirect="list">
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <TextInput source="id" required />
       </SimpleForm>

@@ -32,7 +32,7 @@ export const LocalizedStringEdit = (): JSX.Element => {
 
 export const LocalizedStringCreate = (): JSX.Element => {
   return (
-    <Create>
+    <Create redirect="list">
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <TextInput source="id" required />
       </SimpleForm>

@@ -32,7 +32,7 @@ export const UiItemEdit = (): JSX.Element => {
 
 export const UserCreate = (): JSX.Element => {
   return (
-    <Create>
+    <Create redirect="list">
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <TextInput source="id" required />
       </SimpleForm>

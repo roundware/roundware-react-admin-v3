@@ -172,6 +172,7 @@ export const UiGroupCreate = (): JSX.Element => {
       mutationOptions={{
         onSuccess: () => refreshData(),
       }}
+      redirect="list"
     >
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <TextField

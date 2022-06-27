@@ -1,9 +1,10 @@
 import { LinearProgress, Stack, Typography } from "@mui/material";
 import FileDownloadButton from "components/common/FileDownloadButton";
 import FormToolbar from "components/common/FormToolbar";
+import useBoolean from "hooks/useBoolean";
 import { useProjects } from "providers/ProjectsContext";
 import { useSpeakers } from "providers/SpeakersContext";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BooleanInput,
   Create,
@@ -17,7 +18,6 @@ import {
   TextInput,
   useCreate,
   useNotify,
-  useRecordContext,
   useRedirect,
   useRefresh,
   useUpdate,
@@ -159,11 +159,12 @@ export const SpeakerCreate = (): JSX.Element => {
         },
         {
           returnPromise: true,
-          onSuccess: (data) => {
-            fetchData();
-            refresh();
-            redirect(`list`, `/speakers`);
+          onSuccess: async (data) => {
+            console.log(`success`);
+            await fetchData();
             setSelectedSpeaker(parseInt(data.id.toString()));
+            redirect(`/speakers`);
+            refresh();
           },
         }
       );
@@ -177,7 +178,7 @@ export const SpeakerCreate = (): JSX.Element => {
   };
 
   return (
-    <Create transform={transform}>
+    <Create redirect={false} transform={transform}>
       <SimpleForm
         warnWhenUnsavedChanges
         onSubmit={save}
@@ -195,7 +196,9 @@ export const SpeakerCreate = (): JSX.Element => {
         {progress > 0 && (
           <Stack sx={{ width: "100%" }}>
             <Typography variant="subtitle2">
-              Upload Progress: {progress.toFixed(2)} %{" "}
+              {progress == 100
+                ? `Processing...`
+                : `Upload Progress: ${progress.toFixed(2)} %`}
             </Typography>
             <LinearProgress
               sx={{ width: "100%" }}

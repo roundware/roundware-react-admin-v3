@@ -59,6 +59,7 @@ export const UserCreate = (): JSX.Element => {
         }
         return r;
       }}
+      redirect="list"
     >
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="username" />

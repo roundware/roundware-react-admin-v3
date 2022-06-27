@@ -143,7 +143,7 @@ export const AudioTrackEdit = (): JSX.Element => {
 
 export const AudioTrackCreate = (): JSX.Element => {
   return (
-    <Create>
+    <Create redirect="list">
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <RangeSlider
           source="volume"

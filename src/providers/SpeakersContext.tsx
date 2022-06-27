@@ -8,7 +8,7 @@ export interface ISpeakerContext {
   setSelectedSpeaker: (newId: number | null) => void;
   setSpeakers: React.Dispatch<React.SetStateAction<ISpeaker[] | undefined>>;
   speakers?: ISpeaker[];
-  fetchData: () => void;
+  fetchData: () => Promise<void>;
   setIsCurrentSpeakerSaved: React.Dispatch<React.SetStateAction<boolean>>;
 }
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

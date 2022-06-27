@@ -88,7 +88,7 @@ export const TimedAssetEdit = (): JSX.Element => {
 
 export const TimedAssetCreate = (): JSX.Element => {
   return (
-    <Create>
+    <Create redirect="list">
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <ReferenceInput source="asset_id" reference="assets">
           <SelectInput optionText={(record) => `${record?.id}`} />

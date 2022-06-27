@@ -69,7 +69,7 @@ export const SessionEdit = (): JSX.Element => {
 
 export const SessionCreate = (): JSX.Element => {
   return (
-    <Create>
+    <Create redirect="list">
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <TextInput source="id" required />
         <TextInput source="device" required />

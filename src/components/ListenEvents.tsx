@@ -83,7 +83,7 @@ export const ListenEventsEdit = (): JSX.Element => {
 
 export const ListenEventsCreate = (): JSX.Element => {
   return (
-    <Create>
+    <Create redirect="list">
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <TextInput source="id" disabled />
         <NumberInput source="duration_in_seconds" required />

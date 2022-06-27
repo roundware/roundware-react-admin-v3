@@ -64,7 +64,7 @@ export const TagCategoryEdit = (): JSX.Element => {
 
 export const TagCategoryCreate = (): JSX.Element => {
   return (
-    <Create>
+    <Create redirect="list">
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <TextInput source="name" required />
         <TextInput source="data" />

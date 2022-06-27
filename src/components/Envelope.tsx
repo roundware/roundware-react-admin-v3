@@ -33,7 +33,7 @@ export const EnvelopeEdit = (): JSX.Element => {
 
 export const EnvelopeCreate = (): JSX.Element => {
   return (
-    <Create>
+    <Create redirect="list">
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <TextInput source="id" required />
       </SimpleForm>

@@ -13,7 +13,7 @@ import { cloneDeep } from "lodash";
 type Props = {
   onSuccess?: () => void;
   assignFirst?: () => Promise<object>;
-  transform?: (d: RaRecord) => RaRecord;
+  transform?: (d: Omit<RaRecord, "id">) => Omit<RaRecord, "id">;
 };
 const CopyResourceButton = ({
   onSuccess = () => console.log(`copied`),
@@ -29,11 +29,11 @@ const CopyResourceButton = ({
 
   const copy = async () => {
     try {
-      const record = cloneDeep(r);
+      const record: Omit<Partial<typeof r>, "id"> = cloneDeep(r);
       setLoading(true);
       const resourceName = window.location.pathname.split(`/`).reverse()[0];
       const a = await assignFirst();
-      // @ts-ignore
+
       if (record.id) delete record.id;
       const res = await dataProvider.create(resourceName, {
         data: Object.assign(transform(record), a),
