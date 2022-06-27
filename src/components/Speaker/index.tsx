@@ -48,6 +48,7 @@ export const SpeakerEdit = (): JSX.Element => {
 
   const [progress, setProgress] = useState(0);
   const [update] = useUpdate();
+
   const save: SimpleFormProps[`onSubmit`] = async (values) => {
     values = transform(values as RaRecord);
     try {
@@ -67,13 +68,13 @@ export const SpeakerEdit = (): JSX.Element => {
         {
           returnPromise: true,
           mutationMode: "pessimistic",
-          onSuccess: () => {
-            fetchData();
-            refresh();
-            redirect("list", `/speakers`);
-          },
         }
       );
+      fetchData();
+      refresh();
+      setTimeout(() => {
+        redirect(`/speakers`);
+      }, 100);
     } catch (e) {
       notify(`Something went wrong!`, {
         type: "error",
@@ -142,7 +143,7 @@ export const SpeakerCreate = (): JSX.Element => {
   const [create] = useCreate();
   const [progress, setProgress] = useState(0);
   const notify = useNotify();
-
+  const success = useBoolean();
   const save: SimpleFormProps[`onSubmit`] = async (values) => {
     values = transform(values as RaRecord);
     try {
@@ -163,8 +164,11 @@ export const SpeakerCreate = (): JSX.Element => {
             console.log(`success`);
             await fetchData();
             setSelectedSpeaker(parseInt(data.id.toString()));
-            redirect(`/speakers`);
+            success.setTrue();
             refresh();
+            setTimeout(() => {
+              redirect(`/speakers`);
+            }, 100);
           },
         }
       );
@@ -180,9 +184,10 @@ export const SpeakerCreate = (): JSX.Element => {
   return (
     <Create redirect={false} transform={transform}>
       <SimpleForm
-        warnWhenUnsavedChanges
+        warnWhenUnsavedChanges={!success.value}
         onSubmit={save}
         toolbar={<FormToolbar />}
+        redirect="/speakers"
       >
         <BooleanInput source="activeyn" fullWidth defaultChecked />
         <TextInput source="code" fullWidth required />
