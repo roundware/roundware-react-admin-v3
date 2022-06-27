@@ -179,7 +179,7 @@ const ImportView = ({ handleClose }: { handleClose: () => void }) => {
       saving.setFalse();
     }
   };
-  console.log(data?.map((d) => d.tag_ids));
+
   return (
     <>
       {editRecord && (
@@ -258,6 +258,7 @@ const ImportView = ({ handleClose }: { handleClose: () => void }) => {
               <Stack spacing={1}>
                 {assetProgress.map((a) => (
                   <LinearProgress
+                    key={a.index}
                     value={a.progress}
                     variant={a.progress < 100 ? `determinate` : `indeterminate`}
                   />
