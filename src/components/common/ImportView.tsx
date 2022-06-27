@@ -49,6 +49,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useProjects } from "providers/ProjectsContext";
 import { AssetPreview } from "components/Asset/AssetDatagrid";
 import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import { cloneDeep } from "lodash";
 const ReferenceArrayField = React.memo(RAF);
 const ImportView = ({ handleClose }: { handleClose: () => void }) => {
   const [filter, setFilter] = useState("");
@@ -136,7 +137,14 @@ const ImportView = ({ handleClose }: { handleClose: () => void }) => {
   const handleSave = async () => {
     try {
       saving.setTrue();
-      const promises = data.map(async (d, index) => {
+      const postData = cloneDeep(data);
+      postData.forEach((d) => {
+        delete d.filename;
+        if (typeof d.weight != "undefined")
+          d.weight = parseInt(d.weight.toString());
+        d.tag_ids = d.tag_ids.join(`,`) as unknown as number[];
+      });
+      const promises = postData.map(async (d, index) => {
         const file = await fetch(d.file as string).then((r) => r.blob());
         if (!d.envelope_ids) {
           d.envelope_ids = Number(

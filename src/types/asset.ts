@@ -6,8 +6,8 @@ export interface IAsset {
   latitude: number;
   longitude: number;
   shape: null;
-  filename: string;
-  file: string | { src: string } | Blob | null ;
+  filename?: string;
+  file: string | { src: string } | Blob | null;
   volume: number;
   submitted: true;
   created: string;
@@ -24,7 +24,7 @@ export interface IAsset {
   user_id?: number;
   user?: {
     id: number;
-  }
-  loc_description_admin?: LocalizedString[]
+  };
+  loc_description_admin?: LocalizedString[];
   loc_alt_text_admin?: LocalizedString[];
 }
