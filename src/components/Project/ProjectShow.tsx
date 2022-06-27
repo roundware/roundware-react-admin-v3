@@ -12,7 +12,7 @@ import {
 } from "react-admin";
 import React from "react";
 import { Typography } from "@mui/material";
-import { useProjects } from "../../providers/ProjectsContext";
+import { useProjects } from "../../context/ProjectsContext";
 
 type Props = ShowProps;
 

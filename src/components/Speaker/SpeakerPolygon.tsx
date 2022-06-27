@@ -21,8 +21,8 @@ import {
 import buffer from "@turf/buffer";
 import { multiPolygon } from "@turf/helpers";
 import MapControl from "components/common/MapControl";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import { useSpeakers } from "providers/SpeakersContext";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
+import { useSpeakers } from "context/SpeakersContext";
 import React, { useEffect, useMemo, useState } from "react";
 import { ISpeaker } from "types/speaker";
 import {

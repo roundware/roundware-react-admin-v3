@@ -1,7 +1,7 @@
 import App, { BaseApp } from "App";
 import SplashScreen from "components/Layout/SplashScreen";
-import tokenAuthProvider from "providers/AuthProvider";
-import { useProjects } from "providers/ProjectsContext";
+import tokenAuthProvider from "context/AuthProvider";
+import { useProjects } from "context/ProjectsContext";
 import React, { useEffect, useState } from "react";
 import {
   useLocation,

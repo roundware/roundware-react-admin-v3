@@ -13,7 +13,7 @@ import {
   Stack,
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
-import { useProjects } from "providers/ProjectsContext";
+import { useProjects } from "context/ProjectsContext";
 import React, { memo, useState } from "react";
 import { HideOnScroll, useRedirect, UserMenu, useUserMenu } from "react-admin";
 import { SidebarToggleButton } from "./SidebarToggleButton";

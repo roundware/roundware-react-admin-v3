@@ -1,15 +1,15 @@
 import { LocalizationProvider } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import ProjectRoute from "ProjectRoute";
-import { BuildUIContextProvider } from "providers/BuildUIContext";
-import { RoundwareDataProviderContextProvider } from "providers/DataProviderContext";
-import { SpeakersProvider } from "providers/SpeakersContext";
+import { BuildUIContextProvider } from "context/BuildUIContext";
+import { RoundwareDataProviderContextProvider } from "context/DataProviderContext";
+import { SpeakersProvider } from "context/SpeakersContext";
 import React from "react";
 import ReactDOM from "react-dom";
 
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./index.css";
-import { ProjectsProvider } from "./providers/ProjectsContext";
+import { ProjectsProvider } from "./context/ProjectsContext";
 
 ReactDOM.render(
   <React.StrictMode>

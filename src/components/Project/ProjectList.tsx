@@ -12,7 +12,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useListContext, useRedirect } from "ra-core";
 import React, { useEffect, useState } from "react";
 import { List, useRecordContext } from "react-admin";
-import { IProject, useProjects } from "../../providers/ProjectsContext";
+import { IProject, useProjects } from "../../context/ProjectsContext";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 const ProjectList = (): JSX.Element => {

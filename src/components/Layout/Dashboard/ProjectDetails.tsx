@@ -2,7 +2,7 @@ import { Box, Theme, Typography } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
 import { EditButton, ShowButton } from "react-admin";
-import { useProjects } from "../../../providers/ProjectsContext";
+import { useProjects } from "../../../context/ProjectsContext";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

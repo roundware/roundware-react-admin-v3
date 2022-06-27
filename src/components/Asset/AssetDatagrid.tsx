@@ -1,5 +1,5 @@
 import CopyResourceButton from "components/common/CopyResource";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
 import React from "react";
 import {
   BooleanField,

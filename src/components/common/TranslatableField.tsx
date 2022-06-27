@@ -8,7 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 import useFieldValue from "hooks/useFieldValue";
-import { useProjects } from "providers/ProjectsContext";
+import { useProjects } from "context/ProjectsContext";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDataProvider } from "react-admin";
 import { ILanguage, LocalizedString } from "types";

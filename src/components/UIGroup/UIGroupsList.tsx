@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Box, Divider, Grid } from "@mui/material";
 import BuildUIHeader from "components/UIGroup/BuildUIHeader";
-import { useBuildUI } from "providers/BuildUIContext";
+import { useBuildUI } from "context/BuildUIContext";
 import React from "react";
 import {
   BooleanInput,

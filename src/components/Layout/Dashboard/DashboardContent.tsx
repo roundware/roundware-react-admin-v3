@@ -13,7 +13,7 @@ import {
   WatchLater,
   Person,
 } from "@mui/icons-material";
-import { IProject } from "../../../providers/ProjectsContext";
+import { IProject } from "../../../context/ProjectsContext";
 import CardWithIcon from "./CardWithIcon";
 import { GetListResult, RaRecord } from "react-admin";
 import { ResourceList } from "../../../App";

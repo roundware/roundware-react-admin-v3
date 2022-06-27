@@ -2,8 +2,8 @@ import { LinearProgress, Stack, Typography } from "@mui/material";
 import FileDownloadButton from "components/common/FileDownloadButton";
 import FormToolbar from "components/common/FormToolbar";
 import useBoolean from "hooks/useBoolean";
-import { useProjects } from "providers/ProjectsContext";
-import { useSpeakers } from "providers/SpeakersContext";
+import { useProjects } from "context/ProjectsContext";
+import { useSpeakers } from "context/SpeakersContext";
 import React, { useEffect, useState } from "react";
 import {
   BooleanInput,
@@ -22,6 +22,7 @@ import {
   useRefresh,
   useUpdate,
 } from "react-admin";
+import { Navigate, useNavigate } from "react-router-dom";
 import SpeakerAudioControls from "./SpeakerAudioControls";
 
 export const SpeakerEdit = (): JSX.Element => {
@@ -48,7 +49,7 @@ export const SpeakerEdit = (): JSX.Element => {
 
   const [progress, setProgress] = useState(0);
   const [update] = useUpdate();
-
+  const navigate = useNavigate();
   const save: SimpleFormProps[`onSubmit`] = async (values) => {
     values = transform(values as RaRecord);
     try {
@@ -68,13 +69,13 @@ export const SpeakerEdit = (): JSX.Element => {
         {
           returnPromise: true,
           mutationMode: "pessimistic",
+          onSuccess: () => {
+            fetchData();
+            refresh();
+            navigate(`/project/${selectedProject?.id}/speakers`);
+          },
         }
       );
-      fetchData();
-      refresh();
-      setTimeout(() => {
-        redirect(`/speakers`);
-      }, 100);
     } catch (e) {
       notify(`Something went wrong!`, {
         type: "error",
@@ -137,13 +138,13 @@ export const SpeakerCreate = (): JSX.Element => {
     return data;
   };
 
-  const redirect = useRedirect();
   const refresh = useRefresh();
 
   const [create] = useCreate();
   const [progress, setProgress] = useState(0);
   const notify = useNotify();
   const success = useBoolean();
+
   const save: SimpleFormProps[`onSubmit`] = async (values) => {
     values = transform(values as RaRecord);
     try {
@@ -160,15 +161,13 @@ export const SpeakerCreate = (): JSX.Element => {
         },
         {
           returnPromise: true,
+
           onSuccess: async (data) => {
             console.log(`success`);
             await fetchData();
             setSelectedSpeaker(parseInt(data.id.toString()));
             success.setTrue();
             refresh();
-            setTimeout(() => {
-              redirect(`/speakers`);
-            }, 100);
           },
         }
       );
@@ -180,7 +179,8 @@ export const SpeakerCreate = (): JSX.Element => {
       setProgress(0);
     }
   };
-
+  if (success.value)
+    return <Navigate to={`/project/${selectedProject?.id}/speakers`} />;
   return (
     <Create redirect={false} transform={transform}>
       <SimpleForm

@@ -1,5 +1,5 @@
 import { LoadingButton } from "@mui/lab";
-import { useProgress } from "providers/ProgressContext";
+import { useProgress } from "context/ProgressContext";
 import React from "react";
 
 type Props = {};

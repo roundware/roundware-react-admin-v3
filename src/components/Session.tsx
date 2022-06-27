@@ -21,7 +21,7 @@ import {
   EditButton,
   DeleteButton,
 } from "react-admin";
-import { useProjects } from "../providers/ProjectsContext";
+import { useProjects } from "../context/ProjectsContext";
 import FormToolbar from "./common/FormToolbar";
 
 export const SessionList = (): JSX.Element => {

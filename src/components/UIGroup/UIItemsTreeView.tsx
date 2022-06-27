@@ -16,7 +16,7 @@ import DragHandleSharpIcon from "@mui/icons-material/DragHandleSharp";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import TreeItem from "@mui/lab/TreeItem";
 import TreeView from "@mui/lab/TreeView";
-import { useBuildUI } from "providers/BuildUIContext";
+import { useBuildUI } from "context/BuildUIContext";
 import React, { useCallback, useState } from "react";
 import {
   DragDropContext,
@@ -28,7 +28,7 @@ import {
 import { UiItemNode } from "types/uiGroups";
 import TreeItemLabel from "./TreeItemLabel";
 import { UpdateResult, RaRecord, useRefresh, useNotify } from "react-admin";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
 const UIItemsTreeView = (): JSX.Element => {
   const {
     uiItemsTree,

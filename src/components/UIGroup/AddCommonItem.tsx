@@ -14,8 +14,8 @@ import {
   Typography,
 } from "@mui/material";
 import { differenceBy, groupBy, isEqual } from "lodash";
-import { useBuildUI } from "providers/BuildUIContext";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import { useBuildUI } from "context/BuildUIContext";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
 import React, { useCallback, useMemo, useState } from "react";
 import {
   CreateResult,

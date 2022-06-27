@@ -16,7 +16,7 @@ import AdjustIcon from "@mui/icons-material/Adjust";
 import CategoryIcon from "@mui/icons-material/Category";
 import PublicIcon from "@mui/icons-material/Public";
 import { capitalize } from "lodash";
-import { useProjects } from "../../providers/ProjectsContext";
+import { useProjects } from "../../context/ProjectsContext";
 import SubMenu from "./SubMenu";
 import { useNavigate } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";

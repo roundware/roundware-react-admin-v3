@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useSpeakers } from "providers/SpeakersContext";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import { useSpeakers } from "context/SpeakersContext";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
 import {
   DrawingManager,
   DrawingManagerProps,

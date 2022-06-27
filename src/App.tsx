@@ -36,7 +36,7 @@ import {
 import { UiGroupCreate, UiGroupEdit } from "components/UIGroup/index";
 import { UiGroupList } from "components/UIGroup/UIGroupsList";
 import { UserCreate, UserEdit, UserList } from "components/User";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
 import React, { useEffect, useState } from "react";
 import { Admin, EditGuesser, ListGuesser, Resource } from "react-admin";
 import { useLocation, useParams, useRoutes } from "react-router-dom";
@@ -55,8 +55,8 @@ import ProjectEdit from "./components/Project/ProjectEdit";
 import ProjectList from "./components/Project/ProjectList";
 import ProjectShow from "./components/Project/ProjectShow";
 import { SessionCreate, SessionEdit, SessionList } from "./components/Session";
-import authProvider from "./providers/AuthProvider";
-import { useProjects } from "./providers/ProjectsContext";
+import authProvider from "./context/AuthProvider";
+import { useProjects } from "./context/ProjectsContext";
 import adminTheme from "./styles";
 import { createBrowserHistory } from "history";
 

@@ -20,7 +20,7 @@ import {
   TextField,
   TextInput,
 } from "react-admin";
-import { useProjects } from "../providers/ProjectsContext";
+import { useProjects } from "../context/ProjectsContext";
 import CopyResourceButton from "./common/CopyResource";
 import FormToolbar from "./common/FormToolbar";
 

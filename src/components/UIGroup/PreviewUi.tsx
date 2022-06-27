@@ -14,7 +14,7 @@ import ResetIcon from "@mui/icons-material/Restore";
 import ArrowBack from "@mui/icons-material/ArrowBackIos";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { useBuildUI } from "providers/BuildUIContext";
+import { useBuildUI } from "context/BuildUIContext";
 import React, { useState } from "react";
 import { IUIGroup } from "types/uiGroups";
 const PreviewUi = (): JSX.Element => {
@@ -60,90 +60,92 @@ const PreviewUi = (): JSX.Element => {
   const handleReset = () => setSelectedTags([]);
 
   const currentGroup = uiGroups?.[currentIndex] || null;
-  return <>
-    <Button
-      variant="contained"
-      startIcon={<VisibilityIcon />}
-      color="primary"
-      onClick={handleOpen}
-      label="Preview"
-      size="small"
-    />
+  return (
+    <>
+      <Button
+        variant="contained"
+        startIcon={<VisibilityIcon />}
+        color="primary"
+        onClick={handleOpen}
+        label="Preview"
+        size="small"
+      />
 
-    <Dialog open={show} maxWidth="xs" fullWidth onClose={handleClose}>
-      <DialogTitle>
-        <Grid container justifyContent="space-between" alignItems="center">
-          <Grid item>{currentGroup?.header_text_loc}</Grid>
+      <Dialog open={show} maxWidth="xs" fullWidth onClose={handleClose}>
+        <DialogTitle>
+          <Grid container justifyContent="space-between" alignItems="center">
+            <Grid item>{currentGroup?.header_text_loc}</Grid>
 
-          <Grid item>
-            <IconButton onClick={handleClose} size="large">
-              <CloseIcon />
-            </IconButton>
+            <Grid item>
+              <IconButton onClick={handleClose} size="large">
+                <CloseIcon />
+              </IconButton>
+            </Grid>
           </Grid>
-        </Grid>
-      </DialogTitle>
-      <DialogContent>
-        <Grid item container direction="column" spacing={2}>
-          {currentGroup?.ui_items?.filter(
-            (i) => i.parent_id == null || selectedTags.includes(i.parent_id)
-          ).length
-            ? currentGroup?.ui_items
-                ?.filter(
-                  (i) =>
-                    i.parent_id == null || selectedTags.includes(i.parent_id)
-                )
-                .map((i: IUIGroup[`ui_items`][0]) => (
-                  <Grid
-                    item
-                    key={i?.id}
-                    xs={12}
-                    onClick={() => handleOnItemSelect(i.id)}
-                  >
-                    <MuiButton
-                      size="large"
-                      color={`primary`}
-                      fullWidth
-                      variant={
-                        selectedTags.includes(i.id) ? `contained` : `outlined`
-                      }
-                      startIcon={
-                        selectedTags.includes(i.id) ? <CheckIcon /> : null
-                      }
+        </DialogTitle>
+        <DialogContent>
+          <Grid item container direction="column" spacing={2}>
+            {currentGroup?.ui_items?.filter(
+              (i) => i.parent_id == null || selectedTags.includes(i.parent_id)
+            ).length
+              ? currentGroup?.ui_items
+                  ?.filter(
+                    (i) =>
+                      i.parent_id == null || selectedTags.includes(i.parent_id)
+                  )
+                  .map((i: IUIGroup[`ui_items`][0]) => (
+                    <Grid
+                      item
+                      key={i?.id}
+                      xs={12}
+                      onClick={() => handleOnItemSelect(i.id)}
                     >
-                      {uiItemsList.find((li) => li?.id == i?.id)?.displayText}
-                    </MuiButton>
-                  </Grid>
-                ))
-            : `No Items to Show`}
-        </Grid>
-      </DialogContent>
-      <DialogActions>
-        <MuiButton
-          onClick={handlePrev}
-          color="primary"
-          startIcon={<ArrowBack />}
-        >
-          Previous
-        </MuiButton>
-        <MuiButton
-          onClick={handleNext}
-          startIcon={<ChevronRightIcon />}
-          color="primary"
-        >
-          Next
-        </MuiButton>
+                      <MuiButton
+                        size="large"
+                        color={`primary`}
+                        fullWidth
+                        variant={
+                          selectedTags.includes(i.id) ? `contained` : `outlined`
+                        }
+                        startIcon={
+                          selectedTags.includes(i.id) ? <CheckIcon /> : null
+                        }
+                      >
+                        {uiItemsList.find((li) => li?.id == i?.id)?.displayText}
+                      </MuiButton>
+                    </Grid>
+                  ))
+              : `No Items to Show`}
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <MuiButton
+            onClick={handlePrev}
+            color="primary"
+            startIcon={<ArrowBack />}
+          >
+            Previous
+          </MuiButton>
+          <MuiButton
+            onClick={handleNext}
+            startIcon={<ChevronRightIcon />}
+            color="primary"
+          >
+            Next
+          </MuiButton>
 
-        <MuiButton
-          onClick={handleReset}
-          color="primary"
-          startIcon={<ResetIcon />}
-        >
-          Reset
-        </MuiButton>
-        <MuiButton onClick={handleClose}>Close</MuiButton>
-      </DialogActions>
-    </Dialog>
-  </>;
+          <MuiButton
+            onClick={handleReset}
+            color="primary"
+            startIcon={<ResetIcon />}
+          >
+            Reset
+          </MuiButton>
+          <MuiButton onClick={handleClose}>Close</MuiButton>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
 };
 
 export default PreviewUi;

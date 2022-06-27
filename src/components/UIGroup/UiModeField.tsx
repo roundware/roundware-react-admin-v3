@@ -6,7 +6,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { Stack } from "@mui/material";
-import { useBuildUI } from "providers/BuildUIContext";
+import { useBuildUI } from "context/BuildUIContext";
 import { IUIGroup } from "types/uiGroups";
 const UiModeField = (): JSX.Element => {
   const [value, setValue] = useFieldValue<string>("ui_mode");

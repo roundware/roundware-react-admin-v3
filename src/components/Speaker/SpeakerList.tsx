@@ -1,8 +1,9 @@
-import { Grid, IconButton, Paper, Tooltip } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import { useProjects } from "providers/ProjectsContext";
-import { useSpeakers } from "providers/SpeakersContext";
+import { Grid, IconButton, Paper, Tooltip } from "@mui/material";
+import CopyResourceButton from "components/common/CopyResource";
+import { useProjects } from "context/ProjectsContext";
+import { useSpeakers } from "context/SpeakersContext";
 import React from "react";
 import {
   BooleanField,
@@ -10,14 +11,11 @@ import {
   DeleteButton,
   EditButton,
   List,
-  ListProps,
   TextField,
   useRecordContext,
   useResourceContext,
 } from "react-admin";
-import { SpeakerEdit } from ".";
 import SpeakerShapesControl from "./SpeakerShapesControl";
-import CopyResourceButton from "components/common/CopyResource";
 const SpeakerList = (): JSX.Element => {
   const rc = useResourceContext();
   const { selectedProject } = useProjects();

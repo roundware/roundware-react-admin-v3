@@ -10,7 +10,7 @@ import {
   SimpleForm,
   TextInput,
 } from "react-admin";
-import { useProjects } from "../providers/ProjectsContext";
+import { useProjects } from "../context/ProjectsContext";
 import FormToolbar from "./common/FormToolbar";
 export const EventsList = (): JSX.Element => {
   const { selectedProject } = useProjects();

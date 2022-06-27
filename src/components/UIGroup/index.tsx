@@ -2,9 +2,9 @@
 import { TextField } from "@mui/material";
 import FormToolbar from "components/common/FormToolbar";
 import TranslatableField from "components/common/TranslatableField";
-import { useBuildUI } from "providers/BuildUIContext";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import { useProjects } from "providers/ProjectsContext";
+import { useBuildUI } from "context/BuildUIContext";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
+import { useProjects } from "context/ProjectsContext";
 import React, { useMemo } from "react";
 import {
   BooleanInput,

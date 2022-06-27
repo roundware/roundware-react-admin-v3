@@ -3,8 +3,8 @@ import CardBox from "components/common/CardBox";
 import FormToolbar from "components/common/FormToolbar";
 import LocationSelector from "components/common/LocationSelector";
 import TranslatableField from "components/common/TranslatableField";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import { IProject, useProjects } from "providers/ProjectsContext";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
+import { IProject, useProjects } from "context/ProjectsContext";
 import React from "react";
 import {
   BooleanInput,

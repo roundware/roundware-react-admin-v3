@@ -1,6 +1,6 @@
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { CircularProgress, IconButton } from "@mui/material";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
 import React, { useState } from "react";
 import { useNotify, useRefresh } from "react-admin";
 import { useLocation } from "react-router-dom";

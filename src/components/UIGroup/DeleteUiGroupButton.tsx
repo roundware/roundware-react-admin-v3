@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { useBuildUI } from "providers/BuildUIContext";
+import { useBuildUI } from "context/BuildUIContext";
 import React, { useState } from "react";
 import {
   IconButton,
@@ -22,7 +22,7 @@ import {
   useNotify,
   useRecordContext,
 } from "react-admin";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
 
 const DeleteUiGroupButton = (): JSX.Element => {
   const record = useRecordContext();

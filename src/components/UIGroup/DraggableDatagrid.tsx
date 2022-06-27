@@ -9,8 +9,8 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import ReorderIcon from "@mui/icons-material/DragHandle";
-import { useBuildUI } from "providers/BuildUIContext";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import { useBuildUI } from "context/BuildUIContext";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
 import React, { useMemo, useState } from "react";
 import {
   Datagrid,

@@ -7,7 +7,7 @@ import {
   TextInput,
 } from "react-admin";
 
-import { useProjects } from "../providers/ProjectsContext";
+import { useProjects } from "../context/ProjectsContext";
 import FormToolbar from "./common/FormToolbar";
 export const LanguageList = (): JSX.Element => {
   const { selectedProject } = useProjects();

@@ -9,7 +9,7 @@ import { IconButton, Grid, LinearProgress } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import useFieldValue from "hooks/useFieldValue";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
 const plugins = [
   {
     plugin: RegionsPlugin,

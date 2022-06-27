@@ -16,7 +16,7 @@ import {
   useRedirect,
 } from "react-admin";
 import { handleLocalizedStrings } from "utils";
-import { useProjects } from "../../providers/ProjectsContext";
+import { useProjects } from "../../context/ProjectsContext";
 import AudioOptions from "../common/AudioOptions";
 import AssetShape from "./AssetShape";
 

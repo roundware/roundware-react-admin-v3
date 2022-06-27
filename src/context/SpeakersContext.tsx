@@ -1,4 +1,4 @@
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
 import React, { useEffect, useState } from "react";
 import { ISpeaker } from "types/speaker";
 import { AllowChildrenOnlyProps, useProjects } from "./ProjectsContext";

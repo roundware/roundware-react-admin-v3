@@ -2,8 +2,8 @@ import { Grid } from "@mui/material";
 import CardBox from "components/common/CardBox";
 import LocationSelector from "components/common/LocationSelector";
 import TranslatableField from "components/common/TranslatableField";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
-import { useProjects } from "providers/ProjectsContext";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
+import { useProjects } from "context/ProjectsContext";
 import React, { useState } from "react";
 import {
   BooleanInput,

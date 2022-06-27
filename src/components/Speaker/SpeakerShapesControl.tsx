@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
-import { useSpeakers } from "providers/SpeakersContext";
+import { useSpeakers } from "context/SpeakersContext";
 import React from "react";
 import SpeakerDrawer from "./SpeakerDrawer";
 import SpeakerPolygonGroup from "./SpeakerPolygon";

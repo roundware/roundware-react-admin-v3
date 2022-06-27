@@ -46,9 +46,9 @@ import TagIdSelector from "./TagIdSelector";
 import TranslatableField from "./TranslatableField";
 import ArrowLeft from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
-import { useProjects } from "providers/ProjectsContext";
+import { useProjects } from "context/ProjectsContext";
 import { AssetPreview } from "components/Asset/AssetDatagrid";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
 import { cloneDeep } from "lodash";
 const ReferenceArrayField = React.memo(RAF);
 const ImportView = ({ handleClose }: { handleClose: () => void }) => {

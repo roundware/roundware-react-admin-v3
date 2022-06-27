@@ -10,7 +10,7 @@ import {
   NumberInput,
   SelectInput,
 } from "react-admin";
-import { useProjects } from "../../providers/ProjectsContext";
+import { useProjects } from "../../context/ProjectsContext";
 import AssetDatagrid from "./AssetDatagrid";
 import AssetMap from "./AssetMap";
 

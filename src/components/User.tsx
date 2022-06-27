@@ -9,7 +9,7 @@ import {
   TextField,
   TextInput,
 } from "react-admin";
-import { useProjects } from "../providers/ProjectsContext";
+import { useProjects } from "../context/ProjectsContext";
 export const UserList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   return (

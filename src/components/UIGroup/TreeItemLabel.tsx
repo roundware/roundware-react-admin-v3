@@ -19,9 +19,9 @@ import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
 import DragHandleSharpIcon from "@mui/icons-material/DragHandleSharp";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
-import { useBuildUI } from "providers/BuildUIContext";
+import { useBuildUI } from "context/BuildUIContext";
 import { Confirm, useNotify, useRefresh, useRedirect } from "react-admin";
-import { useRoundwareDataProvider } from "providers/DataProviderContext";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import { ITag } from "types/tags";
 interface Props {

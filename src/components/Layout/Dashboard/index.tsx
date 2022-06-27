@@ -10,7 +10,7 @@ import {
   useDataProvider,
   useRedirect,
 } from "react-admin";
-import { useProjects } from "../../../providers/ProjectsContext";
+import { useProjects } from "../../../context/ProjectsContext";
 import DashboardContent from "./DashboardContent";
 import ProjectDetails from "./ProjectDetails";
 

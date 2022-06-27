@@ -1,12 +1,13 @@
-import React from "react";
 import { Stack } from "@mui/material";
-import { Toolbar, useNotify, useRedirect, SaveButton } from "react-admin";
+import React from "react";
+import { SaveButton, Toolbar, useNotify, useRedirect } from "react-admin";
 import { useFormContext } from "react-hook-form";
 
 const FormToolbar = () => {
-  const redirect = useRedirect();
   const notify = useNotify();
   const fc = useFormContext();
+  const redirect = useRedirect();
+
   return (
     <Toolbar>
       <Stack direction="row" spacing={1}>
@@ -17,7 +18,7 @@ const FormToolbar = () => {
             onSuccess: () => {
               notify(`Successfully saved!`);
               redirect(false);
-              fc.reset();
+              fc.reset({});
               window.scrollTo(0, 0);
             },
           }}

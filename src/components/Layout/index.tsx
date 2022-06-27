@@ -16,7 +16,7 @@ import {
   useRedirect,
   useSidebarState,
 } from "react-admin";
-import { useProjects } from "../../providers/ProjectsContext";
+import { useProjects } from "../../context/ProjectsContext";
 import Appbar from "./Appbar";
 import { Menu } from "./Menu";
 
