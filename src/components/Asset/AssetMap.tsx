@@ -13,6 +13,7 @@ import { IAsset } from "types/asset";
 import AssetMarker from "./AssetMarker";
 import { mapLibraries } from "utils";
 import { Alert, LinearProgress } from "@mui/material";
+import { AssetMapContextProvider } from "context/AssetMapContext";
 
 const AssetMarkers = () => {
   const { data, ...lc } = useListController();
@@ -125,18 +126,19 @@ const GoogleMapsWrapper = (props: PropsWithChildren<{}>) => {
       onLoad={(map) => {
         const bounds = new window.google.maps.LatLngBounds();
         map.fitBounds(bounds);
+        map.setZoom(10);
       }}
       center={{
         lat: 0,
         lng: 0,
       }}
-      zoom={4}
+      zoom={10}
       mapContainerStyle={{
         height: "calc(100vh - 48px - 48px - 64px)",
         width: "100%",
       }}
     >
-      {props.children}
+      <AssetMapContextProvider>{props.children}</AssetMapContextProvider>
     </GoogleMap>
   );
 };
