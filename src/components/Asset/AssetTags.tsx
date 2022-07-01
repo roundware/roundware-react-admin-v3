@@ -1,3 +1,4 @@
+import { Chip } from "@mui/material";
 import React from "react";
 import { useGetOne } from "react-admin";
 
@@ -11,7 +12,7 @@ export const TagDisplay = ({ tagId }: TagDisplayProps) => {
   if (tag.data) {
     return (
       <>
-        <span className="rw-tag">{tag.data.description}</span>
+        <Chip label={tag.data.description} />
         <br />
       </>
     );

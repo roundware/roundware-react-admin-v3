@@ -12,17 +12,22 @@ import { OverlappingMarkerSpiderfier } from "ts-overlapping-marker-spiderfier";
 import { IAsset } from "types/asset";
 import AssetMarker from "./AssetMarker";
 import { mapLibraries } from "utils";
-import { Alert, LinearProgress } from "@mui/material";
-import { AssetMapContextProvider } from "context/AssetMapContext";
+import { Alert, LinearProgress, Slide, Stack } from "@mui/material";
+import {
+  AssetMapContextProvider,
+  useAssetMapContext,
+} from "context/AssetMapContext";
+import { LoadingButton } from "@mui/lab";
+import MapControl from "components/common/MapControl";
+import { Save } from "@mui/icons-material";
 
 const AssetMarkers = () => {
   const { data, ...lc } = useListController();
 
-  const unsaved = useBoolean(false);
-
   const [markerClusterer, setMarkerClusterer] = useState<Clusterer | null>(
     null
   );
+
   const markers = (clusterer: Clusterer) => {
     const childrenRenderer = (oms: OverlappingMarkerSpiderfier | null) =>
       data.map((asset: IAsset) => (
@@ -74,16 +79,38 @@ const AssetMarkers = () => {
     if (!(markerClusterer && markerClusterer.ready)) return;
     wait_for_full_page().then(recluster);
   }, [markerClusterer && markerClusterer.ready, data]);
+
+  const { promises, handleSave, saving } = useAssetMapContext();
   if (!data) return <LinearProgress />;
 
   return (
-    <MarkerClusterer
-      maxZoom={16}
-      onLoad={setMarkerClusterer}
-      minimumClusterSize={3}
-      options={options}
-      children={markers}
-    />
+    <>
+      <MapControl position={google.maps.ControlPosition.TOP_CENTER}>
+        <Stack direction="row" spacing={1} my={1}>
+          <Alert severity={promises.length ? `info` : `success`}>
+            {promises.length ? `${promises.length} Updates` : `Up to Date`}
+          </Alert>
+          <Slide in={!!promises.length}>
+            <LoadingButton
+              variant="contained"
+              color="primary"
+              loading={saving.value}
+              onClick={handleSave}
+              startIcon={<Save />}
+            >
+              Save
+            </LoadingButton>
+          </Slide>
+        </Stack>
+      </MapControl>
+      <MarkerClusterer
+        maxZoom={16}
+        onLoad={setMarkerClusterer}
+        minimumClusterSize={3}
+        options={options}
+        children={markers}
+      />
+    </>
   );
 };
 const OverlappingMarkerSpiderfierComponent = (props: {
@@ -119,6 +146,7 @@ const GoogleMapsWrapper = (props: PropsWithChildren<{}>) => {
     libraries: mapLibraries,
   });
   const { data } = useListController();
+
   if (!isLoaded || !data) return <LinearProgress />;
   if (loadError) return <Alert severity="error">{loadError.message}</Alert>;
   return (
@@ -128,11 +156,6 @@ const GoogleMapsWrapper = (props: PropsWithChildren<{}>) => {
         map.fitBounds(bounds);
         map.setZoom(10);
       }}
-      center={{
-        lat: 0,
-        lng: 0,
-      }}
-      zoom={10}
       mapContainerStyle={{
         height: "calc(100vh - 48px - 48px - 64px)",
         width: "100%",
@@ -143,9 +166,11 @@ const GoogleMapsWrapper = (props: PropsWithChildren<{}>) => {
   );
 };
 
-const AssetMap = () => (
-  <GoogleMapsWrapper>
-    <AssetMarkers />
-  </GoogleMapsWrapper>
-);
+const AssetMap = () => {
+  return (
+    <GoogleMapsWrapper>
+      <AssetMarkers />
+    </GoogleMapsWrapper>
+  );
+};
 export default AssetMap;
