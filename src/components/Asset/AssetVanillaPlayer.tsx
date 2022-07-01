@@ -22,8 +22,8 @@ const AssetVainllaPlayer = ({
   const supported = ["mp3", "wav"];
   if (supported.indexOf(ext) === -1) {
     ext = "mp3";
-    let lastPos = filename.indexOf(".", filename.length - 5);
-    let pos = lastPos == -1 ? filename.length : lastPos;
+    const lastPos = filename.indexOf(".", filename.length - 5);
+    const pos = lastPos == -1 ? filename.length : lastPos;
     filename = filename.substr(0, pos < 0 ? filename.length : pos) + "." + ext;
   }
 

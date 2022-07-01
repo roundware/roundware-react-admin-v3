@@ -38,7 +38,11 @@ const AssetMarkers = () => {
           oms={oms!}
         />
       ));
-    return <OverlappingMarkerSpiderfierComponent children={childrenRenderer} />;
+    return (
+      <OverlappingMarkerSpiderfierComponent>
+        {childrenRenderer}
+      </OverlappingMarkerSpiderfierComponent>
+    );
   };
   const recluster = () => {
     if (markerClusterer) {
@@ -108,8 +112,9 @@ const AssetMarkers = () => {
         onLoad={setMarkerClusterer}
         minimumClusterSize={3}
         options={options}
-        children={markers}
-      />
+      >
+        {markers}
+      </MarkerClusterer>
     </>
   );
 };

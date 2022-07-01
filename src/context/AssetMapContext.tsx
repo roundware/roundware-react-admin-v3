@@ -25,7 +25,9 @@ type AssetContextType = {
 const AssetMapContext = React.createContext<AssetContextType>(undefined!);
 export const useAssetMapContext = () => React.useContext(AssetMapContext);
 
-export const AssetMapContextProvider = (props: PropsWithChildren<{}>) => {
+export const AssetMapContextProvider = (
+  props: PropsWithChildren<{ selectedAsset?: IAsset }>
+) => {
   const [promises, setPromises] = useState<AssetContextType[`promises`]>([]);
   const [selectedAsset, setSelectedAsset] = useState<IAsset | null>(null);
   const { refetch } = useListController();
