@@ -1,17 +1,14 @@
-import { useTheme } from "@mui/material";
-import { orange, red } from "@mui/material/colors";
-import { InfoWindow, Marker } from "@react-google-maps/api";
+import { red } from "@mui/material/colors";
+import { Marker } from "@react-google-maps/api";
 import { Clusterer } from "@react-google-maps/marker-clusterer";
 import { useAssetMapContext } from "context/AssetMapContext";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
 import { clone, isEqual } from "lodash";
-import React, { useEffect, useMemo, useState } from "react";
-import { IconPathData } from "@fortawesome/fontawesome-common-types";
+import React, { useMemo, useState } from "react";
 import { OverlappingMarkerSpiderfier } from "ts-overlapping-marker-spiderfier";
 import { IAsset } from "types/asset";
-import LocationOnIcon from "./location-on.svg";
 import { AssetInfoWindowInner } from "./AssetInfoWindow";
-const locationOnPath = `M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5`;
+
 interface AssetMarkerProps {
   asset: IAsset;
   clusterer: Clusterer;
