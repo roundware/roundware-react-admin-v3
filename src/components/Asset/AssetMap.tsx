@@ -12,14 +12,22 @@ import { OverlappingMarkerSpiderfier } from "ts-overlapping-marker-spiderfier";
 import { IAsset } from "types/asset";
 import AssetMarker from "./AssetMarker";
 import { mapLibraries } from "utils";
-import { Alert, LinearProgress, Slide, Stack } from "@mui/material";
+import {
+  Alert,
+  Button,
+  IconButton,
+  LinearProgress,
+  Paper,
+  Slide,
+  Stack,
+} from "@mui/material";
 import {
   AssetMapContextProvider,
   useAssetMapContext,
 } from "context/AssetMapContext";
 import { LoadingButton } from "@mui/lab";
 import MapControl from "components/common/MapControl";
-import { Save } from "@mui/icons-material";
+import { History, Save } from "@mui/icons-material";
 
 const AssetMarkers = () => {
   const { data, ...lc } = useListController();
@@ -84,16 +92,18 @@ const AssetMarkers = () => {
     wait_for_full_page().then(recluster);
   }, [markerClusterer && markerClusterer.ready, data]);
 
-  const { promises, handleSave, saving } = useAssetMapContext();
+  const { promises, handleSave, saving, setPromises } = useAssetMapContext();
   if (!data) return <LinearProgress />;
 
   return (
     <>
       <MapControl position={google.maps.ControlPosition.TOP_CENTER}>
         <Stack direction="row" spacing={1} my={1}>
-          <Alert severity={promises.length ? `info` : `success`}>
-            {promises.length ? `${promises.length} Updates` : `Up to Date`}
-          </Alert>
+          <Paper>
+            <Alert severity={promises.length ? `info` : `success`}>
+              {promises.length ? `${promises.length} Updates` : `Up to Date`}
+            </Alert>
+          </Paper>
           <Slide in={!!promises.length}>
             <LoadingButton
               variant="contained"
@@ -104,6 +114,16 @@ const AssetMarkers = () => {
             >
               Save
             </LoadingButton>
+          </Slide>
+          <Slide in={!!promises.length}>
+            <Button
+              onClick={() => {
+                setPromises([]);
+                lc.refetch();
+              }}
+            >
+              <History />
+            </Button>
           </Slide>
         </Stack>
       </MapControl>

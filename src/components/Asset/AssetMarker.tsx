@@ -4,7 +4,7 @@ import { Clusterer } from "@react-google-maps/marker-clusterer";
 import { useAssetMapContext } from "context/AssetMapContext";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
 import { clone, isEqual } from "lodash";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { OverlappingMarkerSpiderfier } from "ts-overlapping-marker-spiderfier";
 import { IAsset } from "types/asset";
 import { AssetInfoWindowInner } from "./AssetInfoWindow";
@@ -20,7 +20,8 @@ const AssetMarker = ({ asset, clusterer, oms }: AssetMarkerProps) => {
     lng: asset.longitude!,
   });
 
-  const { setPromises, selectedAsset, setSelectedAsset } = useAssetMapContext();
+  const { setPromises, selectedAsset, setSelectedAsset, promises } =
+    useAssetMapContext();
   const dataProvider = useRoundwareDataProvider();
   const isEdited = useMemo(
     () =>
@@ -30,6 +31,14 @@ const AssetMarker = ({ asset, clusterer, oms }: AssetMarkerProps) => {
       }),
     [position.lat, position.lng, asset.latitude, asset.longitude]
   );
+
+  useEffect(() => {
+    if (promises.length == 0)
+      setposition({
+        lat: asset.latitude,
+        lng: asset.longitude,
+      });
+  }, [asset.latitude, asset.longitude, promises]);
 
   return (
     <Marker
