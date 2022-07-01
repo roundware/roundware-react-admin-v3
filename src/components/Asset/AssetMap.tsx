@@ -60,7 +60,7 @@ const AssetMarkers = () => {
   useEffect(() => {
     lc.setPerPage(lc.total);
     return () => lc.setPerPage(10);
-  }, [data]);
+  }, []);
 
   const wait_for_full_page = async () => {
     return new Promise<void>((resolve, reject) => {
