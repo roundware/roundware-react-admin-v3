@@ -143,7 +143,7 @@ const OverlappingMarkerSpiderfierComponent = (props: {
   return <Fragment>{props.children(spiderfier)}</Fragment>;
 };
 
-const GoogleMapsWrapper = (props: PropsWithChildren<{}>) => {
+const GoogleMapsWrapper = (props: PropsWithChildren<{ nothing?: null }>) => {
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
