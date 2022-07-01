@@ -1,4 +1,10 @@
-import React, { Fragment, PropsWithChildren, useEffect, useState } from "react";
+import React, {
+  forwardRef,
+  Fragment,
+  PropsWithChildren,
+  useEffect,
+  useState,
+} from "react";
 import useBoolean from "hooks/useBoolean";
 import { useListController } from "react-admin";
 import {
@@ -65,10 +71,6 @@ const AssetMarkers = () => {
     imagePath:
       "https://github.com/googlemaps/v3-utility-library/raw/master/packages/markerclustererplus/images/m",
   };
-  useEffect(() => {
-    lc.setPerPage(lc.total);
-    return () => lc.setPerPage(10);
-  }, []);
 
   const wait_for_full_page = async () => {
     return new Promise<void>((resolve, reject) => {
@@ -163,7 +165,12 @@ const OverlappingMarkerSpiderfierComponent = (props: {
   return <Fragment>{props.children(spiderfier)}</Fragment>;
 };
 
-const GoogleMapsWrapper = (props: PropsWithChildren<{ nothing?: null }>) => {
+const GoogleMapsWrapper = forwardRef<
+  unknown,
+  {
+    children: React.ReactNode;
+  }
+>((props) => {
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -189,13 +196,13 @@ const GoogleMapsWrapper = (props: PropsWithChildren<{ nothing?: null }>) => {
       <AssetMapContextProvider>{props.children}</AssetMapContextProvider>
     </GoogleMap>
   );
-};
+});
 
-const AssetMap = () => {
+const AssetMap = forwardRef((p, ref) => {
   return (
     <GoogleMapsWrapper>
       <AssetMarkers />
     </GoogleMapsWrapper>
   );
-};
+});
 export default AssetMap;

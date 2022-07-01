@@ -17,71 +17,76 @@ import {
 } from "react-admin";
 import AudioPlayerField from "../common/AudioPlayerField";
 
-export const AssetDatagrid = (): JSX.Element => {
+export const AssetDatagrid = React.forwardRef((): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
   return (
-    <Datagrid optimized>
-      <TextField source="id" />
-      <BooleanField source="submitted" />
-      <AssetPreview />
-      <DateField source="created" />
-      <NumberField source="latitude" options={{ maximumFractionDigits: 8 }} />
-      <NumberField source="longitude" options={{ maximumFractionDigits: 8 }} />
+    <div>
+      <Datagrid optimized>
+        <TextField source="id" />
+        <BooleanField source="submitted" />
+        <AssetPreview />
+        <DateField source="created" />
+        <NumberField source="latitude" options={{ maximumFractionDigits: 8 }} />
+        <NumberField
+          source="longitude"
+          options={{ maximumFractionDigits: 8 }}
+        />
 
-      <ReferenceArrayField label="Tags" reference="tags" source="tag_ids">
-        <SingleFieldList>
-          <ChipField source="value" />
-        </SingleFieldList>
-      </ReferenceArrayField>
-      <NumberField
-        label="Audio Length(s)"
-        source="audio_length_in_seconds"
-        options={{ maximumFractionDigits: 3 }}
-      />
-      <EditButton />
-      <CopyResourceButton
-        assignFirst={async () => {
-          const res = await dataProvider.create(`envelopes`, {
-            data: {
-              session_id: 1,
-            },
-          });
-          return { envelope_ids: Number(res.data.id) };
-        }}
-        transform={(a) => {
-          if (Array.isArray(a.tag_ids)) a.tag_ids = a.tag_ids.join(`,`);
-          a.session_id = 1;
-          delete a.file;
-          delete a.user;
-          if (a.loc_description_admin?.length)
-            a.description_loc_ids = a.loc_description_admin
-              .map((r: RaRecord) => r.id)
-              .reduce(
-                (acc: string, el: number) =>
-                  acc.toString() + el.toString() + ",",
-                ""
-              )
-              .slice(0, -1);
+        <ReferenceArrayField label="Tags" reference="tags" source="tag_ids">
+          <SingleFieldList>
+            <ChipField source="value" />
+          </SingleFieldList>
+        </ReferenceArrayField>
+        <NumberField
+          label="Audio Length(s)"
+          source="audio_length_in_seconds"
+          options={{ maximumFractionDigits: 3 }}
+        />
+        <EditButton />
+        <CopyResourceButton
+          assignFirst={async () => {
+            const res = await dataProvider.create(`envelopes`, {
+              data: {
+                session_id: 1,
+              },
+            });
+            return { envelope_ids: Number(res.data.id) };
+          }}
+          transform={(a) => {
+            if (Array.isArray(a.tag_ids)) a.tag_ids = a.tag_ids.join(`,`);
+            a.session_id = 1;
+            delete a.file;
+            delete a.user;
+            if (a.loc_description_admin?.length)
+              a.description_loc_ids = a.loc_description_admin
+                .map((r: RaRecord) => r.id)
+                .reduce(
+                  (acc: string, el: number) =>
+                    acc.toString() + el.toString() + ",",
+                  ""
+                )
+                .slice(0, -1);
 
-          if (a.loc_alt_text_admin?.length)
-            a.alt_text_loc_ids = a.loc_alt_text_admin
-              .map((r: RaRecord) => r.id)
-              .reduce(
-                (acc: string, el: number) =>
-                  acc.toString() + el.toString() + ",",
-                ""
-              )
-              .slice(0, -1);
-          delete a.loc_alt_text_admin;
-          delete a.loc_description_admin;
-          a.dummy = new Blob();
-          return a;
-        }}
-      />
-      <DeleteButton />
-    </Datagrid>
+            if (a.loc_alt_text_admin?.length)
+              a.alt_text_loc_ids = a.loc_alt_text_admin
+                .map((r: RaRecord) => r.id)
+                .reduce(
+                  (acc: string, el: number) =>
+                    acc.toString() + el.toString() + ",",
+                  ""
+                )
+                .slice(0, -1);
+            delete a.loc_alt_text_admin;
+            delete a.loc_description_admin;
+            a.dummy = new Blob();
+            return a;
+          }}
+        />
+        <DeleteButton />
+      </Datagrid>
+    </div>
   );
-};
+});
 
 export default AssetDatagrid;
 

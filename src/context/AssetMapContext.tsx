@@ -1,5 +1,7 @@
+import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import { AssetInfoWindowInner } from "components/Asset/AssetInfoWindow";
 import useBoolean, { UseBooleanType } from "hooks/useBoolean";
+import { useCallbackPrompt } from "hooks/useCallbackPrompt";
 import React, { PropsWithChildren, useState } from "react";
 import { useListController } from "react-admin";
 import { IAsset } from "types/asset";
@@ -32,6 +34,9 @@ export const AssetMapContextProvider = (
   const [selectedAsset, setSelectedAsset] = useState<IAsset | null>(null);
   const { refetch } = useListController();
   const saving = useBoolean();
+  const [showPromp, confirmNav, cancelNav] = useCallbackPrompt(
+    promises.length != 0
+  );
   const handleSave = async () => {
     saving.setTrue();
     try {
@@ -57,6 +62,16 @@ export const AssetMapContextProvider = (
       }}
     >
       {props.children}
+      <Dialog open={showPromp as boolean}>
+        <DialogContent>
+          You save some unsaved changes in Assets Map. Are you sure you want to
+          leave?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={confirmNav as () => void}>Yes</Button>
+          <Button onClick={cancelNav as () => void}>No</Button>
+        </DialogActions>
+      </Dialog>
     </AssetMapContext.Provider>
   );
 };

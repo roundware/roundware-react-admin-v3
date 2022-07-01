@@ -1,15 +1,15 @@
-import { Box, Tab, Tabs } from "@mui/material";
-import { GoogleMap } from "@react-google-maps/api";
+import { Fade, Tab, Tabs } from "@mui/material";
 import ListActions from "components/common/ListActions";
 import TagIdSelector from "components/common/TagIdSelector";
 import useBoolean from "hooks/useBoolean";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BooleanInput,
   DateTimeInput,
   List,
   NumberInput,
   SelectInput,
+  useListController,
 } from "react-admin";
 import { useProjects } from "../../context/ProjectsContext";
 import AssetDatagrid from "./AssetDatagrid";
@@ -18,6 +18,11 @@ import AssetMap from "./AssetMap";
 export const AssetList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   const mapViewEnabled = useBoolean(false);
+  useEffect(() => {
+    if (mapViewEnabled.value) {
+    }
+  }, [mapViewEnabled.value]);
+
   return (
     <List
       filter={{ project_id: selectedProject?.id }}
@@ -62,7 +67,6 @@ export const AssetList = (): JSX.Element => {
         />,
         <BooleanInput key="submitted" source="submitted" label="Submitted" />,
       ]}
-      perPage={30}
       sort={{
         field: "id",
         order: "DSC",
@@ -79,10 +83,34 @@ export const AssetList = (): JSX.Element => {
           <Tab value="map" label="Map" />
         </Tabs>
 
-        {mapViewEnabled.value ? <AssetMap /> : <AssetDatagrid />}
+        <Fade in={mapViewEnabled.value}>
+          <div style={{ height: "0" }}>
+            <AssetMap />
+          </div>
+        </Fade>
+        <Fade in={!mapViewEnabled.value}>
+          <div style={{ height: "0" }}>
+            <AssetDatagrid />
+          </div>
+        </Fade>
+        <SyncPerPage mapView={mapViewEnabled.value} />
       </>
     </List>
   );
 };
 
+const SyncPerPage = (props: { mapView: boolean }) => {
+  const lc = useListController();
+  useEffect(() => {
+    if (props.mapView) {
+      lc.setPerPage(lc.total);
+      lc.setPage(0);
+    } else {
+      lc.setPerPage(10);
+      lc.setPage(0);
+    }
+  }, [props.mapView]);
+
+  return null;
+};
 export default AssetList;
