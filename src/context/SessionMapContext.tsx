@@ -17,7 +17,11 @@ export const useSesisonMap = () => React.useContext(SessionMapContext);
 
 export const SessionMapContextProvider = (props: AllowChildrenOnlyProps) => {
   const params = useParams();
-  const { data, isLoading } = useGetList<EventPayload>(`events`, {});
+  const { data, isLoading } = useGetList<EventPayload>(`events`, {
+    filter: {
+      session_id: parseInt(params.sessionId!),
+    },
+  });
 
   const events: SessionMapContextType[`events`] = useMemo(
     () =>
