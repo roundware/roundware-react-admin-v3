@@ -8,7 +8,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { OverlappingMarkerSpiderfier } from "ts-overlapping-marker-spiderfier";
 import { IAsset } from "types/asset";
 import { AssetInfoWindowInner } from "./AssetInfoWindow";
-
+import EditedLocation from "./location-edited.svg";
 interface AssetMarkerProps {
   asset: IAsset;
   clusterer: Clusterer;
@@ -45,11 +45,14 @@ const AssetMarker = ({ asset, clusterer, oms }: AssetMarkerProps) => {
       position={position}
       clusterer={clusterer}
       icon={{
-        url: isEdited
-          ? `https://fonts.gstatic.com/s/i/materialicons/edit_location/v16/24px.svg`
-          : `https://fonts.gstatic.com/s/i/materialicons/location_on/v15/24px.svg`,
-        fillColor: red[200],
-        strokeColor: red[200],
+        // url: isEdited
+        //   ? `https://fonts.gstatic.com/s/i/materialicons/edit_location/v16/24px.svg`
+        //   : `https://fonts.gstatic.com/s/i/materialicons/location_on/v15/24px.svg`,
+        path: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z",
+        fillColor: isEdited ? "#ff0000" : `#000`,
+        fillOpacity: 1,
+
+        scale: 1,
       }}
       onLoad={(m) => oms.addMarker(m, () => setSelectedAsset(asset))}
       noClustererRedraw={true}

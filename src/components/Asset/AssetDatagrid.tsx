@@ -1,6 +1,6 @@
 import CopyResourceButton from "components/common/CopyResource";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import {
   BooleanField,
   ChipField,
@@ -13,12 +13,19 @@ import {
   ReferenceArrayField,
   SingleFieldList,
   TextField,
+  useListController,
   useRecordContext,
 } from "react-admin";
 import AudioPlayerField from "../common/AudioPlayerField";
 
 export const AssetDatagrid = React.forwardRef((): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
+
+  const { setPerPage, refetch } = useListController();
+  useLayoutEffect(() => {
+    setPerPage(10);
+    refetch();
+  }, []);
   return (
     <div>
       <Datagrid optimized>

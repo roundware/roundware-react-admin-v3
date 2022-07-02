@@ -2,7 +2,7 @@ import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import { AssetInfoWindowInner } from "components/Asset/AssetInfoWindow";
 import useBoolean, { UseBooleanType } from "hooks/useBoolean";
 import { useCallbackPrompt } from "hooks/useCallbackPrompt";
-import React, { PropsWithChildren, useState } from "react";
+import React, { PropsWithChildren, useLayoutEffect, useState } from "react";
 import { useListController } from "react-admin";
 import { IAsset } from "types/asset";
 
@@ -32,8 +32,12 @@ export const AssetMapContextProvider = (
 ) => {
   const [promises, setPromises] = useState<AssetContextType[`promises`]>([]);
   const [selectedAsset, setSelectedAsset] = useState<IAsset | null>(null);
-  const { refetch } = useListController();
+  const { refetch, setPerPage, total } = useListController();
   const saving = useBoolean();
+  useLayoutEffect(() => {
+    setPerPage(total);
+    refetch();
+  }, []);
   const [showPromp, confirmNav, cancelNav] = useCallbackPrompt(
     promises.length != 0
   );

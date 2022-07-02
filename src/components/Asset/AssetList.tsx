@@ -1,15 +1,14 @@
-import { Fade, Tab, Tabs } from "@mui/material";
+import { Fade, Paper, Tab, Tabs } from "@mui/material";
 import ListActions from "components/common/ListActions";
 import TagIdSelector from "components/common/TagIdSelector";
 import useBoolean from "hooks/useBoolean";
-import React, { useEffect } from "react";
+import React from "react";
 import {
   BooleanInput,
   DateTimeInput,
   List,
   NumberInput,
   SelectInput,
-  useListController,
 } from "react-admin";
 import { useProjects } from "../../context/ProjectsContext";
 import AssetDatagrid from "./AssetDatagrid";
@@ -18,10 +17,6 @@ import AssetMap from "./AssetMap";
 export const AssetList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   const mapViewEnabled = useBoolean(false);
-  useEffect(() => {
-    if (mapViewEnabled.value) {
-    }
-  }, [mapViewEnabled.value]);
 
   return (
     <List
@@ -83,34 +78,10 @@ export const AssetList = (): JSX.Element => {
           <Tab value="map" label="Map" />
         </Tabs>
 
-        <Fade in={mapViewEnabled.value}>
-          <div style={{ height: "0" }}>
-            <AssetMap />
-          </div>
-        </Fade>
-        <Fade in={!mapViewEnabled.value}>
-          <div style={{ height: "0" }}>
-            <AssetDatagrid />
-          </div>
-        </Fade>
-        <SyncPerPage mapView={mapViewEnabled.value} />
+        {mapViewEnabled.value ? <AssetMap /> : <AssetDatagrid />}
       </>
     </List>
   );
 };
 
-const SyncPerPage = (props: { mapView: boolean }) => {
-  const lc = useListController();
-  useEffect(() => {
-    if (props.mapView) {
-      lc.setPerPage(lc.total);
-      lc.setPage(0);
-    } else {
-      lc.setPerPage(10);
-      lc.setPage(0);
-    }
-  }, [props.mapView]);
-
-  return null;
-};
 export default AssetList;
