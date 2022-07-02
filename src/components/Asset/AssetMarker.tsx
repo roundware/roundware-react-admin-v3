@@ -107,7 +107,15 @@ const AssetMarker = ({ asset, clusterer, oms }: AssetMarkerProps) => {
         ]);
       }}
     >
-      {selectedAsset?.id == asset.id && <AssetInfoWindowInner asset={asset} />}
+      {selectedAsset?.id == asset.id && (
+        <AssetInfoWindowInner
+          asset={{
+            ...asset,
+            latitude: position.lat,
+            longitude: position.lng,
+          }}
+        />
+      )}
     </Marker>
   );
 };
