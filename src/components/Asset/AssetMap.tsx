@@ -3,6 +3,7 @@ import React, {
   Fragment,
   PropsWithChildren,
   useEffect,
+  useLayoutEffect,
   useState,
 } from "react";
 import useBoolean from "hooks/useBoolean";
@@ -177,14 +178,29 @@ const GoogleMapsWrapper = forwardRef<
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY!,
     libraries: mapLibraries,
   });
-  const { data } = useListController();
+  const { data, setPerPage, total, refetch } = useListController();
 
-  if (!isLoaded || !data) return <LinearProgress />;
+  const saving = useBoolean();
+  useLayoutEffect(() => {
+    setPerPage(total);
+    refetch();
+  }, []);
+
+  if (!isLoaded || !data || data.length != total) return <LinearProgress />;
   if (loadError) return <Alert severity="error">{loadError.message}</Alert>;
   return (
     <GoogleMap
       onLoad={(map) => {
-        const bounds = new window.google.maps.LatLngBounds();
+        const bounds = new window.google.maps.LatLngBounds(
+          {
+            lat: Math.min(...data.map((a) => a.latitude)) - 1,
+            lng: Math.min(...data.map((a) => a.longitude)) - 1,
+          },
+          {
+            lat: Math.max(...data.map((a) => a.latitude)) + 1,
+            lng: Math.max(...data.map((a) => a.longitude)) + 1,
+          }
+        );
         map.fitBounds(bounds);
         map.setZoom(10);
       }}
