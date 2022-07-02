@@ -1,4 +1,4 @@
-import { Chip } from "@mui/material";
+import { Chip, Stack } from "@mui/material";
 import React from "react";
 import { useGetOne } from "react-admin";
 
@@ -12,7 +12,7 @@ export const TagDisplay = ({ tagId }: TagDisplayProps) => {
   if (tag.data) {
     return (
       <>
-        <Chip label={tag.data.description} />
+        <Chip size="small" label={tag.data.description} />
         <br />
       </>
     );
@@ -23,12 +23,12 @@ export const TagDisplay = ({ tagId }: TagDisplayProps) => {
 
 export const TagsDisplay = ({ tagIds }: { tagIds: number[] }) => {
   return (
-    <div className="rw-tags">
+    <Stack direction="row" flexWrap={"wrap"} spacing={0.2}>
       {tagIds.map((tagId: number) => (
         <React.Fragment key={tagId}>
           <TagDisplay tagId={tagId} />
         </React.Fragment>
       ))}
-    </div>
+    </Stack>
   );
 };

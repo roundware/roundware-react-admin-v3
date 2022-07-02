@@ -22,10 +22,13 @@ import { AssetActionButtons } from "./AssetActionButtons";
 import CloseIcon from "@mui/icons-material/Close";
 import { Theme } from "@mui/material";
 import { Interweave } from "interweave";
-import { useListController } from "react-admin";
+import { useListController, useRedirect } from "react-admin";
 import { TagsDisplay } from "./AssetTags";
 import AssetVainllaPlayer from "./AssetVanillaPlayer";
 import { IAsset } from "types/asset";
+import { Edit } from "@mui/icons-material";
+
+import { Link } from "react-router-dom";
 interface AssetInfoWindowInnerProps {
   asset: IAsset;
 }
@@ -172,6 +175,7 @@ export const AssetInfoWindowInner = ({ asset }: AssetInfoWindowInnerProps) => {
     }
   };
 
+  const redirect = useRedirect();
   return (
     <InfoWindow
       options={{
@@ -182,19 +186,25 @@ export const AssetInfoWindowInner = ({ asset }: AssetInfoWindowInnerProps) => {
       position={position}
     >
       <StyledEngineProvider injectFirst>
-        <Grid container direction={"column"}>
-          <Paper>
-            {[
-              `date`,
-              `tags`,
-              `description`,
-              `photo`,
-              `text`,
-              `audio`,
-              `actions`,
-            ].map((item, index, list) => infoItemsResolver(item, index, list))}
-          </Paper>
-        </Grid>
+        <Paper>
+          {[
+            `date`,
+            `tags`,
+            `description`,
+            `photo`,
+            `text`,
+            `audio`,
+            `actions`,
+          ].map((item, index, list) => infoItemsResolver(item, index, list))}
+
+          <Button
+            size="small"
+            onClick={() => redirect(`edit`, `assets`, asset.id)}
+            startIcon={<Edit />}
+          >
+            Edit
+          </Button>
+        </Paper>
       </StyledEngineProvider>
     </InfoWindow>
   );
