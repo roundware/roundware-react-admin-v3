@@ -166,12 +166,7 @@ const OverlappingMarkerSpiderfierComponent = (props: {
   return <Fragment>{props.children(spiderfier)}</Fragment>;
 };
 
-const GoogleMapsWrapper = forwardRef<
-  unknown,
-  {
-    children: React.ReactNode;
-  }
->((props) => {
+const GoogleMapsWrapper = (props: { children: React.ReactNode }) => {
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -212,7 +207,7 @@ const GoogleMapsWrapper = forwardRef<
       <AssetMapContextProvider>{props.children}</AssetMapContextProvider>
     </GoogleMap>
   );
-});
+};
 
 const AssetMap = forwardRef((p, ref) => {
   return (

@@ -20,12 +20,7 @@ const SessionMap = () => {
   );
 };
 
-const GoogleMapsWrapper = forwardRef<
-  unknown,
-  {
-    children: React.ReactNode;
-  }
->((props) => {
+const GoogleMapsWrapper = (props: { children: React.ReactNode }) => {
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -61,6 +56,6 @@ const GoogleMapsWrapper = forwardRef<
       <>{props.children}</>
     </GoogleMap>
   );
-});
+};
 
 export default SessionMap;

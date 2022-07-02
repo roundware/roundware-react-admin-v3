@@ -107,7 +107,7 @@ function App({ basename }: { basename: string }): JSX.Element {
           : process.env.REACT_APP_INCLUDE_TABS?.split(`,`)
               ?.filter((r) => Object.keys(resourceLookup).includes(r))
               .map((r) => resourceLookup[r]) || []),
-        <CustomRoutes>
+        <CustomRoutes key="custom-routes">
           <Route path={`/session_map/:sessionId`} element={<SessionMap />} />
         </CustomRoutes>,
       ]}

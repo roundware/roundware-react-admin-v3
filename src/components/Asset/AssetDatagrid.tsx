@@ -18,7 +18,7 @@ import {
 } from "react-admin";
 import AudioPlayerField from "../common/AudioPlayerField";
 
-export const AssetDatagrid = React.forwardRef((): JSX.Element => {
+export const AssetDatagrid = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
 
   const { setPerPage, refetch } = useListController();
@@ -93,7 +93,7 @@ export const AssetDatagrid = React.forwardRef((): JSX.Element => {
       </Datagrid>
     </div>
   );
-});
+};
 
 export default AssetDatagrid;
 
