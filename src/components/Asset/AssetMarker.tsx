@@ -48,10 +48,12 @@ const AssetMarker = ({ asset, clusterer, oms }: AssetMarkerProps) => {
         // url: isEdited
         //   ? `https://fonts.gstatic.com/s/i/materialicons/edit_location/v16/24px.svg`
         //   : `https://fonts.gstatic.com/s/i/materialicons/location_on/v15/24px.svg`,
-        path: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z",
+        path: isEdited
+          ? `M12 2C8.14 2 5 5.14 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.86-3.14-7-7-7zm-1.56 10H9v-1.44l3.35-3.34 1.43 1.43L10.44 12zm4.45-4.45l-.7.7-1.44-1.44.7-.7c.15-.15.39-.15.54 0l.9.9c.15.15.15.39 0 .54z`
+          : "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z",
         fillColor: isEdited ? "#ff0000" : `#000`,
         fillOpacity: 1,
-
+        strokeWeight: 0.5,
         scale: 1,
       }}
       onLoad={(m) => oms.addMarker(m, () => setSelectedAsset(asset))}
