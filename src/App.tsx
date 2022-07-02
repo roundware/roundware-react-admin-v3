@@ -14,7 +14,7 @@ import {
   Translate,
   WebAsset,
 } from "@mui/icons-material";
-import { LinearProgress } from "@mui/material";
+import { Box } from "@mui/material";
 import {
   AudioTrackCreate,
   AudioTrackEdit,
@@ -37,9 +37,16 @@ import { UiGroupCreate, UiGroupEdit } from "components/UIGroup/index";
 import { UiGroupList } from "components/UIGroup/UIGroupsList";
 import { UserCreate, UserEdit, UserList } from "components/User";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
-import React, { useEffect, useState } from "react";
-import { Admin, EditGuesser, ListGuesser, Resource } from "react-admin";
-import { useLocation, useParams, useRoutes } from "react-router-dom";
+import { createBrowserHistory } from "history";
+import React from "react";
+import {
+  Admin,
+  CustomRoutes,
+  EditGuesser,
+  ListGuesser,
+  Resource,
+} from "react-admin";
+import { Route } from "react-router-dom";
 import AssetCreate from "./components/Asset/AssetCreate";
 import AssetEdit from "./components/Asset/AssetEdit";
 import AssetList from "./components/Asset/AssetList";
@@ -54,11 +61,15 @@ import ProjectCreate from "./components/Project/ProjectCreate";
 import ProjectEdit from "./components/Project/ProjectEdit";
 import ProjectList from "./components/Project/ProjectList";
 import ProjectShow from "./components/Project/ProjectShow";
-import { SessionCreate, SessionEdit, SessionList } from "./components/Session";
+import {
+  SessionCreate,
+  SessionEdit,
+  SessionList,
+} from "./components/Session/Session";
+import SessionMap from "./components/Session/SessionMap";
 import authProvider from "./context/AuthProvider";
 import { useProjects } from "./context/ProjectsContext";
 import adminTheme from "./styles";
-import { createBrowserHistory } from "history";
 
 const history = createBrowserHistory();
 function App({ basename }: { basename: string }): JSX.Element {
@@ -96,6 +107,9 @@ function App({ basename }: { basename: string }): JSX.Element {
           : process.env.REACT_APP_INCLUDE_TABS?.split(`,`)
               ?.filter((r) => Object.keys(resourceLookup).includes(r))
               .map((r) => resourceLookup[r]) || []),
+        <CustomRoutes>
+          <Route path={`/session_map/:sessionId`} element={<SessionMap />} />
+        </CustomRoutes>,
       ]}
     />
   );

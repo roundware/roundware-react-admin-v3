@@ -1,34 +1,35 @@
+import { Map } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 import React from "react";
 import {
-  CreateProps,
-  ListProps,
-  EditProps,
-  List,
-  Create,
-  Edit,
-  Datagrid,
-  SimpleForm,
-  TextInput,
-  NumberField,
-  TextField,
-  DateField,
   BooleanField,
-  ReferenceField,
-  DateTimeInput,
   BooleanInput,
+  Create,
+  Datagrid,
+  DateField,
+  DateTimeInput,
+  DeleteButton,
+  Edit,
+  EditButton,
+  List,
+  NumberField,
   ReferenceInput,
   SelectInput,
-  EditButton,
-  DeleteButton,
+  SimpleForm,
+  TextField,
+  TextInput,
+  useRecordContext,
 } from "react-admin";
-import { useProjects } from "../context/ProjectsContext";
-import FormToolbar from "./common/FormToolbar";
+import { Link } from "react-router-dom";
+import { useProjects } from "../../context/ProjectsContext";
+import FormToolbar from "../common/FormToolbar";
 
 export const SessionList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
     <List filter={{ project_id: selectedProject?.id }}>
-      <Datagrid rowClick="edit">
+      <Datagrid>
+        <SessionMapLink />
         <NumberField source="id" />
         <TextField source="device_id" />
         <DateField source="starttime" showTime />
@@ -43,6 +44,18 @@ export const SessionList = (): JSX.Element => {
         <DeleteButton />
       </Datagrid>
     </List>
+  );
+};
+
+const SessionMapLink = () => {
+  const record = useRecordContext();
+  const pc = useProjects();
+  return (
+    <Link to={`/project/${pc.selectedProject?.id}/session_map/${record.id}`}>
+      <IconButton>
+        <Map />
+      </IconButton>
+    </Link>
   );
 };
 
