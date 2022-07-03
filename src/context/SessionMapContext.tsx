@@ -1,13 +1,17 @@
 import { Alert, LinearProgress } from "@mui/material";
-import React, { useMemo } from "react";
+import { EVENT_TYPES } from "components/Session/SessionMapFilters";
+import React, { useEffect, useMemo, useState } from "react";
 import { useGetList } from "react-admin";
 import { useParams } from "react-router-dom";
-import { EventPayload } from "types/event";
+import { EventPayload, EventType } from "types/event";
+import { useRoundwareDataProvider } from "./DataProviderContext";
 import { AllowChildrenOnlyProps } from "./ProjectsContext";
 type SessionMapContextType = {
   events: (Required<Pick<EventPayload, "latitude" | "longitude" | "id">> &
     EventPayload)[];
   loading: boolean;
+  selectedFilters: EventType[];
+  setSelectedFilters: React.Dispatch<React.SetStateAction<EventType[]>>;
 };
 const SessionMapContext = React.createContext<SessionMapContextType>(
   undefined!
@@ -17,19 +21,44 @@ export const useSesisonMap = () => React.useContext(SessionMapContext);
 
 export const SessionMapContextProvider = (props: AllowChildrenOnlyProps) => {
   const params = useParams();
-  const { data, isLoading } = useGetList<EventPayload>(`events`, {
-    filter: {
-      session_id: parseInt(params.sessionId!),
-    },
-  });
 
+  const dataProvider = useRoundwareDataProvider();
+  const [data, setData] = useState<EventPayload[] | null>(null);
+
+  useEffect(() => {
+    dataProvider
+      .getList(
+        `events`,
+        {
+          filter: {
+            session_id: parseInt(params.sessionId!),
+          },
+          pagination: {
+            perPage: 0,
+            page: 0,
+          },
+          sort: {
+            field: "id",
+            order: "ASC",
+          },
+        },
+        true
+      )
+      .then((d) => setData(d.data as EventPayload[]));
+  }, []);
+
+  const isLoading = data === null;
+
+  const [selectedFilters, setSelectedFilters] = useState(EVENT_TYPES);
   const events: SessionMapContextType[`events`] = useMemo(
     () =>
       Array.isArray(data)
         ? (data
             .filter(
               (e) =>
-                typeof e.latitude == "number" && typeof e.latitude == "number"
+                typeof e.latitude == "number" &&
+                typeof e.latitude == "number" &&
+                selectedFilters.includes(e.event_type!)
             )
             .sort((a, b) =>
               new Date(a.client_time as string) >
@@ -38,18 +67,20 @@ export const SessionMapContextProvider = (props: AllowChildrenOnlyProps) => {
                 : 1
             ) as SessionMapContextType[`events`])
         : [],
-    [data]
+    [data, selectedFilters]
   );
   return (
     <SessionMapContext.Provider
       value={{
         events,
         loading: isLoading,
+        selectedFilters,
+        setSelectedFilters,
       }}
     >
       {isLoading ? (
         <LinearProgress />
-      ) : !events.length ? (
+      ) : !data?.length ? (
         <Alert sx={{ my: 4 }} severity="info">
           No Data Available
         </Alert>

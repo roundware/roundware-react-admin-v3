@@ -6,12 +6,14 @@ import {
 } from "context/SessionMapContext";
 import React, { forwardRef } from "react";
 import { mapLibraries } from "utils";
+import SessionMapFilters from "./SessionMapFilters";
 import SessionMapMarkers from "./SessionMapMarkers";
 
 const SessionMap = () => {
   return (
     <SessionMapContextProvider>
       <Box my={5}>
+        <SessionMapFilters />
         <GoogleMapsWrapper>
           <SessionMapMarkers />
         </GoogleMapsWrapper>

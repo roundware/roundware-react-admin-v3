@@ -17,45 +17,50 @@ const SessionMapMarkers = () => {
   return (
     <div>
       {/* start */}
-      <Marker
-        position={{
-          lat: events[0].latitude,
-          lng: events[0].longitude,
-        }}
-        // icon={{
-        //   path: walkingIcon,
-        //   fillColor: `#ff0000`,
-        //   fillOpacity: 1,
-        // }}
-      />
-      {events.slice(1, events.length - 2).map((e) => (
+      {events.length >= 1 && (
         <Marker
-          key={e.id}
           position={{
-            lat: e.latitude,
-            lng: e.longitude,
+            lat: events[0].latitude,
+            lng: events[0].longitude,
           }}
-          title={e.event_type + e.client_time!}
           // icon={{
-          //   path: locationPin,
+          //   path: walkingIcon,
           //   fillColor: `#ff0000`,
           //   fillOpacity: 1,
           // }}
         />
-      ))}
+      )}
+      {events.length >= 3 &&
+        events.slice(1, events.length - 2).map((e) => (
+          <Marker
+            key={e.id}
+            position={{
+              lat: e.latitude,
+              lng: e.longitude,
+            }}
+            title={e.event_type + e.client_time!}
+            // icon={{
+            //   path: locationPin,
+            //   fillColor: `#ff0000`,
+            //   fillOpacity: 1,
+            // }}
+          />
+        ))}
 
       {/* end */}
-      <Marker
-        position={{
-          lat: events[events.length - 1].latitude,
-          lng: events[events.length - 1].longitude,
-        }}
-        // icon={{
-        //   path: flagIcon,
-        //   fillColor: `#ff0000`,
-        //   fillOpacity: 1,
-        // }}
-      />
+      {events.length >= 2 && (
+        <Marker
+          position={{
+            lat: events[events.length - 1].latitude,
+            lng: events[events.length - 1].longitude,
+          }}
+          // icon={{
+          //   path: flagIcon,
+          //   fillColor: `#ff0000`,
+          //   fillOpacity: 1,
+          // }}
+        />
+      )}
 
       {/* connecting line */}
       <Polyline
