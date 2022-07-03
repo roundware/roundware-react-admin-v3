@@ -15,6 +15,7 @@ import {
   WebAsset,
 } from "@mui/icons-material";
 import { Box } from "@mui/material";
+import AssetMapPage from "components/Asset/AssetMapPage";
 import {
   AudioTrackCreate,
   AudioTrackEdit,
@@ -108,6 +109,7 @@ function App({ basename }: { basename: string }): JSX.Element {
               ?.filter((r) => Object.keys(resourceLookup).includes(r))
               .map((r) => resourceLookup[r]) || []),
         <CustomRoutes key="custom-routes">
+          <Route path="/assets/map" element={<AssetMapPage />} />
           <Route path={`/session_map/:sessionId`} element={<SessionMap />} />
         </CustomRoutes>,
       ]}

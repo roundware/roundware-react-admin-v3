@@ -2,7 +2,7 @@ import { Fade, Paper, Tab, Tabs } from "@mui/material";
 import ListActions from "components/common/ListActions";
 import TagIdSelector from "components/common/TagIdSelector";
 import useBoolean from "hooks/useBoolean";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BooleanInput,
   DateTimeInput,
@@ -10,6 +10,7 @@ import {
   NumberInput,
   SelectInput,
 } from "react-admin";
+import { Navigate } from "react-router-dom";
 import { useProjects } from "../../context/ProjectsContext";
 import AssetDatagrid from "./AssetDatagrid";
 import AssetMap from "./AssetMap";
@@ -69,16 +70,16 @@ export const AssetList = (): JSX.Element => {
       actions={<ListActions />}
     >
       <>
-        <Tabs
-          value={!mapViewEnabled.value ? `datagrid` : `map`}
-          onChange={mapViewEnabled.toggle}
-        >
+        <Tabs value={`datagrid`} onChange={mapViewEnabled.toggle}>
           <Tab value="datagrid" label="List" />
 
           <Tab value="map" label="Map" />
         </Tabs>
 
-        {mapViewEnabled.value ? <AssetMap /> : <AssetDatagrid />}
+        {mapViewEnabled.value && (
+          <Navigate to={`/project/${selectedProject?.id}/assets/map`} />
+        )}
+        <AssetDatagrid />
       </>
     </List>
   );

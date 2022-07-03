@@ -37,7 +37,7 @@ export const AssetMapContextProvider = (
   useLayoutEffect(() => {
     setPerPage(total);
     refetch();
-  }, []);
+  }, [total]);
   const [showPromp, confirmNav, cancelNav] = useCallbackPrompt(
     promises.length != 0
   );

@@ -173,14 +173,12 @@ const GoogleMapsWrapper = (props: { children: React.ReactNode }) => {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY!,
     libraries: mapLibraries,
   });
-  const { data, setPerPage, total, refetch } = useListController();
+  const { data, total, setPerPage } = useListController();
+  useEffect(() => {
+    if (data.length != total) setPerPage(total);
+  }, [total]);
 
-  const saving = useBoolean();
-  useLayoutEffect(() => {
-    setPerPage(total);
-    refetch();
-  }, []);
-
+  console.log(isLoaded, data.length, total);
   if (!isLoaded || !data || data.length != total) return <LinearProgress />;
   if (loadError) return <Alert severity="error">{loadError.message}</Alert>;
   return (
