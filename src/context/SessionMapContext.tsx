@@ -1,5 +1,6 @@
 import { Alert, LinearProgress } from "@mui/material";
 import { EVENT_TYPES } from "components/Session/SessionMapFilters";
+import useBoolean, { UseBooleanType } from "hooks/useBoolean";
 import React, { useEffect, useMemo, useState } from "react";
 import { useGetList } from "react-admin";
 import { useParams } from "react-router-dom";
@@ -12,6 +13,9 @@ type SessionMapContextType = {
   loading: boolean;
   selectedFilters: EventType[];
   setSelectedFilters: React.Dispatch<React.SetStateAction<EventType[]>>;
+  showArrows: UseBooleanType;
+  selectedEvent: EventPayload | null;
+  setSelectedEvent: React.Dispatch<React.SetStateAction<EventPayload | null>>;
 };
 const SessionMapContext = React.createContext<SessionMapContextType>(
   undefined!
@@ -50,6 +54,7 @@ export const SessionMapContextProvider = (props: AllowChildrenOnlyProps) => {
   const isLoading = data === null;
 
   const [selectedFilters, setSelectedFilters] = useState(EVENT_TYPES);
+
   const events: SessionMapContextType[`events`] = useMemo(
     () =>
       Array.isArray(data)
@@ -69,6 +74,9 @@ export const SessionMapContextProvider = (props: AllowChildrenOnlyProps) => {
         : [],
     [data, selectedFilters]
   );
+  const showArrows = useBoolean();
+
+  const [selectedEvent, setSelectedEvent] = useState<EventPayload | null>(null);
   return (
     <SessionMapContext.Provider
       value={{
@@ -76,6 +84,9 @@ export const SessionMapContextProvider = (props: AllowChildrenOnlyProps) => {
         loading: isLoading,
         selectedFilters,
         setSelectedFilters,
+        showArrows,
+        selectedEvent,
+        setSelectedEvent,
       }}
     >
       {isLoading ? (
