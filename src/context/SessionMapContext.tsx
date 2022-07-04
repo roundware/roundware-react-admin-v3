@@ -68,8 +68,8 @@ export const SessionMapContextProvider = (props: AllowChildrenOnlyProps) => {
             .sort((a, b) =>
               new Date(a.client_time as string) >
               new Date(b.client_time as string)
-                ? -1
-                : 1
+                ? 1
+                : -1
             ) as SessionMapContextType[`events`])
         : [],
     [data, selectedFilters]
