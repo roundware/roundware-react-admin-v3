@@ -68,8 +68,8 @@ export const AssetMapContextProvider = (
       {props.children}
       <Dialog open={showPromp as boolean}>
         <DialogContent>
-          You save some unsaved changes in Assets Map. Are you sure you want to
-          leave?
+          You have some unsaved changes on the Asset Map. Are you sure you want
+          to leave and discard these changes?
         </DialogContent>
         <DialogActions>
           <Button onClick={confirmNav as () => void}>Yes</Button>
