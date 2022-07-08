@@ -207,11 +207,11 @@ const GoogleMapsWrapper = (props: { children: React.ReactNode }) => {
   );
 };
 
-const AssetMap = forwardRef((p, ref) => {
+const AssetMap = () => {
   return (
     <GoogleMapsWrapper>
       <AssetMarkers />
     </GoogleMapsWrapper>
   );
-});
+};
 export default AssetMap;
