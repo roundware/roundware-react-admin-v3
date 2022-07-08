@@ -4,18 +4,20 @@ import {
   BooleanField,
   BooleanInput,
   Create,
-  CreateProps,
   Datagrid,
   Edit,
-  EditProps,
   FieldProps,
   List,
-  ListProps,
   SimpleForm,
   TextInput,
   NumberInput,
   TextField,
   useRecordContext,
+  ReferenceArrayField,
+  SingleFieldList,
+  ChipField,
+  ReferenceArrayInput,
+  SelectArrayInput,
 } from "react-admin";
 import CopyResourceButton from "./common/CopyResource";
 import FormToolbar from "./common/FormToolbar";
@@ -64,6 +66,11 @@ export const AudioTrackList = (): JSX.Element => {
           source="fadeout_when_filtered"
           label="Fade Out When Filtered"
         />
+        <ReferenceArrayField source="tag_filters" reference="tags">
+          <SingleFieldList>
+            <ChipField source="value" />
+          </SingleFieldList>
+        </ReferenceArrayField>
         <CopyResourceButton />
       </Datagrid>
     </List>
@@ -130,6 +137,11 @@ export const AudioTrackEdit = (): JSX.Element => {
           step={0.1}
         />
         <NumberInput source="banned_duration" defaultValue={0} />
+
+        <ReferenceArrayInput source="tag_filters" reference="tags">
+          <SelectArrayInput optionText="value" />
+        </ReferenceArrayInput>
+
         <BooleanInput source="repeatrecordings" label="Repeat Recordings" />
         <BooleanInput source="start_with_silence" label="Start With Silence" />
         <BooleanInput
@@ -202,6 +214,11 @@ export const AudioTrackCreate = (): JSX.Element => {
           helperText="Seconds"
           defaultValue={0}
         />
+
+        <ReferenceArrayInput source="tag_filters" reference="tags">
+          <SelectArrayInput optionText="value" />
+        </ReferenceArrayInput>
+
         <BooleanInput source="repeatrecordings" label="Repeat Recordings" />
         <BooleanInput source="start_with_silence" label="Start With Silence" />
         <BooleanInput
