@@ -23,7 +23,7 @@ const ProjectRoute = () => {
     tokenAuthProvider
       .checkAuth({})
       .then(() => {
-        if (!projectsList) return;
+        if (!projectsList) return setLoading(false);
         if (!projectId) return setLoading(false);
         selectProject(
           projectsList.find((p) => p.id == Number(projectId)) || null

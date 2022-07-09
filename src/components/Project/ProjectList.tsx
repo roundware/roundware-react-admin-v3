@@ -1,20 +1,19 @@
+import AddIcon from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
 import {
   CardActionArea,
-  Grid,
-  Typography,
-  TextField,
   Container,
-  CardContent,
+  Grid,
+  TextField,
+  Typography,
 } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import Card from "@mui/material/Card";
-import AddIcon from "@mui/icons-material/Add";
-import { useListContext, useRedirect } from "ra-core";
-import React, { useEffect, useState } from "react";
+import makeStyles from "@mui/styles/makeStyles";
+import { useRedirect } from "ra-core";
+import React, { useState } from "react";
 import { List, useRecordContext } from "react-admin";
-import { IProject, useProjects } from "../../context/ProjectsContext";
-import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
+import { IProject, useProjects } from "../../context/ProjectsContext";
 const ProjectList = (): JSX.Element => {
   const { setProjectsList } = useProjects();
   return (
@@ -25,6 +24,7 @@ const ProjectList = (): JSX.Element => {
           setProjectsList(data.data);
         },
       }}
+      perPage={0}
       component={ProjectCardWrapper}
     >
       <ProjectCard />
