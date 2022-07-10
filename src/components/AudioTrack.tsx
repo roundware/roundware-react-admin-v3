@@ -18,6 +18,7 @@ import {
   ChipField,
   ReferenceArrayInput,
   SelectArrayInput,
+  SelectInput,
 } from "react-admin";
 import CopyResourceButton from "./common/CopyResource";
 import FormToolbar from "./common/FormToolbar";
@@ -52,6 +53,7 @@ export const AudioTrackList = (): JSX.Element => {
     >
       <Datagrid rowClick="edit">
         <TextField source="id" />
+        <BooleanField source="active" />
         <RangeDisplay source="volume" label="Volume" />
         <RangeDisplay source="duration" label="Duration" />
         <RangeDisplay source="deadair" label="Dead Air" />
@@ -71,6 +73,8 @@ export const AudioTrackList = (): JSX.Element => {
             <ChipField source="value" />
           </SingleFieldList>
         </ReferenceArrayField>
+
+        <TextField source="timed_asset_priority" />
         <CopyResourceButton />
       </Datagrid>
     </List>
@@ -91,6 +95,7 @@ export const AudioTrackEdit = (): JSX.Element => {
     <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required disabled />
+        <BooleanInput source="active" />
         <RangeSlider
           source="volume"
           label="Volume"
@@ -142,6 +147,16 @@ export const AudioTrackEdit = (): JSX.Element => {
           <SelectArrayInput optionText="value" />
         </ReferenceArrayInput>
 
+        <SelectInput
+          source="timed_asset_priority"
+          choices={[
+            { id: "highest", name: "Highest" },
+            { id: "normal", name: "Normal" },
+            { id: "lowest", name: "Lowest" },
+            { id: "discard", name: "Discard" },
+          ]}
+        />
+
         <BooleanInput source="repeatrecordings" label="Repeat Recordings" />
         <BooleanInput source="start_with_silence" label="Start With Silence" />
         <BooleanInput
@@ -157,6 +172,7 @@ export const AudioTrackCreate = (): JSX.Element => {
   return (
     <Create redirect="list">
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
+        <BooleanInput source="active" />
         <RangeSlider
           source="volume"
           label="Volume"
@@ -218,6 +234,16 @@ export const AudioTrackCreate = (): JSX.Element => {
         <ReferenceArrayInput source="tag_filters" reference="tags">
           <SelectArrayInput optionText="value" />
         </ReferenceArrayInput>
+
+        <SelectInput
+          source="timed_asset_priority"
+          choices={[
+            { id: "highest", name: "Highest" },
+            { id: "normal", name: "Normal" },
+            { id: "lowest", name: "Lowest" },
+            { id: "discard", name: "Discard" },
+          ]}
+        />
 
         <BooleanInput source="repeatrecordings" label="Repeat Recordings" />
         <BooleanInput source="start_with_silence" label="Start With Silence" />
