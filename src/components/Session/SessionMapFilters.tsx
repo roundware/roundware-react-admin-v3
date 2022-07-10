@@ -5,7 +5,6 @@ import {
   Collapse,
   darken,
   FormControlLabel,
-  lighten,
   Stack,
   Switch,
   Typography,
