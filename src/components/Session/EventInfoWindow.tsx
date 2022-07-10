@@ -1,28 +1,23 @@
-import { Box, Divider, Paper, Typography, Button } from "@mui/material";
+import { Box, Button, Divider, Typography } from "@mui/material";
 import { InfoWindow } from "@react-google-maps/api";
 import { useProjects } from "context/ProjectsContext";
 import { useSesisonMap } from "context/SessionMapContext";
 import moment from "moment";
 import React from "react";
-import {
-  ChipField,
-  ReferenceArrayField,
-  ReferenceField,
-  SingleFieldList,
-} from "react-admin";
+import { ChipField, ReferenceArrayField, SingleFieldList } from "react-admin";
 import { Link } from "react-router-dom";
 
 const EventInfoWindow = () => {
   const { selectedEvent, setSelectedEvent } = useSesisonMap();
   const sp = useProjects();
   if (!selectedEvent) return null;
-
+  if (!selectedEvent.latitude || !selectedEvent.longitude) return null;
   return (
     <InfoWindow
       onCloseClick={() => setSelectedEvent(null)}
       position={{
-        lat: selectedEvent.latitude!,
-        lng: selectedEvent.longitude!,
+        lat: selectedEvent.latitude,
+        lng: selectedEvent.longitude,
       }}
     >
       <Box height="150px" width="200px">

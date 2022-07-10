@@ -1,8 +1,8 @@
-import React from "react";
-import { DataProvider, fetchUtils, Options } from "react-admin";
-import { AllowChildrenOnlyProps } from "./ProjectsContext";
 import { RoundwareDataProvider } from "ra-data-roundware-drf";
+import React from "react";
+import { fetchUtils, Options } from "react-admin";
 import { createOptionsFromToken } from "./AuthProvider";
+import { AllowChildrenOnlyProps } from "./ProjectsContext";
 export const dataProvider = new RoundwareDataProvider(
   `${process.env.REACT_APP_SERVER_URL}/api/2`,
   (url: string, options: Options = {}) => {
