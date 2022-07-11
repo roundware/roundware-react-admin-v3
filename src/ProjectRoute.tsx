@@ -3,18 +3,13 @@ import SplashScreen from "components/Layout/SplashScreen";
 import tokenAuthProvider from "context/AuthProvider";
 import { useProjects } from "context/ProjectsContext";
 import React, { useEffect, useState } from "react";
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-  Navigate,
-} from "react-router-dom";
+import { Navigate, useLocation, useParams } from "react-router-dom";
 
 const CurrentProjectApp = App;
 const ProjectRoute = () => {
   const { projectId } = useParams();
   const location = useLocation();
-  const navigate = useNavigate();
+
   const { selectProject, projectsList, selectedProject } = useProjects();
   const [loading, setLoading] = useState(true);
 
@@ -23,7 +18,7 @@ const ProjectRoute = () => {
     tokenAuthProvider
       .checkAuth({})
       .then(() => {
-        if (!projectsList) return setLoading(false);
+        if (!projectsList) return;
         if (!projectId) return setLoading(false);
         selectProject(
           projectsList.find((p) => p.id == Number(projectId)) || null

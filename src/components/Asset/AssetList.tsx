@@ -1,8 +1,8 @@
-import { Fade, Paper, Tab, Tabs } from "@mui/material";
+import { Tab, Tabs } from "@mui/material";
 import ListActions from "components/common/ListActions";
 import TagIdSelector from "components/common/TagIdSelector";
 import useBoolean from "hooks/useBoolean";
-import React, { useEffect } from "react";
+import React from "react";
 import {
   BooleanInput,
   DateTimeInput,
@@ -13,7 +13,6 @@ import {
 import { Navigate } from "react-router-dom";
 import { useProjects } from "../../context/ProjectsContext";
 import AssetDatagrid from "./AssetDatagrid";
-import AssetMap from "./AssetMap";
 
 export const AssetList = (): JSX.Element => {
   const { selectedProject } = useProjects();
@@ -21,7 +20,6 @@ export const AssetList = (): JSX.Element => {
 
   return (
     <List
-      filter={{ project_id: selectedProject?.id }}
       filters={[
         <DateTimeInput
           key="after"

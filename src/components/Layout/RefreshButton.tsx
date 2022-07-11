@@ -1,17 +1,22 @@
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { CircularProgress, IconButton } from "@mui/material";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
+import { useProjects } from "context/ProjectsContext";
 import React, { useState } from "react";
-import { useNotify, useRefresh } from "react-admin";
+import { useNotify, useRefresh, useResourceContext } from "react-admin";
 import { useLocation } from "react-router-dom";
 
 const RefreshButton = () => {
   const refresh = useRefresh();
 
   const dataProvider = useRoundwareDataProvider();
-  const rm = useLocation();
+  const location = useLocation();
   const notify = useNotify();
   const [loading, setLoading] = useState(false);
+
+  const { selectedProject } = useProjects();
+
+  const startUrl = `/project/${selectedProject?.id}`;
   return (
     <IconButton
       disabled={loading}
@@ -19,7 +24,9 @@ const RefreshButton = () => {
         setLoading(true);
         try {
           await dataProvider.getList(
-            rm.pathname.slice(1),
+            location.pathname.slice(
+              location.pathname.indexOf(startUrl) + startUrl.length + 1
+            ),
             {
               pagination: {
                 perPage: 0,
