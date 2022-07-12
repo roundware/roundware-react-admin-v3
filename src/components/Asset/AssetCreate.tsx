@@ -25,6 +25,7 @@ const AssetCreate = (): JSX.Element => {
   const { selectedProject } = useProjects();
   const redirect = useRedirect();
   const transform = async (data: RaRecord) => {
+    console.log(data.file);
     try {
       // use the file blob as file property
       data.file = data.file.rawFile;

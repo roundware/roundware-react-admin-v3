@@ -1,8 +1,10 @@
 import {
   Box,
+  Button,
   Card,
   CardContent,
   Grid,
+  IconButton,
   Slider,
   Tab,
   Tabs,
@@ -13,15 +15,17 @@ import useFieldValue from "hooks/useFieldValue";
 import React, { useState } from "react";
 import { FileField, FileInput, TextInput } from "react-admin";
 import SpeakerAudioPlayer from "./SpeakerAudioPlayer";
+import AudioRecorder from "components/common/AudioRecorder";
+import { Delete } from "@mui/icons-material";
 
 const SpeakerAudioControls = (): JSX.Element => {
-  const [file] = useFieldValue<{
+  const [file, setFile] = useFieldValue<{
     src?: string;
-  }>(`file`);
+  } | null>(`file`);
 
   const [uri] = useFieldValue(`uri`);
 
-  const [sourceMode, setSourceMode] = useState<`UPLOAD` | `URI`>(
+  const [sourceMode, setSourceMode] = useState<`UPLOAD` | `URI` | `RECORD`>(
     uri ? "URI" : `UPLOAD`
   );
   const handleChange = (
@@ -54,6 +58,7 @@ const SpeakerAudioControls = (): JSX.Element => {
             <Tabs value={sourceMode} onChange={handleChange}>
               <Tab label={`UPLOAD`} value={"UPLOAD"} />
               <Tab label={`URI`} value={"URI"} />
+              <Tab label="RECORD" value="RECORD" />
             </Tabs>
 
             <TabPanel value={`UPLOAD`} current={sourceMode}>
@@ -65,14 +70,44 @@ const SpeakerAudioControls = (): JSX.Element => {
                 <FileField source="src" title="title" fullWidth />
               </FileInput>
             </TabPanel>
+
             <TabPanel value={`URI`} current={sourceMode}>
               <TextInput source="uri" required label="File URI" fullWidth />
               <TextInput source="backupuri" label="Back up URI" fullWidth />
             </TabPanel>
 
+            <TabPanel value={`RECORD`} current={sourceMode}>
+              <AudioRecorder
+                onFinish={(b) =>
+                  setFile({
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    rawFile: new File([b], "admin_recorded"),
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    name: `admin-${Math.random()}`.split(`.`, ``),
+                    src: URL.createObjectURL(b),
+                  })
+                }
+              />
+              {file && (
+                <Button
+                  color="error"
+                  onClick={() => setFile(null)}
+                  startIcon={<Delete />}
+                >
+                  Delete
+                </Button>
+              )}
+            </TabPanel>
+
             <Box>
               <SpeakerAudioPlayer
-                src={sourceMode == "UPLOAD" ? file?.src : uri}
+                src={
+                  sourceMode == "UPLOAD" || sourceMode == "RECORD"
+                    ? file?.src
+                    : uri
+                }
               />
             </Box>
           </Grid>

@@ -79,6 +79,7 @@ const AudioEditField = ({
         wavesurferRef.current.on("loading", (p: number) => {
           setProgress(p);
         });
+        wavesurferRef.current.on("error", (e: Error) => console.error(e));
       }
     },
     [value]

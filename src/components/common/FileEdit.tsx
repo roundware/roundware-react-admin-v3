@@ -1,4 +1,5 @@
-import { Grid } from "@mui/material";
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { Grid, Stack } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useEffect } from "react";
@@ -7,6 +8,7 @@ import { FileField, FileInput } from "react-admin";
 import AudioEdit from "./AudioPlayerField/AudioEdit";
 import useFieldValue from "hooks/useFieldValue";
 import { IAsset } from "types/asset";
+import AudioRecorder from "./AudioRecorder";
 type FileType2 = {
   src: string;
 };
@@ -47,7 +49,6 @@ export const FileEdit = (): JSX.Element => {
               ]}
             />
           )}
-
           {mediaType === "photo" && value && (
             <>
               <img
@@ -61,22 +62,42 @@ export const FileEdit = (): JSX.Element => {
           )}
         </Grid>
         <Grid item>
-          {(mediaType !== "audio" || !value) && (
-            <FileInput
-              source="file"
-              multiple={false}
-              label={`Upload ${getFileExtensions(mediaType).reduce(
-                (acc, el) => (acc += el + ", "),
-                ""
-              )}`}
-              accept={getFileExtensions(mediaType).reduce(
-                (acc, el) => (acc += acc + ",." + el),
-                ""
-              )}
-            >
-              <FileField source="src" title="title" fullWidth />
-            </FileInput>
-          )}
+          <Grid container direction="row" flexWrap={"nowrap"}>
+            {(mediaType !== "audio" || !value) && (
+              <Grid xs={12} md={6} flexGrow={1}>
+                <FileInput
+                  source="file"
+                  multiple={false}
+                  label={`Upload ${getFileExtensions(mediaType).reduce(
+                    (acc, el) => (acc += el + ", "),
+                    ""
+                  )}`}
+                  accept={getFileExtensions(mediaType).reduce(
+                    (acc, el) => (acc += acc + ",." + el),
+                    ""
+                  )}
+                >
+                  <FileField source="src" title="title" fullWidth />
+                </FileInput>
+              </Grid>
+            )}
+
+            {mediaType == "audio" && !value && (
+              <Grid xs={12} md={6}>
+                <AudioRecorder
+                  onFinish={(b) =>
+                    setFile({
+                      // @ts-ignore
+                      rawFile: new File([b], "admin_recorded"),
+                      // @ts-ignore
+                      name: `admin-${Math.random()}`.split(`.`, ``),
+                      src: URL.createObjectURL(b),
+                    })
+                  }
+                />
+              </Grid>
+            )}
+          </Grid>
         </Grid>
       </Grid>
     </div>
