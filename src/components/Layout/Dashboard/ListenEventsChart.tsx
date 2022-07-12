@@ -1,46 +1,38 @@
-import React, { useState, useEffect } from "react";
-import { GetListResult, RaRecord, useRedirect } from "react-admin";
 import {
   Card,
-  CardHeader,
   CardContent,
-  Toolbar,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormControl,
-  Typography,
-  Grid,
+  CardHeader,
   Checkbox,
+  FormControl,
   FormControlLabel,
-  CircularProgress,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
+  TextFieldProps,
+  Toolbar,
+  Typography,
 } from "@mui/material";
+import { addDays, isAfter, isBefore, subDays } from "date-fns";
+import React, { useEffect, useState } from "react";
+import { GetListResult, RaRecord, useRedirect } from "react-admin";
 import {
-  format,
-  subDays,
-  addDays,
-  isBefore,
-  isAfter,
-  differenceInCalendarDays,
-} from "date-fns";
-import {
-  ResponsiveContainer,
+  Bar,
+  Brush,
+  CartesianGrid,
   ComposedChart,
-  Area,
+  Label,
+  Line,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Label,
-  Bar,
-  Line,
-  Brush,
 } from "recharts";
 
-import { DatePicker, TimePicker, DateTimePicker } from "@mui/lab";
-import { ResourceList } from "../../../App";
+import { DatePicker } from "@mui/x-date-pickers";
 import { CenteredLoading } from ".";
+import { ResourceList } from "../../../App";
 interface Props {
   events: GetListResult<RaRecord> | null;
 }
@@ -215,7 +207,7 @@ const ListenEventsChart = ({ events }: Props) => {
                     // @ts-ignore
                     setStartDate(date);
                   }}
-                  renderInput={(p) => <TextField {...p} />}
+                  renderInput={(p: TextFieldProps) => <TextField {...p} />}
                 />
               </Grid>
               <Grid item xs={5}>
@@ -227,7 +219,7 @@ const ListenEventsChart = ({ events }: Props) => {
                     // @ts-ignore
                     setEndDate(date);
                   }}
-                  renderInput={(p) => <TextField {...p} />}
+                  renderInput={(p: TextFieldProps) => <TextField {...p} />}
                 />
               </Grid>
             </Grid>

@@ -9,6 +9,7 @@ import AudioEdit from "./AudioPlayerField/AudioEdit";
 import useFieldValue from "hooks/useFieldValue";
 import { IAsset } from "types/asset";
 import AudioRecorder from "./AudioRecorder";
+import useBoolean from "hooks/useBoolean";
 type FileType2 = {
   src: string;
 };
@@ -29,6 +30,8 @@ export const FileEdit = (): JSX.Element => {
       setFile(null);
     }
   }, [mediaType]);
+
+  const isUploadView = useBoolean();
 
   return (
     <div style={{ width: "100%", marginBottom: 16 }}>
@@ -62,28 +65,26 @@ export const FileEdit = (): JSX.Element => {
           )}
         </Grid>
         <Grid item>
-          <Grid container direction="row" flexWrap={"nowrap"}>
-            {(mediaType !== "audio" || !value) && (
-              <Grid xs={12} md={6} flexGrow={1}>
-                <FileInput
-                  source="file"
-                  multiple={false}
-                  label={`Upload ${getFileExtensions(mediaType).reduce(
-                    (acc, el) => (acc += el + ", "),
-                    ""
-                  )}`}
-                  accept={getFileExtensions(mediaType).reduce(
-                    (acc, el) => (acc += acc + ",." + el),
-                    ""
-                  )}
-                >
-                  <FileField source="src" title="title" fullWidth />
-                </FileInput>
-              </Grid>
-            )}
+          {mediaType !== "audio" && !value && (
+            <FileInput
+              source="file"
+              multiple={false}
+              label={`Upload ${getFileExtensions(mediaType).reduce(
+                (acc, el) => (acc += el + ", "),
+                ""
+              )}`}
+              accept={getFileExtensions(mediaType).reduce(
+                (acc, el) => (acc += acc + ",." + el),
+                ""
+              )}
+            >
+              <FileField source="src" title="title" fullWidth />
+            </FileInput>
+          )}
 
-            {mediaType == "audio" && !value && (
-              <Grid xs={12} md={6}>
+          {mediaType == "audio" && !value && (
+            <>
+              <>
                 <AudioRecorder
                   onFinish={(b) =>
                     setFile({
@@ -95,9 +96,9 @@ export const FileEdit = (): JSX.Element => {
                     })
                   }
                 />
-              </Grid>
-            )}
-          </Grid>
+              </>
+            </>
+          )}
         </Grid>
       </Grid>
     </div>

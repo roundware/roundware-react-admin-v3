@@ -10,10 +10,11 @@ import {
   MenuItem,
   Select,
   TextField,
+  TextFieldProps,
   Toolbar,
   Typography,
 } from "@mui/material";
-import { DatePicker } from "@mui/lab";
+import { DatePicker } from "@mui/x-date-pickers";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { GetListResult, RaRecord, useRedirect } from "react-admin";
@@ -219,7 +220,7 @@ const SessionsChart = ({ sessions }: Props) => {
                     // @ts-ignore
                     setStartDate(date);
                   }}
-                  renderInput={(p) => <TextField {...p} />}
+                  renderInput={(p: TextFieldProps) => <TextField {...p} />}
                 />
               </Grid>
               <Grid item xs={5}>
@@ -231,7 +232,7 @@ const SessionsChart = ({ sessions }: Props) => {
                     // @ts-ignore
                     setEndDate(date);
                   }}
-                  renderInput={(p) => <TextField {...p} />}
+                  renderInput={(p: TextFieldProps) => <TextField {...p} />}
                 />
               </Grid>
             </Grid>
