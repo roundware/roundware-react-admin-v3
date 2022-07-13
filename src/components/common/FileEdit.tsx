@@ -31,7 +31,7 @@ export const FileEdit = (): JSX.Element => {
     }
   }, [mediaType]);
 
-  const isUploadView = useBoolean();
+  const isUploadView = useBoolean(true);
 
   return (
     <div style={{ width: "100%", marginBottom: 16 }}>
