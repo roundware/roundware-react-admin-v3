@@ -1,5 +1,4 @@
 import { Stack, Slider, Typography } from "@mui/material";
-import withStyles from "@mui/styles/withStyles";
 import React from "react";
 import useFieldValue from "../../hooks/useFieldValue";
 interface Props {
@@ -17,7 +16,7 @@ const CustomSlider = ({
   defaultValue = 100,
   icon,
 }: Props): JSX.Element => {
-  const [value, setValue] = useFieldValue<number>(field);
+  const [value, setValue] = useFieldValue<number>(field, defaultValue);
   React.useEffect(() => {
     setValue(value || defaultValue);
   }, []);
