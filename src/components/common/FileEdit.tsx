@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Grid, Stack } from "@mui/material";
+import { Box, Grid, Stack, Tab, Tabs } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useEffect } from "react";
@@ -84,18 +84,48 @@ export const FileEdit = (): JSX.Element => {
 
           {mediaType == "audio" && !value && (
             <>
+              <Tabs
+                value={isUploadView.value ? `upload` : `record`}
+                onChange={(e, v) =>
+                  v == "upload"
+                    ? isUploadView.setTrue()
+                    : isUploadView.setFalse()
+                }
+              >
+                <Tab label="Upload" value="upload" />
+                <Tab label="Record" value="record" />
+              </Tabs>
               <>
-                <AudioRecorder
-                  onFinish={(b) =>
-                    setFile({
-                      // @ts-ignore
-                      rawFile: new File([b], "admin_recorded"),
-                      // @ts-ignore
-                      name: `admin-${Math.random()}`.split(`.`, ``),
-                      src: URL.createObjectURL(b),
-                    })
-                  }
-                />
+                {isUploadView.value ? (
+                  <FileInput
+                    source="file"
+                    multiple={false}
+                    label={`Upload ${getFileExtensions(mediaType).reduce(
+                      (acc, el) => (acc += el + ", "),
+                      ""
+                    )}`}
+                    accept={getFileExtensions(mediaType).reduce(
+                      (acc, el) => (acc += acc + ",." + el),
+                      ""
+                    )}
+                  >
+                    <FileField source="src" title="title" fullWidth />
+                  </FileInput>
+                ) : (
+                  <Box position="relative">
+                    <AudioRecorder
+                      onFinish={(b) =>
+                        setFile({
+                          // @ts-ignore
+                          rawFile: new File([b], "admin_recorded"),
+                          // @ts-ignore
+                          name: `admin-${Math.random()}`.split(`.`, ``),
+                          src: URL.createObjectURL(b),
+                        })
+                      }
+                    />
+                  </Box>
+                )}
               </>
             </>
           )}

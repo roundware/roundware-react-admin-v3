@@ -1,5 +1,6 @@
 import { Mic, MicOff } from "@mui/icons-material";
 import { Box, Button, Stack, Typography, useTheme } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import useBoolean from "hooks/useBoolean";
 import React from "react";
 import { ReactMic } from "react-mic";
@@ -7,10 +8,17 @@ type Props = {
   onFinish: (uri: Blob) => void;
 };
 
+const useStyles = makeStyles({
+  canvas: {
+    width: "100%",
+    height: "100px",
+  },
+});
 const AudioRecorder = ({ onFinish }: Props) => {
   const isRecording = useBoolean(false);
   const theme = useTheme();
 
+  const styles = useStyles();
   return (
     <Stack>
       <ReactMic
@@ -22,6 +30,7 @@ const AudioRecorder = ({ onFinish }: Props) => {
         strokeColor={theme.palette.primary.main} // sinewave or frequency bar color
         backgroundColor={theme.palette.background.paper}
         mimeType="audio/webm" // defaults -> "audio/webm".  Set to "audio/wav" for WAV or "audio/mp3" for MP3 audio format (available in React-Mic-Gold)
+        className={styles["canvas"]}
       />
       <Box display={"flex"} justifyContent="center">
         <Button
