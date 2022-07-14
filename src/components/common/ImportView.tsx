@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import AssetShape from "components/Asset/AssetShape";
 import useBoolean from "hooks/useBoolean";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useState } from "react";
 import {
   BooleanField,
   BooleanInput,
@@ -61,7 +61,7 @@ const ImportView = ({ handleClose }: { handleClose: () => void }) => {
   const pc = useProjects();
 
   const filterValues = { q: filter };
-  const setFilters = (filters: any) => setFilter(filters.q);
+  const setFilters = (filters: { q: string }) => setFilter(filters.q);
   const notify = useNotify();
   const processing = useBoolean();
   const handleOnFileUpload: React.ChangeEventHandler<HTMLInputElement> = async (
@@ -98,7 +98,10 @@ const ImportView = ({ handleClose }: { handleClose: () => void }) => {
           created: new Date().toISOString(),
           id: index,
           ...r,
-          file: URL.createObjectURL(files.find((f) => f.name == r.filename)!),
+          file: URL.createObjectURL(
+            files.find((f) => f.name == r.filename) ||
+              new File([], "noFile", {})
+          ),
           tag_ids: r?.tag_ids?.map(Number),
         }))
       );
@@ -122,16 +125,6 @@ const ImportView = ({ handleClose }: { handleClose: () => void }) => {
     }[]
   >([]);
 
-  const getAvg = useCallback(
-    (
-      a: {
-        index: number;
-        progress: number;
-      }[]
-    ) => a.reduce((acc, el) => el.progress + acc, 0) / a.length,
-    []
-  );
-  const progress = useMemo(() => getAvg(assetProgress), [assetProgress]);
   const dataProvider = useRoundwareDataProvider();
   const refresh = useRefresh();
   const handleSave = async () => {

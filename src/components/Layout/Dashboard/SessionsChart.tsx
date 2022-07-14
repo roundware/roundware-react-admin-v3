@@ -279,7 +279,7 @@ const SessionsChart = ({ sessions }: Props) => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <Tooltip
                   formatter={(value: number) => `${value} Sessions`}
-                  labelFormatter={(label: any) =>
+                  labelFormatter={(label: string) =>
                     new Date(label).toLocaleDateString()
                   }
                   active={true}

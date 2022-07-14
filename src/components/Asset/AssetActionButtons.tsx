@@ -36,7 +36,7 @@ const downloadAsset = async (asset: IAsset, projectName: string) => {
 
 export const AssetActionButtons = ({ asset }: { asset: IAsset }) => {
   const { selectedProject } = useProjects();
-  const projectName = selectedProject!.name;
+  const projectName = selectedProject?.name as string;
 
   return (
     <div id="infoVoteBlock">

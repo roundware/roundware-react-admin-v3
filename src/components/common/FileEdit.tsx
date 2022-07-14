@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Box, Grid, Stack, Tab, Tabs } from "@mui/material";
+import { Box, Grid, Tab, Tabs } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useEffect } from "react";

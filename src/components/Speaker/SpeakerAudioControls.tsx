@@ -1,22 +1,21 @@
+import { Delete } from "@mui/icons-material";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import {
   Box,
   Button,
   Card,
   CardContent,
   Grid,
-  IconButton,
   Slider,
   Tab,
   Tabs,
   Typography,
 } from "@mui/material";
-import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import AudioRecorder from "components/common/AudioRecorder";
 import useFieldValue from "hooks/useFieldValue";
 import React, { useState } from "react";
 import { FileField, FileInput, TextInput } from "react-admin";
 import SpeakerAudioPlayer from "./SpeakerAudioPlayer";
-import AudioRecorder from "components/common/AudioRecorder";
-import { Delete } from "@mui/icons-material";
 
 const SpeakerAudioControls = (): JSX.Element => {
   const [file, setFile] = useFieldValue<{

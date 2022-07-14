@@ -1,29 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { useSpeakers } from "context/SpeakersContext";
-import { useRoundwareDataProvider } from "context/DataProviderContext";
+import HistoryIcon from "@mui/icons-material/History";
+import { Grid, IconButton, Paper, Tooltip } from "@mui/material";
 import {
   DrawingManager,
   DrawingManagerProps,
   Polygon,
-  Polyline,
 } from "@react-google-maps/api";
-import {
-  Paper,
-  Grid,
-  IconButton,
-  Tooltip,
-  CircularProgress,
-} from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
-import HistoryIcon from "@mui/icons-material/History";
-import MapControl from "components/common/MapControl";
-import {
-  getSpeakerGeoJSONObjectsForPath,
-  googleMapPathToGeoJSONPath,
-  polygonToGoogleMapPaths,
-} from "utilities";
-import useFieldValue from "hooks/useFieldValue";
 import { multiPolygon, MultiPolygon } from "@turf/helpers";
+import MapControl from "components/common/MapControl";
+import useFieldValue from "hooks/useFieldValue";
+import React, { useEffect, useState } from "react";
+import { googleMapPathToGeoJSONPath, polygonToGoogleMapPaths } from "utilities";
 
 type googleMapDrawnShapes =
   | google.maps.Circle
@@ -178,28 +164,10 @@ const AssetShape = (): JSX.Element | null => {
     setDrawingManager(dm);
   };
 
-  /** status of async call */
-  const [saving, setSaving] = useState(false);
-
   /** removes current shape */
   const handleRedraw = () => {
     setCurrentShape(null);
     setAssetShape(undefined);
-  };
-  const polylineOptions = {
-    strokeColor: "#000000",
-    strokeOpacity: 0.1,
-    icons: [
-      {
-        icon: {
-          path: google.maps.SymbolPath.CIRCLE,
-          fillOpacity: 0.5,
-          scale: 1,
-        },
-        offset: "0",
-        repeat: "10px",
-      },
-    ],
   };
 
   const [polygon, setPolygon] = useState<google.maps.Polygon>();

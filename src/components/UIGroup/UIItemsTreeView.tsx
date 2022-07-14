@@ -98,7 +98,7 @@ const UIItemsTreeView = (): JSX.Element => {
                         draggableId={i.id.toString()}
                         index={i.index!}
                       >
-                        {(provided, snapshot) => (
+                        {(provided) => (
                           <TreeItem
                             {...provided.draggableProps}
                             ref={provided.innerRef}
@@ -158,7 +158,7 @@ const UIItemsTreeView = (): JSX.Element => {
     setExpandedItems(newExpanded);
   };
 
-  const handleDragEnd: OnDragEndResponder = (provided, snapshop) => {
+  const handleDragEnd: OnDragEndResponder = (provided) => {
     /** source and destination index */
     const { source, destination, draggableId } = provided;
 
@@ -240,7 +240,7 @@ const UIItemsTreeView = (): JSX.Element => {
   };
 
   /** when drag start collapse those items */
-  const hanldeDragStart: OnDragStartResponder = (provided, snapshot) => {
+  const hanldeDragStart: OnDragStartResponder = (provided) => {
     const uiGroupId = Number(provided.source.droppableId?.split(`-`)[0]);
     const foundGroup = uiGroups.find((g) => g.id == uiGroupId);
 

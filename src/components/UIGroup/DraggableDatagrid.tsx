@@ -1,14 +1,11 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { CircularProgress, Fade, TableBody } from "@mui/material";
+import ReorderIcon from "@mui/icons-material/DragHandle";
+import { CircularProgress, Fade } from "@mui/material";
 import { Theme } from "@mui/material/styles";
-import createStyles from "@mui/styles/createStyles";
-import makeStyles from "@mui/styles/makeStyles";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import ReorderIcon from "@mui/icons-material/DragHandle";
+import createStyles from "@mui/styles/createStyles";
+import makeStyles from "@mui/styles/makeStyles";
 import { useBuildUI } from "context/BuildUIContext";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
 import React, { useMemo, useState } from "react";
@@ -19,13 +16,12 @@ import {
   DatagridHeaderProps,
   DatagridProps,
   DatagridRowProps,
+  DeleteResult,
+  FieldProps,
   RaRecord,
   UpdateResult,
   useListContext,
   useNotify,
-  DeleteResult,
-  useRecordContext,
-  useResourceContext,
 } from "react-admin";
 import {
   DragDropContext,
@@ -77,7 +73,7 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
   );
 
   /** order changes */
-  const handleDragEnd: OnDragEndResponder = (result, provided) => {
+  const handleDragEnd: OnDragEndResponder = (result) => {
     /** source and destination index */
     const { source, destination, draggableId } = result;
 
@@ -95,10 +91,10 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
     /** user doesn't want this, bye */
     if (!res) return;
 
+    if (!destination) return;
     // detemine direction:
     // if positive then moved downwards and negative upwards
-    const movedDirection =
-      destination!.index - source.index < 0 ? `up` : `down`;
+    const movedDirection = destination.index - source.index < 0 ? `up` : `down`;
 
     // promises of dataProvider calls
     const promises: Promise<UpdateResult<RaRecord>>[] = [];
@@ -117,13 +113,13 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
       } else if (
         /** find if its affected and increment or decrement its index */
         movedDirection == "up" &&
-        g.index >= destination!.index &&
-        g.index <= source!.index
+        g.index >= destination.index &&
+        g.index <= source.index
       ) {
         newIndex = g.index + 1;
       } else if (
         movedDirection == "down" &&
-        g.index <= destination!.index &&
+        g.index <= destination.index &&
         g.index >= source.index
       ) {
         newIndex = g.index - 1;
@@ -229,8 +225,8 @@ const DraggableDatagridRow = ({
     <>
       <Draggable
         key={id || ""}
-        draggableId={id?.toString()!}
-        index={record?.index!}
+        draggableId={id?.toString() || ""}
+        index={record?.index}
       >
         {(provided) => (
           <TableRow ref={provided.innerRef} {...provided.draggableProps}>
@@ -238,12 +234,16 @@ const DraggableDatagridRow = ({
             <TableCell {...provided.dragHandleProps}>
               <ReorderIcon />
             </TableCell>
-            {/* data columns based on children */}
-            {React.Children.map(children, (field: any) => (
-              <TableCell key={`${id}-${field?.props?.source}`}>
-                {React.cloneElement(field!, {
-                  record,
 
+            {React.Children.map<
+              React.ReactElement<FieldProps>[],
+              React.ReactElement<FieldProps>
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+            >(children, (field) => (
+              <TableCell key={`${id}-${field?.props.source}`}>
+                {React.cloneElement(field, {
+                  record,
                   resource,
                 })}
               </TableCell>
@@ -261,13 +261,18 @@ const DatagridHeader = ({ children }: DatagridHeaderProps) => (
   <TableHead>
     <TableRow>
       <TableCell></TableCell> {/* empty cell to account for the reorder icon */}
-      {React.Children.map(children, (child: any) => (
-        <TableCell key={child.props.source}>
-          {capitalizeFirstLetter(child.props.source || "")
-            ?.replaceAll(`_`, ` `)
-            .replaceAll(` id`, ``)}
-        </TableCell>
-      ))}
+      {React.Children.map<JSX.Element, React.ReactElement<FieldProps>>(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        children,
+        (child) => (
+          <TableCell key={child.props.source}>
+            {capitalizeFirstLetter(child.props.source || "")
+              ?.replaceAll(`_`, ` `)
+              .replaceAll(` id`, ``)}
+          </TableCell>
+        )
+      )}
     </TableRow>
   </TableHead>
 );

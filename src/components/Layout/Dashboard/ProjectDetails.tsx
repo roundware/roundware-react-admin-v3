@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const ProjectDetails = () => {
   const { selectedProject } = useProjects();
   const classes = useStyles();
+  if (!selectedProject) return null;
   return (
     <Box display="flex" className={classes.root}>
       <Box flex="1">
@@ -41,12 +42,12 @@ const ProjectDetails = () => {
         <EditButton
           resource="projects"
           label="Edit Project"
-          record={selectedProject!}
+          record={selectedProject}
         />
         <ShowButton
           resource="projects"
           label="View Details"
-          record={selectedProject!}
+          record={selectedProject}
         />
       </Box>
     </Box>

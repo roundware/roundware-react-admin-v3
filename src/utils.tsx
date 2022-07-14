@@ -48,7 +48,7 @@ export function csvToJSON<T>(csv: string): T[] {
   /* Iterate over the remaning data rows */
   for (let i = 1; i < lines.length; i++) {
     /* Empty object to store result in key value pair */
-    const jsonObject: any = {};
+    const jsonObject: Record<string, unknown> = {};
     /* Store the current array element */
     const currentArrayString = lines[i];
     let string = "";
@@ -116,5 +116,5 @@ export function csvToJSON<T>(csv: string): T[] {
     /* Push the genearted JSON object to resultant array */
     result.push(jsonObject);
   }
-  return result; //JSON
+  return result as unknown as T[]; //JSON
 }

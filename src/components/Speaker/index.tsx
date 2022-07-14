@@ -1,10 +1,10 @@
 import { LinearProgress, Stack, Typography } from "@mui/material";
 import FileDownloadButton from "components/common/FileDownloadButton";
 import FormToolbar from "components/common/FormToolbar";
-import useBoolean from "hooks/useBoolean";
 import { useProjects } from "context/ProjectsContext";
 import { useSpeakers } from "context/SpeakersContext";
-import React, { useEffect, useState } from "react";
+import useBoolean from "hooks/useBoolean";
+import React, { useState } from "react";
 import {
   BooleanInput,
   Create,
@@ -18,11 +18,10 @@ import {
   TextInput,
   useCreate,
   useNotify,
-  useRedirect,
   useRefresh,
   useUpdate,
 } from "react-admin";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import SpeakerAudioControls from "./SpeakerAudioControls";
 
 export const SpeakerEdit = (): JSX.Element => {
@@ -43,13 +42,12 @@ export const SpeakerEdit = (): JSX.Element => {
     return data;
   };
 
-  const redirect = useRedirect();
   const refresh = useRefresh();
   const notify = useNotify();
 
   const [progress, setProgress] = useState(0);
   const [update] = useUpdate();
-  const navigate = useNavigate();
+
   const success = useBoolean();
   const save: SimpleFormProps[`onSubmit`] = async (values) => {
     values = transform(values as RaRecord);

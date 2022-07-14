@@ -47,7 +47,7 @@
     "@svgr/webpack": "$@svgr/webpack"
   },
   "scripts": {
-    "start": "PORT=1234 ESLINT_NO_DEV_ERRORS='true' react-scripts start",
+    "start": "PORT=1234 GENERATE_SOURCEMAP=false react-scripts start",
     "build": "react-scripts build",
     "deploy": "surge ./build dev-roundware-admin.surge.sh"
   },

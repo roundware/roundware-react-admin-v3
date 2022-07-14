@@ -1,10 +1,9 @@
 import { AccountTree } from "@mui/icons-material";
 import DefaultIcon from "@mui/icons-material/ViewList";
-import { MenuItem, useMediaQuery } from "@mui/material";
+import { useMediaQuery } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
 import {
-  DashboardMenuItem,
   Menu as RAMenu,
   MenuItemLink,
   MenuProps,
@@ -14,12 +13,11 @@ import {
 
 import AdjustIcon from "@mui/icons-material/Adjust";
 import CategoryIcon from "@mui/icons-material/Category";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import PublicIcon from "@mui/icons-material/Public";
 import { capitalize } from "lodash";
 import { useProjects } from "../../context/ProjectsContext";
 import SubMenu from "./SubMenu";
-import { useNavigate } from "react-router-dom";
-import DashboardIcon from "@mui/icons-material/Dashboard";
 const useStyles = makeStyles(() => ({
   raMenu: {
     paddingTop: "30px",
@@ -73,13 +71,9 @@ export const Menu = (props: MenuProps) => {
     global: true,
   });
 
-  const [open] = useSidebarState();
-
   const handleToggle = (menu: string) => {
     setState((state) => ({ ...state, [menu]: !state[menu] }));
   };
-
-  const navigate = useNavigate();
 
   return (
     <RAMenu {...props} className={classes.raMenu}>

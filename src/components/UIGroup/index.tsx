@@ -17,11 +17,10 @@ import {
   SelectInput,
   SimpleForm,
   TextInput,
-  UpdateResult,
   useRedirect,
   useRefresh,
 } from "react-admin";
-import { IUIGroup, IUIItems } from "types/uiGroups";
+import { IUIGroup } from "types/uiGroups";
 import { handleLocalizedStrings } from "utils";
 import UiModeField from "./UiModeField";
 
@@ -124,7 +123,7 @@ export const UiGroupEdit = (): JSX.Element => {
 };
 
 export const UiGroupCreate = (): JSX.Element => {
-  const { refetchData, uiGroups, setUiMode } = useBuildUI();
+  const { refetchData, uiGroups } = useBuildUI();
   const dataProvider = useRoundwareDataProvider();
   const { selectedProject } = useProjects();
 

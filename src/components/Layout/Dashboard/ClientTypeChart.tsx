@@ -63,24 +63,25 @@ const renderCustomizedLabel = ({
   innerRadius,
   outerRadius,
   percent,
-  index,
   payload,
   fill,
-}: any) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 1.3;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+}: Record<string, number | string | { payload: { name: string } }>) => {
+  const radius = +innerRadius + (+outerRadius - +innerRadius) * 1.3;
+  const x = +cx + radius * Math.cos(-+midAngle * RADIAN);
+  const y = +cy + radius * Math.sin(-+midAngle * RADIAN);
 
   return (
     <text
       x={x}
       y={y}
-      fill={fill}
+      fill={fill.toString()}
       fontSize={12}
       textAnchor={x > cx ? "start" : "end"}
       dominantBaseline="central"
     >
-      {`${payload.name} (${(percent * 100).toFixed(0)}%)`}
+      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+      {/* @ts-ignore */}
+      {`${payload.name} (${(+percent * 100).toFixed(0)}%)`}
     </text>
   );
 };

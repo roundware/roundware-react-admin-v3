@@ -135,7 +135,7 @@ const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
         const lastIndex = Math.max(...newUiItemsList.map((i) => i.index));
 
         newUiItemsList.push({
-          id: undefined!,
+          id: 0,
           tag_id: t.id,
           active: true,
           default: false,
@@ -152,7 +152,7 @@ const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
           );
 
           newUiItemsList.push({
-            id: undefined!,
+            id: 0,
             tag_id: t.id,
             active: true,
             default: false,
@@ -166,11 +166,11 @@ const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
 
     const tagsToBeDeleted = differenceBy(
       Object.keys(groupBy(currentGroupItems, "tag_id"))
-        .map((t) => tagsToDisplay.find((dt) => dt.id == Number(t))!)
+        .map((t) => tagsToDisplay.find((dt) => dt.id == Number(t)))
         .filter((t) => !!t),
       dirtyList,
       "id"
-    );
+    ).filter((t) => !!t) as ITag[];
 
     newUiItemsList = newUiItemsList.filter(
       (i) => !tagsToBeDeleted.some((t) => t.id == i.tag_id)

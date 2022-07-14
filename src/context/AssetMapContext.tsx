@@ -1,5 +1,4 @@
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
-import { AssetInfoWindowInner } from "components/Asset/AssetInfoWindow";
 import useBoolean, { UseBooleanType } from "hooks/useBoolean";
 import { useCallbackPrompt } from "hooks/useCallbackPrompt";
 import React, { PropsWithChildren, useLayoutEffect, useState } from "react";
@@ -10,13 +9,13 @@ type AssetContextType = {
   handleSave: () => Promise<void>;
   promises: {
     id: number;
-    promise: () => Promise<any>;
+    promise: () => Promise<void>;
   }[];
   setPromises: React.Dispatch<
     React.SetStateAction<
       {
         id: number;
-        promise: () => Promise<any>;
+        promise: () => Promise<void>;
       }[]
     >
   >;
@@ -24,6 +23,7 @@ type AssetContextType = {
   selectedAsset: IAsset | null;
   setSelectedAsset: React.Dispatch<React.SetStateAction<IAsset | null>>;
 };
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const AssetMapContext = React.createContext<AssetContextType>(undefined!);
 export const useAssetMapContext = () => React.useContext(AssetMapContext);
 

@@ -18,13 +18,12 @@ import {
   SelectInput,
   SimpleForm,
   TextInput,
-  useRedirect,
 } from "react-admin";
 import { useNavigate } from "react-router-dom";
 import { handleLocalizedStrings } from "utils";
 const ProjectCreate = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
-  const redirect = useRedirect();
+
   const transform = async (r: RaRecord) => {
     const data = { ...r };
 

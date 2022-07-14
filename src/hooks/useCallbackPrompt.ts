@@ -1,12 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useBlocker } from "./useBlocker";
-
+import { Transition } from "history";
 export function useCallbackPrompt(when: boolean): (boolean | (() => void))[] {
   const navigate = useNavigate();
   const location = useLocation();
   const [showPrompt, setShowPrompt] = useState(false);
-  const [lastLocation, setLastLocation] = useState<any>(null);
+  const [lastLocation, setLastLocation] = useState<
+    | null
+    | ({
+        retry(): void;
+      } & Transition)
+  >(null);
   const [confirmedNavigation, setConfirmedNavigation] = useState(false);
 
   const cancelNavigation = useCallback(() => {

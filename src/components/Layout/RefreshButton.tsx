@@ -3,7 +3,7 @@ import { CircularProgress, IconButton } from "@mui/material";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
 import { useProjects } from "context/ProjectsContext";
 import React, { useState } from "react";
-import { useNotify, useRefresh, useResourceContext } from "react-admin";
+import { useNotify, useRefresh } from "react-admin";
 import { useLocation } from "react-router-dom";
 
 const RefreshButton = () => {

@@ -13,11 +13,9 @@ import {
   List,
   TextField,
   useRecordContext,
-  useResourceContext,
 } from "react-admin";
 import SpeakerShapesControl from "./SpeakerShapesControl";
 const SpeakerList = (): JSX.Element => {
-  const rc = useResourceContext();
   const { selectedProject } = useProjects();
   const { fetchData } = useSpeakers();
   if (!selectedProject) return <>No Project Selected.</>;

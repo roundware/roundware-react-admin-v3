@@ -1,34 +1,32 @@
 import {
-  Divider,
-  Grid,
-  Modal,
-  ThemeProvider,
-  StyledEngineProvider,
-  Paper,
-  Typography,
   Button,
   Dialog,
   DialogContent,
   DialogContentText,
   DialogTitle as MuiDialogTitle,
+  Divider,
+  Grid,
   IconButton,
+  Modal,
+  Paper,
+  StyledEngineProvider,
+  Typography,
 } from "@mui/material";
-import { makeStyles, withStyles, createStyles, WithStyles } from "@mui/styles";
+import { createStyles, makeStyles, withStyles, WithStyles } from "@mui/styles";
 import { InfoWindow } from "@react-google-maps/api";
 import moment from "moment";
-import React, { useEffect, useState, useContext, useRef } from "react";
+import React, { useEffect, useState } from "react";
 
-import { AssetActionButtons } from "./AssetActionButtons";
+import { Edit } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Theme } from "@mui/material";
 import { Interweave } from "interweave";
 import { useListController, useRedirect } from "react-admin";
+import { IAsset } from "types/asset";
+import { AssetActionButtons } from "./AssetActionButtons";
 import { TagsDisplay } from "./AssetTags";
 import AssetVainllaPlayer from "./AssetVanillaPlayer";
-import { IAsset } from "types/asset";
-import { Edit } from "@mui/icons-material";
 
-import { Link } from "react-router-dom";
 interface AssetInfoWindowInnerProps {
   asset: IAsset;
 }
@@ -64,7 +62,7 @@ export const AssetInfoWindowInner = ({ asset }: AssetInfoWindowInnerProps) => {
   const primaryImageUrl = imageAssets && imageAssets[0]?.file;
   const primaryTextUrl = textAssets && textAssets[0]?.file;
 
-  const position = { lat: asset.latitude!, lng: asset.longitude! };
+  const position = { lat: asset.latitude, lng: asset.longitude };
 
   const infoItemsResolver = (
     elementName: string,
@@ -155,7 +153,7 @@ export const AssetInfoWindowInner = ({ asset }: AssetInfoWindowInnerProps) => {
         return primaryTextUrl ? (
           <div key={elementName}>
             {showDividerIfEligible()}
-            <TextDisplay textUrl={primaryTextUrl! as string} />
+            <TextDisplay textUrl={primaryTextUrl as string} />
           </div>
         ) : null;
 

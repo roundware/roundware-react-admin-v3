@@ -1,4 +1,3 @@
-import { red } from "@mui/material/colors";
 import { Marker } from "@react-google-maps/api";
 import { Clusterer } from "@react-google-maps/marker-clusterer";
 import { useAssetMapContext } from "context/AssetMapContext";
@@ -8,7 +7,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { OverlappingMarkerSpiderfier } from "ts-overlapping-marker-spiderfier";
 import { IAsset } from "types/asset";
 import { AssetInfoWindowInner } from "./AssetInfoWindow";
-import EditedLocation from "./location-edited.svg";
 interface AssetMarkerProps {
   asset: IAsset;
   clusterer: Clusterer;
@@ -16,8 +14,8 @@ interface AssetMarkerProps {
 }
 const AssetMarker = ({ asset, clusterer, oms }: AssetMarkerProps) => {
   const [position, setposition] = useState({
-    lat: asset.latitude!,
-    lng: asset.longitude!,
+    lat: asset.latitude,
+    lng: asset.longitude,
   });
 
   const { setPromises, selectedAsset, setSelectedAsset, promises } =
@@ -26,8 +24,8 @@ const AssetMarker = ({ asset, clusterer, oms }: AssetMarkerProps) => {
   const isEdited = useMemo(
     () =>
       !isEqual(position, {
-        lat: asset.latitude!,
-        lng: asset.longitude!,
+        lat: asset.latitude,
+        lng: asset.longitude,
       }),
     [position.lat, position.lng, asset.latitude, asset.longitude]
   );
@@ -64,20 +62,22 @@ const AssetMarker = ({ asset, clusterer, oms }: AssetMarkerProps) => {
         const newLat = ev.latLng?.lat();
         const newLng = ev.latLng?.lng();
 
+        if (typeof newLat != "number") return;
+        if (typeof newLng != "number") return;
         if (newLat == asset.latitude && newLng == asset.longitude) return;
         setposition({
-          lat: newLat!,
-          lng: newLng!,
+          lat: newLat,
+          lng: newLng,
         });
 
         const isDifferent = !isEqual(
           {
-            lat: newLat!,
-            lng: newLng!,
+            lat: newLat,
+            lng: newLng,
           },
           {
-            lat: asset.latitude!,
-            lng: asset.longitude!,
+            lat: asset.latitude,
+            lng: asset.longitude,
           }
         );
         setPromises((prev) => [
@@ -91,8 +91,8 @@ const AssetMarker = ({ asset, clusterer, oms }: AssetMarkerProps) => {
                       .update(`assets`, {
                         id: asset.id,
                         data: {
-                          latitude: newLat!.toString(),
-                          longitude: newLng!.toString(),
+                          latitude: newLat.toString(),
+                          longitude: newLng.toString(),
                           dummy: new Blob(),
                         },
                         previousData: asset,

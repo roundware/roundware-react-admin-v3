@@ -1,5 +1,5 @@
 import { Mic, MicOff } from "@mui/icons-material";
-import { Box, Button, Stack, Typography, useTheme } from "@mui/material";
+import { Box, Button, Stack, useTheme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import useBoolean from "hooks/useBoolean";
 import React from "react";

@@ -23,7 +23,7 @@ const FileDownloadButton = ({ source }: Props) => {
         request.responseType = "blob";
         request.onprogress = (ev) =>
           setDownloadProgress(ev.loaded / ev.total / 100);
-        request.onload = (ev) => {
+        request.onload = () => {
           try {
             const blob = request.response;
 

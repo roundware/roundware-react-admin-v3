@@ -5,7 +5,7 @@ import { Box, LinearProgress } from "@mui/material";
 const SplashScreen = () => {
   return (
     <Box
-      sx={(t) => ({
+      sx={() => ({
         display: "flex",
         justifyContent: `center`,
         alignItems: `center`,

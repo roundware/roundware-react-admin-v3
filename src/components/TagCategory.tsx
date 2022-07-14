@@ -1,9 +1,8 @@
-import React from "react";
 import { Button } from "@mui/material";
+import React from "react";
 import {
   Create,
   Datagrid,
-  DatagridCellProps,
   DeleteButton,
   Edit,
   EditButton,
@@ -14,8 +13,8 @@ import {
   useRecordContext,
   useRedirect,
 } from "react-admin";
-import FormToolbar from "./common/FormToolbar";
 import CopyResourceButton from "./common/CopyResource";
+import FormToolbar from "./common/FormToolbar";
 export const TagCategoryList = (): JSX.Element => {
   return (
     <List>
@@ -32,7 +31,7 @@ export const TagCategoryList = (): JSX.Element => {
   );
 };
 
-const RedirectButton = (props: DatagridCellProps) => {
+const RedirectButton = () => {
   const redirect = useRedirect();
   const record = useRecordContext();
   const handleOnViewTags = () => {

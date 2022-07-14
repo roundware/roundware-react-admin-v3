@@ -42,7 +42,7 @@ const Dashboard = (): JSX.Element => {
     [resrouce: string]: string;
   }>({});
 
-  const [busy, setBusy] = useState(false);
+  const [, setBusy] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [lastProjectId, setLastProjectId] = useState(selectedProject?.id);
 

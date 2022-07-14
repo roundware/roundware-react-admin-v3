@@ -11,7 +11,7 @@ import Card from "@mui/material/Card";
 import makeStyles from "@mui/styles/makeStyles";
 import { useRedirect } from "ra-core";
 import React, { useState } from "react";
-import { List, useRecordContext } from "react-admin";
+import { List } from "react-admin";
 import { useNavigate } from "react-router-dom";
 import { IProject, useProjects } from "../../context/ProjectsContext";
 const ProjectList = (): JSX.Element => {
@@ -42,11 +42,8 @@ const ProjectCardWrapper = ({ children }: { children: React.ReactNode }) => {
   );
 };
 const ProjectCard = () => {
-  const record = useRecordContext();
-
-  const redirect = useRedirect();
   const classes = useCardStyles();
-  const { selectProject, setProjectsList, projectsList } = useProjects();
+  const { selectProject, projectsList } = useProjects();
 
   const navigate = useNavigate();
   const handleOnProjectSelect = (p: IProject) => {
@@ -127,7 +124,7 @@ const CreateProjectCard = () => {
 
 export default ProjectList;
 
-const useCardStyles = makeStyles((theme) => ({
+const useCardStyles = makeStyles(() => ({
   root: {
     width: 275,
     height: 160,

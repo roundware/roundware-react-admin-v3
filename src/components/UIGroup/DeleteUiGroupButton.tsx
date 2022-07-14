@@ -15,7 +15,6 @@ import makeStyles from "@mui/styles/makeStyles";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   RaRecord,
-  DeleteButtonProps,
   useRefresh,
   UpdateResult,
   DeleteResult,

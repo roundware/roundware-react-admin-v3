@@ -1,16 +1,13 @@
 import React from "react";
 import {
   Create,
-  CreateProps,
   Datagrid,
   DateField,
   DateTimeInput,
   DeleteButton,
   Edit,
   EditButton,
-  EditProps,
   List,
-  ListProps,
   NumberField,
   NumberInput,
   ReferenceField,

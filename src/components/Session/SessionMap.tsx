@@ -4,7 +4,7 @@ import {
   SessionMapContextProvider,
   useSesisonMap,
 } from "context/SessionMapContext";
-import React, { forwardRef } from "react";
+import React from "react";
 import { mapLibraries } from "utils";
 import EventInfoWindow from "./EventInfoWindow";
 import SessionMapFilters from "./SessionMapFilters";

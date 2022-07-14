@@ -1,28 +1,15 @@
+import { Hearing, RecordVoiceOver, WatchLater } from "@mui/icons-material";
+import { Grid } from "@mui/material";
 import React from "react";
-import {
-  Typography,
-  Grid,
-  Divider,
-  Card,
-  CardHeader,
-  CardContent,
-} from "@mui/material";
-import {
-  Hearing,
-  RecordVoiceOver,
-  WatchLater,
-  Person,
-} from "@mui/icons-material";
-import { IProject } from "../../../context/ProjectsContext";
-import CardWithIcon from "./CardWithIcon";
 import { GetListResult, RaRecord } from "react-admin";
 import { ResourceList } from "../../../App";
-import SessionsChart from "./SessionsChart";
-import AssetsChart from "./AssetsChart";
-import ClientTypeChart from "./ClientTypeChart";
-import BrowsersChart from "./BrowsersChart";
-import ListenEventsChart from "./ListenEventsChart";
 import AssetMediaTypesChart from "./AssetMediaTypesChart";
+import AssetsChart from "./AssetsChart";
+import BrowsersChart from "./BrowsersChart";
+import CardWithIcon from "./CardWithIcon";
+import ClientTypeChart from "./ClientTypeChart";
+import ListenEventsChart from "./ListenEventsChart";
+import SessionsChart from "./SessionsChart";
 
 interface Props {
   sessions: GetListResult<RaRecord> | null;

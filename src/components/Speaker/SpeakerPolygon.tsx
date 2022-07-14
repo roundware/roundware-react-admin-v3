@@ -31,7 +31,6 @@ import {
   googleMapPathToGeoJSONPath,
 } from "utilities";
 import useDebounce from "hooks/useDebounce";
-import { isEqual } from "lodash";
 interface Props {
   speaker: ISpeaker;
 }

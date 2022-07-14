@@ -14,7 +14,6 @@ import {
   Translate,
   WebAsset,
 } from "@mui/icons-material";
-import { Box } from "@mui/material";
 import AssetMapPage from "components/Asset/AssetMapPage";
 import {
   AudioTrackCreate,

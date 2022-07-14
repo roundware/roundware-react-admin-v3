@@ -1,24 +1,5 @@
-import React, {
-  forwardRef,
-  Fragment,
-  PropsWithChildren,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from "react";
-import useBoolean from "hooks/useBoolean";
-import { useListController } from "react-admin";
-import {
-  GoogleMap,
-  useJsApiLoader,
-  MarkerClusterer,
-  useGoogleMap,
-} from "@react-google-maps/api";
-import { Clusterer } from "@react-google-maps/marker-clusterer";
-import { OverlappingMarkerSpiderfier } from "ts-overlapping-marker-spiderfier";
-import { IAsset } from "types/asset";
-import AssetMarker from "./AssetMarker";
-import { mapLibraries } from "utils";
+import { History, Save } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
 import {
   Alert,
   Button,
@@ -28,12 +9,23 @@ import {
   Stack,
 } from "@mui/material";
 import {
+  GoogleMap,
+  MarkerClusterer,
+  useGoogleMap,
+  useJsApiLoader,
+} from "@react-google-maps/api";
+import { Clusterer } from "@react-google-maps/marker-clusterer";
+import MapControl from "components/common/MapControl";
+import {
   AssetMapContextProvider,
   useAssetMapContext,
 } from "context/AssetMapContext";
-import { LoadingButton } from "@mui/lab";
-import MapControl from "components/common/MapControl";
-import { History, Save } from "@mui/icons-material";
+import React, { Fragment, useEffect, useState } from "react";
+import { useListController } from "react-admin";
+import { OverlappingMarkerSpiderfier } from "ts-overlapping-marker-spiderfier";
+import { IAsset } from "types/asset";
+import { mapLibraries } from "utils";
+import AssetMarker from "./AssetMarker";
 
 const AssetMarkers = () => {
   const { data, ...lc } = useListController();
@@ -44,14 +36,16 @@ const AssetMarkers = () => {
 
   const markers = (clusterer: Clusterer) => {
     const childrenRenderer = (oms: OverlappingMarkerSpiderfier | null) =>
-      data.map((asset: IAsset) => (
-        <AssetMarker
-          key={asset.id}
-          asset={asset}
-          clusterer={clusterer}
-          oms={oms!}
-        />
-      ));
+      oms
+        ? data.map((asset: IAsset) => (
+            <AssetMarker
+              key={asset.id}
+              asset={asset}
+              clusterer={clusterer}
+              oms={oms}
+            />
+          ))
+        : [];
     return (
       <OverlappingMarkerSpiderfierComponent>
         {childrenRenderer}
