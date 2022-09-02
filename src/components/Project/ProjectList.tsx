@@ -52,6 +52,10 @@ const ProjectCard = () => {
   };
 
   const [textFilter, setTextFilter] = useState("");
+
+  const possibleProjects = (
+    process.env.REACT_APP_INCLUDE_PROJECT_IDS || "all"
+  ).split(`,`);
   return (
     <>
       <Grid item xs={12}>
@@ -74,6 +78,10 @@ const ProjectCard = () => {
               ? p?.name?.toLowerCase().indexOf(textFilter?.toLowerCase()) != -1
               : true
           )
+          .filter((p) => {
+            if (possibleProjects.includes("all")) return true;
+            return possibleProjects.includes(p.id.toString());
+          })
           .map((p) => (
             <Grid key={p?.id} item>
               <Card
