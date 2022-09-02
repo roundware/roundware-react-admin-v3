@@ -138,7 +138,7 @@ const UIItemsTreeView = (): JSX.Element => {
         </DragDropContext>
       );
     },
-    [reorderingGroup, uiGroups]
+    [reorderingGroup, uiGroups, uiItemsList]
   );
 
   const [selectedUiGroup, setSelectedUiGroup] = useState<number | null>(
@@ -163,7 +163,7 @@ const UIItemsTreeView = (): JSX.Element => {
     const { source, destination, draggableId } = provided;
 
     /** not destination nothing changed return go home tata byebye */
-    if (!destination?.index) return;
+    if (typeof destination?.index !== "number") return;
 
     // find the item which is moved
     const draggedItem = uiItemsList.find((g) => g.id == Number(draggableId));
