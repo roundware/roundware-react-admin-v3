@@ -42,9 +42,9 @@ export const UiGroupList = (): JSX.Element => {
                     { id: "speak", name: "Speak" },
                   ]}
                   label="Select UI Mode"
-                  onChange={(v) =>
-                    setUiMode(v as unknown as IUIGroup[`ui_mode`])
-                  }
+                  onChange={(e) => {
+                    setUiMode(e.target.value as unknown as IUIGroup[`ui_mode`]);
+                  }}
                 />,
               ]}
               sort={{
