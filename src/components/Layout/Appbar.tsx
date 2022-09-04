@@ -46,6 +46,10 @@ const AppBar = (): JSX.Element => {
     navigate(`/project/${value}`);
   };
 
+  const possibleProjects = (
+    process.env.REACT_APP_INCLUDE_PROJECT_IDS || "all"
+  ).split(`,`);
+
   return (
     <HideOnScroll>
       <MuiAppBar color={"secondary"} sx={{ padding: 1 }} position="fixed">
@@ -88,11 +92,16 @@ const AppBar = (): JSX.Element => {
                   {Array.isArray(projectsList) && projectsList.length > 0 && (
                     <ListSubheader>Recent</ListSubheader>
                   )}
-                  {projectsList?.map((p) => (
-                    <MenuItem key={p?.id} value={p?.id}>
-                      {p?.name}
-                    </MenuItem>
-                  ))}
+                  {projectsList
+                    ?.filter((p) => {
+                      if (possibleProjects.includes("all")) return true;
+                      return possibleProjects.includes(p.id.toString());
+                    })
+                    .map((p) => (
+                      <MenuItem key={p?.id} value={p?.id}>
+                        {p?.name}
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
             </Stack>
