@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
+import { capitalize } from "lodash";
 import React, { useEffect, useState } from "react";
 import { GetListResult, RaRecord, useRedirect } from "react-admin";
 import {
@@ -317,7 +318,10 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <Tooltip
                   cursor={{ strokeDasharray: "3 3" }}
-                  formatter={(value) => [value, `Assets`]}
+                  formatter={(value, name) => [
+                    value,
+                    capitalize(name.toString()),
+                  ]}
                   labelFormatter={(label: any) =>
                     new Date(label).toLocaleDateString()
                   }
