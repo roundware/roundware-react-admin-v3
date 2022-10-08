@@ -220,6 +220,44 @@ const ImportView = ({ handleClose }: { handleClose: () => void }) => {
                   filterValues,
                   setFilters,
                   sort,
+                  displayedFilters: filterValues,
+                  showFilter: () => {
+                    return;
+                  },
+                  hideFilter: () => {
+                    return;
+                  },
+                  isFetching: !data,
+                  isLoading: !data,
+                  selectedIds: [],
+                  onSelect: () => {
+                    return;
+                  },
+                  onToggleItem: () => {
+                    return;
+                  },
+                  onUnselectItems: () => {
+                    return;
+                  },
+                  refetch: () => {
+                    return;
+                  },
+                  hasNextPage: false,
+                  hasPreviousPage: false,
+                  resource: `assets`,
+                  setPerPage: () => {
+                    return;
+                  },
+                  setSort: () => {
+                    return;
+                  },
+                  defaultTitle: `Assets`,
+
+                  error: null,
+                  exporter: () => {
+                    return;
+                  },
+                  filter: {},
                 }}
               >
                 <div>
