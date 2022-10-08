@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
+import { capitalize } from "lodash";
 import React, { useEffect, useState } from "react";
 import { GetListResult, RaRecord, useRedirect } from "react-admin";
 import {
@@ -278,7 +279,7 @@ const SessionsChart = ({ sessions }: Props) => {
                 </YAxis>
                 <CartesianGrid strokeDasharray="3 3" />
                 <Tooltip
-                  formatter={(value: number) => `${value} Sessions`}
+                  formatter={(value) => [value, `Sessions`]}
                   labelFormatter={(label: string) =>
                     new Date(label).toLocaleDateString()
                   }

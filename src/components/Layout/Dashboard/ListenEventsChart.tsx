@@ -265,7 +265,7 @@ const ListenEventsChart = ({ events }: Props) => {
 
                 <Tooltip
                   cursor={{ strokeDasharray: "3 3" }}
-                  formatter={(value: number) => `${value} Listens`}
+                  formatter={(value) => [value, `Listens`]}
                   labelFormatter={(label: number) =>
                     new Date(label).toLocaleDateString()
                   }

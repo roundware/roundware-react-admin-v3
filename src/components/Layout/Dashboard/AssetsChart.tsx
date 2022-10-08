@@ -317,7 +317,7 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <Tooltip
                   cursor={{ strokeDasharray: "3 3" }}
-                  formatter={(value: number) => `${value} Assets`}
+                  formatter={(value) => [value, `Assets`]}
                   labelFormatter={(label: any) =>
                     new Date(label).toLocaleDateString()
                   }
