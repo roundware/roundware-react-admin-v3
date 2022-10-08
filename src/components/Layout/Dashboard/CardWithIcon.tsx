@@ -46,7 +46,7 @@ const CardWithIcon = (props: Props): JSX.Element => {
     subtitle,
     to,
     children,
-    bgColor = "#ffffff",
+
     helperText,
   } = props;
   const classes = useStyles(props);
@@ -57,7 +57,10 @@ const CardWithIcon = (props: Props): JSX.Element => {
     if (to && typeof to == "string") redirect(to);
   };
   return (
-    <Card className={classes.card} style={{ backgroundColor: bgColor }}>
+    <Card
+      className={classes.card}
+      sx={(t) => ({ backgroundColor: t.palette.background.paper })}
+    >
       <div className={classes.main} onClick={handleClick}>
         <Box width="3em" className="icon">
           {createElement(icon, { fontSize: "large" })}

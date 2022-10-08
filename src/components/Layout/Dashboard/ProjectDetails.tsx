@@ -6,7 +6,7 @@ import { useProjects } from "../../../context/ProjectsContext";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    color: "#000000",
+    color: theme.palette.text.primary,
     padding: 10,
     marginTop: theme.spacing(2),
     marginBottom: "1em",
