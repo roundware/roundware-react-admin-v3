@@ -16,7 +16,6 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
-import { capitalize } from "lodash";
 import React, { useEffect, useState } from "react";
 import { GetListResult, RaRecord, useRedirect } from "react-admin";
 import {
