@@ -119,7 +119,7 @@ const AssetCreate = (): JSX.Element => {
           reference="languages"
           defaultValue={1}
         >
-          <SelectInput source="name" />
+          <SelectInput optionText="name" />
         </ReferenceInput>
         <TagIdSelector source="tag_ids" multiple label="Tags" />
         {/* <NumberInput label="Audio Length(s)" source="audio_length_in_seconds" /> */}
