@@ -121,7 +121,7 @@ const AssetEdit = (): JSX.Element => {
           source="project_id"
           reference="projects"
         >
-          <SelectInput source="name" fullWidth />
+          <SelectInput optionText="name" fullWidth />
         </ReferenceInput>
 
         <SelectInput
@@ -159,7 +159,7 @@ const AssetEdit = (): JSX.Element => {
           source="language_id"
           reference="languages"
         >
-          <SelectInput source="name" fullWidth />
+          <SelectInput optionText="name" fullWidth />
         </ReferenceInput>
         <TagIdSelector source="tag_ids" multiple label="Tags" />
         <TranslatableField

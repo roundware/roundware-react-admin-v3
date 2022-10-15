@@ -73,7 +73,7 @@ export const SessionEdit = (): JSX.Element => {
         <BooleanInput source="geo_listen_enabled" />
         <TextInput source="timezone" />
         <ReferenceInput source="project_id" reference="projects" required>
-          <SelectInput source="name" />
+          <SelectInput optionText="name" />
         </ReferenceInput>
       </SimpleForm>
     </Edit>

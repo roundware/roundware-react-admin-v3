@@ -363,7 +363,7 @@ const EditForm = ({
           source="project_id"
           reference="projects"
         >
-          <SelectInput source="name" fullWidth />
+          <SelectInput optionText="name" fullWidth />
         </ReferenceInput>
 
         <SelectInput
@@ -401,7 +401,7 @@ const EditForm = ({
           source="language_id"
           reference="languages"
         >
-          <SelectInput source="name" fullWidth />
+          <SelectInput optionText="name" fullWidth />
         </ReferenceInput>
         <TagIdSelector source="tag_ids" multiple label="Tags" />
         <TranslatableField
