@@ -1,6 +1,17 @@
+import { Edit } from "@mui/icons-material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import { Grid, IconButton, Paper, Tooltip } from "@mui/material";
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  Grid,
+  IconButton,
+  Paper,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import CopyResourceButton from "components/common/CopyResource";
 import { useProjects } from "context/ProjectsContext";
 import { useSpeakers } from "context/SpeakersContext";
@@ -17,7 +28,8 @@ import {
 import SpeakerShapesControl from "./SpeakerShapesControl";
 const SpeakerList = (): JSX.Element => {
   const { selectedProject } = useProjects();
-  const { fetchData } = useSpeakers();
+  const { fetchData, speakers, setSelectedSpeaker, selectedSpeaker } =
+    useSpeakers();
   if (!selectedProject) return <>No Project Selected.</>;
   return (
     <>
@@ -42,6 +54,48 @@ const SpeakerList = (): JSX.Element => {
             height: "80vh",
           }}
         >
+          {speakers?.some((s) => s.shape == undefined) && (
+            <Alert severity="warning">
+              <AlertTitle>
+                There are some speakers with no shape assigned!
+              </AlertTitle>
+              Please assign a shape to following speakers:
+              <Stack spacing={1} mt={1}>
+                {speakers
+                  ?.filter((s) => s.shape == undefined)
+                  .map((s) => (
+                    <Stack
+                      spacing={1}
+                      direction={"row"}
+                      key={s.id}
+                      alignItems="center"
+                    >
+                      <Typography
+                        textTransform={"uppercase"}
+                        variant="subtitle2"
+                      >
+                        {s.id}: {s.code}
+                      </Typography>
+                      <Button
+                        variant={
+                          s.id == selectedSpeaker ? "contained" : "outlined"
+                        }
+                        size="small"
+                        onClick={() =>
+                          setSelectedSpeaker(
+                            s.id == selectedSpeaker ? null : s.id
+                          )
+                        }
+                        startIcon={<Edit />}
+                      >
+                        {`Draw`}
+                      </Button>
+                    </Stack>
+                  ))}
+              </Stack>
+            </Alert>
+          )}
+
           <List title="Speakers" component="div">
             <Datagrid bulkActionButtons={false} style={{ flexShrink: 1 }}>
               <SpeakerHighter />
