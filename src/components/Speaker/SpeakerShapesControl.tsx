@@ -3,12 +3,13 @@ import {
   CardContent,
   CircularProgress,
   Grid,
+  Grow,
   Typography,
 } from "@mui/material";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { useSpeakers } from "context/SpeakersContext";
-import React from "react";
+import React, { useEffect } from "react";
 import SpeakerDrawer from "./SpeakerDrawer";
 import SpeakerPolygonGroup from "./SpeakerPolygon";
 import { mapLibraries } from "utils";
@@ -67,50 +68,67 @@ const SpeakerShapesControl = (): JSX.Element => {
     setMap(null);
   }, []);
 
+  const [scaleFactor, setScaleFactor] = React.useState(1);
+
+  useEffect(() => {
+    setScaleFactor(1.01);
+    setTimeout(() => {
+      setScaleFactor(1);
+    }, 200);
+  }, [selectedSpeaker]);
+
   return (
-    <Card variant="outlined" style={{ margin: 16 }}>
-      <CardContent>
-        <Grid container direction="column" spacing={2}>
-          <Grid item>
-            <Typography variant="h5">Shapes</Typography>
-            <Typography
-              variant="body1"
-              style={{ fontWeight: selectedSpeaker ? "bold" : "normal" }}
-            >
-              {selectedSpeaker ? (
-                `Selected Speaker #${selectedSpeaker}`
-              ) : (
-                <Grid container direction="row" alignItems="center">
-                  Select a Speaker to Edit using{" "}
-                  <LocationOnOutlinedIcon fontSize={"medium"} /> Icon from List,
-                  Or Double Click any shape
-                </Grid>
-              )}
-            </Typography>
-          </Grid>
-          <Grid item>
-            {isLoaded ? (
-              <GoogleMap
-                mapContainerStyle={containerStyle}
-                onLoad={onLoad}
-                onUnmount={onUnmount}
+    <div
+      style={{
+        // everytime selectedSpeaker changes scale to 1.02 for 1 second and then back to 1
+        transform: `scale(${scaleFactor})`,
+        transition: "transform 0.1s ease-in-out",
+      }}
+    >
+      <Card variant="elevation" elevation={4} style={{ margin: 16 }}>
+        <CardContent>
+          <Grid container direction="column" spacing={2}>
+            <Grid item>
+              <Typography variant="h5">Shapes</Typography>
+              <Typography
+                variant="body1"
+                style={{ fontWeight: selectedSpeaker ? "bold" : "normal" }}
               >
-                {/* show a drawing manager only when there no shape, */}
-                <SpeakerDrawer />
-                {/* all other polygons */}
-                {speakers
-                  ?.filter((s) => s.shape)
-                  ?.map((s) => (
-                    <SpeakerPolygonGroup speaker={s} key={s.id} />
-                  ))}
-              </GoogleMap>
-            ) : (
-              <CircularProgress />
-            )}
+                {selectedSpeaker ? (
+                  `Selected Speaker #${selectedSpeaker}`
+                ) : (
+                  <Grid container direction="row" alignItems="center">
+                    Select a Speaker to Edit using{" "}
+                    <LocationOnOutlinedIcon fontSize={"medium"} /> Icon from
+                    List, Or Double Click any shape
+                  </Grid>
+                )}
+              </Typography>
+            </Grid>
+            <Grid item>
+              {isLoaded ? (
+                <GoogleMap
+                  mapContainerStyle={containerStyle}
+                  onLoad={onLoad}
+                  onUnmount={onUnmount}
+                >
+                  {/* show a drawing manager only when there no shape, */}
+                  <SpeakerDrawer />
+                  {/* all other polygons */}
+                  {speakers
+                    ?.filter((s) => s.shape)
+                    ?.map((s) => (
+                      <SpeakerPolygonGroup speaker={s} key={s.id} />
+                    ))}
+                </GoogleMap>
+              ) : (
+                <CircularProgress />
+              )}
+            </Grid>
           </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

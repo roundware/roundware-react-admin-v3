@@ -28,8 +28,12 @@ import {
 import SpeakerShapesControl from "./SpeakerShapesControl";
 const SpeakerList = (): JSX.Element => {
   const { selectedProject } = useProjects();
-  const { fetchData, speakers, setSelectedSpeaker, selectedSpeaker } =
-    useSpeakers();
+  const {
+    fetchData,
+    speakersWithoutShape,
+    setSelectedSpeaker,
+    selectedSpeaker,
+  } = useSpeakers();
   if (!selectedProject) return <>No Project Selected.</>;
   return (
     <>
@@ -54,48 +58,97 @@ const SpeakerList = (): JSX.Element => {
             height: "80vh",
           }}
         >
-          {speakers?.some((s) => s.shape == undefined) && (
-            <Alert severity="warning">
-              <AlertTitle>
-                There are some speakers with no shape assigned!
-              </AlertTitle>
-              Please assign a shape to following speakers:
-              <Stack spacing={1} mt={1}>
-                {speakers
-                  ?.filter((s) => s.shape == undefined)
-                  .map((s) => (
-                    <Stack
-                      spacing={1}
-                      direction={"row"}
-                      key={s.id}
-                      alignItems="center"
-                    >
-                      <Typography
-                        textTransform={"uppercase"}
-                        variant="subtitle2"
+          <Stack spacing={2}>
+            {!!speakersWithoutShape.filter((s) => s.isNewlyCreated == false)
+              .length && (
+              <Alert severity="warning">
+                <AlertTitle>
+                  There are some speakers with no shape assigned!
+                </AlertTitle>
+                Please assign a shape to following speakers:
+                <Stack spacing={1} mt={1}>
+                  {speakersWithoutShape
+                    ?.filter((s) => s.isNewlyCreated == false)
+                    .map((s) => (
+                      <Stack
+                        spacing={1}
+                        direction={"row"}
+                        key={s.id}
+                        alignItems="center"
                       >
-                        {s.id}: {s.code}
-                      </Typography>
-                      <Button
-                        variant={
-                          s.id == selectedSpeaker ? "contained" : "outlined"
-                        }
-                        size="small"
-                        onClick={() =>
-                          setSelectedSpeaker(
-                            s.id == selectedSpeaker ? null : s.id
-                          )
-                        }
-                        startIcon={<Edit />}
-                      >
-                        {`Draw`}
-                      </Button>
-                    </Stack>
-                  ))}
-              </Stack>
-            </Alert>
-          )}
+                        <Typography
+                          textTransform={"uppercase"}
+                          variant="subtitle2"
+                        >
+                          {s.id}: {s.code}
+                        </Typography>
+                        <Button
+                          variant={
+                            s.id == selectedSpeaker ? "contained" : "outlined"
+                          }
+                          size="small"
+                          onClick={() =>
+                            setSelectedSpeaker(
+                              s.id == selectedSpeaker ? null : s.id
+                            )
+                          }
+                          startIcon={<Edit />}
+                        >
+                          {selectedSpeaker == s.id
+                            ? "Selected to Draw"
+                            : "Draw"}
+                        </Button>
+                      </Stack>
+                    ))}
+                </Stack>
+              </Alert>
+            )}
 
+            {!!speakersWithoutShape.filter((s) => s.isNewlyCreated == true)
+              .length && (
+              <Alert severity="info">
+                <AlertTitle>
+                  Finish creating your new speakers by adding a shape on the
+                  map.
+                </AlertTitle>
+                <Stack spacing={1} mt={1}>
+                  {speakersWithoutShape
+                    ?.filter((s) => s.isNewlyCreated == true)
+                    .map((s) => (
+                      <Stack
+                        spacing={1}
+                        direction={"row"}
+                        key={s.id}
+                        alignItems="center"
+                      >
+                        <Typography
+                          textTransform={"uppercase"}
+                          variant="subtitle2"
+                        >
+                          {s.id}: {s.code}
+                        </Typography>
+                        <Button
+                          variant={
+                            s.id == selectedSpeaker ? "contained" : "outlined"
+                          }
+                          size="small"
+                          onClick={() =>
+                            setSelectedSpeaker(
+                              s.id == selectedSpeaker ? null : s.id
+                            )
+                          }
+                          startIcon={<Edit />}
+                        >
+                          {s.id == selectedSpeaker
+                            ? `Selected to draw`
+                            : `Draw`}
+                        </Button>
+                      </Stack>
+                    ))}
+                </Stack>
+              </Alert>
+            )}
+          </Stack>
           <List title="Speakers" component="div">
             <Datagrid bulkActionButtons={false} style={{ flexShrink: 1 }}>
               <SpeakerHighter />

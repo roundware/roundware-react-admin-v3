@@ -131,7 +131,8 @@ export const SpeakerEdit = (): JSX.Element => {
 
 export const SpeakerCreate = (): JSX.Element => {
   const { selectedProject } = useProjects();
-  const { fetchData, setSelectedSpeaker } = useSpeakers();
+  const { fetchData, setSelectedSpeaker, addToNewlyCreatedSpeakers } =
+    useSpeakers();
   const transform = (data: RaRecord) => {
     data.project = selectedProject?.id;
     if (typeof data?.file?.src == "string") {
@@ -174,6 +175,7 @@ export const SpeakerCreate = (): JSX.Element => {
             setSelectedSpeaker(parseInt(data.id.toString()));
             success.setTrue();
             refresh();
+            addToNewlyCreatedSpeakers(data.id);
           },
         }
       );

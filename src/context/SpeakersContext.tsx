@@ -1,5 +1,5 @@
 import { useRoundwareDataProvider } from "context/DataProviderContext";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ISpeaker } from "types/speaker";
 import { AllowChildrenOnlyProps, useProjects } from "./ProjectsContext";
 
@@ -10,6 +10,10 @@ export interface ISpeakerContext {
   speakers?: ISpeaker[];
   fetchData: () => Promise<void>;
   setIsCurrentSpeakerSaved: React.Dispatch<React.SetStateAction<boolean>>;
+  speakersWithoutShape: (ISpeaker & {
+    isNewlyCreated: boolean;
+  })[];
+  addToNewlyCreatedSpeakers: (speakerId: number) => void;
 }
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 export const SpeakerContext = React.createContext<ISpeakerContext>(undefined!);
@@ -59,6 +63,25 @@ export const SpeakersProvider = ({
       .then((res) => setSpeakers(res.data as ISpeaker[]));
   };
 
+  const [newlyCreatedSpeakerIds, setNewlyCreatedSpeakerIds] = useState<
+    number[]
+  >([]);
+
+  const addToNewlyCreatedSpeakers = (speakerId: number) => {
+    setNewlyCreatedSpeakerIds((prev) => [...prev, speakerId]);
+  };
+
+  const speakersWithoutShape = useMemo(() => {
+    return (speakers || [])
+      .filter((s) => !s.shape)
+      .map((s) => {
+        return {
+          ...s,
+          isNewlyCreated: newlyCreatedSpeakerIds.some((n) => n == s.id),
+        };
+      });
+  }, [speakers, newlyCreatedSpeakerIds]);
+  console.log(speakersWithoutShape, newlyCreatedSpeakerIds);
   return (
     <SpeakerContext.Provider
       value={{
@@ -68,6 +91,8 @@ export const SpeakersProvider = ({
         setSpeakers,
         fetchData,
         setIsCurrentSpeakerSaved,
+        speakersWithoutShape,
+        addToNewlyCreatedSpeakers,
       }}
     >
       {children}
