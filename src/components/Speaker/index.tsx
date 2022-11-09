@@ -9,6 +9,7 @@ import {
   BooleanInput,
   Create,
   Edit,
+  maxLength,
   NumberInput,
   RaRecord,
   ReferenceInput,
@@ -83,14 +84,19 @@ export const SpeakerEdit = (): JSX.Element => {
       setProgress(0);
     }
   };
+
   if (success.value)
     return <Navigate to={`/project/${selectedProject?.id}/speakers`} />;
   return (
     <Edit transform={transform}>
-      <SimpleForm warnWhenUnsavedChanges onSubmit={save}>
+      <SimpleForm
+        reValidateMode="onBlur"
+        warnWhenUnsavedChanges
+        onSubmit={save}
+      >
         <TextInput source="id" fullWidth />
         <BooleanInput source="activeyn" fullWidth />
-        <TextInput source="code" fullWidth />
+        <TextInput source="code" fullWidth validate={maxLength(10)} />
         <SpeakerAudioControls />
         <FileDownloadButton source="uri" />
         <TextInput source="uri" fullWidth />
@@ -179,6 +185,7 @@ export const SpeakerCreate = (): JSX.Element => {
       setProgress(0);
     }
   };
+
   if (success.value)
     return <Navigate to={`/project/${selectedProject?.id}/speakers`} />;
   return (
@@ -188,9 +195,10 @@ export const SpeakerCreate = (): JSX.Element => {
         onSubmit={save}
         toolbar={<FormToolbar />}
         redirect="/speakers"
+        reValidateMode="onBlur"
       >
         <BooleanInput source="activeyn" fullWidth defaultChecked />
-        <TextInput source="code" fullWidth required />
+        <TextInput source="code" validate={maxLength(10)} fullWidth required />
 
         <SpeakerAudioControls />
         <NumberInput
