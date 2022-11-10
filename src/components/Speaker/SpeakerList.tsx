@@ -95,8 +95,8 @@ const SpeakerList = (): JSX.Element => {
                           startIcon={<Edit />}
                         >
                           {selectedSpeaker == s.id
-                            ? "Selected to Draw"
-                            : "Draw"}
+                            ? "Ready to Draw"
+                            : "Click to Draw"}
                         </Button>
                       </Stack>
                     ))}
@@ -140,8 +140,8 @@ const SpeakerList = (): JSX.Element => {
                           startIcon={<Edit />}
                         >
                           {s.id == selectedSpeaker
-                            ? `Selected to draw`
-                            : `Draw`}
+                            ? `Ready to Draw`
+                            : `Click to Draw`}
                         </Button>
                       </Stack>
                     ))}

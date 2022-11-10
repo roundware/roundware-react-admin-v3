@@ -1,18 +1,17 @@
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import {
   Card,
   CardContent,
   CircularProgress,
   Grid,
-  Grow,
   Typography,
 } from "@mui/material";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { useSpeakers } from "context/SpeakersContext";
 import React, { useEffect } from "react";
+import { mapLibraries } from "utils";
 import SpeakerDrawer from "./SpeakerDrawer";
 import SpeakerPolygonGroup from "./SpeakerPolygon";
-import { mapLibraries } from "utils";
 const containerStyle = {
   width: "100%",
   height: "60vh",
