@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { GetListResult, RaRecord, useRedirect } from "react-admin";
 import {
   Bar,
@@ -150,6 +150,18 @@ const SessionsChart = ({ sessions }: Props) => {
       );
   };
 
+  const sessionsPerDay = useMemo(
+    () =>
+      getSessionsPerDay(
+        (sessions?.data as {
+          id: number;
+          starttime: string;
+        }[]) || [],
+        range
+      ),
+    [sessions, range]
+  );
+
   return (
     <Card>
       <CardHeader
@@ -243,15 +255,7 @@ const SessionsChart = ({ sessions }: Props) => {
         ) : (
           <div style={{ width: "100%", height: 300 }}>
             <ResponsiveContainer>
-              <ComposedChart
-                data={getSessionsPerDay(
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  /* @ts-ignore */
-                  sessions.data || [],
-                  range
-                )}
-                height={200}
-              >
+              <ComposedChart data={sessionsPerDay} height={200}>
                 <XAxis
                   dataKey="date"
                   type={skipNoActivity ? undefined : "number"}
@@ -284,7 +288,20 @@ const SessionsChart = ({ sessions }: Props) => {
                   }
                   active={true}
                 />
-                <Legend verticalAlign="top" height={30} />
+                <Legend
+                  verticalAlign="top"
+                  height={30}
+                  payload={[
+                    {
+                      value: `Sessions (${sessionsPerDay.reduce(
+                        (acc, el) => acc + el.total,
+                        0
+                      )})`,
+                      type: "rect",
+                      color: "#8884d8",
+                    },
+                  ]}
+                />
                 <Brush
                   dataKey="date"
                   stroke=" #413ea0 "

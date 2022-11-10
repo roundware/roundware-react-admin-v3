@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { GetListResult, RaRecord, useRedirect } from "react-admin";
 import {
   Bar,
@@ -23,6 +23,7 @@ import {
   CartesianGrid,
   ComposedChart,
   Label,
+  Legend,
   Line,
   ResponsiveContainer,
   Tooltip,
@@ -147,6 +148,18 @@ const ListenEventsChart = ({ events }: Props) => {
         })}`
       );
   };
+
+  const listensPerDay = useMemo(
+    () =>
+      getListensPerDay(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        events?.data || [],
+        range
+      ),
+    [events, range]
+  );
+
   return (
     <Card>
       <CardHeader
@@ -230,14 +243,23 @@ const ListenEventsChart = ({ events }: Props) => {
         ) : (
           <div style={{ width: "100%", height: 300 }}>
             <ResponsiveContainer>
-              <ComposedChart
-                data={getListensPerDay(
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  /* @ts-ignore */
-                  events.data,
-                  range
-                )}
-              >
+              <ComposedChart data={listensPerDay}>
+                <Legend
+                  align="center"
+                  verticalAlign="top"
+                  height={36}
+                  payload={[
+                    {
+                      value: `Listens (${listensPerDay.reduce(
+                        (acc, l) => acc + l.total,
+                        0
+                      )})`,
+                      type: "rect",
+                      color: "#8884d8",
+                    },
+                  ]}
+                />
+
                 <defs>
                   <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                     <stop stopColor="#8884d8" stopOpacity={1} />

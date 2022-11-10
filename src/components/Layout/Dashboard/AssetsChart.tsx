@@ -18,8 +18,8 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
-import { capitalize } from "lodash";
-import React, { useEffect, useState } from "react";
+import { capitalize, groupBy } from "lodash";
+import React, { useEffect, useMemo, useState } from "react";
 import { GetListResult, RaRecord, useRedirect } from "react-admin";
 import {
   Bar,
@@ -41,21 +41,21 @@ interface Props {
   assets: GetListResult<RaRecord> | null;
 }
 
-const mediaTypes = [`audio`, `photo`, `text`];
+const mediaTypes: [`audio`, "photo", "text"] = [`audio`, `photo`, `text`];
 const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 type IAsset = {
   id: number;
   created: Date;
-  media_type: string;
+  media_type: "audio" | "photo" | "text";
 };
 
 type BarChartData = {
+  [index in "audio" | "photo" | "text" | "date"]?: number;
+} & {
   audio: number;
   photo: number;
   text: number;
-
   date?: number;
-  [index: string]: number | undefined;
 };
 
 export const isWithinRange = (date: Date, range: Date[]): boolean => {
@@ -91,10 +91,7 @@ const getRecordingsPerDay = (assets: IAsset[], range: Date[]) => {
     }
     data = {
       ...data,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      [s?.media_type]: data![s?.media_type] + 1,
+      [s?.media_type]: data[s?.media_type] + 1,
     };
 
     chartDataMap.set(keyName, data);
@@ -114,8 +111,7 @@ const getRecordingsPerDay = (assets: IAsset[], range: Date[]) => {
   );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getSanitizedList = (assets: any[]): IAsset[] => [
+const getSanitizedList = (assets: IAsset[]): IAsset[] => [
   ...assets
     .filter((a) => ![1].includes(a.id))
     .map((s) => ({
@@ -157,16 +153,14 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
     if (assets) handleOnSelectChange(30);
   }, [assets]);
 
-  const [startDate, setStartDate] = useState(
-    getSanitizedList(
-      // @ts-ignore
-      assets?.data || []
-    )?.[0]?.created || new Date()
+  const [startDate, setStartDate] = useState<Date | null>(
+    getSanitizedList((assets?.data as IAsset[]) || [])?.[0]?.created ||
+      new Date()
   );
-  const [endDate, setEndDate] = useState(new Date());
+  const [endDate, setEndDate] = useState<Date | null>(new Date());
 
   useEffect(() => {
-    setRange([startDate, endDate]);
+    if (startDate && endDate) setRange([startDate, endDate]);
   }, [startDate, endDate]);
   const [showLine, setShowLine] = useState(false);
 
@@ -183,6 +177,28 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
       );
   };
 
+  const recordingsPerDay = useMemo(
+    () =>
+      assets?.data ? getRecordingsPerDay(assets?.data as IAsset[], range) : [],
+    [assets, range]
+  );
+
+  const totals = useMemo(() => {
+    const totals = {
+      audio: 0,
+      text: 0,
+      photo: 0,
+    };
+
+    recordingsPerDay.forEach((s) => {
+      mediaTypes.forEach((t) => {
+        totals[t] += s[t];
+      });
+    });
+
+    return totals;
+  }, [recordingsPerDay]);
+
   return (
     <Card>
       <CardHeader
@@ -198,9 +214,7 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
                   <InputLabel>Range</InputLabel>
                   <Select
                     defaultValue={30}
-                    // @ts-ignore
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    onChange={(e) => handleOnSelectChange(e!.target!.value)}
+                    onChange={(e) => handleOnSelectChange(e.target.value)}
                   >
                     <MenuItem value={7}>Last 7 Days</MenuItem>
                     <MenuItem value={30}>Last 30 Days</MenuItem>
@@ -221,20 +235,20 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
                 }
                 label="Show Line"
               />
-              <div>
+              {/* <div>
                 <ResponsiveContainer>
                   <Legend
                     align="right"
                     verticalAlign="top"
                     payload={mediaTypes?.map((m, i) => ({
-                      value: m,
+                      value: m + ` (${totals[m]})`,
                       id: `ID${i}`,
                       type: `rect`,
                       color: colors[i],
                     }))}
                   />
                 </ResponsiveContainer>
-              </div>
+              </div> */}
             </Toolbar>
           </>
         }
@@ -255,7 +269,6 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
                   value={startDate}
                   views={["year", "month", "day"]}
                   onChange={(date) => {
-                    // @ts-ignore
                     setStartDate(date);
                   }}
                   renderInput={(props: TextFieldProps) => (
@@ -268,7 +281,6 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
                   label="End Date"
                   value={endDate}
                   onChange={(date) => {
-                    // @ts-ignore
                     setEndDate(date);
                   }}
                   renderInput={(props: TextFieldProps) => (
@@ -284,13 +296,28 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
         ) : (
           <div style={{ width: "100%", height: 300 }}>
             <ResponsiveContainer>
-              <ComposedChart
-                data={getRecordingsPerDay(
-                  /* @ts-ignore */
-                  assets.data,
-                  range
-                )}
-              >
+              <ComposedChart data={recordingsPerDay}>
+                <Legend
+                  align="center"
+                  verticalAlign="top"
+                  // @ts-ignore
+                  payload={mediaTypes
+                    .map((m, i) => ({
+                      value: m + ` (${totals[m]})`,
+                      id: `ID${i}`,
+
+                      type: "rect",
+                      color: colors[i],
+                    }))
+                    .concat({
+                      value: `Total (${
+                        totals.audio + totals.text + totals.photo
+                      })`,
+                      id: `IDtotal`,
+                      type: "rect",
+                      color: colors[3],
+                    })}
+                />
                 <defs>
                   <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                     <stop stopColor="#8884d8" stopOpacity={1} />
@@ -328,29 +355,35 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
                   active
                 />
 
-                <Brush
-                  dataKey="date"
-                  stroke=" #413ea0 "
-                  tickFormatter={(time) => new Date(time).toLocaleDateString()}
-                />
                 {mediaTypes?.map((m, index) => (
                   <Bar
                     dataKey={m}
                     fill={colors[index]}
-                    stackId={"a"}
                     key={m}
                     onClick={handleOnBarClick}
                   />
                 ))}
 
                 {showLine && (
-                  <Line
-                    type="monotone"
-                    dataKey="total"
-                    tooltipType="none"
-                    stroke="#ff7300"
-                  />
+                  <>
+                    <Line
+                      type="monotone"
+                      dataKey={(e) => {
+                        return e.audio + e.text + e.photo;
+                      }}
+                      tooltipType="none"
+                      stroke="#ff7300"
+                      name="Total"
+                    />
+                  </>
                 )}
+                <Brush
+                  dataKey="date"
+                  stroke=" #413ea0 "
+                  tickFormatter={(time) => {
+                    return new Date(time).toLocaleDateString();
+                  }}
+                />
               </ComposedChart>
             </ResponsiveContainer>
           </div>
