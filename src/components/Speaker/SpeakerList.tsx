@@ -80,7 +80,7 @@ const SpeakerList = (): JSX.Element => {
                           textTransform={"uppercase"}
                           variant="subtitle2"
                         >
-                          {s.id}: {s.code}
+                          Speaker {s.id}: {s.code}
                         </Typography>
                         <Button
                           variant={
@@ -125,7 +125,7 @@ const SpeakerList = (): JSX.Element => {
                           textTransform={"uppercase"}
                           variant="subtitle2"
                         >
-                          {s.id}: {s.code}
+                          Speaker {s.id}: {s.code}
                         </Typography>
                         <Button
                           variant={
