@@ -64,7 +64,7 @@ export const UiGroupEdit = (): JSX.Element => {
     <Edit
       transform={transform}
       mutationMode="pessimistic"
-      queryOptions={{
+      mutationOptions={{
         onSuccess: refreshData,
       }}
     >
