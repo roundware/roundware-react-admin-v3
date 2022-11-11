@@ -57,9 +57,9 @@ export const UiGroupList = (): JSX.Element => {
               actions={<UIGroupListActions />}
             >
               <DraggableDatagrid
-                rowClick="edit"
                 sort={{ field: "index", order: "ASC" }}
                 bulkActionButtons={false}
+                rowClick="edit"
               >
                 {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                 {/* @ts-ignore */}
@@ -83,6 +83,7 @@ export const UiGroupList = (): JSX.Element => {
                 </ArrayField> */}
 
                 {/* <BooleanField source="active" /> */}
+                <EditButton label="Edit Group" />
                 <RowActions />
               </DraggableDatagrid>
             </List>
@@ -99,9 +100,6 @@ export const UiGroupList = (): JSX.Element => {
 const RowActions = (props: DatagridRowProps): JSX.Element => {
   return (
     <Grid container spacing={1} direction="row" wrap="nowrap">
-      <Grid item>
-        <EditButton size="small" label="" />
-      </Grid>
       <Grid item>
         <AddCommonItem group={props.record as IUIGroup} />
       </Grid>
