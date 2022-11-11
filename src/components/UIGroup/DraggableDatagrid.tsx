@@ -19,6 +19,7 @@ import {
   DeleteResult,
   FieldProps,
   RaRecord,
+  RecordContextProvider,
   UpdateResult,
   useListContext,
   useNotify,
@@ -234,20 +235,21 @@ const DraggableDatagridRow = ({
             <TableCell {...provided.dragHandleProps}>
               <ReorderIcon />
             </TableCell>
-
-            {React.Children.map<
-              React.ReactElement<FieldProps>[],
-              React.ReactElement<FieldProps>
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-            >(children, (field) => (
-              <TableCell key={`${id}-${field?.props.source}`}>
-                {React.cloneElement(field, {
-                  record,
-                  resource,
-                })}
-              </TableCell>
-            ))}
+            <RecordContextProvider value={record}>
+              {React.Children.map<
+                React.ReactElement<FieldProps>[],
+                React.ReactElement<FieldProps>
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+              >(children, (field) => (
+                <TableCell key={`${id}-${field?.props.source}`}>
+                  {React.cloneElement(field, {
+                    record,
+                    resource,
+                  })}
+                </TableCell>
+              ))}
+            </RecordContextProvider>
           </TableRow>
         )}
       </Draggable>

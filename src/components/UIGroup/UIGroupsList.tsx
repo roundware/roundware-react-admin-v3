@@ -9,6 +9,7 @@ import {
   RadioButtonGroupInput,
   ReferenceField,
   TextField,
+  useRecordContext,
 } from "react-admin";
 import { IUIGroup } from "types/uiGroups";
 import AddCommonItem from "./AddCommonItem";
@@ -83,7 +84,7 @@ export const UiGroupList = (): JSX.Element => {
                 </ArrayField> */}
 
                 {/* <BooleanField source="active" /> */}
-                <EditButton label="Edit Group" />
+
                 <RowActions />
               </DraggableDatagrid>
             </List>
@@ -98,8 +99,20 @@ export const UiGroupList = (): JSX.Element => {
 };
 
 const RowActions = (props: DatagridRowProps): JSX.Element => {
+  const record = useRecordContext();
+  console.log(`RowActions`, record);
   return (
-    <Grid container spacing={1} direction="row" wrap="nowrap">
+    <Grid
+      container
+      spacing={1}
+      direction="row"
+      wrap="nowrap"
+      alignItems={"center"}
+      justifyContent="center"
+    >
+      <Grid item>
+        <EditButton label="" />
+      </Grid>
       <Grid item>
         <AddCommonItem group={props.record as IUIGroup} />
       </Grid>

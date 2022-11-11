@@ -36,14 +36,16 @@ const DeleteUiGroupButton = (): JSX.Element => {
   };
   const dataProvider = useRoundwareDataProvider();
   const notify = useNotify();
+
   const handleDelete = async () => {
     try {
+      if (!record) return;
       setLoading(true);
       const promises: Promise<
         UpdateResult<RaRecord> | DeleteResult<RaRecord>
       >[] = [];
       uiGroups.forEach((g) => {
-        if (g.index > record!.index) {
+        if (g.index > record.index) {
           const updateProm = dataProvider.update(`uigroups`, {
             id: g.id,
             data: {
@@ -77,6 +79,7 @@ const DeleteUiGroupButton = (): JSX.Element => {
       notify(`Something went wrong. Sorry.`, {
         type: "error",
       });
+      console.log(e);
     } finally {
       refreshData();
       setLoading(false);
