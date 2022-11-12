@@ -15,7 +15,9 @@ import {
   Typography,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
+import DateRangeSlider from "components/charts/DateRangeSlider";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
+import { useChartData } from "hooks/useChartData";
 import React, { useEffect, useMemo, useState } from "react";
 import { GetListResult, RaRecord, useRedirect } from "react-admin";
 import {
@@ -48,11 +50,12 @@ export const isWithinRange = (date: Date, range: Date[]): boolean => {
 
   return false;
 };
-
-const getSessionsPerDay = (
-  sessions: { id: number; starttime: string }[],
-  range: Date[]
-) => {
+type SanitizedSession = {
+  id: number;
+  starttime: Date;
+  [index: string]: number | Date;
+};
+const getSessionsPerDay = (sessions: RaRecord[], range: Date[]) => {
   const sessionsWithDate = getSanitizedList(sessions).filter((s) =>
     isWithinRange(s.starttime, range)
   );
@@ -79,87 +82,35 @@ const getSessionsPerDay = (
   return chartData.sort((s1, s2) => (s1.date > s2.date ? 1 : -1));
 };
 
-const getSanitizedList = (
-  sessions: { id: number; starttime: string }[]
-): { starttime: Date; id: number }[] => [
+const getSanitizedList = (sessions: RaRecord[]): SanitizedSession[] => [
   ...sessions
-    .filter((s) => ![1, 2].includes(s.id))
-    .map((s) => ({ starttime: new Date(s?.starttime), id: s?.id }))
+    .filter((s) => ![1, 2].includes(+s.id))
+    .map((s) => ({ starttime: new Date(s?.starttime), id: +s?.id }))
     .sort((a, b) => (a.starttime > b.starttime ? 1 : -1)),
 ];
 
 const SessionsChart = ({ sessions }: Props) => {
-  const [customRange, setCustomRange] = useState(false);
-  const [range, setRange] = useState([new Date(), new Date()]);
-
-  const handleOnSelectChange = (value: string | number) => {
-    if (!sessions?.data?.length) return;
-    if (value === "custom") {
-      setCustomRange(true);
-      return;
-    }
-    setCustomRange(false);
-
-    if (value === "total") {
-      setRange([
-        getSanitizedList(
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          sessions.data || []
-        )[0].starttime,
-        new Date(),
-      ]);
-      return;
-    }
-
-    const leastDate = subDays(new Date(), Number(value));
-    setRange([leastDate, new Date()]);
-  };
-
-  useEffect(() => {
-    handleOnSelectChange(30);
-  }, [sessions]);
-
-  const [startDate, setStartDate] = useState(
-    getSanitizedList(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      sessions?.data || []
-    )?.[0]?.starttime || new Date()
-  );
-  const [endDate, setEndDate] = useState(new Date());
-
-  useEffect(() => {
-    setRange([startDate, endDate]);
-  }, [startDate, endDate]);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [skipNoActivity, setSkipNoActivity] = useState(false);
-  const [showLine, setShowLine] = useState(false);
-
-  const redirect = useRedirect();
-
-  const handleOnBarClick = (e: { date: string }) => {
-    if (ResourceList.includes(`sessions`))
-      redirect(
-        `list`,
-        `sessions?filter=${JSON.stringify({
-          start_time__gte: new Date(e?.date).toISOString(),
-          start_time__lte: addDays(new Date(e?.date), 1).toISOString(),
-        })}`
-      );
-  };
-
-  const sessionsPerDay = useMemo(
-    () =>
-      getSessionsPerDay(
-        (sessions?.data as {
-          id: number;
-          starttime: string;
-        }[]) || [],
-        range
-      ),
-    [sessions, range]
+  const {
+    rangeDropdownValue,
+    handleOnSelectChange,
+    setShowLine,
+    dropdownRange,
+    setRange,
+    range,
+    showLine,
+    customRange,
+    handleOnBarClick,
+    setStartDate,
+    setEndDate,
+    endDate,
+    startDate,
+    perDateData,
+  } = useChartData<SanitizedSession>(
+    sessions?.data || [],
+    getSanitizedList,
+    "starttime",
+    getSessionsPerDay,
+    "sessions"
   );
 
   return (
@@ -175,10 +126,9 @@ const SessionsChart = ({ sessions }: Props) => {
               <FormControl style={{ width: 150 }}>
                 <InputLabel>Range</InputLabel>
                 <Select
-                  defaultValue={30}
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-ignore
+                  value={rangeDropdownValue}
                   onChange={(e) => handleOnSelectChange(e?.target?.value)}
+                  label="Range"
                 >
                   <MenuItem value={7}>Last 7 Days</MenuItem>
                   <MenuItem value={30}>Last 30 Days</MenuItem>
@@ -228,9 +178,7 @@ const SessionsChart = ({ sessions }: Props) => {
                   value={startDate}
                   views={["year", "month", "day"]}
                   onChange={(date) => {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    setStartDate(date);
+                    if (date) setStartDate(date);
                   }}
                   renderInput={(p: TextFieldProps) => <TextField {...p} />}
                 />
@@ -240,9 +188,7 @@ const SessionsChart = ({ sessions }: Props) => {
                   label="End Date"
                   value={endDate}
                   onChange={(date) => {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    setEndDate(date);
+                    if (date) setEndDate(date);
                   }}
                   renderInput={(p: TextFieldProps) => <TextField {...p} />}
                 />
@@ -255,12 +201,12 @@ const SessionsChart = ({ sessions }: Props) => {
         ) : (
           <div style={{ width: "100%", height: 300 }}>
             <ResponsiveContainer>
-              <ComposedChart data={sessionsPerDay} height={200}>
+              <ComposedChart data={perDateData} height={200}>
                 <XAxis
                   dataKey="date"
-                  type={skipNoActivity ? undefined : "number"}
+                  type={"number"}
                   name="Date"
-                  scale={skipNoActivity ? undefined : "time"}
+                  scale={"time"}
                   domain={[`dataMin`, `dataMax`]}
                   allowDataOverflow
                   tickFormatter={(date) => new Date(date).toLocaleDateString()}
@@ -272,7 +218,11 @@ const SessionsChart = ({ sessions }: Props) => {
                 >
                   <Label value="Date" />
                 </XAxis>
-                <YAxis dataKey="total" name="Sessions">
+                <YAxis
+                  dataKey="total"
+                  name="Sessions"
+                  domain={[0, "dataMax + 5"]}
+                >
                   <Label
                     value="Number of Sessions"
                     offset={-5}
@@ -293,7 +243,7 @@ const SessionsChart = ({ sessions }: Props) => {
                   height={30}
                   payload={[
                     {
-                      value: `Sessions (${sessionsPerDay.reduce(
+                      value: `Sessions (${perDateData.reduce(
                         (acc, el) => acc + el.total,
                         0
                       )})`,
@@ -302,16 +252,6 @@ const SessionsChart = ({ sessions }: Props) => {
                     },
                   ]}
                 />
-                <Brush
-                  dataKey="date"
-                  stroke=" #413ea0 "
-                  type="number"
-                  scale="time"
-                  padding={{
-                    top: 30,
-                  }}
-                  tickFormatter={(time) => new Date(time).toLocaleDateString()}
-                />
 
                 <Bar
                   dataKey="total"
@@ -319,6 +259,7 @@ const SessionsChart = ({ sessions }: Props) => {
                   name="Sessions"
                   fill=" #413ea0 "
                   onClick={handleOnBarClick}
+                  maxBarSize={50}
                 />
                 {showLine && (
                   <Line
@@ -331,6 +272,14 @@ const SessionsChart = ({ sessions }: Props) => {
               </ComposedChart>
             </ResponsiveContainer>
           </div>
+        )}
+        {!!sessions?.data?.length && (
+          <DateRangeSlider
+            value={range}
+            onChange={setRange}
+            min={dropdownRange[0].getTime()}
+            max={dropdownRange[1].getTime()}
+          />
         )}
       </CardContent>
     </Card>

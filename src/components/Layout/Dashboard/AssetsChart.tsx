@@ -17,8 +17,10 @@ import {
   Typography,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
+import DateRangeSlider from "components/charts/DateRangeSlider";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
-import { capitalize, groupBy } from "lodash";
+import { useChartData } from "hooks/useChartData";
+import { capitalize } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import { GetListResult, RaRecord, useRedirect } from "react-admin";
 import {
@@ -47,6 +49,7 @@ type IAsset = {
   id: number;
   created: Date;
   media_type: "audio" | "photo" | "text";
+  [index: string]: Date | number | string;
 };
 
 type BarChartData = {
@@ -55,7 +58,8 @@ type BarChartData = {
   audio: number;
   photo: number;
   text: number;
-  date?: number;
+  date: number;
+  total: number;
 };
 
 export const isWithinRange = (date: Date, range: Date[]): boolean => {
@@ -70,7 +74,7 @@ export const isWithinRange = (date: Date, range: Date[]): boolean => {
   return false;
 };
 
-const getRecordingsPerDay = (assets: IAsset[], range: Date[]) => {
+const getRecordingsPerDay = (assets: RaRecord[], range: Date[]) => {
   const assetsWithDate = getSanitizedList(assets).filter((s) =>
     isWithinRange(s.created, range)
   );
@@ -81,6 +85,8 @@ const getRecordingsPerDay = (assets: IAsset[], range: Date[]) => {
     audio: 0,
     text: 0,
     photo: 0,
+    total: 0,
+    date: 0,
   };
   assetsWithDate.forEach((s) => {
     const keyName = s.created.toDateString();
@@ -101,8 +107,8 @@ const getRecordingsPerDay = (assets: IAsset[], range: Date[]) => {
 
   chartDataMap.forEach((val, key) => {
     chartData.push({
-      date: new Date(key).getTime(),
       ...val,
+      date: new Date(key).getTime(),
     });
   });
 
@@ -111,76 +117,39 @@ const getRecordingsPerDay = (assets: IAsset[], range: Date[]) => {
   );
 };
 
-const getSanitizedList = (assets: IAsset[]): IAsset[] => [
+const getSanitizedList = (assets: RaRecord[]): IAsset[] => [
   ...assets
-    .filter((a) => ![1].includes(a.id))
+    .filter((a) => ![1].includes(+a.id))
     .map((s) => ({
       media_type: s?.media_type,
       created: new Date(s?.created),
-      id: s?.id,
+      id: +s?.id,
     }))
     .sort((a, b) => (a.created > b.created ? 1 : -1)),
 ];
 
 const AssetsChart = ({ assets }: Props): JSX.Element => {
-  const [customRange, setCustomRange] = useState(false);
-  const [range, setRange] = useState([new Date(), new Date()]);
-
-  const handleOnSelectChange = (value: string | number) => {
-    if (!assets?.data?.length) return;
-    if (value === "custom") {
-      setCustomRange(true);
-      return;
-    }
-    setCustomRange(false);
-
-    if (value === "total") {
-      setRange([
-        getSanitizedList(
-          // @ts-ignore
-          assets.data
-        )[0].created,
-        new Date(),
-      ]);
-      return;
-    }
-
-    const leastDate = subDays(new Date(), Number(value));
-    setRange([leastDate, new Date()]);
-  };
-
-  useEffect(() => {
-    if (assets) handleOnSelectChange(30);
-  }, [assets]);
-
-  const [startDate, setStartDate] = useState<Date | null>(
-    getSanitizedList((assets?.data as IAsset[]) || [])?.[0]?.created ||
-      new Date()
-  );
-  const [endDate, setEndDate] = useState<Date | null>(new Date());
-
-  useEffect(() => {
-    if (startDate && endDate) setRange([startDate, endDate]);
-  }, [startDate, endDate]);
-  const [showLine, setShowLine] = useState(false);
-
-  const redirect = useRedirect();
-
-  const handleOnBarClick = (e: any) => {
-    if (ResourceList.includes(`assets`))
-      redirect(
-        `list`,
-        `assets?filter=${JSON.stringify({
-          created__gte: new Date(e?.date).toISOString(),
-          created__lte: addDays(new Date(e?.date), 1).toISOString(),
-        })}`
-      );
-  };
-
-  const recordingsPerDay = useMemo(
-    () =>
-      assets?.data ? getRecordingsPerDay(assets?.data as IAsset[], range) : [],
-    [assets, range]
+  const {
+    rangeDropdownValue,
+    handleOnSelectChange,
+    setShowLine,
+    dropdownRange,
+    setRange,
+    range,
+    showLine,
+    customRange,
+    handleOnBarClick,
+    setStartDate,
+    setEndDate,
+    endDate,
+    startDate,
+    perDateData,
+  } = useChartData<IAsset>(
+    assets?.data || [],
+    getSanitizedList,
+    "created",
+    getRecordingsPerDay,
+    "assets"
   );
 
   const totals = useMemo(() => {
@@ -190,14 +159,14 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
       photo: 0,
     };
 
-    recordingsPerDay.forEach((s) => {
+    perDateData.forEach((s) => {
       mediaTypes.forEach((t) => {
         totals[t] += s[t];
       });
     });
 
     return totals;
-  }, [recordingsPerDay]);
+  }, [perDateData]);
 
   return (
     <Card>
@@ -210,11 +179,12 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
               </Typography>
 
               <div>
-                <FormControl style={{ width: 120 }}>
+                <FormControl style={{ width: 150 }}>
                   <InputLabel>Range</InputLabel>
                   <Select
-                    defaultValue={30}
+                    value={rangeDropdownValue}
                     onChange={(e) => handleOnSelectChange(e.target.value)}
+                    label="Range"
                   >
                     <MenuItem value={7}>Last 7 Days</MenuItem>
                     <MenuItem value={30}>Last 30 Days</MenuItem>
@@ -269,7 +239,7 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
                   value={startDate}
                   views={["year", "month", "day"]}
                   onChange={(date) => {
-                    setStartDate(date);
+                    if (date) setStartDate(date);
                   }}
                   renderInput={(props: TextFieldProps) => (
                     <TextField {...props} />
@@ -281,7 +251,7 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
                   label="End Date"
                   value={endDate}
                   onChange={(date) => {
-                    setEndDate(date);
+                    if (date) setEndDate(date);
                   }}
                   renderInput={(props: TextFieldProps) => (
                     <TextField {...props} />
@@ -296,7 +266,7 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
         ) : (
           <div style={{ width: "100%", height: 300 }}>
             <ResponsiveContainer>
-              <ComposedChart data={recordingsPerDay}>
+              <ComposedChart data={perDateData}>
                 <Legend
                   align="center"
                   verticalAlign="top"
@@ -329,20 +299,30 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
                   type="number"
                   name="Date"
                   scale="time"
-                  domain={["dataMin", "dataMax"]}
-                  allowDataOverflow
+                  domain={["dataMin + 10", "dataMax + 10"]}
                   tickFormatter={(date) => new Date(date).toLocaleDateString()}
                   angle={45}
                   dx={15}
                   dy={20}
                   height={70}
                   minTickGap={0.5}
+                  fontSize={12}
+                  allowDataOverflow
                 >
-                  <Label value="Day" offset={0} position="insideBottom" />
+                  <Label value="Day" />
                 </XAxis>
-
-                <YAxis />
-                <CartesianGrid strokeDasharray="3 3" />
+                <YAxis domain={[0, "dataMax + 5"]} />
+                {mediaTypes?.map((m, index) => (
+                  <Bar
+                    dataKey={m}
+                    fill={colors[index]}
+                    key={m}
+                    stackId="a"
+                    onClick={handleOnBarClick}
+                    maxBarSize={30}
+                  />
+                ))}
+                <CartesianGrid strokeDasharray={"3 3 "} />
                 <Tooltip
                   cursor={{ strokeDasharray: "3 3" }}
                   formatter={(value, name) => [
@@ -354,15 +334,6 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
                   }
                   active
                 />
-
-                {mediaTypes?.map((m, index) => (
-                  <Bar
-                    dataKey={m}
-                    fill={colors[index]}
-                    key={m}
-                    onClick={handleOnBarClick}
-                  />
-                ))}
 
                 {showLine && (
                   <>
@@ -377,16 +348,17 @@ const AssetsChart = ({ assets }: Props): JSX.Element => {
                     />
                   </>
                 )}
-                <Brush
-                  dataKey="date"
-                  stroke=" #413ea0 "
-                  tickFormatter={(time) => {
-                    return new Date(time).toLocaleDateString();
-                  }}
-                />
               </ComposedChart>
             </ResponsiveContainer>
           </div>
+        )}
+        {!!assets?.data?.length && (
+          <DateRangeSlider
+            value={range}
+            onChange={setRange}
+            min={dropdownRange[0].getTime()}
+            max={dropdownRange[1].getTime()}
+          />
         )}
       </CardContent>
     </Card>

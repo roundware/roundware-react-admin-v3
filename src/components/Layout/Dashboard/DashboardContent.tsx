@@ -2,6 +2,7 @@ import { Hearing, RecordVoiceOver, WatchLater } from "@mui/icons-material";
 import { Grid } from "@mui/material";
 import React from "react";
 import { GetListResult, RaRecord } from "react-admin";
+import { CenteredLoading } from ".";
 import { ResourceList } from "../../../App";
 import AssetMediaTypesChart from "./AssetMediaTypesChart";
 import AssetsChart from "./AssetsChart";

@@ -34,6 +34,8 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import { CenteredLoading } from ".";
 import { ResourceList } from "../../../App";
+import { useChartData } from "hooks/useChartData";
+import DateRangeSlider from "components/charts/DateRangeSlider";
 interface Props {
   events: GetListResult<RaRecord> | null;
 }
@@ -50,10 +52,7 @@ export const isWithinRange = (date: Date, range: Date[]) => {
   return false;
 };
 
-const getListensPerDay = (
-  events: { id: number; start_time: string }[],
-  range: Date[]
-) => {
+const getListensPerDay = (events: RaRecord[], range: Date[]) => {
   const eventsWithDate = getSanitizedList(events).filter((s) =>
     isWithinRange(s.start_time, range)
   );
@@ -80,84 +79,39 @@ const getListensPerDay = (
   return chartData.sort((s1, s2) => (s1.date > s2.date ? 1 : -1));
 };
 
-const getSanitizedList = (
-  events: { id: number; start_time: string }[]
-): { start_time: Date; id: number }[] => [
+type SanitizedListenEvent = {
+  start_time: Date;
+  id: number;
+};
+
+const getSanitizedList = (events: RaRecord[]): SanitizedListenEvent[] => [
   ...events
-    .map((s) => ({ start_time: new Date(s?.start_time), id: s?.id }))
+    .map((s) => ({ start_time: new Date(s?.start_time), id: +s?.id }))
     .sort((a, b) => (a.start_time > b.start_time ? 1 : -1)),
 ];
 
 const ListenEventsChart = ({ events }: Props) => {
-  const [customRange, setCustomRange] = useState(false);
-  const [range, setRange] = useState([new Date(), new Date()]);
-
-  const handleOnSelectChange = (value: string | number) => {
-    if (!events?.data?.length) return;
-    if (value === "custom") {
-      setCustomRange(true);
-      return;
-    }
-    setCustomRange(false);
-
-    if (value === "total") {
-      setRange([
-        getSanitizedList(
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          events?.data
-        )[0].start_time,
-        new Date(),
-      ]);
-      return;
-    }
-
-    const leastDate = subDays(new Date(), Number(value));
-    setRange([leastDate, new Date()]);
-  };
-
-  useEffect(() => {
-    handleOnSelectChange(30);
-  }, [events]);
-
-  const [startDate, setStartDate] = useState(
-    getSanitizedList(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      events?.data || []
-    )?.[0]?.start_time || new Date()
-  );
-  const [endDate, setEndDate] = useState(new Date());
-
-  useEffect(() => {
-    setRange([startDate, endDate]);
-  }, [startDate, endDate]);
-
-  const [showLine, setShowLine] = useState(false);
-
-  const redirect = useRedirect();
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleOnBarClick = (e: any) => {
-    if (ResourceList?.includes(`listenevents`))
-      redirect(
-        `list`,
-        `listenevents?filter=${JSON.stringify({
-          start_time__gte: new Date(e?.date).toISOString(),
-          start_time__lte: addDays(new Date(e?.date), 1).toISOString(),
-        })}`
-      );
-  };
-
-  const listensPerDay = useMemo(
-    () =>
-      getListensPerDay(
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        events?.data || [],
-        range
-      ),
-    [events, range]
+  const {
+    rangeDropdownValue,
+    handleOnSelectChange,
+    setShowLine,
+    dropdownRange,
+    setRange,
+    range,
+    showLine,
+    customRange,
+    handleOnBarClick,
+    setStartDate,
+    setEndDate,
+    endDate,
+    startDate,
+    perDateData,
+  } = useChartData<SanitizedListenEvent>(
+    events?.data || [],
+    getSanitizedList,
+    "start_time",
+    getListensPerDay,
+    "listenevents"
   );
 
   return (
@@ -173,21 +127,18 @@ const ListenEventsChart = ({ events }: Props) => {
               <FormControlLabel
                 control={
                   <Checkbox
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    //   @ts-ignore
-                    defaultValue={showLine}
+                    value={showLine}
                     onChange={(e) => setShowLine(e?.target?.checked)}
                   />
                 }
                 label="Show Line"
               />
-              <FormControl style={{ width: 120 }}>
+              <FormControl style={{ width: 150 }}>
                 <InputLabel>Range</InputLabel>
                 <Select
-                  defaultValue={30}
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-ignore
+                  value={rangeDropdownValue}
                   onChange={(e) => handleOnSelectChange(e?.target?.value)}
+                  label="Range"
                 >
                   <MenuItem value={7}>Last 7 Days</MenuItem>
                   <MenuItem value={30}>Last 30 Days</MenuItem>
@@ -243,46 +194,34 @@ const ListenEventsChart = ({ events }: Props) => {
         ) : (
           <div style={{ width: "100%", height: 300 }}>
             <ResponsiveContainer>
-              <ComposedChart data={listensPerDay}>
-                <Legend
-                  align="center"
-                  verticalAlign="top"
-                  height={36}
-                  payload={[
-                    {
-                      value: `Listens (${listensPerDay.reduce(
-                        (acc, l) => acc + l.total,
-                        0
-                      )})`,
-                      type: "rect",
-                      color: "#8884d8",
-                    },
-                  ]}
-                />
-
-                <defs>
-                  <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                    <stop stopColor="#8884d8" stopOpacity={1} />
-                    <stop stopColor="#1a1a20" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
+              <ComposedChart data={perDateData} height={200}>
                 <XAxis
                   dataKey="date"
                   type="number"
                   name="Date"
                   scale="time"
-                  domain={["dataMin", "dataMax"]}
+                  domain={["dataMin ", "dataMax"]}
                   allowDataOverflow
                   tickFormatter={(date) => new Date(date).toLocaleDateString()}
                   angle={45}
                   dx={15}
                   dy={20}
                   height={70}
-                  minTickGap={0.5}
+                  minTickGap={0.1}
+                ></XAxis>
+                <YAxis
+                  domain={[0, "dataMax + 5"]}
+                  type="number"
+                  dataKey={"total"}
+                  name="Listens"
                 >
-                  <Label value="Day" offset={0} position="insideBottom" />
-                </XAxis>
-                <YAxis dataKey="total" name="Listens"></YAxis>
+                  <Label
+                    value="Number of Listens"
+                    offset={-5}
+                    angle={-90}
+                    position="inside"
+                  />
+                </YAxis>
                 <CartesianGrid strokeDasharray="3 3" />
 
                 <Tooltip
@@ -293,15 +232,36 @@ const ListenEventsChart = ({ events }: Props) => {
                   }
                   active
                 />
-                <Brush
-                  dataKey="date"
-                  stroke=" #413ea0 "
-                  tickFormatter={(time) => new Date(time).toLocaleDateString()}
+                <Legend
+                  align="center"
+                  verticalAlign="top"
+                  height={36}
+                  payload={[
+                    {
+                      value: `Listens (${perDateData.reduce(
+                        (acc, l) => acc + l.total,
+                        0
+                      )})`,
+                      type: "rect",
+                      color: "#8884d8",
+                    },
+                  ]}
                 />
+
+                {/* <defs>
+                  <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                    <stop stopColor="#8884d8" stopOpacity={1} />
+                    <stop stopColor="#1a1a20" stopOpacity={0} />
+                  </linearGradient>
+                </defs> */}
+
                 <Bar
                   dataKey="total"
                   fill="#413ea0"
+                  name="Listens"
                   onClick={handleOnBarClick}
+                  maxBarSize={30}
+                  strokeWidth={3}
                 />
                 {showLine && (
                   <Line
@@ -314,6 +274,15 @@ const ListenEventsChart = ({ events }: Props) => {
               </ComposedChart>
             </ResponsiveContainer>
           </div>
+        )}
+
+        {!!events?.data?.length && (
+          <DateRangeSlider
+            value={range}
+            onChange={setRange}
+            min={dropdownRange[0].getTime()}
+            max={dropdownRange[1].getTime()}
+          />
         )}
       </CardContent>
     </Card>
