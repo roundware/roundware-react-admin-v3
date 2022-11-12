@@ -21,11 +21,10 @@ import DateRangeSlider from "components/charts/DateRangeSlider";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
 import { useChartData } from "hooks/useChartData";
 import { capitalize } from "lodash";
-import React, { useEffect, useMemo, useState } from "react";
-import { GetListResult, RaRecord, useRedirect } from "react-admin";
+import React, { useMemo } from "react";
+import { GetListResult, RaRecord } from "react-admin";
 import {
   Bar,
-  Brush,
   CartesianGrid,
   ComposedChart,
   Label,
@@ -37,7 +36,6 @@ import {
   YAxis,
 } from "recharts";
 import { CenteredLoading } from ".";
-import { ResourceList } from "../../../App";
 
 interface Props {
   assets: GetListResult<RaRecord> | null;

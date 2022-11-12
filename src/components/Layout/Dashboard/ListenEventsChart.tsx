@@ -15,11 +15,10 @@ import {
   Typography,
 } from "@mui/material";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
-import React, { useEffect, useMemo, useState } from "react";
-import { GetListResult, RaRecord, useRedirect } from "react-admin";
+import React from "react";
+import { GetListResult, RaRecord } from "react-admin";
 import {
   Bar,
-  Brush,
   CartesianGrid,
   ComposedChart,
   Label,
@@ -32,10 +31,9 @@ import {
 } from "recharts";
 
 import { DatePicker } from "@mui/x-date-pickers";
-import { CenteredLoading } from ".";
-import { ResourceList } from "../../../App";
-import { useChartData } from "hooks/useChartData";
 import DateRangeSlider from "components/charts/DateRangeSlider";
+import { useChartData } from "hooks/useChartData";
+import { CenteredLoading } from ".";
 interface Props {
   events: GetListResult<RaRecord> | null;
 }

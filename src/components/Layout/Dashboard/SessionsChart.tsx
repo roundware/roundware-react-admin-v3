@@ -18,11 +18,10 @@ import { DatePicker } from "@mui/x-date-pickers";
 import DateRangeSlider from "components/charts/DateRangeSlider";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
 import { useChartData } from "hooks/useChartData";
-import React, { useEffect, useMemo, useState } from "react";
-import { GetListResult, RaRecord, useRedirect } from "react-admin";
+import React from "react";
+import { GetListResult, RaRecord } from "react-admin";
 import {
   Bar,
-  Brush,
   CartesianGrid,
   ComposedChart,
   Label,
@@ -34,7 +33,6 @@ import {
   YAxis,
 } from "recharts";
 import { CenteredLoading } from ".";
-import { ResourceList } from "../../../App";
 interface Props {
   sessions: GetListResult<RaRecord> | null;
 }
