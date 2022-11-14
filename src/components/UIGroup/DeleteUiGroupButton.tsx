@@ -57,16 +57,6 @@ const DeleteUiGroupButton = (): JSX.Element => {
         }
       });
 
-      uiItemsList.forEach((i) => {
-        if (i.ui_group_id == record?.id) {
-          const deleteProm = dataProvider.delete(`uiitems`, {
-            id: i.id,
-            previousData: i as RaRecord,
-          });
-          promises.push(deleteProm);
-        }
-      });
-
       const deleteProm = dataProvider.delete(`uigroups`, {
         id: record!.id,
         previousData: record as RaRecord,
