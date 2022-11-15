@@ -116,6 +116,17 @@ export const UiGroupEdit = (): JSX.Element => {
           ]}
         />
 
+        <RadioButtonGroupInput
+          source="selection_method"
+          fullWidth
+          defaultValue="user"
+          choices={[
+            { id: "user", name: "User" },
+            { id: "random_single", name: "Random Single" },
+            { id: "random_double", name: "Random Double" },
+          ]}
+        />
+
         <BooleanInput source="active" />
       </SimpleForm>
     </Edit>
