@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { TextField } from "@mui/material";
 import FormToolbar from "components/common/FormToolbar";
 import TranslatableField from "components/common/TranslatableField";
 import { useBuildUI } from "context/BuildUIContext";
@@ -14,6 +13,7 @@ import {
   RadioButtonGroupInput,
   RaRecord,
   ReferenceInput,
+  required,
   SelectInput,
   SimpleForm,
   TextInput,
@@ -102,8 +102,8 @@ export const UiGroupEdit = (): JSX.Element => {
         >
           <SelectInput optionText="name" fullWidth />
         </ReferenceInput>
-        <TextInput source="name" fullWidth required />
-        <TranslatableField source="header_text_loc_admin" />
+        <TextInput source="name" fullWidth validate={required()} />
+        <TranslatableField source="header_text_loc_admin" label="Header Text" />
         <UiModeField />
         <RadioButtonGroupInput
           source="select"
@@ -185,7 +185,7 @@ export const UiGroupCreate = (): JSX.Element => {
       redirect="list"
     >
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
-        <TextField
+        <TextInput
           fullWidth
           required
           disabled
@@ -193,6 +193,7 @@ export const UiGroupCreate = (): JSX.Element => {
           type="number"
           label="Index"
           value={newIndex.toString()}
+          source="index"
           helperText="It is recommended to not modify this field here but use drag and drop feature instead."
         />
 
@@ -204,8 +205,8 @@ export const UiGroupCreate = (): JSX.Element => {
         >
           <SelectInput optionText="name" fullWidth />
         </ReferenceInput>
-        <TextInput source="name" fullWidth required />
-        <TranslatableField source="header_text_loc_admin" />
+        <TextInput source="name" fullWidth validate={required()} />
+        <TranslatableField source="header_text_loc_admin" label="Header Text" />
         <UiModeField />
         <RadioButtonGroupInput
           source="select"
