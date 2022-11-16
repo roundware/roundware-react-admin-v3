@@ -22,6 +22,7 @@ import {
 } from "react-admin";
 import { IUIGroup } from "types/uiGroups";
 import { handleLocalizedStrings } from "utils";
+import UIItemFilterField from "./UIItemFilterField";
 import UiModeField from "./UiModeField";
 
 export const UiGroupEdit = (): JSX.Element => {
@@ -116,16 +117,7 @@ export const UiGroupEdit = (): JSX.Element => {
           ]}
         />
 
-        <RadioButtonGroupInput
-          source="selection_method"
-          fullWidth
-          defaultValue="user"
-          choices={[
-            { id: "user", name: "User" },
-            { id: "random_single", name: "Random Single" },
-            { id: "random_double", name: "Random Double" },
-          ]}
-        />
+        <UIItemFilterField />
 
         <BooleanInput source="active" />
       </SimpleForm>
@@ -219,17 +211,7 @@ export const UiGroupCreate = (): JSX.Element => {
           ]}
         />
 
-        <RadioButtonGroupInput
-          source="selection_method"
-          fullWidth
-          defaultValue="user"
-          choices={[
-            { id: "user", name: "User" },
-            { id: "random_single", name: "Random Single" },
-            { id: "random_double", name: "Random Double" },
-          ]}
-        />
-
+        <UIItemFilterField />
         <BooleanInput source="active" defaultValue={true} />
       </SimpleForm>
     </Create>
