@@ -83,8 +83,8 @@ export const useChartData = <
       redirect(
         `list`,
         `${resource}?filter=${JSON.stringify({
-          start_time__gte: new Date(e?.date).toISOString(),
-          start_time__lte: addDays(new Date(e?.date), 1).toISOString(),
+          [`${timeField}__gte`]: new Date(e?.date).toISOString(),
+          [`${timeField}__lte`]: addDays(new Date(e?.date), 1).toISOString(),
         })}`
       );
   };
