@@ -50,7 +50,7 @@ export const ListenEventsList = (): JSX.Element => {
           <TextField source="id" />
         </ReferenceField>
         <ReferenceField source="asset_id" reference="assets">
-          <TextField source="filename" />
+          <TextField source="id" />
         </ReferenceField>
         <EditButton />
         <DeleteButton />
