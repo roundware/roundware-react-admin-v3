@@ -5,16 +5,27 @@ import {
   Grid,
   Radio,
   RadioGroup,
+  TextField,
 } from "@mui/material";
 import useFieldValue from "hooks/useFieldValue";
+import { isNumber } from "lodash";
 import React, { useState } from "react";
-import { NumberInput, ReferenceInput } from "react-admin";
+import {
+  AutocompleteArrayInput,
+  AutocompleteInput,
+  NumberInput,
+  ReferenceArrayField,
+  ReferenceArrayInput,
+  ReferenceInput,
+  SelectInput,
+  useRecordContext,
+} from "react-admin";
 
 const EnvelopeIdSelector = (): JSX.Element => {
   const [envelope_ids, setEnvelope_ids] = useFieldValue<number[] | undefined>(
     `envelope_ids`
   );
-
+  console.log(envelope_ids);
   const [mode, setMode] = useState<`manual` | `createNew`>(
     (Array.isArray(envelope_ids) && envelope_ids.length > 0) ||
       typeof envelope_ids == "number"
@@ -59,13 +70,17 @@ const EnvelopeIdSelector = (): JSX.Element => {
       </Grid>
       {mode === "manual" && (
         <Grid item>
-          <ReferenceInput
-            label="Envelope ID"
-            source="envelope_ids"
-            reference="envelopes"
-          >
-            <NumberInput source="id" />
-          </ReferenceInput>
+          <TextField
+            value={
+              envelope_ids?.toString() == "0" ? `` : envelope_ids?.toString()
+            }
+            type="number"
+            onChange={(e) =>
+              isNumber(+e.target.value)
+                ? setEnvelope_ids([+e.target.value])
+                : undefined
+            }
+          />
         </Grid>
       )}
     </Grid>

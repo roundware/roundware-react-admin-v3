@@ -54,7 +54,7 @@ const AssetEdit = (): JSX.Element => {
     if (Number(data.envelope_ids) > 0) {
       // this means user wants to specify an existing envelope_ids
       // note though its plural, it doesn't want an array format
-      data.envelope_ids = Number(data.envelope_ids);
+      data.envelope_ids = [Number(data.envelope_ids)];
     } else {
       // we need to create a new envelope here; and pass that id
       // using session_id = 1 for admin
@@ -64,7 +64,7 @@ const AssetEdit = (): JSX.Element => {
           session_id: 1,
         },
       });
-      data.envelope_ids = Number(res.data.id);
+      data.envelope_ids = [Number(res.data.id)];
     }
 
     if (data.loc_description_admin?.length)
