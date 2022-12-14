@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import { CenteredLoading } from ".";
+import { CenteredLoading } from "../Layout/Dashboard";
 import { COLORS } from "./BrowsersChart";
 
 interface Props {

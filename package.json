@@ -35,6 +35,7 @@
     "react-mic": "https://github.com/shreyas-jadhav/react-mic/raw/master/react-mic-12.4.6.tgz",
     "react-spring": "^9.3.2",
     "recharts": "^2.1.14",
+    "roundware-web-framework": "^0.12.8-alpha.14",
     "ts-overlapping-marker-spiderfier": "^1.0.3",
     "wavesurfer-react": "^2.1.6",
     "wavesurfer.js": "^4.6.0",

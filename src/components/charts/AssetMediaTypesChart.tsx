@@ -10,8 +10,8 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import { CenteredLoading } from ".";
-import { ResourceList } from "../../../App";
+import { CenteredLoading } from "../Layout/Dashboard";
+import { ResourceList } from "../../App";
 interface Props {
   assets: GetListResult<RaRecord> | null;
 }

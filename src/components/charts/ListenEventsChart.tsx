@@ -33,7 +33,7 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import DateRangeSlider from "components/charts/DateRangeSlider";
 import { useChartData } from "hooks/useChartData";
-import { CenteredLoading } from ".";
+import { CenteredLoading } from "../Layout/Dashboard";
 interface Props {
   events: GetListResult<RaRecord> | null;
 }

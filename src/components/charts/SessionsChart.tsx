@@ -32,7 +32,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { CenteredLoading } from ".";
+import { CenteredLoading } from "../Layout/Dashboard";
 interface Props {
   sessions: GetListResult<RaRecord> | null;
 }

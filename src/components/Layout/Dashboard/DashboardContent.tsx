@@ -3,14 +3,16 @@ import { Grid } from "@mui/material";
 import React from "react";
 import { GetListResult, RaRecord } from "react-admin";
 import { ResourceList } from "../../../App";
-import AssetMediaTypesChart from "./AssetMediaTypesChart";
-import AssetsChart from "./AssetsChart";
-import BrowsersChart from "./BrowsersChart";
+import AssetMediaTypesChart from "../../charts/AssetMediaTypesChart";
+import AssetsChart from "../../charts/AssetsChart";
+import BrowsersChart from "../../charts/BrowsersChart";
 import CardWithIcon from "./CardWithIcon";
-import ClientTypeChart from "./ClientTypeChart";
-import ListenEventsChart from "./ListenEventsChart";
-import SessionsChart from "./SessionsChart";
-
+import ClientTypeChart from "../../charts/ClientTypeChart";
+import ListenEventsChart from "../../charts/ListenEventsChart";
+import SessionsChart from "../../charts/SessionsChart";
+import AssetListensChart from "components/charts/AssetListensChart";
+import { IAsset } from "types/asset";
+import { IListenEvent } from "types/listenEvents";
 interface Props {
   sessions: GetListResult<RaRecord> | null;
   assets: GetListResult<RaRecord> | null;
@@ -74,6 +76,13 @@ const DashboardContent = (props: Props) => {
 
           <Grid item xs={12} md={12} lg={12}>
             <AssetsChart assets={assets} />
+          </Grid>
+
+          <Grid item xs={12}>
+            <AssetListensChart
+              assets={assets as GetListResult<IAsset>}
+              listenEvents={listenEvents as GetListResult<IListenEvent>}
+            />
           </Grid>
 
           <Grid item xs={12} md={12} lg={12}>

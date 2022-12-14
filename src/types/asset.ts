@@ -1,6 +1,16 @@
+import { IAssetData } from "roundware-web-framework/dist/types/asset";
 import { LocalizedString } from "types";
 
-export interface IAsset {
+export interface IAsset
+  extends Omit<
+    IAssetData,
+    | "filename"
+    | "file"
+    | "user"
+    | "envelope_ids"
+    | "description_loc_ids"
+    | "alt_text_loc_ids"
+  > {
   id: number;
   description: string;
   latitude: number;
