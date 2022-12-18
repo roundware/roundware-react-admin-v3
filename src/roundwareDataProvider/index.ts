@@ -114,7 +114,6 @@ export class RoundwareDataProvider implements DataProvider {
         revalidate = false
     ): Promise<GetListResult<RecordType>> {
         const { project_id, session_id, ...filters } = params.filter;
-        console.debug(`getList`);
 
         /** get url query */
         const query = {
@@ -252,6 +251,25 @@ export class RoundwareDataProvider implements DataProvider {
                                 d.tag_ids.includes(t)
                             )
                         );
+                        break;
+
+                    case `search_str`:
+                        json = json.filter((d) => {
+                            if (resource == "users") {
+                                // search in username, first_name, last_name, email
+                                const searchStr = filters[filter].toLowerCase();
+                                const searchIn = [
+                                    d.username,
+                                    d.first_name,
+                                    d.last_name,
+                                    d.email,
+                                ]
+                                    .join(" ")
+                                    .toLowerCase();
+                                return searchIn.includes(searchStr);
+                            }
+                            return true;
+                        });
                         break;
                     default:
                         if (filter.slice(-5) == "__gte") {

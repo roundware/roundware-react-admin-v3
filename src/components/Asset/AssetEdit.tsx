@@ -156,9 +156,9 @@ const AssetEdit = (): JSX.Element => {
                             `${r.first_name} ${r.last_name} (@${r.username})`
                         }
                         fullWidth
-                        // filterToQuery={{
-                        //   username: ``
-                        // }}
+                        filterToQuery={(s) => ({
+                            search_str: s,
+                        })}
                     />
                 </ReferenceInput>
 
