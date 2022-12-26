@@ -1,4 +1,5 @@
-import React from "react";
+import Search from '@mui/icons-material/Search';
+import React from 'react';
 import {
   Create,
   Datagrid,
@@ -8,20 +9,36 @@ import {
   SimpleForm,
   TextField,
   TextInput,
-} from "react-admin";
-import { useProjects } from "../context/ProjectsContext";
+} from 'react-admin';
+import { useProjects } from '../context/ProjectsContext';
 export const UserList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
-    <List filter={{ project_id: selectedProject?.id }}>
-      <Datagrid rowClick={"edit"}>
-        <TextField source="id" />
-        <TextField source="username" />
-        <TextField source="first_name" />
-        <TextField source="last_name" />
-        <TextField source="email" />
-        <TextField source="device_id" />
-        <TextField source="client_type" />
+    <List
+      filter={{ project_id: selectedProject?.id }}
+      filters={[
+        <TextInput
+          alwaysOn
+          source='search_str'
+          label='Search'
+          key={'search_str'}
+          InputProps={{
+            endAdornment: <Search />,
+          }}
+        />,
+      ]}
+      sx={{
+        my: 2,
+      }}
+    >
+      <Datagrid rowClick={'edit'}>
+        <TextField source='id' />
+        <TextField source='username' />
+        <TextField source='first_name' />
+        <TextField source='last_name' />
+        <TextField source='email' />
+        <TextField source='device_id' />
+        <TextField source='client_type' />
       </Datagrid>
     </List>
   );
@@ -38,11 +55,11 @@ export const UserEdit = (): JSX.Element => {
       }}
     >
       <SimpleForm warnWhenUnsavedChanges>
-        <TextInput source="id" disabled />
-        <TextInput source="username" />
-        <TextInput source="fist_name" />
-        <TextInput source="last_name" />
-        <TextInput source="email" />
+        <TextInput source='id' disabled />
+        <TextInput source='username' />
+        <TextInput source='fist_name' />
+        <TextInput source='last_name' />
+        <TextInput source='email' />
         {/* <TextInput source="device_id" defaultValue="" /> */}
         {/* <TextInput source="client_type" /> */}
       </SimpleForm>
@@ -59,13 +76,13 @@ export const UserCreate = (): JSX.Element => {
         }
         return r;
       }}
-      redirect="list"
+      redirect='list'
     >
       <SimpleForm warnWhenUnsavedChanges>
-        <TextInput source="username" />
-        <TextInput source="first_name" />
-        <TextInput source="last_name" />
-        <TextInput source="email" />
+        <TextInput source='username' />
+        <TextInput source='first_name' />
+        <TextInput source='last_name' />
+        <TextInput source='email' />
         {/* <TextInput source="device_id" defaultValue="" /> */}
         {/* <TextInput source="client_type" /> */}
       </SimpleForm>
