@@ -1,15 +1,17 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Box, Grid, Tab, Tabs } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
-import React, { useEffect } from "react";
-import { FileField, FileInput } from "react-admin";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Box, Button, Grid, Stack, Tab, Tabs } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import React, { useEffect } from 'react';
+import { FileField, FileInput } from 'react-admin';
 
-import AudioEdit from "./AudioPlayerField/AudioEdit";
-import useFieldValue from "hooks/useFieldValue";
-import { IAsset } from "types/asset";
-import AudioRecorder from "./AudioRecorder";
-import useBoolean from "hooks/useBoolean";
+import Delete from '@mui/icons-material/Delete';
+import { TextDisplay } from 'components/Asset/TextDisplayField';
+import useBoolean from 'hooks/useBoolean';
+import useFieldValue from 'hooks/useFieldValue';
+import { IAsset } from 'types/asset';
+import AudioEdit from './AudioPlayerField/AudioEdit';
+import AudioRecorder from './AudioRecorder';
 type FileType2 = {
   src: string;
 };
@@ -21,7 +23,7 @@ export const FileEdit = (): JSX.Element => {
 
   useEffect(() => {
     const fileExt =
-      typeof value == "string"
+      typeof value == 'string'
         ? value?.split(`.`)?.reverse()[0]
         : value?.src
         ? value?.src?.split(`.`)?.reverse()[0]
@@ -34,90 +36,90 @@ export const FileEdit = (): JSX.Element => {
   const isUploadView = useBoolean(true);
 
   return (
-    <div style={{ width: "100%", marginBottom: 16 }}>
-      <Grid container direction="column">
+    <div style={{ width: '100%', marginBottom: 16 }}>
+      <Grid container direction='column'>
         <Grid item style={{ marginRight: 16 }}>
-          {mediaType === "audio" && value && (
+          {mediaType === 'audio' && value && (
             <AudioEdit
-              size="medium"
+              size='medium'
               buttons={[
                 <IconButton
-                  key="del"
-                  style={{ color: "#dc004e" }}
+                  key='del'
+                  style={{ color: '#dc004e' }}
                   onClick={handleDelete}
-                  size="large"
+                  size='large'
                 >
                   <DeleteIcon />
                 </IconButton>,
               ]}
             />
           )}
-          {mediaType === "photo" && value && (
+          {mediaType === 'photo' && value && (
             <>
               <img
-                alt="Not selected"
-                height="300px"
-                width="300px"
-                style={{ objectFit: "contain" }}
-                src={typeof value == "string" ? value : value?.src}
+                alt='Not selected'
+                height='300px'
+                width='300px'
+                style={{ objectFit: 'contain' }}
+                src={typeof value == 'string' ? value : value?.src}
               />
             </>
           )}
         </Grid>
         <Grid item>
-          {mediaType !== "audio" && !value && (
+          {mediaType !== 'audio' && !value && (
             <FileInput
-              source="file"
+              source='file'
               multiple={false}
               label={`Upload ${getFileExtensions(mediaType).reduce(
-                (acc, el) => (acc += el + ", "),
-                ""
+                (acc, el) => (acc += el + ', '),
+                ''
               )}`}
               accept={getFileExtensions(mediaType).reduce(
-                (acc, el) => (acc += acc + ",." + el),
-                ""
+                (acc, el) => (acc += acc + ',.' + el),
+                ''
               )}
             >
-              <FileField source="src" title="title" fullWidth />
+              <FileField source='src' title='title' fullWidth />
             </FileInput>
           )}
 
-          {mediaType == "audio" && !value && (
+          {mediaType == 'audio' && !value && (
             <>
               <Tabs
                 value={isUploadView.value ? `upload` : `record`}
                 onChange={(e, v) =>
-                  v == "upload"
+                  v == 'upload'
                     ? isUploadView.setTrue()
                     : isUploadView.setFalse()
                 }
               >
-                <Tab label="Upload" value="upload" />
-                <Tab label="Record" value="record" />
+                <Tab label='Upload' value='upload' />
+                <Tab label='Record' value='record' />
               </Tabs>
               <>
                 {isUploadView.value ? (
                   <FileInput
-                    source="file"
+                    source='file'
                     multiple={false}
                     label={`Upload ${getFileExtensions(mediaType).reduce(
-                      (acc, el) => (acc += el + ", "),
-                      ""
+                      (acc, el) => (acc += el + ', '),
+                      ''
                     )}`}
                     accept={getFileExtensions(mediaType).reduce(
-                      (acc, el) => (acc += acc + ",." + el),
-                      ""
+                      (acc, el) => (acc += acc + ',.' + el),
+                      ''
                     )}
                   >
-                    <FileField source="src" title="title" fullWidth />
+                    <FileField source='src' title='title' fullWidth />
                   </FileInput>
                 ) : (
-                  <Box position="relative">
+                  <Box position='relative'>
                     <AudioRecorder
                       onFinish={(b) =>
                         setFile({
                           // @ts-ignore
-                          rawFile: new File([b], "admin_recorded"),
+                          rawFile: new File([b], 'admin_recorded'),
                           // @ts-ignore
                           name: `admin-${Math.random()}`.split(`.`, ``),
                           src: URL.createObjectURL(b),
@@ -129,6 +131,23 @@ export const FileEdit = (): JSX.Element => {
               </>
             </>
           )}
+
+          {mediaType === 'text' && value && (
+            <Stack>
+              <TextDisplay
+                file={typeof value == 'string' ? value : value?.src}
+              />
+              <Box>
+                <Button
+                  startIcon={<Delete />}
+                  color='error'
+                  onClick={handleDelete}
+                >
+                  Delete
+                </Button>
+              </Box>
+            </Stack>
+          )}
         </Grid>
       </Grid>
     </div>
@@ -137,7 +156,7 @@ export const FileEdit = (): JSX.Element => {
 
 export const getFileExtensions = (mediaType: string): string[] => {
   switch (mediaType) {
-    case "audio":
+    case 'audio':
       return [`mp3`, `wav`, `m4a`];
     case `photo`:
       return [`jpg`, `png`, `gif`];
