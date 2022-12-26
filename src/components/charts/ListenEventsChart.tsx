@@ -13,10 +13,10 @@ import {
   TextFieldProps,
   Toolbar,
   Typography,
-} from "@mui/material";
-import { addDays, isAfter, isBefore, subDays } from "date-fns";
-import React from "react";
-import { GetListResult, RaRecord } from "react-admin";
+} from '@mui/material';
+import { addDays, isAfter, isBefore, subDays } from 'date-fns';
+import React from 'react';
+import { GetListResult, RaRecord } from 'react-admin';
 import {
   Bar,
   CartesianGrid,
@@ -28,12 +28,12 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from "recharts";
+} from 'recharts';
 
-import { DatePicker } from "@mui/x-date-pickers";
-import DateRangeSlider from "components/charts/DateRangeSlider";
-import { useChartData } from "hooks/useChartData";
-import { CenteredLoading } from "../Layout/Dashboard";
+import { DatePicker } from '@mui/x-date-pickers';
+import DateRangeSlider from 'components/charts/DateRangeSlider';
+import { useChartData } from 'hooks/useChartData';
+import { CenteredLoading } from '../Layout/Dashboard';
 interface Props {
   events: GetListResult<RaRecord> | null;
 }
@@ -107,9 +107,9 @@ const ListenEventsChart = ({ events }: Props) => {
   } = useChartData<SanitizedListenEvent>(
     events?.data || [],
     getSanitizedList,
-    "start_time",
+    'start_time',
     getListensPerDay,
-    "listenevents"
+    'listenevents'
   );
 
   return (
@@ -117,8 +117,8 @@ const ListenEventsChart = ({ events }: Props) => {
       <CardHeader
         title={
           <Toolbar>
-            <Typography variant="h5" style={{ flexGrow: 1 }}>
-              Listens
+            <Typography variant='h5' style={{ flexGrow: 1 }}>
+              Total Listens by Date
             </Typography>
 
             <div>
@@ -129,20 +129,20 @@ const ListenEventsChart = ({ events }: Props) => {
                     onChange={(e) => setShowLine(e?.target?.checked)}
                   />
                 }
-                label="Show Line"
+                label='Show Line'
               />
               <FormControl style={{ width: 150 }}>
                 <InputLabel>Range</InputLabel>
                 <Select
                   value={rangeDropdownValue}
                   onChange={(e) => handleOnSelectChange(e?.target?.value)}
-                  label="Range"
+                  label='Range'
                 >
                   <MenuItem value={7}>Last 7 Days</MenuItem>
                   <MenuItem value={30}>Last 30 Days</MenuItem>
                   <MenuItem value={365}>Last Year</MenuItem>
-                  <MenuItem value="total">Total</MenuItem>
-                  <MenuItem value="custom">Custom Range</MenuItem>
+                  <MenuItem value='total'>Total</MenuItem>
+                  <MenuItem value='custom'>Custom Range</MenuItem>
                 </Select>
               </FormControl>
             </div>
@@ -155,15 +155,15 @@ const ListenEventsChart = ({ events }: Props) => {
           <>
             <Grid
               container
-              justifyContent="center"
+              justifyContent='center'
               spacing={2}
               style={{ marginBottom: 16 }}
             >
               <Grid item xs={5}>
                 <DatePicker
-                  label="Start Date"
+                  label='Start Date'
                   value={startDate}
-                  views={["year", "month", "day"]}
+                  views={['year', 'month', 'day']}
                   onChange={(date) => {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
@@ -174,7 +174,7 @@ const ListenEventsChart = ({ events }: Props) => {
               </Grid>
               <Grid item xs={5}>
                 <DatePicker
-                  label="End Date"
+                  label='End Date'
                   value={endDate}
                   onChange={(date) => {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -190,15 +190,15 @@ const ListenEventsChart = ({ events }: Props) => {
         {!events ? (
           <CenteredLoading />
         ) : (
-          <div style={{ width: "100%", height: 300 }}>
+          <div style={{ width: '100%', height: 300 }}>
             <ResponsiveContainer>
               <ComposedChart data={perDateData} height={200}>
                 <XAxis
-                  dataKey="date"
-                  type="number"
-                  name="Date"
-                  scale="time"
-                  domain={["dataMin ", "dataMax"]}
+                  dataKey='date'
+                  type='number'
+                  name='Date'
+                  scale='time'
+                  domain={['dataMin ', 'dataMax']}
                   allowDataOverflow
                   tickFormatter={(date) => new Date(date).toLocaleDateString()}
                   angle={45}
@@ -208,22 +208,22 @@ const ListenEventsChart = ({ events }: Props) => {
                   minTickGap={0.1}
                 ></XAxis>
                 <YAxis
-                  domain={[0, "dataMax + 5"]}
-                  type="number"
-                  dataKey={"total"}
-                  name="Listens"
+                  domain={[0, 'dataMax + 5']}
+                  type='number'
+                  dataKey={'total'}
+                  name='Listens'
                 >
                   <Label
-                    value="Number of Listens"
+                    value='Number of Listens'
                     offset={-5}
                     angle={-90}
-                    position="inside"
+                    position='inside'
                   />
                 </YAxis>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray='3 3' />
 
                 <Tooltip
-                  cursor={{ strokeDasharray: "3 3" }}
+                  cursor={{ strokeDasharray: '3 3' }}
                   formatter={(value) => [value, `Listens`]}
                   labelFormatter={(label: number) =>
                     new Date(label).toLocaleDateString()
@@ -231,8 +231,8 @@ const ListenEventsChart = ({ events }: Props) => {
                   active
                 />
                 <Legend
-                  align="center"
-                  verticalAlign="top"
+                  align='center'
+                  verticalAlign='top'
                   height={36}
                   payload={[
                     {
@@ -240,8 +240,8 @@ const ListenEventsChart = ({ events }: Props) => {
                         (acc, l) => acc + l.total,
                         0
                       )})`,
-                      type: "rect",
-                      color: "#8884d8",
+                      type: 'rect',
+                      color: '#8884d8',
                     },
                   ]}
                 />
@@ -254,19 +254,19 @@ const ListenEventsChart = ({ events }: Props) => {
                 </defs> */}
 
                 <Bar
-                  dataKey="total"
-                  fill="#413ea0"
-                  name="Listens"
+                  dataKey='total'
+                  fill='#413ea0'
+                  name='Listens'
                   onClick={handleOnBarClick}
                   maxBarSize={30}
                   strokeWidth={3}
                 />
                 {showLine && (
                   <Line
-                    type="monotone"
-                    dataKey="total"
-                    tooltipType="none"
-                    stroke="#ff7300"
+                    type='monotone'
+                    dataKey='total'
+                    tooltipType='none'
+                    stroke='#ff7300'
                   />
                 )}
               </ComposedChart>
