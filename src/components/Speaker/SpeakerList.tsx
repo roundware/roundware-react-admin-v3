@@ -1,6 +1,6 @@
-import { Edit } from "@mui/icons-material";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import { Edit } from '@mui/icons-material';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import {
   Alert,
   AlertTitle,
@@ -11,11 +11,12 @@ import {
   Stack,
   Tooltip,
   Typography,
-} from "@mui/material";
-import CopyResourceButton from "components/common/CopyResource";
-import { useProjects } from "context/ProjectsContext";
-import { useSpeakers } from "context/SpeakersContext";
-import React from "react";
+} from '@mui/material';
+import CopyResourceButton from 'components/common/CopyResource';
+import DeleteWithBinary from 'components/common/DeleteWithBinary';
+import { useProjects } from 'context/ProjectsContext';
+import { useSpeakers } from 'context/SpeakersContext';
+import React from 'react';
 import {
   BooleanField,
   Datagrid,
@@ -24,8 +25,8 @@ import {
   List,
   TextField,
   useRecordContext,
-} from "react-admin";
-import SpeakerShapesControl from "./SpeakerShapesControl";
+} from 'react-admin';
+import SpeakerShapesControl from './SpeakerShapesControl';
 const SpeakerList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   const {
@@ -40,8 +41,8 @@ const SpeakerList = (): JSX.Element => {
       <Grid
         spacing={3}
         container
-        direction="row"
-        wrap="nowrap"
+        direction='row'
+        wrap='nowrap'
         style={{ marginTop: 28 }}
         component={Paper}
       >
@@ -52,16 +53,16 @@ const SpeakerList = (): JSX.Element => {
           style={{
             flexShrink: 1,
             flexGrow: 0,
-            overflowY: "scroll",
-            overflowX: "visible",
-            width: "100%",
-            height: "80vh",
+            overflowY: 'scroll',
+            overflowX: 'visible',
+            width: '100%',
+            height: '80vh',
           }}
         >
           <Stack spacing={2}>
             {!!speakersWithoutShape.filter((s) => s.isNewlyCreated == false)
               .length && (
-              <Alert severity="warning">
+              <Alert severity='warning'>
                 <AlertTitle>
                   There are some speakers with no shape assigned!
                 </AlertTitle>
@@ -72,21 +73,21 @@ const SpeakerList = (): JSX.Element => {
                     .map((s) => (
                       <Stack
                         spacing={1}
-                        direction={"row"}
+                        direction={'row'}
                         key={s.id}
-                        alignItems="center"
+                        alignItems='center'
                       >
                         <Typography
-                          textTransform={"uppercase"}
-                          variant="subtitle2"
+                          textTransform={'uppercase'}
+                          variant='subtitle2'
                         >
                           Speaker {s.id}: {s.code}
                         </Typography>
                         <Button
                           variant={
-                            s.id == selectedSpeaker ? "contained" : "outlined"
+                            s.id == selectedSpeaker ? 'contained' : 'outlined'
                           }
-                          size="small"
+                          size='small'
                           onClick={() =>
                             setSelectedSpeaker(
                               s.id == selectedSpeaker ? null : s.id
@@ -95,8 +96,8 @@ const SpeakerList = (): JSX.Element => {
                           startIcon={<Edit />}
                         >
                           {selectedSpeaker == s.id
-                            ? "Ready to Draw"
-                            : "Click to Draw"}
+                            ? 'Ready to Draw'
+                            : 'Click to Draw'}
                         </Button>
                       </Stack>
                     ))}
@@ -106,7 +107,7 @@ const SpeakerList = (): JSX.Element => {
 
             {!!speakersWithoutShape.filter((s) => s.isNewlyCreated == true)
               .length && (
-              <Alert severity="info">
+              <Alert severity='info'>
                 <AlertTitle>
                   Finish creating your new speakers by adding a shape on the
                   map.
@@ -117,21 +118,21 @@ const SpeakerList = (): JSX.Element => {
                     .map((s) => (
                       <Stack
                         spacing={1}
-                        direction={"row"}
+                        direction={'row'}
                         key={s.id}
-                        alignItems="center"
+                        alignItems='center'
                       >
                         <Typography
-                          textTransform={"uppercase"}
-                          variant="subtitle2"
+                          textTransform={'uppercase'}
+                          variant='subtitle2'
                         >
                           Speaker {s.id}: {s.code}
                         </Typography>
                         <Button
                           variant={
-                            s.id == selectedSpeaker ? "contained" : "outlined"
+                            s.id == selectedSpeaker ? 'contained' : 'outlined'
                           }
-                          size="small"
+                          size='small'
                           onClick={() =>
                             setSelectedSpeaker(
                               s.id == selectedSpeaker ? null : s.id
@@ -149,21 +150,24 @@ const SpeakerList = (): JSX.Element => {
               </Alert>
             )}
           </Stack>
-          <List title="Speakers" component="div">
-            <Datagrid bulkActionButtons={false} style={{ flexShrink: 1 }}>
+          <List title='Speakers' component='div'>
+            <Datagrid
+              bulkActionButtons={<DeleteWithBinary isBulk />}
+              style={{ flexShrink: 1 }}
+            >
               <SpeakerHighter />
 
-              <TextField source="id" />
-              <BooleanField source="activeyn" label="Active" />
-              <TextField source="code" />
+              <TextField source='id' />
+              <BooleanField source='activeyn' label='Active' />
+              <TextField source='code' />
 
               {/* <TextField source="backupuri" />
       <TextField source="shape.type" />
       <TextField source="boundary.type" /> */}
 
-              <EditButton label="" style={{ margin: 0 }} />
+              <EditButton label='' style={{ margin: 0 }} />
               <CopyResourceButton onSuccess={() => fetchData()} />
-              <DeleteButton label="" />
+              <DeleteWithBinary />
             </Datagrid>
           </List>
         </Grid>
@@ -181,10 +185,10 @@ const SpeakerHighter = () => {
 
   const isSelected = id == selectedSpeaker;
   return (
-    <Tooltip title={isSelected ? "Unselect" : `Select On Map`} placement="left">
+    <Tooltip title={isSelected ? 'Unselect' : `Select On Map`} placement='left'>
       <IconButton
         onClick={() => setSelectedSpeaker(isSelected ? null : Number(id))}
-        size="large"
+        size='large'
       >
         {isSelected ? <LocationOnIcon /> : <LocationOnOutlinedIcon />}
       </IconButton>

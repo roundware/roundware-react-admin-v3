@@ -1,4 +1,5 @@
 import CopyResourceButton from 'components/common/CopyResource';
+import DeleteWithBinary from 'components/common/DeleteWithBinary';
 import { useRoundwareDataProvider } from 'context/DataProviderContext';
 import React, { useLayoutEffect } from 'react';
 import {
@@ -6,7 +7,6 @@ import {
   ChipField,
   Datagrid,
   DateField,
-  DeleteButton,
   EditButton,
   NumberField,
   RaRecord,
@@ -29,7 +29,7 @@ export const AssetDatagrid = (): JSX.Element => {
   }, []);
   return (
     <div>
-      <Datagrid optimized>
+      <Datagrid optimized bulkActionButtons={<DeleteWithBinary isBulk />}>
         <TextField source='id' />
         <BooleanField source='submitted' />
         <AssetPreview />
@@ -90,7 +90,7 @@ export const AssetDatagrid = (): JSX.Element => {
             return a;
           }}
         />
-        <DeleteButton />
+        <DeleteWithBinary />
       </Datagrid>
     </div>
   );
