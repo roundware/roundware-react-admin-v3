@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import CopyResourceButton from 'components/common/CopyResource';
 import DeleteWithBinary from 'components/common/DeleteWithBinary';
 import { useRoundwareDataProvider } from 'context/DataProviderContext';
