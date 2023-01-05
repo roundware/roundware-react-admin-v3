@@ -1,20 +1,21 @@
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import {
   Card,
   CardContent,
   CircularProgress,
   Grid,
   Typography,
-} from "@mui/material";
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
-import { useSpeakers } from "context/SpeakersContext";
-import React, { useEffect } from "react";
-import { mapLibraries } from "utils";
-import SpeakerDrawer from "./SpeakerDrawer";
-import SpeakerPolygonGroup from "./SpeakerPolygon";
+} from '@mui/material';
+import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import PlacesAutoComplete from 'components/common/LocationSelector/PlacesAutoComplete';
+import { useSpeakers } from 'context/SpeakersContext';
+import React, { useEffect, useState } from 'react';
+import { mapLibraries } from 'utils';
+import SpeakerDrawer from './SpeakerDrawer';
+import SpeakerPolygonGroup from './SpeakerPolygon';
 const containerStyle = {
-  width: "100%",
-  height: "60vh",
+  width: '100%',
+  height: '60vh',
 };
 
 // const center = {
@@ -29,7 +30,7 @@ const containerStyle = {
 const SpeakerShapesControl = (): JSX.Element => {
   const { selectedSpeaker, speakers } = useSpeakers();
   const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
+    id: 'google-map-script',
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY!,
     libraries: mapLibraries,
@@ -55,6 +56,7 @@ const SpeakerShapesControl = (): JSX.Element => {
       map.fitBounds(bounds);
       map.panTo(new google.maps.LatLng(0, 0));
       map.setZoom(1);
+
       // map.setOptions({
       //   center: getGoogleMapsCenter(speakers?.filter((s) => s?.shape) || []),
       //   zoom: 1,
@@ -76,40 +78,58 @@ const SpeakerShapesControl = (): JSX.Element => {
     }, 200);
   }, [selectedSpeaker]);
 
+  const [center, setCenter] = useState({ lat: 0, lng: 0 });
+
   return (
     <div
       style={{
         // everytime selectedSpeaker changes scale to 1.02 for 1 second and then back to 1
         transform: `scale(${scaleFactor})`,
-        transition: "transform 0.1s ease-in-out",
+        transition: 'transform 0.1s ease-in-out',
       }}
     >
-      <Card variant="elevation" elevation={4} style={{ margin: 16 }}>
+      <Card variant='elevation' elevation={4} style={{ margin: 16 }}>
         <CardContent>
-          <Grid container direction="column" spacing={2}>
+          <Grid container direction='column' spacing={2}>
+            {/* speaker info */}
             <Grid item>
-              <Typography variant="h5">Shapes</Typography>
+              <Typography variant='h5'>Shapes</Typography>
               <Typography
-                variant="body1"
-                style={{ fontWeight: selectedSpeaker ? "bold" : "normal" }}
+                variant='body1'
+                style={{ fontWeight: selectedSpeaker ? 'bold' : 'normal' }}
               >
                 {selectedSpeaker ? (
                   `Selected Speaker #${selectedSpeaker}`
                 ) : (
-                  <Grid container direction="row" alignItems="center">
-                    Select a Speaker to Edit using{" "}
-                    <LocationOnOutlinedIcon fontSize={"medium"} /> Icon from
+                  <Grid container direction='row' alignItems='center'>
+                    Select a Speaker to Edit using{' '}
+                    <LocationOnOutlinedIcon fontSize={'medium'} /> Icon from
                     List, Or Double Click any shape
                   </Grid>
                 )}
               </Typography>
             </Grid>
+
+            {/* locatoin seelctor */}
+            <Grid item>
+              <PlacesAutoComplete
+                onSelect={(lat, lng) =>
+                  setCenter({
+                    lat,
+                    lng,
+                  })
+                }
+              />
+            </Grid>
+
+            {/* map */}
             <Grid item>
               {isLoaded ? (
                 <GoogleMap
                   mapContainerStyle={containerStyle}
                   onLoad={onLoad}
                   onUnmount={onUnmount}
+                  center={center}
                 >
                   {/* show a drawing manager only when there no shape, */}
                   <SpeakerDrawer />
