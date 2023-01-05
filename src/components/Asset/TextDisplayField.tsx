@@ -11,6 +11,7 @@ import {
 import React, { useState } from 'react';
 import { useRecordContext } from 'react-admin';
 import { useQuery } from 'react-query';
+import Article from '@mui/icons-material/Article';
 const TextDisplayField = () => {
   const [open, Open] = useState(false);
   const record = useRecordContext();
@@ -21,8 +22,9 @@ const TextDisplayField = () => {
         onClick={() => {
           Open(true);
         }}
+        startIcon={<Article />}
       >
-        Dipslay Text Content
+        Dipslay Text
       </Button>
       <Dialog
         open={open}

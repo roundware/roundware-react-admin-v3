@@ -1,13 +1,15 @@
+import { Box } from '@mui/material';
 import CopyResourceButton from 'components/common/CopyResource';
 import DeleteWithBinary from 'components/common/DeleteWithBinary';
 import { useRoundwareDataProvider } from 'context/DataProviderContext';
-import React, { useLayoutEffect } from 'react';
+import React, { FC, useLayoutEffect } from 'react';
 import {
   BooleanField,
   ChipField,
   Datagrid,
   DateField,
   EditButton,
+  FieldProps,
   NumberField,
   RaRecord,
   ReferenceArrayField,
@@ -32,7 +34,8 @@ export const AssetDatagrid = (): JSX.Element => {
       <Datagrid optimized bulkActionButtons={<DeleteWithBinary isBulk />}>
         <TextField source='id' />
         <BooleanField source='submitted' />
-        <AssetPreview />
+
+        <AssetPreview label='Media' />
         <DateField source='created' />
         <NumberField source='latitude' options={{ maximumFractionDigits: 8 }} />
         <NumberField
@@ -98,7 +101,7 @@ export const AssetDatagrid = (): JSX.Element => {
 
 export default AssetDatagrid;
 
-export const AssetPreview = () => {
+export const AssetPreview: FC<FieldProps> = () => {
   const record = useRecordContext();
   if (!record?.file) return <span>No File</span>;
   switch (record.media_type) {
