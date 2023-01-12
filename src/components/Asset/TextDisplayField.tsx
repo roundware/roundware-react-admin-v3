@@ -1,4 +1,6 @@
+import Article from '@mui/icons-material/Article';
 import Download from '@mui/icons-material/Download';
+import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Button,
@@ -8,12 +10,10 @@ import {
   DialogTitle,
   Stack,
 } from '@mui/material';
+import { saveAs } from 'file-saver';
 import React, { useState } from 'react';
 import { useRecordContext } from 'react-admin';
 import { useQuery } from 'react-query';
-import Article from '@mui/icons-material/Article';
-import { LoadingButton } from '@mui/lab';
-import { saveAs } from 'file-saver';
 const TextDisplayField = () => {
   const [open, Open] = useState(false);
   const record = useRecordContext();

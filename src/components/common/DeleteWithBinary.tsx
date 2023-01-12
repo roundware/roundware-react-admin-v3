@@ -16,7 +16,6 @@ import {
   useDelete,
   useDeleteMany,
   useListContext,
-  useListController,
   useNotify,
   useRecordContext,
   useRefresh,
@@ -29,7 +28,6 @@ const DeleteWithBinary = ({ isBulk }: { isBulk?: boolean }) => {
   const record = useRecordContext();
 
   const lc = useListContext();
-  const lcc = useListController();
 
   const resource = useResourceContext();
   const handleDeleteButton = () => {
