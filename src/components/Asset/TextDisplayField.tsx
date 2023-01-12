@@ -26,7 +26,7 @@ const TextDisplayField = () => {
         }}
         startIcon={<Article />}
       >
-        Dipslay Text
+        Display Text
       </Button>
       <Dialog
         open={open}
