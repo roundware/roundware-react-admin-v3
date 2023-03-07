@@ -51,7 +51,7 @@ const DeleteWithBinary = ({ isBulk }: { isBulk?: boolean }) => {
   // delete function
   const handleConfirm = async () => {
     const delFunction = isBulk ? deleteMany : deleteOne;
-    console.log(lc?.selectedIds);
+
     try {
       await delFunction(
         resource,

@@ -30,7 +30,7 @@ const AssetEdit = (): JSX.Element => {
   const dataProvider = useDataProvider();
 
   const transform = async (data: Partial<IAsset>) => {
-    console.log(data.file);
+
     if (!data.file) {
       // wants to remove file
       data.file = null;

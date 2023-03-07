@@ -171,7 +171,7 @@ const GoogleMapsWrapper = (props: { children: React.ReactNode }) => {
     if (data.length != total) setPerPage(total);
   }, [total]);
 
-  console.log(isLoaded, data.length, total);
+
   if (!isLoaded || !data || data.length != total) return <LinearProgress />;
   if (loadError) return <Alert severity="error">{loadError.message}</Alert>;
   return (

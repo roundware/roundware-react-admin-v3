@@ -207,7 +207,7 @@ const UIItemsTreeView = (): JSX.Element => {
 
       /** if its affected  */
       if (typeof newIndex == "number") {
-        console.log(i, i.index, `changed to`, newIndex);
+
         const prom = dataProvider.update(`uiitems`, {
           data: {
             index: newIndex,

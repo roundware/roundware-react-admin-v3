@@ -81,7 +81,7 @@ export const SpeakersProvider = ({
         };
       });
   }, [speakers, newlyCreatedSpeakerIds]);
-  console.log(speakersWithoutShape, newlyCreatedSpeakerIds);
+
   return (
     <SpeakerContext.Provider
       value={{

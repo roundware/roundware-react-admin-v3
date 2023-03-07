@@ -1,18 +1,18 @@
-import { Hearing, RecordVoiceOver, WatchLater } from '@mui/icons-material';
-import { CircularProgress, Grid } from '@mui/material';
-import React from 'react';
-import { GetListResult, RaRecord } from 'react-admin';
-import { ResourceList } from '../../../App';
-import AssetMediaTypesChart from '../../charts/AssetMediaTypesChart';
-import AssetsChart from '../../charts/AssetsChart';
-import BrowsersChart from '../../charts/BrowsersChart';
-import CardWithIcon from './CardWithIcon';
-import ClientTypeChart from '../../charts/ClientTypeChart';
-import ListenEventsChart from '../../charts/ListenEventsChart';
-import SessionsChart from '../../charts/SessionsChart';
-import AssetListensChart from 'components/charts/AssetListensChart';
-import { IAsset } from 'types/asset';
-import { IListenEvent } from 'types/listenEvents';
+import { Hearing, RecordVoiceOver, WatchLater } from "@mui/icons-material";
+import { CircularProgress, Grid } from "@mui/material";
+import AssetListensChart from "components/charts/AssetListensChart";
+import React from "react";
+import { GetListResult, RaRecord } from "react-admin";
+import { IAsset } from "types/asset";
+import { IListenEvent } from "types/listenEvents";
+import { ResourceList } from "../../../App";
+import AssetMediaTypesChart from "../../charts/AssetMediaTypesChart";
+import AssetsChart from "../../charts/AssetsChart";
+import BrowsersChart from "../../charts/BrowsersChart";
+import ClientTypeChart from "../../charts/ClientTypeChart";
+import ListenEventsChart from "../../charts/ListenEventsChart";
+import SessionsChart from "../../charts/SessionsChart";
+import CardWithIcon from "./CardWithIcon";
 interface Props {
   sessions: GetListResult<RaRecord> | null;
   assets: GetListResult<RaRecord> | null;
@@ -29,11 +29,11 @@ const DashboardContent = (props: Props) => {
           <Grid item md={2} xs={6}>
             <CardWithIcon
               icon={Hearing}
-              title='Listens'
+              title="Listens"
               subtitle={
                 listenEvents === null ? `Loading..` : listenEvents?.total || `0`
               }
-              to={ResourceList.includes(`listenevents`) && 'listenevents'}
+              to={ResourceList.includes(`listenevents`) && "listenevents"}
               helperText={ranges[`listenEvents`]}
             />
           </Grid>
@@ -41,9 +41,9 @@ const DashboardContent = (props: Props) => {
           <Grid item md={2} xs={6}>
             <CardWithIcon
               icon={RecordVoiceOver}
-              title='Recordings'
+              title="Recordings"
               subtitle={assets === null ? `Loading..` : assets?.total || `0`}
-              to={ResourceList.includes(`assets`) && 'assets'}
+              to={ResourceList.includes(`assets`) && "assets"}
               helperText={ranges[`assets`]}
             />
           </Grid>
@@ -51,11 +51,11 @@ const DashboardContent = (props: Props) => {
           <Grid item md={2} xs={12}>
             <CardWithIcon
               icon={WatchLater}
-              title='Sessions'
+              title="Sessions"
               subtitle={
                 sessions === null ? `Loading..` : sessions?.total || `0`
               }
-              to={ResourceList.includes(`sessions`) && 'sessions'}
+              to={ResourceList.includes(`sessions`) && "sessions"}
               helperText={ranges[`sessions`]}
             />
           </Grid>

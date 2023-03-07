@@ -170,7 +170,7 @@ export const SpeakerCreate = (): JSX.Element => {
           returnPromise: true,
 
           onSuccess: async (data) => {
-            console.log(`success`);
+
             await fetchData();
             setSelectedSpeaker(parseInt(data.id.toString()));
             success.setTrue();

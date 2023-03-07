@@ -79,11 +79,7 @@ const SpeakerAudioPlayer = ({
           setProgress(p);
         });
 
-        // });
 
-        // wavesurferRef.current.on("loading", (data) => {
-        //   console.log("loading --> ", data);
-        // });
       }
     },
     [src]

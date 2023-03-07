@@ -81,7 +81,7 @@ const ImportView = ({ handleClose }: { handleClose: () => void }) => {
         })
       );
       await Promise.all(promises);
-      console.log(files.map((f) => f.name));
+
       let filesOk = true;
       for (let index = 0; index < jsonData.length; index++) {
         const element = jsonData[index];
@@ -159,7 +159,7 @@ const ImportView = ({ handleClose }: { handleClose: () => void }) => {
           meta: {
             onProgress: (ev: { loaded: number; total: number }) => {
               const newPercent = (ev.loaded / ev.total) * 100;
-              console.log(newPercent);
+
               setAssetProgress((prev) => [
                 ...[...prev].filter((p) => p.index != index),
                 {

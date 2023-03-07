@@ -41,7 +41,7 @@ export const mapLibraries: ["places", "drawing"] = ["places", "drawing"];
 
 export function csvToJSON<T>(csv: string): T[] {
   const lines = csv.split("\r\n");
-  console.log(lines);
+
   const result = [];
 
   const headers = lines[0].split(",");

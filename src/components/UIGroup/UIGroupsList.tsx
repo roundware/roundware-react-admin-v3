@@ -99,8 +99,7 @@ export const UiGroupList = (): JSX.Element => {
 };
 
 const RowActions = (props: DatagridRowProps): JSX.Element => {
-  const record = useRecordContext();
-  console.log(`RowActions`, record);
+
   return (
     <Grid
       container

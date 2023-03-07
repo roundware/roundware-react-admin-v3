@@ -9,6 +9,7 @@ import {
   List,
   NumberInput,
   SelectInput,
+  TextInput,
 } from "react-admin";
 import { Navigate } from "react-router-dom";
 import { useProjects } from "../../context/ProjectsContext";
@@ -60,6 +61,11 @@ export const AssetList = (): JSX.Element => {
           fullWidth
         />,
         <BooleanInput key="submitted" source="submitted" label="Submitted" />,
+        <TextInput
+          label="Description / Filename"
+          key="contains_description|filename"
+          source="contains_description+filename"
+        />,
       ]}
       sort={{
         field: "id",

@@ -15,7 +15,7 @@ const EnvelopeIdSelector = (): JSX.Element => {
     const [envelope_ids, setEnvelope_ids] = useFieldValue<number[] | undefined>(
         `envelope_ids`
     );
-    console.log(envelope_ids);
+
     const [mode, setMode] = useState<`manual` | `createNew`>(
         (Array.isArray(envelope_ids) && envelope_ids.length > 0) ||
             typeof envelope_ids == "number"

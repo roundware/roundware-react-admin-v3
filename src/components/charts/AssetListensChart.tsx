@@ -12,7 +12,7 @@ import {
   Stack,
   TextField,
   TextFieldProps,
-  Typography,
+  Typography
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { subDays } from 'date-fns';
@@ -28,7 +28,7 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis,
+  YAxis
 } from 'recharts';
 import { IAsset } from 'types/asset';
 import { IListenEvent } from 'types/listenEvents';

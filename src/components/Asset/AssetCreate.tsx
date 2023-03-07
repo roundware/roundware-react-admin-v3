@@ -1,9 +1,9 @@
-import React from 'react';
-import EnvelopeIdSelector from 'components/common/EnvelopeIdSelector';
-import FormToolbar from 'components/common/FormToolbar';
-import LocationSelector from 'components/common/LocationSelector';
-import TagIdSelector from 'components/common/TagIdSelector';
-import TranslatableField from 'components/common/TranslatableField';
+import EnvelopeIdSelector from "components/common/EnvelopeIdSelector";
+import FormToolbar from "components/common/FormToolbar";
+import LocationSelector from "components/common/LocationSelector";
+import TagIdSelector from "components/common/TagIdSelector";
+import TranslatableField from "components/common/TranslatableField";
+import React from "react";
 import {
   AutocompleteInput,
   BooleanInput,
@@ -15,18 +15,17 @@ import {
   TextInput,
   useDataProvider,
   useRedirect,
-} from 'react-admin';
-import { handleLocalizedStrings } from 'utils';
-import { useProjects } from '../../context/ProjectsContext';
-import AudioOptions from '../common/AudioOptions';
-import AssetShape from './AssetShape';
+} from "react-admin";
+import { handleLocalizedStrings } from "utils";
+import { useProjects } from "../../context/ProjectsContext";
+import AudioOptions from "../common/AudioOptions";
+import AssetShape from "./AssetShape";
 
 const AssetCreate = (): JSX.Element => {
   const dataProvider = useDataProvider();
   const { selectedProject } = useProjects();
   const redirect = useRedirect();
   const transform = async (data: RaRecord) => {
-    console.log(data.file);
     try {
       // use the file blob as file property
       data.file = data.file.rawFile;
@@ -55,18 +54,18 @@ const AssetCreate = (): JSX.Element => {
         data.description_loc_ids = (
           await handleLocalizedStrings(data.loc_description_admin, dataProvider)
         )
-          .reduce((acc: string, el) => acc.toString() + el.toString() + ',', '')
+          .reduce((acc: string, el) => acc.toString() + el.toString() + ",", "")
           .slice(0, -1);
 
       if (data.loc_alt_text_admin?.length)
         data.alt_text_loc_ids = (
           await handleLocalizedStrings(data.loc_alt_text_admin, dataProvider)
         )
-          .reduce((acc: string, el) => acc.toString() + el.toString() + ',', '')
+          .reduce((acc: string, el) => acc.toString() + el.toString() + ",", "")
           .slice(0, -1);
 
       data.tag_ids = data.tag_ids
-        ?.reduce((acc: string, el: string) => acc + el + ',', '')
+        ?.reduce((acc: string, el: string) => acc + el + ",", "")
         .slice(0, -1);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore it should be optional only in case of create but types say it isn't
@@ -82,7 +81,7 @@ const AssetCreate = (): JSX.Element => {
 
   return (
     <Create
-      title='Create an asset'
+      title="Create an asset"
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       transform={transform}
@@ -92,13 +91,13 @@ const AssetCreate = (): JSX.Element => {
     >
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <SelectInput
-          source='media_type'
+          source="media_type"
           choices={[
-            { id: 'audio', name: 'audio' },
-            { id: 'photo', name: 'photo' },
-            { id: 'text', name: 'text' },
+            { id: "audio", name: "audio" },
+            { id: "photo", name: "photo" },
+            { id: "text", name: "text" },
           ]}
-          defaultValue='audio'
+          defaultValue="audio"
         />
         <AudioOptions />
         <LocationSelector
@@ -106,37 +105,37 @@ const AssetCreate = (): JSX.Element => {
         >
           <AssetShape />
         </LocationSelector>
-        <TextInput multiline source='description' fullWidth minRows={2} />
+        <TextInput multiline source="description" fullWidth minRows={2} />
         {/* <NumberInput source="latitude" />
         <NumberInput source="longitude" /> */}
         {/* <DateTimeInput source="created" />
         <DateTimeInput source="updated" /> */}
-        <BooleanInput source='submitted' />
+        <BooleanInput source="submitted" />
         {/* <NumberInput source="volume" /> */}
 
         <ReferenceInput
-          label='Language'
-          source='language_id'
-          reference='languages'
+          label="Language"
+          source="language_id"
+          reference="languages"
           defaultValue={1}
         >
-          <SelectInput optionText='name' />
+          <SelectInput optionText="name" />
         </ReferenceInput>
-        <TagIdSelector source='tag_ids' multiple label='Tags' />
+        <TagIdSelector source="tag_ids" multiple label="Tags" />
         {/* <NumberInput label="Audio Length(s)" source="audio_length_in_seconds" /> */}
         {/* <Divider /> */}
         <TranslatableField
-          source='loc_description_admin'
-          label='Description Localized'
+          source="loc_description_admin"
+          label="Description Localized"
         />
 
-        <TranslatableField source='loc_alt_text_admin' label='Alt Text' />
-        <ReferenceInput label='User' source='user.id' reference='users'>
+        <TranslatableField source="loc_alt_text_admin" label="Alt Text" />
+        <ReferenceInput label="User" source="user.id" reference="users">
           <AutocompleteInput
             optionText={(r) =>
               `${r.first_name} ${r.last_name} (@${r.username})`
             }
-            label='User'
+            label="User"
             fullWidth
             filterToQuery={(s) => ({
               search_str: s,

@@ -16,7 +16,7 @@ type Props = {
   transform?: (d: Omit<RaRecord, "id">) => Omit<RaRecord, "id">;
 };
 const CopyResourceButton = ({
-  onSuccess = () => console.log(`copied`),
+  onSuccess = () => undefined,
   assignFirst = async () => ({}),
   transform = (a) => a,
 }: Props) => {

@@ -41,12 +41,10 @@ const ProjectRoute = () => {
     );
   }
   if (isCurrentProjectRoute) {
-    console.log(`isCurrentProjectSelected`);
     return <CurrentProjectApp key={3} basename="" />;
   }
 
   if (selectedProject) {
-    console.log(`!selectedButNeedsBaseApp`);
     return (
       <>
         <App key={1} basename={`/project/${selectedProject?.id}`} />
