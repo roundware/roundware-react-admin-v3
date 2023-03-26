@@ -85,6 +85,10 @@ const Dashboard = (): JSX.Element => {
           dataProvider
             .getList(`assets`, {
               ...params,
+              filter: {
+                ...params.filter,
+                submitted: true,
+              },
             })
             .then((data: GetListResult<RaRecord>) => {
               if (!data) return;
