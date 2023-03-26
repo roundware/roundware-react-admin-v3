@@ -1,5 +1,6 @@
 import { Hearing, RecordVoiceOver, WatchLater } from "@mui/icons-material";
 import { CircularProgress, Grid } from "@mui/material";
+import AssetMediaTypesChart from "components/charts/AssetMediaTypesChart";
 import ListenEventsChart from "components/charts/ListenEventsChart";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
 import React from "react";
@@ -115,7 +116,7 @@ const DashboardContent = (props: Props) => {
 
         <Grid container item xs={12} md={12} spacing={3}>
           <Grid item xs={12} md={4} lg={4}>
-            {/* <AssetMediaTypesChart assets={assets} /> */}
+            <AssetMediaTypesChart assets={assets} />
           </Grid>
 
           <Grid container item xs={4} md={4}>
