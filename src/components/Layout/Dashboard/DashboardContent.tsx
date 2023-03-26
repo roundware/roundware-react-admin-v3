@@ -2,10 +2,11 @@ import { Hearing, RecordVoiceOver, WatchLater } from "@mui/icons-material";
 import { CircularProgress, Grid } from "@mui/material";
 import AssetMediaTypesChart from "components/charts/AssetMediaTypesChart";
 import ListenEventsChart from "components/charts/ListenEventsChart";
-import { useRoundwareDataProvider } from "context/DataProviderContext";
+import { useProjects } from "context/ProjectsContext";
 import React from "react";
 import { GetListResult, RaRecord } from "react-admin";
 import { useQuery } from "react-query";
+import { apiFetcher } from "roundwareDataProvider/tokenAuthProvider";
 import { ResourceList } from "../../../App";
 import AssetsChart from "../../charts/AssetsChart";
 import BrowsersChart from "../../charts/BrowsersChart";
@@ -21,17 +22,18 @@ interface Props {
 const DashboardContent = (props: Props) => {
   const { assets, sessions } = props;
 
-  const dataProvider = useRoundwareDataProvider();
-
+  const project = useProjects();
   const assetsCountQuery = useQuery(["assetsCount"], () =>
-    dataProvider.getOne(`assets`, { id: `count` })
+    apiFetcher(
+      `/assets/count?project_id=${project?.selectedProject?.id}&submitted=true`
+    )
   );
 
   const listenEventsCountQuery = useQuery(["listeneventsCount"], () =>
-    dataProvider.getOne(`listenevents`, { id: `count` })
+    apiFetcher(`/listenevents/count?project_id=${project?.selectedProject?.id}`)
   );
   const sessionsCountQuery = useQuery(["sessionsCount"], () =>
-    dataProvider.getOne(`sessions`, { id: `count` })
+    apiFetcher(`/sessions/count?project_id=${project?.selectedProject?.id}`)
   );
 
   return (
@@ -52,7 +54,7 @@ const DashboardContent = (props: Props) => {
                   />
                 ) : (
                   (
-                    listenEventsCountQuery.data?.data as unknown as {
+                    listenEventsCountQuery.data?.json as unknown as {
                       count: number;
                     }
                   )?.count || `0`
@@ -77,7 +79,7 @@ const DashboardContent = (props: Props) => {
                   />
                 ) : (
                   (
-                    assetsCountQuery.data?.data as unknown as {
+                    assetsCountQuery.data?.json as unknown as {
                       count: number;
                     }
                   )?.count || `0`
@@ -102,7 +104,7 @@ const DashboardContent = (props: Props) => {
                   />
                 ) : (
                   (
-                    sessionsCountQuery.data?.data as unknown as {
+                    sessionsCountQuery.data?.json as unknown as {
                       count: number;
                     }
                   )?.count || `0`

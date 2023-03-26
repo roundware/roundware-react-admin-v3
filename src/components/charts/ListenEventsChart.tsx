@@ -86,7 +86,7 @@ const getSanitizedList = (events: RaRecord[]): SanitizedListenEvent[] => [
 ];
 
 type DateRange = [Date, Date];
-
+const PAGE_SIZE = 100;
 async function fetchListenEvents({
   pageParam = 1,
   startDate,
@@ -99,7 +99,7 @@ async function fetchListenEvents({
   projectId: number;
 }) {
   const res = await apiFetcher(
-    `/listenevents?page=${pageParam}&paginate=true&page_size=100&start_time__gte=${startDate.toISOString()}&start_time__lte=${endDate.toISOString()}&admin=1&project_id=${projectId}`
+    `/listenevents?page=${pageParam}&paginate=true&page_size=${PAGE_SIZE}&start_time__gte=${startDate.toISOString()}&start_time__lte=${endDate.toISOString()}&admin=1&project_id=${projectId}`
   );
 
   return res?.json as {
@@ -134,14 +134,14 @@ const ListenEventsChart = () => {
     const total = res.count;
 
     // do we need to fetch more?
-    if (res.results.length <= total) {
+    if (res.results.length == total) {
       // no;
       return res.results;
     }
 
     // yes;
     const totalRemainingToFetch = total - res.results.length;
-    const pagesToFetch = Math.floor(totalRemainingToFetch / 100);
+    const pagesToFetch = Math.ceil(totalRemainingToFetch / PAGE_SIZE);
 
     const promises = [];
 
@@ -152,7 +152,9 @@ const ListenEventsChart = () => {
           startDate: start,
           endDate: end,
           projectId: project?.selectedProject?.id || 0,
-        })
+        }).catch(() => ({
+          results: [],
+        }))
       );
     }
 
