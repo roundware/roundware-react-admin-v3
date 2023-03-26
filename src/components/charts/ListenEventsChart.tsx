@@ -30,7 +30,6 @@ import { ResourceList } from "App";
 import DateRangeSlider from "components/charts/DateRangeSlider";
 import { useProjects } from "context/ProjectsContext";
 import useBoolean from "hooks/useBoolean";
-import { uniqBy } from "lodash";
 import { apiFetcher } from "roundwareDataProvider/tokenAuthProvider";
 import { IListenEvent } from "types/listenEvents";
 import { CenteredLoading } from "../Layout/Dashboard";
@@ -409,9 +408,7 @@ const ListenEventsChart = () => {
                       subDays(range[0], valueDays),
                       range[0],
                     ]).then((data) => {
-                      setAllFetchedData((prev) =>
-                        uniqBy([...prev, ...data], (l) => l.id)
-                      );
+                      setAllFetchedData((prev) => [...prev, ...data]);
                       setRange([subDays(range[0], valueDays), range[1]]);
                       setFetchingMoreValue("");
                     });
