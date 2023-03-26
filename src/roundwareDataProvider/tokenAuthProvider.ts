@@ -1,110 +1,118 @@
 import { AuthProvider, fetchUtils, Options, RaRecord } from "ra-core";
 
 function tokenAuthProvider(options: Options = {}): AuthProvider {
-    const opts = {
-        obtainAuthTokenUrl: "/api-token-auth/",
-        ...options,
-    };
-    return {
-        login: async ({ username, password }) => {
-            const request = new Request(opts.obtainAuthTokenUrl, {
-                method: "POST",
-                body: JSON.stringify({ username, password }),
-                headers: new Headers({ "Content-Type": "application/json" }),
-            });
-            const response = await fetch(request);
-            if (response.ok) {
-                localStorage.setItem("token", (await response.json()).token);
-                return;
-            }
-            if (response.headers.get("content-type") !== "application/json") {
-                throw new Error(response.statusText);
-            }
+  const opts = {
+    obtainAuthTokenUrl: "/api-token-auth/",
+    ...options,
+  };
+  return {
+    login: async ({ username, password }) => {
+      const request = new Request(opts.obtainAuthTokenUrl, {
+        method: "POST",
+        body: JSON.stringify({ username, password }),
+        headers: new Headers({ "Content-Type": "application/json" }),
+      });
+      const response = await fetch(request);
+      if (response.ok) {
+        localStorage.setItem("token", (await response.json()).token);
+        return;
+      }
+      if (response.headers.get("content-type") !== "application/json") {
+        throw new Error(response.statusText);
+      }
 
-            const json = await response.json();
-            const error = json.non_field_errors;
-            throw new Error(error || response.statusText);
-        },
-        logout: () => {
-            localStorage.removeItem("token");
-            return Promise.resolve();
-        },
-        checkAuth: () =>
-            localStorage.getItem("token")
-                ? Promise.resolve()
-                : Promise.reject(),
-        checkError: (error) => {
-            const status = error.status;
-            if (status === 401 || status === 403) {
-                localStorage.removeItem("token");
-                return Promise.reject();
-            }
-            return Promise.resolve();
-        },
-        getPermissions: () => {
-            return Promise.resolve();
-        },
-    };
+      const json = await response.json();
+      const error = json.non_field_errors;
+      throw new Error(error || response.statusText);
+    },
+    logout: () => {
+      localStorage.removeItem("token");
+      return Promise.resolve();
+    },
+    checkAuth: () =>
+      localStorage.getItem("token") ? Promise.resolve() : Promise.reject(),
+    checkError: (error) => {
+      const status = error.status;
+      if (status === 401 || status === 403) {
+        localStorage.removeItem("token");
+        return Promise.reject();
+      }
+      return Promise.resolve();
+    },
+    getPermissions: () => {
+      return Promise.resolve();
+    },
+  };
 }
 
 export function createOptionsFromToken() {
-    const token = localStorage.getItem("token");
-    if (!token) {
-        return {};
-    }
-    return {
-        user: {
-            authenticated: true,
-            token: "Token " + token,
-        },
-    };
+  const token = localStorage.getItem("token");
+  if (!token) {
+    return {};
+  }
+  return {
+    user: {
+      authenticated: true,
+      token: "Token " + token,
+    },
+  };
 }
 
 export function fetchJsonWithAuthToken(url: string, options: object) {
-    return fetchUtils.fetchJson(
-        url,
-        Object.assign(createOptionsFromToken(), options)
-    );
+  return fetchUtils.fetchJson(
+    url,
+    Object.assign(createOptionsFromToken(), options)
+  );
 }
 
 export function XMLHttpRequestWithAuthToken(
-    uri: string,
-    options: Options,
-    onprogress:
-        | ((this: XMLHttpRequest, ev: ProgressEvent<EventTarget>) => void)
-        | null
+  uri: string,
+  options: Options,
+  onprogress:
+    | ((this: XMLHttpRequest, ev: ProgressEvent<EventTarget>) => void)
+    | null
 ): Promise<{
-    json: RaRecord;
+  json: RaRecord;
 }> {
-    options = { ...options, ...createOptionsFromToken() };
-    return new Promise((resolve) => {
-        const request = new XMLHttpRequest();
-        request.open(options.method || "GET", uri);
-        Object.keys(options.headers || {}).forEach((h) =>
-            request.setRequestHeader(
-                h,
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                options?.headers?.[h]
-            )
-        );
+  options = { ...options, ...createOptionsFromToken() };
+  return new Promise((resolve) => {
+    const request = new XMLHttpRequest();
+    request.open(options.method || "GET", uri);
+    Object.keys(options.headers || {}).forEach((h) =>
+      request.setRequestHeader(
+        h,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        options?.headers?.[h]
+      )
+    );
 
-        if (options.user?.authenticated) {
-            request.setRequestHeader(
-                `Authorization`,
-                options.user.token as string
-            );
-        }
+    if (options.user?.authenticated) {
+      request.setRequestHeader(`Authorization`, options.user.token as string);
+    }
 
-        request.onload = () => {
-            resolve({
-                json: JSON.parse(request.response),
-            });
-        };
+    request.onload = () => {
+      resolve({
+        json: JSON.parse(request.response),
+      });
+    };
 
-        if (onprogress) request.upload.onprogress = onprogress;
-        request.send(options.body as FormData);
-    });
+    if (onprogress) request.upload.onprogress = onprogress;
+    request.send(options.body as FormData);
+  });
+}
+
+export function fetcher(url: string, options: Options = {}) {
+  options.user = createOptionsFromToken().user;
+  return fetchUtils.fetchJson(url, options);
+}
+
+export function apiFetcher(url: string, options: Options = {}) {
+  options.user = createOptionsFromToken().user;
+  return fetchUtils.fetchJson(
+    `${process.env.REACT_APP_SERVER_URL}/api/2` + url,
+    options
+  );
 }
 
 export default tokenAuthProvider;

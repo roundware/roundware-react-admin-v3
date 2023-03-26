@@ -28,11 +28,6 @@ import {
 } from "ra-core";
 import { XMLHttpRequestWithAuthToken } from "./tokenAuthProvider";
 
-export {
-  default as tokenAuthProvider,
-  fetchJsonWithAuthToken,
-} from "./tokenAuthProvider";
-
 const getPaginationQuery = (pagination: PaginationPayload) => {
   if (pagination.page === 0) return {};
   return {
@@ -86,7 +81,6 @@ export class RoundwareDataProvider implements DataProvider {
 
   getResource(resource: string, projectId: number = this.currentProjectId) {
     const resources = this.cachedProjectData.get(projectId);
-
     if (!resources) return;
     return resources.get(resource);
   }

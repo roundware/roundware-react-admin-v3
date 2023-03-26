@@ -1,40 +1,64 @@
 import { Hearing, RecordVoiceOver, WatchLater } from "@mui/icons-material";
 import { CircularProgress, Grid } from "@mui/material";
-import AssetListensChart from "components/charts/AssetListensChart";
+import ListenEventsChart from "components/charts/ListenEventsChart";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
 import React from "react";
 import { GetListResult, RaRecord } from "react-admin";
-import { IAsset } from "types/asset";
-import { IListenEvent } from "types/listenEvents";
+import { useQuery } from "react-query";
 import { ResourceList } from "../../../App";
-import AssetMediaTypesChart from "../../charts/AssetMediaTypesChart";
 import AssetsChart from "../../charts/AssetsChart";
 import BrowsersChart from "../../charts/BrowsersChart";
 import ClientTypeChart from "../../charts/ClientTypeChart";
-import ListenEventsChart from "../../charts/ListenEventsChart";
 import SessionsChart from "../../charts/SessionsChart";
 import CardWithIcon from "./CardWithIcon";
 interface Props {
   sessions: GetListResult<RaRecord> | null;
   assets: GetListResult<RaRecord> | null;
-  listenEvents: GetListResult<RaRecord> | null;
   ranges: { [resrouce: string]: string };
 }
 
 const DashboardContent = (props: Props) => {
-  const { ranges, assets, listenEvents, sessions } = props;
+  const { assets, sessions } = props;
+
+  const dataProvider = useRoundwareDataProvider();
+
+  const assetsCountQuery = useQuery(["assetsCount"], () =>
+    dataProvider.getOne(`assets`, { id: `count` })
+  );
+
+  const listenEventsCountQuery = useQuery(["listeneventsCount"], () =>
+    dataProvider.getOne(`listenevents`, { id: `count` })
+  );
+  const sessionsCountQuery = useQuery(["sessionsCount"], () =>
+    dataProvider.getOne(`sessions`, { id: `count` })
+  );
+
   return (
     <div>
-      <Grid container spacing={4}>
+      <Grid container spacing={4} mb={10}>
         <Grid container item spacing={3} md={12} xs={12}>
           <Grid item md={2} xs={6}>
             <CardWithIcon
               icon={Hearing}
               title="Listens"
               subtitle={
-                listenEvents === null ? `Loading..` : listenEvents?.total || `0`
+                listenEventsCountQuery.isLoading ? (
+                  <CircularProgress
+                    size={20}
+                    sx={{
+                      margin: "0 auto",
+                    }}
+                  />
+                ) : (
+                  (
+                    listenEventsCountQuery.data?.data as unknown as {
+                      count: number;
+                    }
+                  )?.count || `0`
+                )
               }
               to={ResourceList.includes(`listenevents`) && "listenevents"}
-              helperText={ranges[`listenEvents`]}
+              helperText={`Total`}
             />
           </Grid>
 
@@ -42,9 +66,24 @@ const DashboardContent = (props: Props) => {
             <CardWithIcon
               icon={RecordVoiceOver}
               title="Recordings"
-              subtitle={assets === null ? `Loading..` : assets?.total || `0`}
+              subtitle={
+                assetsCountQuery.isLoading ? (
+                  <CircularProgress
+                    size={20}
+                    sx={{
+                      margin: "0 auto",
+                    }}
+                  />
+                ) : (
+                  (
+                    assetsCountQuery.data?.data as unknown as {
+                      count: number;
+                    }
+                  )?.count || `0`
+                )
+              }
               to={ResourceList.includes(`assets`) && "assets"}
-              helperText={ranges[`assets`]}
+              helperText={`Total`}
             />
           </Grid>
 
@@ -53,17 +92,30 @@ const DashboardContent = (props: Props) => {
               icon={WatchLater}
               title="Sessions"
               subtitle={
-                sessions === null ? `Loading..` : sessions?.total || `0`
+                sessionsCountQuery.isLoading ? (
+                  <CircularProgress
+                    size={20}
+                    sx={{
+                      margin: "0 auto",
+                    }}
+                  />
+                ) : (
+                  (
+                    sessionsCountQuery.data?.data as unknown as {
+                      count: number;
+                    }
+                  )?.count || `0`
+                )
               }
               to={ResourceList.includes(`sessions`) && "sessions"}
-              helperText={ranges[`sessions`]}
+              helperText={`Total`}
             />
           </Grid>
         </Grid>
 
         <Grid container item xs={12} md={12} spacing={3}>
           <Grid item xs={12} md={4} lg={4}>
-            <AssetMediaTypesChart assets={assets} />
+            {/* <AssetMediaTypesChart assets={assets} /> */}
           </Grid>
 
           <Grid container item xs={4} md={4}>
@@ -83,10 +135,10 @@ const DashboardContent = (props: Props) => {
           </Grid>
 
           <Grid item xs={12} md={12} lg={12}>
-            <ListenEventsChart events={listenEvents} />
+            <ListenEventsChart />
           </Grid>
 
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             {assets && listenEvents ? (
               <AssetListensChart
                 assets={assets as GetListResult<IAsset>}
@@ -95,7 +147,7 @@ const DashboardContent = (props: Props) => {
             ) : (
               <CircularProgress />
             )}
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
     </div>

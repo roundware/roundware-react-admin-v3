@@ -8,7 +8,7 @@ interface Props {
   icon: FC<any>;
   to?: string | boolean;
   title?: string;
-  subtitle?: string | number;
+  subtitle?: string | number | React.ReactNode;
   helperText?: string;
   children?: ReactNode;
   bgColor?: string;
@@ -40,15 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const CardWithIcon = (props: Props): JSX.Element => {
-  const {
-    icon,
-    title,
-    subtitle,
-    to,
-    children,
-
-    helperText,
-  } = props;
+  const { icon, title, subtitle, to, children, helperText } = props;
   const classes = useStyles(props);
 
   const redirect = useRedirect();

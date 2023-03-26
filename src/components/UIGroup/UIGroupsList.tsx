@@ -9,7 +9,6 @@ import {
   RadioButtonGroupInput,
   ReferenceField,
   TextField,
-  useRecordContext,
 } from "react-admin";
 import { IUIGroup } from "types/uiGroups";
 import AddCommonItem from "./AddCommonItem";
@@ -99,7 +98,6 @@ export const UiGroupList = (): JSX.Element => {
 };
 
 const RowActions = (props: DatagridRowProps): JSX.Element => {
-
   return (
     <Grid
       container

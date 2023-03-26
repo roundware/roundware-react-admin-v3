@@ -1,7 +1,5 @@
-import { Box, CircularProgress, Grid, Theme } from "@mui/material";
+import { Box, CircularProgress, Grid, Skeleton, Theme } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
-import { Skeleton } from "@mui/material";
-import subDays from "date-fns/fp/subDays/index.js";
 import { GetListParams } from "ra-core";
 import React, { useCallback, useEffect, useState } from "react";
 import {
@@ -32,8 +30,7 @@ const Dashboard = (): JSX.Element => {
   const [loading, setLoading] = useState(true);
 
   const [session, setSession] = useState<GetListResult<RaRecord> | null>(null);
-  const [listenEvents, setListenEvents] =
-    useState<GetListResult<RaRecord> | null>(null);
+
   const [assets, setAssets] = useState<GetListResult<RaRecord> | null>(null);
 
   const dataProvider = useDataProvider();
@@ -60,7 +57,7 @@ const Dashboard = (): JSX.Element => {
         setLoading(true);
         setSession(null);
         setResourcesRanges({});
-        setListenEvents(null);
+
         setAssets(null);
 
         const params: GetListParams = {
@@ -83,27 +80,6 @@ const Dashboard = (): JSX.Element => {
             .then((data: GetListResult<RaRecord>) => {
               setResourcesRanges((prev) => ({ ...prev, sessions: `Total` }));
               setSession(data);
-            }),
-
-          dataProvider
-            .getList(`listenevents`, {
-              ...params,
-              filter: {
-                ...params.filter,
-                start_time__gte: subDays(30, new Date()).toISOString(),
-              },
-            })
-            .then((data: GetListResult<RaRecord>) => {
-              if (!data) return;
-              setListenEvents((prev) => ({
-                ...prev,
-                data: [...(prev?.data || []), ...(data?.data || [])],
-                total: [...(prev?.data || []), ...(data?.data || [])].length,
-              }));
-              setResourcesRanges((prev) => ({
-                ...prev,
-                listenEvents: `Total`,
-              }));
             }),
 
           dataProvider
@@ -159,7 +135,6 @@ const Dashboard = (): JSX.Element => {
           sessions={session}
           // users={users}
           assets={assets}
-          listenEvents={listenEvents}
           ranges={resourcesRanges}
         />
       )}

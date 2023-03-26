@@ -12,6 +12,9 @@ const adminTheme = createTheme({
   shape: {
     borderRadius: 8,
   },
+  typography: {
+    fontFamily: "'Roboto', sans-serif",
+  },
 });
 
 export default adminTheme;
