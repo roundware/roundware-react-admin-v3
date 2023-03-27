@@ -57,7 +57,7 @@ const DashboardContent = (props: Props) => {
                     listenEventsCountQuery.data?.json as unknown as {
                       count: number;
                     }
-                  )?.count || `0`
+                  )?.count?.toLocaleString() || `0`
                 )
               }
               to={ResourceList.includes(`listenevents`) && "listenevents"}
@@ -82,7 +82,7 @@ const DashboardContent = (props: Props) => {
                     assetsCountQuery.data?.json as unknown as {
                       count: number;
                     }
-                  )?.count || `0`
+                  )?.count?.toLocaleString() || `0`
                 )
               }
               to={ResourceList.includes(`assets`) && "assets"}
@@ -107,7 +107,7 @@ const DashboardContent = (props: Props) => {
                     sessionsCountQuery.data?.json as unknown as {
                       count: number;
                     }
-                  )?.count || `0`
+                  )?.count?.toLocaleString() || `0`
                 )
               }
               to={ResourceList.includes(`sessions`) && "sessions"}

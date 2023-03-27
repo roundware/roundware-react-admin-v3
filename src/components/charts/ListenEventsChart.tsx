@@ -3,7 +3,9 @@ import {
   CardContent,
   CardHeader,
   Checkbox,
+  Collapse,
   FormControlLabel,
+  LinearProgress,
   Stack,
   Toolbar,
   Typography,
@@ -85,20 +87,24 @@ const getSanitizedList = (events: RaRecord[]): SanitizedListenEvent[] => [
 ];
 
 type DateRange = [Date, Date];
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 500;
 async function fetchListenEvents({
   pageParam = 1,
   startDate,
   endDate,
   projectId,
+  pageSize,
 }: {
   pageParam?: number;
   startDate: Date;
   endDate: Date;
   projectId: number;
+  pageSize?: number;
 }) {
   const res = await apiFetcher(
-    `/listenevents?page=${pageParam}&paginate=true&page_size=${PAGE_SIZE}&start_time__gte=${startDate.toISOString()}&start_time__lte=${endDate.toISOString()}&admin=1&project_id=${projectId}`
+    `/listenevents?page=${pageParam}&paginate=true&page_size=${
+      pageSize || PAGE_SIZE
+    }&start_time__gte=${startDate.toISOString()}&start_time__lte=${endDate.toISOString()}&admin=1&project_id=${projectId}`
   );
 
   return res?.json as {
@@ -117,7 +123,10 @@ const ListenEventsChart = () => {
   const [range, setRange] = useState(INITIAL_RANGE);
   const [allFetchedData, setAllFetchedData] = useState([] as IListenEvent[]);
 
+  const [percentage, setPercentage] = useState(0);
+
   async function fetchForRange(inputRange: DateRange) {
+    setPercentage(0);
     // determine extra range to fetch from backward;
     const start = inputRange[0];
     const end = inputRange[1];
@@ -141,7 +150,7 @@ const ListenEventsChart = () => {
     // yes;
     const totalRemainingToFetch = total - res.results.length;
     const pagesToFetch = Math.ceil(totalRemainingToFetch / PAGE_SIZE);
-
+    setPercentage((1 / (pagesToFetch + 1)) * 100);
     const promises = [];
 
     for (let i = 0; i <= pagesToFetch; i++) {
@@ -151,9 +160,17 @@ const ListenEventsChart = () => {
           startDate: start,
           endDate: end,
           projectId: project?.selectedProject?.id || 0,
-        }).catch(() => ({
-          results: [],
-        }))
+        })
+          .catch(() => ({
+            results: [],
+          }))
+          .finally(() => {
+            setPercentage((prev) => {
+              const newPercentage = prev + (1 / (pagesToFetch + 1)) * 100;
+              if (newPercentage > 100) return 100;
+              return newPercentage;
+            });
+          })
       );
     }
 
@@ -398,6 +415,10 @@ const ListenEventsChart = () => {
                   valueDays: 180,
                   label: "6 Months",
                 },
+                {
+                  valueDays: 365,
+                  label: "1 Year",
+                },
               ].map(({ valueDays, label }) => (
                 <LoadingButton
                   startIcon={<History />}
@@ -419,6 +440,26 @@ const ListenEventsChart = () => {
                 </LoadingButton>
               ))}
             </Stack>
+
+            <Collapse in={fetchingMoreValue !== ""}>
+              <Stack
+                width="500px"
+                margin="0 auto"
+                justifyContent={"center"}
+                alignItems={"center"}
+              >
+                <Typography variant="subtitle2" align="center">
+                  Progress {percentage.toFixed(2)}%
+                </Typography>
+                <LinearProgress
+                  variant="determinate"
+                  sx={{
+                    width: "100%",
+                  }}
+                  value={percentage}
+                />
+              </Stack>
+            </Collapse>
           </Stack>
         </Stack>
 
