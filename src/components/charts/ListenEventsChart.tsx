@@ -420,10 +420,6 @@ const ListenEventsChart = () => {
                   valueDays: 180,
                   label: "6 Months",
                 },
-                {
-                  valueDays: 365,
-                  label: "1 Year",
-                },
               ].map(({ valueDays, label }) => (
                 <LoadingButton
                   startIcon={<History />}
