@@ -139,6 +139,8 @@ const ListenEventsChart = () => {
       projectId: project?.selectedProject?.id || 0,
     });
 
+    setAllFetchedData((prev) => [...prev, ...res.results]);
+
     const total = res.count;
 
     // do we need to fetch more?
@@ -151,6 +153,7 @@ const ListenEventsChart = () => {
     const totalRemainingToFetch = total - res.results.length;
     const pagesToFetch = Math.ceil(totalRemainingToFetch / PAGE_SIZE);
     setPercentage((1 / (pagesToFetch + 1)) * 100);
+
     const promises = [];
 
     for (let i = 0; i <= pagesToFetch; i++) {
@@ -161,6 +164,11 @@ const ListenEventsChart = () => {
           endDate: end,
           projectId: project?.selectedProject?.id || 0,
         })
+          .then((res) => {
+            if (res?.results?.length) {
+              setAllFetchedData((prev) => [...prev, ...res.results]);
+            }
+          })
           .catch(() => ({
             results: [],
           }))
@@ -173,10 +181,7 @@ const ListenEventsChart = () => {
           })
       );
     }
-
-    const allResults = await Promise.all(promises);
-
-    return [...res.results, ...allResults.map((s) => s.results).flat()];
+    await Promise.all(promises);
   }
 
   const loading = useBoolean(false);
@@ -185,8 +190,8 @@ const ListenEventsChart = () => {
 
   useEffect(() => {
     loading.setTrue();
-    fetchForRange(INITIAL_RANGE).then((data) => {
-      setAllFetchedData(data);
+    fetchForRange(INITIAL_RANGE).then(() => {
+      // setAllFetchedData(data);
       loading.setFalse();
     });
   }, []);
@@ -428,8 +433,7 @@ const ListenEventsChart = () => {
                     fetchForRange([
                       subDays(range[0], valueDays),
                       range[0],
-                    ]).then((data) => {
-                      setAllFetchedData((prev) => [...prev, ...data]);
+                    ]).then(() => {
                       setRange([subDays(range[0], valueDays), range[1]]);
                       setFetchingMoreValue("");
                     });
