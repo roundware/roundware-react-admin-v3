@@ -1,10 +1,7 @@
-import History from "@mui/icons-material/History";
-import { LoadingButton } from "@mui/lab";
 import {
   Card,
   CardContent,
   CardHeader,
-  Stack,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -12,7 +9,7 @@ import { ResourceList } from "App";
 import { useChartsData } from "components/charts/ChartsData";
 import DateRangeSlider from "components/charts/DateRangeSlider";
 import { useProjects } from "context/ProjectsContext";
-import { addDays, subDays } from "date-fns";
+import { addDays } from "date-fns";
 import useBoolean from "hooks/useBoolean";
 import React, { useEffect, useMemo, useState } from "react";
 import { RaRecord, useRedirect } from "react-admin";
@@ -88,7 +85,7 @@ async function fetchSessions({
 const SessionsChart = () => {
   const {
     sessionsAllFetchedRange,
-    setSessionsAllFetchedRange,
+    // setSessionsAllFetchedRange,
     sessions,
     setSessions,
   } = useChartsData();
@@ -116,7 +113,7 @@ const SessionsChart = () => {
 
   const loading = useBoolean(false);
 
-  const [fetchingMoreValue, setFetchingMoreValue] = useState("");
+  // const [fetchingMoreValue, setFetchingMoreValue] = useState("");
 
   useEffect(() => {
     loading.setTrue();
@@ -259,7 +256,7 @@ const SessionsChart = () => {
             </ResponsiveContainer>
           </div>
         )}
-        <Stack spacing={2} justifyContent="center">
+        {/* <Stack spacing={2} justifyContent="center">
           <Stack mt={4}>
             <Typography
               variant="subtitle2"
@@ -306,7 +303,7 @@ const SessionsChart = () => {
               ))}
             </Stack>
           </Stack>
-        </Stack>
+        </Stack> */}
         {!!sessions?.length && (
           <DateRangeSlider
             value={viewRange}
