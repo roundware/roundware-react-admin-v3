@@ -2,9 +2,7 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Checkbox,
   Collapse,
-  FormControlLabel,
   LinearProgress,
   Stack,
   Toolbar,
@@ -19,7 +17,6 @@ import {
   ComposedChart,
   Label,
   Legend,
-  Line,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -211,8 +208,6 @@ const ListenEventsChart = () => {
     );
   }, [perDateData, viewRange]);
 
-  const showLine = useBoolean();
-
   const redirect = useRedirect();
   const handleOnBarClick = (data: { date: number }) => {
     if (ResourceList.includes(`listenevents`))
@@ -235,15 +230,6 @@ const ListenEventsChart = () => {
             </Typography>
 
             <div>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    value={showLine.value}
-                    onChange={(e) => showLine.setValue(e.target.checked)}
-                  />
-                }
-                label="Show Line"
-              />
               {/* <FormControl style={{ width: 150 }}>
                 <InputLabel>Range</InputLabel>
                 <Select
@@ -374,14 +360,6 @@ const ListenEventsChart = () => {
                   maxBarSize={30}
                   strokeWidth={3}
                 />
-                {showLine.value && (
-                  <Line
-                    type="monotone"
-                    dataKey="total"
-                    tooltipType="none"
-                    stroke="#ff7300"
-                  />
-                )}
               </ComposedChart>
             </ResponsiveContainer>
           </div>

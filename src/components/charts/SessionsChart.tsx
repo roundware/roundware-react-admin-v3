@@ -4,8 +4,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Checkbox,
-  FormControlLabel,
   Stack,
   Toolbar,
   Typography,
@@ -24,7 +22,6 @@ import {
   ComposedChart,
   Label,
   Legend,
-  Line,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -154,8 +151,6 @@ const SessionsChart = () => {
     );
   }, [perDateData, viewRange]);
 
-  const showLine = useBoolean();
-
   const redirect = useRedirect();
   const handleOnBarClick = (data: { date: number }) => {
     if (ResourceList.includes(`listenevents`))
@@ -179,15 +174,6 @@ const SessionsChart = () => {
               </Typography>
             </Toolbar>
             <Toolbar style={{ paddingBottom: 0 }}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    onChange={(e) => showLine.setValue(e.target.checked)}
-                    value={showLine.value}
-                  />
-                }
-                label="Show Line"
-              />
               {/* 
               <FormControlLabel
                 control={
@@ -269,14 +255,6 @@ const SessionsChart = () => {
                   onClick={handleOnBarClick}
                   maxBarSize={50}
                 />
-                {showLine && (
-                  <Line
-                    type="monotone"
-                    dataKey="total"
-                    tooltipType="none"
-                    stroke="#ff7300"
-                  />
-                )}
               </ComposedChart>
             </ResponsiveContainer>
           </div>

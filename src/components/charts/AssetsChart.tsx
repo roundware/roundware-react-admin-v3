@@ -6,9 +6,7 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Checkbox,
   Collapse,
-  FormControlLabel,
   LinearProgress,
   Stack,
   Toolbar,
@@ -29,7 +27,6 @@ import {
   ComposedChart,
   Label,
   Legend,
-  Line,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -253,8 +250,6 @@ const AssetsChart = (): JSX.Element => {
     );
   }, [perDateData, viewRange]);
 
-  const showLine = useBoolean();
-
   const redirect = useRedirect();
   const handleOnBarClick = (data: { date: number }) => {
     if (ResourceList.includes(`assets`))
@@ -292,31 +287,6 @@ const AssetsChart = (): JSX.Element => {
               <Typography variant="h5" style={{ flexGrow: 1 }}>
                 Assets
               </Typography>
-            </Toolbar>
-            <Toolbar>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    onChange={(e) => showLine.setValue(e.target.checked)}
-                    checked={showLine.value}
-                  />
-                }
-                label="Show Line"
-              />
-              {/* <div>
-                <ResponsiveContainer>
-                  <Legend
-                    align="right"
-                    verticalAlign="top"
-                    payload={mediaTypes?.map((m, i) => ({
-                      value: m + ` (${totals[m]})`,
-                      id: `ID${i}`,
-                      type: `rect`,
-                      color: colors[i],
-                    }))}
-                  />
-                </ResponsiveContainer>
-              </div> */}
             </Toolbar>
           </>
         }
@@ -396,20 +366,6 @@ const AssetsChart = (): JSX.Element => {
                   }
                   active
                 />
-
-                {showLine && (
-                  <>
-                    <Line
-                      type="monotone"
-                      dataKey={(e) => {
-                        return e.audio + e.text + e.photo;
-                      }}
-                      tooltipType="none"
-                      stroke="#ff7300"
-                      name="Total"
-                    />
-                  </>
-                )}
               </ComposedChart>
             </ResponsiveContainer>
           </div>
