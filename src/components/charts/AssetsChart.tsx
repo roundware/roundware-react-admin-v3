@@ -285,7 +285,7 @@ const AssetsChart = (): JSX.Element => {
           <>
             <Toolbar>
               <Typography variant="h5" style={{ flexGrow: 1 }}>
-                Assets
+                Asset Data
               </Typography>
             </Toolbar>
           </>
