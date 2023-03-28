@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Box, CardHeader, Slider, Typography } from "@mui/material";
+import { Box, Slider, Toolbar, Typography } from "@mui/material";
 import { capitalize, uniqBy } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import { useRedirect } from "react-admin";
@@ -58,16 +58,11 @@ const AssetListensChart = ({ listenEvents, viewRange }: Props): JSX.Element => {
 
   return (
     <>
-      <CardHeader
-        title={
-          <>
-            <Typography variant="h5" style={{ flexGrow: 1 }}>
-              Asset Listens
-            </Typography>
-          </>
-        }
-      />
-
+      <Toolbar>
+        <Typography variant="body2" color="textSecondary">
+          Listens by Asset
+        </Typography>
+      </Toolbar>
       {!listenEvents.length ? (
         <CenteredLoading />
       ) : (

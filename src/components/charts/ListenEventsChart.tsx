@@ -226,7 +226,7 @@ const ListenEventsChart = () => {
         title={
           <Toolbar>
             <Typography variant="h5" style={{ flexGrow: 1 }}>
-              Total Listens by Date
+              Asset Listening Data
             </Typography>
 
             <div>
@@ -245,6 +245,13 @@ const ListenEventsChart = () => {
                 </Select>
               </FormControl> */}
             </div>
+          </Toolbar>
+        }
+        subheader={
+          <Toolbar>
+            <Typography variant="body2" color="textSecondary">
+              Total listens by Date
+            </Typography>
           </Toolbar>
         }
       />
@@ -365,6 +372,11 @@ const ListenEventsChart = () => {
           </div>
         )}
 
+        <AssetListensChart
+          listenEvents={allFetchedData}
+          viewRange={viewRange}
+        />
+
         <Stack spacing={2} justifyContent="center">
           <Stack mt={4}>
             <Typography
@@ -439,11 +451,6 @@ const ListenEventsChart = () => {
             max={maxDate.getTime()}
           />
         )}
-
-        <AssetListensChart
-          listenEvents={allFetchedData}
-          viewRange={viewRange}
-        />
       </CardContent>
     </Card>
   );
