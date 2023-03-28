@@ -3,7 +3,6 @@
 import { Card, CardContent, CardHeader } from "@mui/material";
 import { useChartsData } from "components/charts/ChartsData";
 import React from "react";
-import { GetListResult, RaRecord } from "react-admin";
 import {
   Cell,
   Legend,
@@ -14,9 +13,6 @@ import {
 } from "recharts";
 import { CenteredLoading } from "../Layout/Dashboard";
 
-interface Props {
-  sessions: GetListResult<RaRecord> | null;
-}
 const getKeyName = (system: string) => {
   system = system?.toLowerCase();
   if (system.indexOf(`linux`) !== -1) return `Linux`;
