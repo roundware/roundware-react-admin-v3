@@ -308,8 +308,8 @@ const SessionsChart = () => {
           <DateRangeSlider
             value={viewRange}
             onChange={setViewRange}
-            min={sessionsAllFetchedRange[0].getTime()}
-            max={sessionsAllFetchedRange[1].getTime()}
+            min={minDate.getTime()}
+            max={maxDate.getTime()}
           />
         )}
       </CardContent>
