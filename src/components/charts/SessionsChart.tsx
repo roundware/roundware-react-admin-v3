@@ -263,7 +263,7 @@ const SessionsChart = () => {
               align="center"
               color="text.secondary"
             >
-              Fetch Previous
+              Fetch Earlier Listening Data
             </Typography>
             <Stack direction={"row-reverse"} justifyContent="center">
               {[
