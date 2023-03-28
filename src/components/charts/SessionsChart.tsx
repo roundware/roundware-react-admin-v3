@@ -251,7 +251,7 @@ const SessionsChart = () => {
                   height={30}
                   payload={[
                     {
-                      value: `Sessions (${perDateData.reduce(
+                      value: `Sessions (${viewData.reduce(
                         (acc, el) => acc + el.total,
                         0
                       )})`,

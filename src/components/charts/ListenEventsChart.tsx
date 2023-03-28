@@ -349,7 +349,7 @@ const ListenEventsChart = () => {
                   height={36}
                   payload={[
                     {
-                      value: `Listens (${perDateData.reduce(
+                      value: `Listens (${viewData.reduce(
                         (acc, l) => acc + l.total,
                         0
                       )})`,

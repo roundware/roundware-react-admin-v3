@@ -275,12 +275,13 @@ const AssetsChart = (): JSX.Element => {
       text: 0,
       photo: 0,
     };
-    assets.forEach((a) => {
-      if (!totals[a.media_type]) totals[a.media_type] = 0;
-      totals[a.media_type] += 1;
+    viewData.forEach((d) => {
+      totals.audio += d.audio;
+      totals.text += d.text;
+      totals.photo += d.photo;
     });
     return totals;
-  }, [assets]);
+  }, [viewData]);
 
   return (
     <Card>
