@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Card, CardContent, CardHeader } from "@mui/material";
+import { Box, Card, CardContent, CardHeader, Typography } from "@mui/material";
+import { useChartsData } from "components/charts/ChartsData";
 import React from "react";
-import { GetListResult, RaRecord, useRedirect } from "react-admin";
+import { useRedirect } from "react-admin";
 import {
   Cell,
   Legend,
@@ -10,15 +11,14 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import { CenteredLoading } from "../Layout/Dashboard";
+import { IAsset } from "types/asset";
 import { ResourceList } from "../../App";
-interface Props {
-  assets: GetListResult<RaRecord> | null;
-}
-const getMediaTypes = (assets: GetListResult<RaRecord>) => {
+import { CenteredLoading } from "../Layout/Dashboard";
+
+const getMediaTypes = (assets: IAsset[]) => {
   const chartDataMap = new Map<string, number>();
 
-  assets.data.forEach((s) => {
+  assets.forEach((s) => {
     const keyName = s.media_type;
     let total = chartDataMap.get(keyName);
     if (total === undefined) total = 1;
@@ -69,7 +69,8 @@ const renderCustomizedLabel = ({
   );
 };
 
-const AssetMediaTypesChart = ({ assets }: Props): JSX.Element => {
+const AssetMediaTypesChart = (): JSX.Element => {
+  const { assets, assetsAllFetchedRange } = useChartsData();
   const redirect = useRedirect();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -126,6 +127,17 @@ const AssetMediaTypesChart = ({ assets }: Props): JSX.Element => {
             </ResponsiveContainer>
           </div>
         )}
+        <Box display="flex" justifyContent="center" mt={2}>
+          <Typography
+            variant="caption"
+            color="textSecondary"
+            textAlign={"center"}
+            width="100%"
+          >
+            Data from {assetsAllFetchedRange?.[0]?.toLocaleDateString()} to{" "}
+            {assetsAllFetchedRange?.[1]?.toLocaleDateString()}
+          </Typography>
+        </Box>
       </CardContent>
     </Card>
   );

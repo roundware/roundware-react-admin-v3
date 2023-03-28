@@ -10,7 +10,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { addDays, isAfter, isBefore, subDays } from "date-fns";
+import { addDays, subDays } from "date-fns";
 import React, { useEffect, useMemo, useState } from "react";
 import { RaRecord, useRedirect } from "react-admin";
 import {
@@ -29,24 +29,14 @@ import {
 import History from "@mui/icons-material/History";
 import { LoadingButton } from "@mui/lab";
 import { ResourceList } from "App";
+import AssetListensChart from "components/charts/AssetListensChart";
 import DateRangeSlider from "components/charts/DateRangeSlider";
 import { useProjects } from "context/ProjectsContext";
 import useBoolean from "hooks/useBoolean";
 import { apiFetcher } from "roundwareDataProvider/tokenAuthProvider";
 import { IListenEvent } from "types/listenEvents";
+import { DateRange, isWithinRange } from "utils";
 import { CenteredLoading } from "../Layout/Dashboard";
-
-export const isWithinRange = (date: Date, range: Date[]) => {
-  range = range.sort((a, b) => (a > b ? 1 : -1));
-
-  if (
-    isAfter(date, subDays(range[0], 1)) &&
-    isBefore(date, addDays(range[1], 1))
-  )
-    return true;
-
-  return false;
-};
 
 const getListensPerDay = (events: RaRecord[], range?: Date[]) => {
   const eventsWithDate = getSanitizedList(events).filter((s) =>
@@ -86,7 +76,6 @@ const getSanitizedList = (events: RaRecord[]): SanitizedListenEvent[] => [
     .sort((a, b) => (a.start_time > b.start_time ? 1 : -1)),
 ];
 
-type DateRange = [Date, Date];
 const PAGE_SIZE = 500;
 async function fetchListenEvents({
   pageParam = 1,
@@ -116,6 +105,7 @@ async function fetchListenEvents({
 }
 
 const INITIAL_RANGE = [subDays(new Date(), 120), new Date()] as DateRange;
+
 const ListenEventsChart = () => {
   const [viewRange, setViewRange] = useState<DateRange>(INITIAL_RANGE);
   const project = useProjects();
@@ -471,6 +461,11 @@ const ListenEventsChart = () => {
             max={maxDate.getTime()}
           />
         )}
+
+        <AssetListensChart
+          listenEvents={allFetchedData}
+          viewRange={viewRange}
+        />
       </CardContent>
     </Card>
   );

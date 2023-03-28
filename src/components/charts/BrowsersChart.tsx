@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Card, CardContent, CardHeader } from "@mui/material";
+import { useChartsData } from "components/charts/ChartsData";
 import React from "react";
 import { GetListResult, RaRecord } from "react-admin";
 import {
@@ -85,18 +86,20 @@ const renderCustomizedLabel = ({
   );
 };
 
-const BrowsersChart = (props: Props): JSX.Element => {
+const BrowsersChart = (): JSX.Element => {
+  const { sessions } = useChartsData();
+
   return (
     <Card style={{ width: "100%" }}>
       <CardHeader title="Operating Systems" />
       <CardContent>
-        {props.sessions ? (
+        {sessions.length ? (
           <div style={{ width: "100%", height: 300 }}>
             <ResponsiveContainer height="100%" width="100%">
               <PieChart width={400} height={400}>
                 <Pie
                   // @ts-ignore
-                  data={getclientSystemData(props.sessions.data)}
+                  data={getclientSystemData(sessions)}
                   dataKey="total"
                   nameKey="name"
                   cx="50%"
@@ -109,15 +112,13 @@ const BrowsersChart = (props: Props): JSX.Element => {
                   label={renderCustomizedLabel}
                 >
                   {/* @ts-ignore */}
-                  {getclientSystemData(props.sessions.data).map(
-                    (entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        name={entry.name}
-                        fill={COLORS[index]}
-                      ></Cell>
-                    )
-                  )}
+                  {getclientSystemData(sessions).map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      name={entry.name}
+                      fill={COLORS[index]}
+                    ></Cell>
+                  ))}
                 </Pie>
                 <Legend
                   verticalAlign="bottom"

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from "@mui/material";
+import { useChartsData } from "components/charts/ChartsData";
 import React from "react";
-import { GetListResult, RaRecord } from "react-admin";
 import {
   Cell,
   Legend,
@@ -11,10 +11,6 @@ import {
 } from "recharts";
 import { CenteredLoading } from "../Layout/Dashboard";
 import { COLORS } from "./BrowsersChart";
-
-interface Props {
-  sessions: GetListResult<RaRecord> | null;
-}
 
 const getKeyName = (clientType: string) => {
   clientType = clientType?.toLowerCase();
@@ -86,19 +82,21 @@ const renderCustomizedLabel = ({
   );
 };
 
-const ClientTypeChart = (props: Props) => {
+const ClientTypeChart = () => {
+  const { sessions } = useChartsData();
+
   return (
     <Card style={{ width: "100%" }}>
       <CardHeader title="Platforms" />
       <CardContent>
-        {props.sessions ? (
+        {sessions.length ? (
           <div style={{ width: "100%", height: 300 }}>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart height={400} width={400}>
                 <Pie
                   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   // @ts-ignore
-                  data={getClientTypeData(props.sessions.data)}
+                  data={getClientTypeData(sessions)}
                   dataKey="total"
                   nameKey="name"
                   cx="50%"
@@ -112,15 +110,13 @@ const ClientTypeChart = (props: Props) => {
                 >
                   {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                   {/* @ts-ignore */}
-                  {getClientTypeData(props.sessions.data).map(
-                    (entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        name={entry.name}
-                        fill={COLORS[index]}
-                      ></Cell>
-                    )
-                  )}
+                  {getClientTypeData(sessions).map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      name={entry.name}
+                      fill={COLORS[index]}
+                    ></Cell>
+                  ))}
                 </Pie>
                 <Tooltip />
                 <Legend

@@ -1,3 +1,4 @@
+import { addDays, isAfter, isBefore, subDays } from "date-fns";
 import { trim } from "lodash";
 import { DataProvider, RaRecord } from "react-admin";
 import { LocalizedString } from "types";
@@ -118,3 +119,17 @@ export function csvToJSON<T>(csv: string): T[] {
   }
   return result as unknown as T[]; //JSON
 }
+
+export const isWithinRange = (date: Date, range: Date[]) => {
+  range = range.sort((a, b) => (a > b ? 1 : -1));
+
+  if (
+    isAfter(date, subDays(range[0], 1)) &&
+    isBefore(date, addDays(range[1], 1))
+  )
+    return true;
+
+  return false;
+};
+
+export type DateRange = [Date, Date];

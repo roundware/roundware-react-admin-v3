@@ -1,25 +1,23 @@
+import History from "@mui/icons-material/History";
+import { LoadingButton } from "@mui/lab";
 import {
   Card,
   CardContent,
   CardHeader,
   Checkbox,
-  FormControl,
   FormControlLabel,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  TextFieldProps,
+  Stack,
   Toolbar,
   Typography,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
+import { ResourceList } from "App";
+import { useChartsData } from "components/charts/ChartsData";
 import DateRangeSlider from "components/charts/DateRangeSlider";
-import { addDays, isAfter, isBefore, subDays } from "date-fns";
-import { useChartData } from "hooks/useChartData";
-import React from "react";
-import { GetListResult, RaRecord } from "react-admin";
+import { useProjects } from "context/ProjectsContext";
+import { addDays, subDays } from "date-fns";
+import useBoolean from "hooks/useBoolean";
+import React, { useEffect, useMemo, useState } from "react";
+import { RaRecord, useRedirect } from "react-admin";
 import {
   Bar,
   CartesianGrid,
@@ -32,31 +30,18 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { apiFetcher } from "roundwareDataProvider/tokenAuthProvider";
+import { ISession } from "types/session";
+import { DateRange, isWithinRange } from "utils";
 import { CenteredLoading } from "../Layout/Dashboard";
-interface Props {
-  sessions: GetListResult<RaRecord> | null;
-}
 
-export const isWithinRange = (date: Date, range: Date[]): boolean => {
-  range = range.sort((a, b) => (a > b ? 1 : -1));
-
-  if (
-    isAfter(date, subDays(range[0], 1)) &&
-    isBefore(date, addDays(range[1], 1))
-  )
-    return true;
-
-  return false;
-};
 type SanitizedSession = {
   id: number;
   starttime: Date;
   [index: string]: number | Date;
 };
-const getSessionsPerDay = (sessions: RaRecord[], range: Date[]) => {
-  const sessionsWithDate = getSanitizedList(sessions).filter((s) =>
-    isWithinRange(s.starttime, range)
-  );
+const getSessionsPerDay = (sessions: RaRecord[]) => {
+  const sessionsWithDate = getSanitizedList(sessions);
 
   const chartDataMap = new Map<string, number>();
 
@@ -87,29 +72,101 @@ const getSanitizedList = (sessions: RaRecord[]): SanitizedSession[] => [
     .sort((a, b) => (a.starttime > b.starttime ? 1 : -1)),
 ];
 
-const SessionsChart = ({ sessions }: Props) => {
-  const {
-    rangeDropdownValue,
-    handleOnSelectChange,
-    setShowLine,
-    dropdownRange,
-    setRange,
-    range,
-    showLine,
-    customRange,
-    handleOnBarClick,
-    setStartDate,
-    setEndDate,
-    endDate,
-    startDate,
-    perDateData,
-  } = useChartData<SanitizedSession>(
-    sessions?.data || [],
-    getSanitizedList,
-    "starttime",
-    getSessionsPerDay,
-    "sessions"
+async function fetchSessions({
+  startDate,
+  endDate,
+  projectId,
+}: {
+  startDate: Date;
+  endDate: Date;
+  projectId: number;
+}) {
+  const res = await apiFetcher(
+    `/sessions?starttime__gte=${startDate.toISOString()}&starttime__lte=${endDate.toISOString()}&admin=1&project_id=${projectId}`
   );
+
+  return res?.json as ISession[];
+}
+
+const SessionsChart = () => {
+  const {
+    sessionsAllFetchedRange,
+    setSessionsAllFetchedRange,
+    sessions,
+    setSessions,
+  } = useChartsData();
+
+  const [viewRange, setViewRange] = useState<DateRange>(
+    sessionsAllFetchedRange
+  );
+
+  const project = useProjects();
+
+  async function fetchForRange(inputRange: DateRange) {
+    // determine extra range to fetch from backward;
+    const start = inputRange[0];
+    const end = inputRange[1];
+
+    // determine how many are there; by doing a call;
+    const res = await fetchSessions({
+      startDate: start,
+      endDate: end,
+      projectId: project?.selectedProject?.id || 0,
+    });
+
+    setSessions((prev) => [...prev, ...res]);
+  }
+
+  const loading = useBoolean(false);
+
+  const [fetchingMoreValue, setFetchingMoreValue] = useState("");
+
+  useEffect(() => {
+    loading.setTrue();
+    fetchForRange(viewRange).then(() => {
+      loading.setFalse();
+    });
+  }, []);
+
+  const perDateData = useMemo(() => {
+    return getSessionsPerDay(sessions);
+  }, [sessions]);
+
+  const minDate = useMemo(() => {
+    if (!perDateData.length) return new Date();
+    return new Date(perDateData[0].date);
+  }, [perDateData]);
+
+  const maxDate = useMemo(() => {
+    if (!perDateData.length) return new Date();
+    return new Date(perDateData[perDateData.length - 1].date);
+  }, [perDateData]);
+
+  useEffect(() => {
+    setViewRange([minDate, maxDate]);
+  }, [minDate, maxDate]);
+
+  const viewData = useMemo(() => {
+    if (!perDateData) return [];
+
+    return perDateData.filter((s) =>
+      isWithinRange(new Date(s.date), viewRange)
+    );
+  }, [perDateData, viewRange]);
+
+  const showLine = useBoolean();
+
+  const redirect = useRedirect();
+  const handleOnBarClick = (data: { date: number }) => {
+    if (ResourceList.includes(`listenevents`))
+      redirect(
+        `list`,
+        `sessions?filter=${JSON.stringify({
+          [`starttime__gte`]: new Date(data?.date).toISOString(),
+          [`starttime__lte`]: addDays(new Date(data?.date), 1).toISOString(),
+        })}`
+      );
+  };
 
   return (
     <Card>
@@ -120,28 +177,13 @@ const SessionsChart = ({ sessions }: Props) => {
               <Typography variant="h5" style={{ flexGrow: 1 }}>
                 Sessions
               </Typography>
-
-              <FormControl style={{ width: 150 }}>
-                <InputLabel>Range</InputLabel>
-                <Select
-                  value={rangeDropdownValue}
-                  onChange={(e) => handleOnSelectChange(e?.target?.value)}
-                  label="Range"
-                >
-                  <MenuItem value={7}>Last 7 Days</MenuItem>
-                  <MenuItem value={30}>Last 30 Days</MenuItem>
-                  <MenuItem value={365}>Last Year</MenuItem>
-                  <MenuItem value="total">Total</MenuItem>
-                  <MenuItem value="custom">Custom Range</MenuItem>
-                </Select>
-              </FormControl>
             </Toolbar>
             <Toolbar style={{ paddingBottom: 0 }}>
               <FormControlLabel
                 control={
                   <Checkbox
-                    onChange={(e) => setShowLine(e.target.checked)}
-                    value={showLine}
+                    onChange={(e) => showLine.setValue(e.target.checked)}
+                    value={showLine.value}
                   />
                 }
                 label="Show Line"
@@ -162,44 +204,12 @@ const SessionsChart = ({ sessions }: Props) => {
       />
 
       <CardContent>
-        {customRange && (
-          <>
-            <Grid
-              container
-              justifyContent="center"
-              spacing={2}
-              style={{ marginBottom: 16 }}
-            >
-              <Grid item xs={5}>
-                <DatePicker
-                  label="Start Date"
-                  value={startDate}
-                  views={["year", "month", "day"]}
-                  onChange={(date) => {
-                    if (date) setStartDate(date);
-                  }}
-                  renderInput={(p: TextFieldProps) => <TextField {...p} />}
-                />
-              </Grid>
-              <Grid item xs={5}>
-                <DatePicker
-                  label="End Date"
-                  value={endDate}
-                  onChange={(date) => {
-                    if (date) setEndDate(date);
-                  }}
-                  renderInput={(p: TextFieldProps) => <TextField {...p} />}
-                />
-              </Grid>
-            </Grid>
-          </>
-        )}
-        {!sessions ? (
+        {loading.value ? (
           <CenteredLoading />
         ) : (
           <div style={{ width: "100%", height: 300 }}>
             <ResponsiveContainer>
-              <ComposedChart data={perDateData} height={200}>
+              <ComposedChart data={viewData} height={200}>
                 <XAxis
                   dataKey="date"
                   type={"number"}
@@ -271,12 +281,60 @@ const SessionsChart = ({ sessions }: Props) => {
             </ResponsiveContainer>
           </div>
         )}
-        {!!sessions?.data?.length && (
+        <Stack spacing={2} justifyContent="center">
+          <Stack mt={4}>
+            <Typography
+              variant="subtitle2"
+              align="center"
+              color="text.secondary"
+            >
+              Fetch Previous
+            </Typography>
+            <Stack direction={"row-reverse"} justifyContent="center">
+              {[
+                {
+                  valueDays: 30,
+                  label: "1 Month",
+                },
+                {
+                  valueDays: 90,
+                  label: "3 Months",
+                },
+                {
+                  valueDays: 180,
+                  label: "6 Months",
+                },
+              ].map(({ valueDays, label }) => (
+                <LoadingButton
+                  startIcon={<History />}
+                  key={valueDays}
+                  onClick={() => {
+                    setFetchingMoreValue(label);
+                    fetchForRange([
+                      subDays(sessionsAllFetchedRange[0], valueDays),
+                      sessionsAllFetchedRange[0],
+                    ]).then(() => {
+                      setSessionsAllFetchedRange([
+                        subDays(sessionsAllFetchedRange[0], valueDays),
+                        sessionsAllFetchedRange[1],
+                      ]);
+                      setFetchingMoreValue("");
+                    });
+                  }}
+                  loading={fetchingMoreValue === label}
+                >
+                  {label}
+                </LoadingButton>
+              ))}
+            </Stack>
+          </Stack>
+        </Stack>
+        {!!sessions?.length && (
           <DateRangeSlider
-            value={range}
-            onChange={setRange}
-            min={dropdownRange[0].getTime()}
-            max={dropdownRange[1].getTime()}
+            value={viewRange}
+            onChange={setViewRange}
+            min={sessionsAllFetchedRange[0].getTime()}
+            max={sessionsAllFetchedRange[1].getTime()}
           />
         )}
       </CardContent>
