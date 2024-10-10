@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React from 'react';
 import AudioOptions from 'components/common/AudioOptions';
 import EnvelopeIdSelector from 'components/common/EnvelopeIdSelector';
 import FileDownloadButton from 'components/common/FileDownloadButton';
 import LocationSelector from 'components/common/LocationSelector';
 import TagIdSelector from 'components/common/TagIdSelector';
 import TranslatableField from 'components/common/TranslatableField';
+import React from 'react';
 import {
   AutocompleteInput,
   BooleanInput,
@@ -30,7 +30,6 @@ const AssetEdit = (): JSX.Element => {
   const dataProvider = useDataProvider();
 
   const transform = async (data: Partial<IAsset>) => {
-
     if (!data.file) {
       // wants to remove file
       data.file = null;
@@ -55,7 +54,7 @@ const AssetEdit = (): JSX.Element => {
     if (Number(data.envelope_ids) > 0) {
       // this means user wants to specify an existing envelope_ids
       // note though its plural, it doesn't want an array format
-      data.envelope_ids = [Number(data.envelope_ids)];
+      data.envelope_ids = Number(data.envelope_ids);
     } else {
       // we need to create a new envelope here; and pass that id
       // using session_id = 1 for admin
@@ -81,11 +80,8 @@ const AssetEdit = (): JSX.Element => {
       );
 
     if (data.file) {
-      data.tag_ids = data.tag_ids
-        // @ts-ignore
-        ?.reduce((acc: string, el: string) => acc + el + ',', '')
-        // @ts-ignore
-        .slice(0, -1);
+      // @ts-ignore
+      data.tag_ids = data.tag_ids?.map(Number);
 
       if (Array.isArray(data.alt_text_loc_ids))
         data.alt_text_loc_ids = data.alt_text_loc_ids

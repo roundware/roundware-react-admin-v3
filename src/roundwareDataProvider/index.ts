@@ -1,4 +1,4 @@
-import { stringify } from "query-string";
+import { stringify } from 'query-string';
 import {
   CreateParams,
   CreateResult,
@@ -25,8 +25,8 @@ import {
   UpdateManyResult,
   UpdateParams,
   UpdateResult,
-} from "ra-core";
-import { XMLHttpRequestWithAuthToken } from "./tokenAuthProvider";
+} from 'ra-core';
+import { XMLHttpRequestWithAuthToken } from './tokenAuthProvider';
 
 const getPaginationQuery = (pagination: PaginationPayload) => {
   if (pagination.page === 0) return {};
@@ -48,7 +48,7 @@ const getFilterQuery = (filter: FilterPayload) => {
 export const getOrderingQuery = (sort: SortPayload) => {
   const { field, order } = sort;
   return {
-    ordering: `${order === "ASC" ? "" : "-"}${field}`,
+    ordering: `${order === 'ASC' ? '' : '-'}${field}`,
   };
 };
 
@@ -145,8 +145,8 @@ export class RoundwareDataProvider implements DataProvider {
       json = this.normalizeApiResponse(json);
 
       /** filter events by project_id client side */
-      if (resource == "events") {
-        const sessions = this.getResource("sessions");
+      if (resource == 'events') {
+        const sessions = this.getResource('sessions');
 
         json = json.filter((e) => sessions?.some((s) => s.id == e.session_id));
       }
@@ -206,33 +206,33 @@ export class RoundwareDataProvider implements DataProvider {
         const start_time_key =
           resource == `sessions` ? `starttime` : `start_time`;
 
-        if (filter === "start_time_gte") {
+        if (filter === 'start_time_gte') {
           json = json.filter(
             (d) => new Date(d[start_time_key]) >= new Date(filters[filter])
           );
-        } else if (filter === "start_time_lte") {
+        } else if (filter === 'start_time_lte') {
           json = json.filter(
             (d) => new Date(d[start_time_key]) <= new Date(filters[filter])
           );
-        } else if (filter === "created_gte") {
+        } else if (filter === 'created_gte') {
           json = json.filter(
             (d) => new Date(d.created) >= new Date(filters[filter])
           );
-        } else if (filter === "created_lte") {
+        } else if (filter === 'created_lte') {
           json = json.filter(
             (d) => new Date(d.created) <= new Date(filters[filter])
           );
-        } else if (filter === "tag_ids") {
+        } else if (filter === 'tag_ids') {
           json = json.filter((d) =>
             filters[filter].every((t: number) => d.tag_ids.includes(t))
           );
-        } else if (filter === "search_str") {
+        } else if (filter === 'search_str') {
           json = json.filter((d) => {
-            if (resource == "users") {
+            if (resource == 'users') {
               // search in username, first_name, last_name, email
               const searchStr = filters[filter].toLowerCase();
               const searchIn = [d.username, d.first_name, d.last_name, d.email]
-                .join(" ")
+                .join(' ')
                 .toLowerCase();
               return searchIn.includes(searchStr);
             }
@@ -248,13 +248,13 @@ export class RoundwareDataProvider implements DataProvider {
           });
         } else {
           // default
-          if (filter.slice(-5) == "__gte") {
+          if (filter.slice(-5) == '__gte') {
             json = json.filter((d) => {
               const res = d[filter.slice(0, -5)] >= filters[filter];
 
               return res;
             });
-          } else if (filter.slice(-5) == "__lte") {
+          } else if (filter.slice(-5) == '__lte') {
             json = json.filter(
               (d) => d[filter.slice(0, -5)] <= filters[filter]
             );
@@ -270,7 +270,7 @@ export class RoundwareDataProvider implements DataProvider {
       const { field, order } = params.sort;
       json = json.sort((a, b) => {
         let bool = false;
-        if (order == "ASC") {
+        if (order == 'ASC') {
           a[field] > b[field] ? (bool = true) : (bool = false);
         } else a[field] > b[field] ? (bool = false) : (bool = true);
         if (bool) return 1;
@@ -366,7 +366,7 @@ export class RoundwareDataProvider implements DataProvider {
     await client(
       `${this.apiUrl}/${resource}/${params.id}/`,
       {
-        method: "PATCH",
+        method: 'PATCH',
         body:
           params.data instanceof FormData
             ? params.data
@@ -404,8 +404,8 @@ export class RoundwareDataProvider implements DataProvider {
         {
           filter: {},
           sort: {
-            field: "id",
-            order: "ASC",
+            field: 'id',
+            order: 'ASC',
           },
           pagination: {
             page: 0,
@@ -427,7 +427,7 @@ export class RoundwareDataProvider implements DataProvider {
     return Promise.all(
       params.ids.map((id) =>
         this.httpClient(`${this.apiUrl}/${resource}/${id}/`, {
-          method: "PATCH",
+          method: 'PATCH',
           body: JSON.stringify(params.data),
         })
       )
@@ -452,7 +452,7 @@ export class RoundwareDataProvider implements DataProvider {
     const result = await client(
       `${this.apiUrl}/${resource}/`,
       {
-        method: "POST",
+        method: 'POST',
         body:
           params.data instanceof FormData
             ? params.data
@@ -488,8 +488,8 @@ export class RoundwareDataProvider implements DataProvider {
         {
           filter: {},
           sort: {
-            field: "id",
-            order: "ASC",
+            field: 'id',
+            order: 'ASC',
           },
           pagination: {
             page: 0,
@@ -510,7 +510,7 @@ export class RoundwareDataProvider implements DataProvider {
     return this.httpClient(
       `${this.apiUrl}/${resource}/${params.id}?${stringify(params.meta)}`,
       {
-        method: "DELETE",
+        method: 'DELETE',
       }
     ).then(() => {
       let list = this.getResource(resource, this.currentProjectId);
@@ -528,7 +528,7 @@ export class RoundwareDataProvider implements DataProvider {
         this.httpClient(
           `${this.apiUrl}/${resource}/${id}?${stringify(params.meta)}`,
           {
-            method: "DELETE",
+            method: 'DELETE',
           }
         )
       )
@@ -591,8 +591,8 @@ export class RoundwareDataProvider implements DataProvider {
             perPage: 0,
           },
           sort: {
-            field: "id",
-            order: "ASC",
+            field: 'id',
+            order: 'ASC',
           },
         },
         true
@@ -624,32 +624,32 @@ export class RoundwareDataProvider implements DataProvider {
 
     function appendFormData(
       data: Record<string, unknown> | string | unknown | File | Blob,
-      root = ""
+      root = ''
     ) {
       if (!ignore(root)) {
-        root = root || "";
+        root = root || '';
         if (data instanceof File) {
           formData.append(root, data);
         } else if (Array.isArray(data)) {
           for (let i = 0; i < data.length; i++) {
-            appendFormData(data[i] + ",", root);
+            appendFormData(data[i], root);
           }
-        } else if (typeof data === "object" && data) {
+        } else if (typeof data === 'object' && data && !Array.isArray(data)) {
           for (const key in data) {
             // eslint-disable-next-line no-prototype-builtins
             if (data.hasOwnProperty(key)) {
-              if (root === "") {
+              if (root === '') {
                 appendFormData((data as Record<string, unknown>)[key], key);
               } else {
                 appendFormData(
                   (data as Record<string, unknown>)[key],
-                  root + "." + key
+                  root + '.' + key
                 );
               }
             }
           }
         } else {
-          if (data !== null && typeof data !== "undefined") {
+          if (data !== null && typeof data !== 'undefined') {
             formData.append(root, data as string);
           }
         }
