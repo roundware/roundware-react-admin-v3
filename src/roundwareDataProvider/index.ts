@@ -69,6 +69,24 @@ export class RoundwareDataProvider implements DataProvider {
 
   revalidatingResources: string[] = [];
 
+  checkProjectAccess = (project_id: number | undefined) => {
+
+    const ids = process.env.REACT_APP_INCLUDE_PROJECT_IDS;
+    const projectIdsArray = ids!.split(',');
+
+
+    projectIdsArray.forEach(id => {
+      if (String(project_id) === id) {
+        console.log(`ACCESS GRANTED -- Match found: ${project_id} and ${id}`);
+      } else if (typeof project_id == 'undefined') {
+        console.log("UNDEFINED ALLOWED");
+      }
+      else {
+        throw new Error("Access denied")
+      }
+    });
+  }
+
   constructor(
     apiUrl: string,
     httpClient = fetchUtils.fetchJson,
@@ -108,6 +126,10 @@ export class RoundwareDataProvider implements DataProvider {
     revalidate = false
   ): Promise<GetListResult<RecordType>> {
     const { project_id, session_id, ...filters } = params.filter;
+
+
+    this.checkProjectAccess(project_id);
+
 
     /** get url query */
     const query = {
@@ -306,6 +328,10 @@ export class RoundwareDataProvider implements DataProvider {
   ): Promise<GetOneResult<RecordType>> {
     const data = await this.getOneJson(resource, id, query);
     if (!data) throw new Error(`Not Found`);
+
+    const project_id = this.currentProjectId;
+    this.checkProjectAccess(project_id);
+
     return {
       data,
     } as {
@@ -327,6 +353,11 @@ export class RoundwareDataProvider implements DataProvider {
     params: GetManyReferenceParams,
     paginate = false
   ): Promise<GetManyReferenceResult<RecordType>> {
+
+
+    const project_id = this.currentProjectId;
+    this.checkProjectAccess(project_id);
+
     const query = {
       ...getFilterQuery(params.filter),
       ...(paginate && getPaginationQuery(params.pagination)),
@@ -350,6 +381,9 @@ export class RoundwareDataProvider implements DataProvider {
     /** determine if any of the field has File type of data
      *  in that case we need to send form-data req
      */
+    const project_id = this.currentProjectId;
+    this.checkProjectAccess(project_id);
+
     const needsFormData = Object.values(params?.data)?.some(
       (v) => v instanceof File || v instanceof Blob
     );
@@ -424,9 +458,13 @@ export class RoundwareDataProvider implements DataProvider {
     resource: string,
     params: UpdateManyParams
   ): Promise<UpdateManyResult> {
+
+    const project_id = this.currentProjectId;
+    this.checkProjectAccess(project_id);
+
     return Promise.all(
       params.ids.map((id) =>
-        this.httpClient(`${this.apiUrl}/${resource}/${id}/`, {
+        this.httpClient(`${this.apiUrl} /${resource}/${id}/`, {
           method: 'PATCH',
           body: JSON.stringify(params.data),
         })
@@ -439,6 +477,10 @@ export class RoundwareDataProvider implements DataProvider {
     resource: string,
     params: CreateParams
   ): Promise<CreateResult<RecordType>> {
+
+    const project_id = this.currentProjectId;
+    this.checkProjectAccess(project_id);
+
     params.data.project_id = this.currentProjectId;
     const needsFormData = Object.values(params?.data)?.some(
       (v) => v instanceof File || v instanceof Blob
@@ -507,6 +549,10 @@ export class RoundwareDataProvider implements DataProvider {
     resource: string,
     params: DeleteParams
   ): Promise<DeleteResult<RecordType>> {
+
+    const project_id = this.currentProjectId;
+    this.checkProjectAccess(project_id);
+
     return this.httpClient(
       `${this.apiUrl}/${resource}/${params.id}?${stringify(params.meta)}`,
       {
@@ -523,6 +569,11 @@ export class RoundwareDataProvider implements DataProvider {
     resource: string,
     params: DeleteManyParams
   ): Promise<DeleteManyResult> {
+
+
+    const project_id = this.currentProjectId;
+    this.checkProjectAccess(project_id);
+
     return Promise.all(
       params.ids.map((id) =>
         this.httpClient(
