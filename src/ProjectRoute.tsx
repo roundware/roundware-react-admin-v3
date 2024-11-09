@@ -43,6 +43,17 @@ const ProjectRoute = () => {
   if (isCurrentProjectRoute) {
     return <CurrentProjectApp key={3} basename="" />;
   }
+  const ids = process.env.REACT_APP_INCLUDE_PROJECT_IDS;
+  const projectIdsArray = ids!.split(',');
+  const selectedId = String(selectedProject?.id);
+  const urlProjectId = location.pathname.split('/').pop();
+
+
+  if (urlProjectId && !projectIdsArray.includes(urlProjectId)) {
+    console.error(`ACCESS DENIED to id ${urlProjectId}`)
+  } else if (projectIdsArray.includes(selectedId)) {
+    console.log(`ACCESS GRANTED ${projectIdsArray} and ${selectedId}`);
+  }
 
   if (selectedProject) {
     return (
