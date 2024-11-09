@@ -1,4 +1,5 @@
 import App, { BaseApp } from "App";
+import AccessDenied from "components/Layout/AccessDenied";
 import SplashScreen from "components/Layout/SplashScreen";
 import tokenAuthProvider from "context/AuthProvider";
 import { useProjects } from "context/ProjectsContext";
@@ -46,11 +47,13 @@ const ProjectRoute = () => {
   const ids = process.env.REACT_APP_INCLUDE_PROJECT_IDS;
   const projectIdsArray = ids!.split(',');
   const selectedId = String(selectedProject?.id);
-  const urlProjectId = location.pathname.split('/').pop();
 
+  if (Number(projectId) == 12) {
+    return <AccessDenied />;
+  }
 
-  if (urlProjectId && !projectIdsArray.includes(urlProjectId)) {
-    console.error(`ACCESS DENIED to id ${urlProjectId}`)
+  if (projectId && !projectIdsArray.includes(projectId)) {
+    return <AccessDenied />;
   } else if (projectIdsArray.includes(selectedId)) {
     console.log(`ACCESS GRANTED ${projectIdsArray} and ${selectedId}`);
   }
