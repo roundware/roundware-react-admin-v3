@@ -70,22 +70,20 @@ export class RoundwareDataProvider implements DataProvider {
   revalidatingResources: string[] = [];
 
   checkProjectAccess = (project_id: number | undefined) => {
-
     const ids = process.env.REACT_APP_INCLUDE_PROJECT_IDS;
-    const projectIdsArray = ids!.split(',');
 
+    if (ids === 'all' || typeof project_id == 'undefined') {
+      return;
+    }
 
-    projectIdsArray.forEach(id => {
-      if (String(project_id) === id) {
-        console.log(`ACCESS GRANTED -- Match found: ${project_id} and ${id}`);
-      } else if (typeof project_id == 'undefined') {
-        console.log("UNDEFINED ALLOWED");
-      }
-      else {
-        throw new Error("Access denied")
-      }
-    });
-  }
+    const projectIdsArray = (ids || '')?.split(',');
+
+    if (
+      !projectIdsArray.some((id) => id.toString() === project_id.toString())
+    ) {
+      throw new Error(`Access Denied`);
+    }
+  };
 
   constructor(
     apiUrl: string,
@@ -127,9 +125,7 @@ export class RoundwareDataProvider implements DataProvider {
   ): Promise<GetListResult<RecordType>> {
     const { project_id, session_id, ...filters } = params.filter;
 
-
     this.checkProjectAccess(project_id);
-
 
     /** get url query */
     const query = {
@@ -353,8 +349,6 @@ export class RoundwareDataProvider implements DataProvider {
     params: GetManyReferenceParams,
     paginate = false
   ): Promise<GetManyReferenceResult<RecordType>> {
-
-
     const project_id = this.currentProjectId;
     this.checkProjectAccess(project_id);
 
@@ -458,7 +452,6 @@ export class RoundwareDataProvider implements DataProvider {
     resource: string,
     params: UpdateManyParams
   ): Promise<UpdateManyResult> {
-
     const project_id = this.currentProjectId;
     this.checkProjectAccess(project_id);
 
@@ -477,7 +470,6 @@ export class RoundwareDataProvider implements DataProvider {
     resource: string,
     params: CreateParams
   ): Promise<CreateResult<RecordType>> {
-
     const project_id = this.currentProjectId;
     this.checkProjectAccess(project_id);
 
@@ -549,7 +541,6 @@ export class RoundwareDataProvider implements DataProvider {
     resource: string,
     params: DeleteParams
   ): Promise<DeleteResult<RecordType>> {
-
     const project_id = this.currentProjectId;
     this.checkProjectAccess(project_id);
 
@@ -569,8 +560,6 @@ export class RoundwareDataProvider implements DataProvider {
     resource: string,
     params: DeleteManyParams
   ): Promise<DeleteManyResult> {
-
-
     const project_id = this.currentProjectId;
     this.checkProjectAccess(project_id);
 
