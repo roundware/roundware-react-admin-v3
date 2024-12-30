@@ -1,10 +1,10 @@
-import { LinearProgress, Stack, Typography } from "@mui/material";
-import FileDownloadButton from "components/common/FileDownloadButton";
-import FormToolbar from "components/common/FormToolbar";
-import { useProjects } from "context/ProjectsContext";
-import { useSpeakers } from "context/SpeakersContext";
-import useBoolean from "hooks/useBoolean";
-import React, { useState } from "react";
+import { LinearProgress, Stack, Typography } from '@mui/material';
+import FileDownloadButton from 'components/common/FileDownloadButton';
+import FormToolbar from 'components/common/FormToolbar';
+import { useProjects } from 'context/ProjectsContext';
+import { useSpeakers } from 'context/SpeakersContext';
+import useBoolean from 'hooks/useBoolean';
+import React, { useState } from 'react';
 import {
   BooleanInput,
   Create,
@@ -12,7 +12,9 @@ import {
   maxLength,
   NumberInput,
   RaRecord,
+  ReferenceArrayInput,
   ReferenceInput,
+  SelectArrayInput,
   SelectInput,
   SimpleForm,
   SimpleFormProps,
@@ -21,9 +23,9 @@ import {
   useNotify,
   useRefresh,
   useUpdate,
-} from "react-admin";
-import { Navigate } from "react-router-dom";
-import SpeakerAudioControls from "./SpeakerAudioControls";
+} from 'react-admin';
+import { Navigate } from 'react-router-dom';
+import SpeakerAudioControls from './SpeakerAudioControls';
 
 export const SpeakerEdit = (): JSX.Element => {
   const { selectedProject } = useProjects();
@@ -31,7 +33,7 @@ export const SpeakerEdit = (): JSX.Element => {
 
   const transform = (data: RaRecord) => {
     data.project = selectedProject?.id;
-    if (typeof data?.file?.src == "string") {
+    if (typeof data?.file?.src == 'string') {
       data.file = data.file.rawFile;
       delete data.uri;
       delete data.backupuri;
@@ -68,7 +70,7 @@ export const SpeakerEdit = (): JSX.Element => {
         },
         {
           returnPromise: true,
-          mutationMode: "pessimistic",
+          mutationMode: 'pessimistic',
           onSuccess: () => {
             fetchData();
             refresh();
@@ -78,7 +80,7 @@ export const SpeakerEdit = (): JSX.Element => {
       );
     } catch (e) {
       notify(`Something went wrong!`, {
-        type: "error",
+        type: 'error',
       });
     } finally {
       setProgress(0);
@@ -90,36 +92,55 @@ export const SpeakerEdit = (): JSX.Element => {
   return (
     <Edit transform={transform}>
       <SimpleForm
-        reValidateMode="onBlur"
+        reValidateMode='onBlur'
         warnWhenUnsavedChanges
         onSubmit={save}
       >
-        <TextInput source="id" fullWidth />
-        <BooleanInput source="activeyn" fullWidth />
-        <TextInput source="code" fullWidth validate={maxLength(10)} />
+        <TextInput source='id' fullWidth />
+        <BooleanInput source='activeyn' fullWidth />
+        <TextInput source='code' fullWidth validate={maxLength(10)} />
         <SpeakerAudioControls />
-        <FileDownloadButton source="uri" />
-        <TextInput source="uri" fullWidth />
-        <TextInput source="backupuri" fullWidth />
+        <FileDownloadButton source='uri' />
+        <TextInput source='uri' fullWidth />
+        <TextInput source='backupuri' fullWidth />
 
-        <NumberInput source="attenuation_distance" required fullWidth />
+        <NumberInput source='attenuation_distance' required fullWidth />
 
         <ReferenceInput
-          source="project_id"
+          source='project_id'
           defaultValue={selectedProject?.id}
-          reference="projects"
+          reference='projects'
         >
-          <SelectInput optionText="name" fullWidth />
+          <SelectInput optionText='name' fullWidth />
         </ReferenceInput>
 
+        <ReferenceArrayInput
+          reference='speakers'
+          source='parents'
+          fullWidth
+          label='Parents'
+        >
+          <SelectArrayInput optionText='code' fullWidth />
+        </ReferenceArrayInput>
+
+        {/* children */}
+        <ReferenceArrayInput
+          reference='speakers'
+          source='children'
+          fullWidth
+          label='Children'
+        >
+          <SelectArrayInput optionText='code' fullWidth />
+        </ReferenceArrayInput>
+
         {progress > 0 && (
-          <Stack sx={{ width: "100%" }}>
-            <Typography variant="subtitle2">
-              Upload Progress: {progress.toFixed(2)} %{" "}
+          <Stack sx={{ width: '100%' }}>
+            <Typography variant='subtitle2'>
+              Upload Progress: {progress.toFixed(2)} %{' '}
             </Typography>
             <LinearProgress
-              sx={{ width: "100%" }}
-              variant={progress == 100 ? `indeterminate` : "determinate"}
+              sx={{ width: '100%' }}
+              variant={progress == 100 ? `indeterminate` : 'determinate'}
               value={parseFloat(progress.toFixed(2))}
             />
           </Stack>
@@ -135,7 +156,7 @@ export const SpeakerCreate = (): JSX.Element => {
     useSpeakers();
   const transform = (data: RaRecord) => {
     data.project = selectedProject?.id;
-    if (typeof data?.file?.src == "string") {
+    if (typeof data?.file?.src == 'string') {
       data.file = data.file.rawFile;
       delete data.uri;
       delete data.backupuri;
@@ -170,7 +191,6 @@ export const SpeakerCreate = (): JSX.Element => {
           returnPromise: true,
 
           onSuccess: async (data) => {
-
             await fetchData();
             setSelectedSpeaker(parseInt(data.id.toString()));
             success.setTrue();
@@ -181,7 +201,7 @@ export const SpeakerCreate = (): JSX.Element => {
       );
     } catch (e) {
       notify(`Something went wrong!`, {
-        type: "error",
+        type: 'error',
       });
     } finally {
       setProgress(0);
@@ -196,28 +216,28 @@ export const SpeakerCreate = (): JSX.Element => {
         warnWhenUnsavedChanges={!success.value}
         onSubmit={save}
         toolbar={<FormToolbar />}
-        redirect="/speakers"
-        reValidateMode="onBlur"
+        redirect='/speakers'
+        reValidateMode='onBlur'
       >
-        <BooleanInput source="activeyn" fullWidth defaultChecked />
-        <TextInput source="code" validate={maxLength(10)} fullWidth required />
+        <BooleanInput source='activeyn' fullWidth defaultChecked />
+        <TextInput source='code' validate={maxLength(10)} fullWidth required />
 
         <SpeakerAudioControls />
         <NumberInput
-          source="attenuation_distance"
+          source='attenuation_distance'
           fullWidth
-          helperText="Meters"
+          helperText='Meters'
         />
         {progress > 0 && (
-          <Stack sx={{ width: "100%" }}>
-            <Typography variant="subtitle2">
+          <Stack sx={{ width: '100%' }}>
+            <Typography variant='subtitle2'>
               {progress == 100
                 ? `Processing...`
                 : `Upload Progress: ${progress.toFixed(2)} %`}
             </Typography>
             <LinearProgress
-              sx={{ width: "100%" }}
-              variant={progress == 100 ? `indeterminate` : "determinate"}
+              sx={{ width: '100%' }}
+              variant={progress == 100 ? `indeterminate` : 'determinate'}
               value={parseFloat(progress.toFixed(2))}
             />
           </Stack>
