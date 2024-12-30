@@ -1,10 +1,10 @@
-import App, { BaseApp } from "App";
-import AccessDenied from "components/Layout/AccessDenied";
-import SplashScreen from "components/Layout/SplashScreen";
-import tokenAuthProvider from "context/AuthProvider";
-import { useProjects } from "context/ProjectsContext";
-import React, { useEffect, useState } from "react";
-import { Navigate, useLocation, useParams } from "react-router-dom";
+import App, { BaseApp } from 'App';
+import AccessDenied from 'components/Layout/AccessDenied';
+import SplashScreen from 'components/Layout/SplashScreen';
+import tokenAuthProvider from 'context/AuthProvider';
+import { useProjects } from 'context/ProjectsContext';
+import React, { useEffect, useState } from 'react';
+import { Navigate, useLocation, useParams } from 'react-router-dom';
 
 const CurrentProjectApp = App;
 const ProjectRoute = () => {
@@ -42,20 +42,19 @@ const ProjectRoute = () => {
     );
   }
   if (isCurrentProjectRoute) {
-    return <CurrentProjectApp key={3} basename="" />;
+    return <CurrentProjectApp key={3} basename='' />;
   }
   const ids = process.env.REACT_APP_INCLUDE_PROJECT_IDS;
-  const projectIdsArray = ids!.split(',');
-  const selectedId = String(selectedProject?.id);
+  const projectIdsArray = (ids || '').split(',');
 
-  if (Number(projectId) == 12) {
+  if (
+    ids !== 'all' &&
+    selectedProject &&
+    !projectIdsArray.some(
+      (id) => id.toString() === selectedProject.id.toString()
+    )
+  ) {
     return <AccessDenied />;
-  }
-
-  if (projectId && !projectIdsArray.includes(projectId)) {
-    return <AccessDenied />;
-  } else if (projectIdsArray.includes(selectedId)) {
-    console.log(`ACCESS GRANTED ${projectIdsArray} and ${selectedId}`);
   }
 
   if (selectedProject) {
