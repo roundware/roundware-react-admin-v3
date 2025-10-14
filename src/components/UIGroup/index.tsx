@@ -6,22 +6,22 @@ import { useRoundwareDataProvider } from "context/DataProviderContext";
 import { useProjects } from "context/ProjectsContext";
 import React, { useMemo } from "react";
 import {
-  BooleanInput,
-  Create,
-  Edit,
-  NumberInput,
-  RadioButtonGroupInput,
-  RaRecord,
-  ReferenceInput,
-  required,
-  SelectInput,
-  SimpleForm,
-  TextInput,
-  useRedirect,
-  useRefresh,
+    BooleanInput,
+    Create,
+    Edit,
+    NumberInput,
+    RadioButtonGroupInput,
+    RaRecord,
+    ReferenceInput,
+    required,
+    SelectInput,
+    SimpleForm,
+    TextInput,
+    useRedirect,
+    useRefresh,
 } from "react-admin";
 import { IUIGroup } from "types/uiGroups";
-import { handleLocalizedStrings } from "utils";
+import { handleLocalizedStrings } from "../../utils.tsx";
 import UIItemFilterField from "./UIItemFilterField";
 import UiModeField from "./UiModeField";
 

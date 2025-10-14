@@ -1,33 +1,33 @@
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  Toolbar,
-  Typography,
+    Card,
+    CardContent,
+    CardHeader,
+    Toolbar,
+    Typography,
 } from "@mui/material";
-import { ResourceList } from "App";
-import { useChartsData } from "components/charts/ChartsData";
-import DateRangeSlider from "components/charts/DateRangeSlider";
-import { useProjects } from "context/ProjectsContext";
 import { addDays } from "date-fns";
-import useBoolean from "hooks/useBoolean";
 import React, { useEffect, useMemo, useState } from "react";
 import { RaRecord, useRedirect } from "react-admin";
 import {
-  Bar,
-  CartesianGrid,
-  ComposedChart,
-  Label,
-  Legend,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
+    Bar,
+    CartesianGrid,
+    ComposedChart,
+    Label,
+    Legend,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
 } from "recharts";
-import { apiFetcher } from "roundwareDataProvider/tokenAuthProvider";
-import { ISession } from "types/session";
-import { DateRange, isWithinRange } from "utils";
+import { ResourceList } from "../../App";
+import { useProjects } from "../../context/ProjectsContext";
+import useBoolean from "../../hooks/useBoolean";
+import { apiFetcher } from "../../roundwareDataProvider/tokenAuthProvider";
+import { ISession } from "../../types/session";
+import { DateRange, isWithinRange } from "../../utils.tsx";
 import { CenteredLoading } from "../Layout/Dashboard";
+import { useChartsData } from "./ChartsData";
+import DateRangeSlider from "./DateRangeSlider";
 
 type SanitizedSession = {
   id: number;

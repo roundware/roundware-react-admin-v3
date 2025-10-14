@@ -1,16 +1,16 @@
 import {
-  AppBar as MuiAppBar,
-  FormControl,
-  InputLabel,
-  Link,
-  ListSubheader,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  Theme,
-  Toolbar,
-  useMediaQuery,
+    FormControl,
+    InputLabel,
+    Link,
+    ListSubheader,
+    MenuItem,
+    AppBar as MuiAppBar,
+    Select,
+    SelectChangeEvent,
+    Stack,
+    Theme,
+    Toolbar,
+    useMediaQuery,
 } from "@mui/material";
 import { useProjects } from "context/ProjectsContext";
 import React, { memo, useState } from "react";
@@ -47,7 +47,7 @@ const AppBar = (): JSX.Element => {
   };
 
   const possibleProjects = (
-    process.env.REACT_APP_INCLUDE_PROJECT_IDS || "all"
+    import.meta.env.VITE_INCLUDE_PROJECT_IDS || "all"
   ).split(`,`);
 
   return (

@@ -1,16 +1,16 @@
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import {
-  Card,
-  CardContent,
-  CircularProgress,
-  Grid,
-  Typography,
+    Card,
+    CardContent,
+    CircularProgress,
+    Grid,
+    Typography,
 } from '@mui/material';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import PlacesAutoComplete from 'components/common/LocationSelector/PlacesAutoComplete';
 import { useSpeakers } from 'context/SpeakersContext';
 import React, { useEffect, useState } from 'react';
-import { mapLibraries } from 'utils';
+import { mapLibraries } from '../../utils.tsx';
 import SpeakerDrawer from './SpeakerDrawer';
 import SpeakerPolygonGroup from './SpeakerPolygon';
 const containerStyle = {
@@ -32,7 +32,7 @@ const SpeakerShapesControl = (): JSX.Element => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY!,
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY!,
     libraries: mapLibraries,
   });
 

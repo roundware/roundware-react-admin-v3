@@ -3,39 +3,39 @@
 import History from "@mui/icons-material/History";
 import { LoadingButton } from "@mui/lab";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  Collapse,
-  LinearProgress,
-  Stack,
-  Toolbar,
-  Typography,
+    Card,
+    CardContent,
+    CardHeader,
+    Collapse,
+    LinearProgress,
+    Stack,
+    Toolbar,
+    Typography,
 } from "@mui/material";
-import { ResourceList } from "App";
-import { useChartsData } from "components/charts/ChartsData";
-import DateRangeSlider from "components/charts/DateRangeSlider";
-import { useProjects } from "context/ProjectsContext";
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
-import useBoolean from "hooks/useBoolean";
 import { capitalize } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import { RaRecord, useRedirect } from "react-admin";
 import {
-  Bar,
-  CartesianGrid,
-  ComposedChart,
-  Label,
-  Legend,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
+    Bar,
+    CartesianGrid,
+    ComposedChart,
+    Label,
+    Legend,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
 } from "recharts";
-import { apiFetcher } from "roundwareDataProvider/tokenAuthProvider";
-import { IAsset } from "types/asset";
-import { DateRange } from "utils";
+import { ResourceList } from "../../App";
+import { useProjects } from "../../context/ProjectsContext";
+import useBoolean from "../../hooks/useBoolean";
+import { apiFetcher } from "../../roundwareDataProvider/tokenAuthProvider";
+import { IAsset } from "../../types/asset";
+import { DateRange } from "../../utils.tsx";
 import { CenteredLoading } from "../Layout/Dashboard";
+import { useChartsData } from "./ChartsData";
+import DateRangeSlider from "./DateRangeSlider";
 
 const mediaTypes: [`audio`, "photo", "text"] = [`audio`, `photo`, `text`];
 const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];

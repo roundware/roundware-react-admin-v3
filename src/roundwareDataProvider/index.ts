@@ -70,7 +70,7 @@ export class RoundwareDataProvider implements DataProvider {
   revalidatingResources: string[] = [];
 
   checkProjectAccess = (project_id: number | undefined) => {
-    const ids = process.env.REACT_APP_INCLUDE_PROJECT_IDS;
+    const ids = import.meta.env.VITE_INCLUDE_PROJECT_IDS;
 
     if (ids === 'all' || typeof project_id == 'undefined') {
       return;

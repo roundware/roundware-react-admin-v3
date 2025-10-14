@@ -1,19 +1,19 @@
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import {
+    Card,
+    CardContent,
+    CircularProgress,
+    Grid,
+    Stack,
+    TextField,
+    Typography,
+} from "@mui/material";
+import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import useFieldValue from "hooks/useFieldValue";
 import React, { PropsWithChildren, useEffect, useState } from "react";
-import {
-  CircularProgress,
-  Typography,
-  Card,
-  CardContent,
-  Grid,
-  TextField,
-  Stack,
-} from "@mui/material";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { mapLibraries } from "utils";
 import PlacesAutoComplete from "./PlacesAutoComplete";
 import SelectorPin from "./SelectorPin";
-import { mapLibraries } from "utils";
 interface Props {
   fieldNames: {
     latitude: string;
@@ -45,7 +45,7 @@ const LocationSelector = (props: PropsWithChildren<Props>): JSX.Element => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY!,
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY!,
     libraries: mapLibraries,
   });
 

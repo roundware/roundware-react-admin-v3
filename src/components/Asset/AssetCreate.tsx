@@ -5,19 +5,19 @@ import TagIdSelector from "components/common/TagIdSelector";
 import TranslatableField from "components/common/TranslatableField";
 import React from "react";
 import {
-  AutocompleteInput,
-  BooleanInput,
-  Create,
-  RaRecord,
-  ReferenceInput,
-  SelectInput,
-  SimpleForm,
-  TextInput,
-  useDataProvider,
-  useRedirect,
+    AutocompleteInput,
+    BooleanInput,
+    Create,
+    RaRecord,
+    ReferenceInput,
+    SelectInput,
+    SimpleForm,
+    TextInput,
+    useDataProvider,
+    useRedirect,
 } from "react-admin";
-import { handleLocalizedStrings } from "utils";
 import { useProjects } from "../../context/ProjectsContext";
+import { handleLocalizedStrings } from "../../utils.tsx";
 import AudioOptions from "../common/AudioOptions";
 import AssetShape from "./AssetShape";
 

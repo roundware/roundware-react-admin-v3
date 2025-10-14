@@ -1,11 +1,11 @@
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import {
-  CardActionArea,
-  Container,
-  Grid,
-  TextField,
-  Typography,
+    CardActionArea,
+    Container,
+    Grid,
+    TextField,
+    Typography,
 } from "@mui/material";
 import Card from "@mui/material/Card";
 import makeStyles from "@mui/styles/makeStyles";
@@ -54,7 +54,7 @@ const ProjectCard = () => {
   const [textFilter, setTextFilter] = useState("");
 
   const possibleProjects = (
-    process.env.REACT_APP_INCLUDE_PROJECT_IDS || "all"
+    import.meta.env.VITE_INCLUDE_PROJECT_IDS || "all"
   ).split(`,`);
   return (
     <>

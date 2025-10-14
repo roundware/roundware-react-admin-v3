@@ -1,27 +1,27 @@
 import { Box } from "@mui/material";
-import { useBuildUI } from "context/BuildUIContext";
+import { useBuildUI } from "../context/BuildUIContext";
 
 import React from "react";
 import {
-  Create,
-  Datagrid,
-  DeleteButton,
-  Edit,
-  EditButton,
-  List,
-  RaRecord,
-  ReferenceField,
-  ReferenceInput,
-  SelectInput,
-  SimpleForm,
-  TextField,
-  TextInput,
-  useDataProvider,
-  useRedirect,
-  useRefresh,
+    Create,
+    Datagrid,
+    DeleteButton,
+    Edit,
+    EditButton,
+    List,
+    RaRecord,
+    ReferenceField,
+    ReferenceInput,
+    SelectInput,
+    SimpleForm,
+    TextField,
+    TextInput,
+    useDataProvider,
+    useRedirect,
+    useRefresh,
 } from "react-admin";
-import { ITag } from "types/tags";
-import { handleLocalizedStrings } from "utils";
+import { ITag } from "../types/tags";
+import { handleLocalizedStrings } from "../utils.tsx";
 import CopyResourceButton from "./common/CopyResource";
 import FormToolbar from "./common/FormToolbar";
 import TranslatableField from "./common/TranslatableField";

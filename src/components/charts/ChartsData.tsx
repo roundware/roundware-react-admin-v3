@@ -5,7 +5,7 @@ import { IAssetData } from "roundware-web-framework/dist/types/asset";
 import { IAsset } from "types/asset";
 import { IListenEvent } from "types/listenEvents";
 import { ISession } from "types/session";
-import { DateRange } from "utils";
+import { DateRange } from "../../utils.tsx";
 
 const INITIAL_RANGE = [subDays(new Date(), 120), new Date()] as DateRange;
 

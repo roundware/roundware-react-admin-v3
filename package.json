@@ -49,8 +49,10 @@
         "@svgr/webpack": "$@svgr/webpack"
     },
     "scripts": {
-        "start": "PORT=1234 GENERATE_SOURCEMAP=false react-scripts start",
-        "build": "react-scripts build",
+        "start": "vite",
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
         "deploy": "cp ./build/index.html ./build/200.html && surge ./build dev-roundware-admin.surge.sh"
     },
     "eslintConfig": {

@@ -8,20 +8,20 @@ import TagIdSelector from 'components/common/TagIdSelector';
 import TranslatableField from 'components/common/TranslatableField';
 import React from 'react';
 import {
-  AutocompleteInput,
-  BooleanInput,
-  DateTimeInput,
-  Edit,
-  NumberInput,
-  ReferenceInput,
-  SelectInput,
-  SimpleForm,
-  TextInput,
-  useDataProvider,
-  useRedirect,
+    AutocompleteInput,
+    BooleanInput,
+    DateTimeInput,
+    Edit,
+    NumberInput,
+    ReferenceInput,
+    SelectInput,
+    SimpleForm,
+    TextInput,
+    useDataProvider,
+    useRedirect,
 } from 'react-admin';
-import { handleLocalizedStrings } from 'utils';
 import { IAsset } from '../../types/asset';
+import { handleLocalizedStrings } from '../../utils.tsx';
 import AssetShape from './AssetShape';
 
 const AssetEdit = (): JSX.Element => {

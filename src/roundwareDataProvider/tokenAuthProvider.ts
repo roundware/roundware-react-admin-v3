@@ -110,7 +110,7 @@ export function fetcher(url: string, options: Options = {}) {
 export function apiFetcher(url: string, options: Options = {}) {
   options.user = createOptionsFromToken().user;
   return fetchUtils.fetchJson(
-    `${process.env.REACT_APP_SERVER_URL}/api/2` + url,
+    `${import.meta.env.VITE_SERVER_URL}/api/2` + url,
     options
   );
 }

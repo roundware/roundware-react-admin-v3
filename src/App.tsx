@@ -1,73 +1,73 @@
 import {
-  AccessTime,
-  AccountTree,
-  Audiotrack,
-  Build,
-  Email,
-  Event,
-  Hearing,
-  Label,
-  Language,
-  PeopleAlt,
-  Speaker,
-  TagFaces,
-  Translate,
-  WebAsset,
+    AccessTime,
+    AccountTree,
+    Audiotrack,
+    Build,
+    Email,
+    Event,
+    Hearing,
+    Label,
+    Language,
+    PeopleAlt,
+    Speaker,
+    TagFaces,
+    Translate,
+    WebAsset,
 } from "@mui/icons-material";
-import AssetMapPage from "components/Asset/AssetMapPage";
-import {
-  AudioTrackCreate,
-  AudioTrackEdit,
-  AudioTrackList,
-} from "components/AudioTrack";
-import { SpeakerCreate, SpeakerEdit } from "components/Speaker";
-import SpeakerList from "components/Speaker/SpeakerList";
-import { TagCreate, TagEdit, TagList } from "components/Tag";
-import {
-  TagCategoryCreate,
-  TagCategoryEdit,
-  TagCategoryList,
-} from "components/TagCategory";
-import {
-  TimedAssetCreate,
-  TimedAssetEdit,
-  TimedAssetList,
-} from "components/TimedAsset";
-import { UiGroupCreate, UiGroupEdit } from "components/UIGroup/index";
-import { UiGroupList } from "components/UIGroup/UIGroupsList";
-import { UserCreate, UserEdit, UserList } from "components/User";
-import { useRoundwareDataProvider } from "context/DataProviderContext";
 import { createBrowserHistory } from "history";
 import React from "react";
 import {
-  Admin,
-  CustomRoutes,
-  EditGuesser,
-  ListGuesser,
-  Resource,
+    Admin,
+    CustomRoutes,
+    EditGuesser,
+    ListGuesser,
+    Resource,
 } from "react-admin";
 import { Route } from "react-router-dom";
 import AssetCreate from "./components/Asset/AssetCreate";
 import AssetEdit from "./components/Asset/AssetEdit";
 import AssetList from "./components/Asset/AssetList";
+import AssetMapPage from "./components/Asset/AssetMapPage";
+import {
+    AudioTrackCreate,
+    AudioTrackEdit,
+    AudioTrackList,
+} from "./components/AudioTrack";
 import CustomLayout from "./components/Layout";
 import Dashboard from "./components/Layout/Dashboard";
 import {
-  ListenEventsCreate,
-  ListenEventsEdit,
-  ListenEventsList,
+    ListenEventsCreate,
+    ListenEventsEdit,
+    ListenEventsList,
 } from "./components/ListenEvents";
 import ProjectCreate from "./components/Project/ProjectCreate";
 import ProjectEdit from "./components/Project/ProjectEdit";
 import ProjectList from "./components/Project/ProjectList";
 import ProjectShow from "./components/Project/ProjectShow";
 import {
-  SessionCreate,
-  SessionEdit,
-  SessionList,
+    SessionCreate,
+    SessionEdit,
+    SessionList,
 } from "./components/Session/Session";
 import SessionMap from "./components/Session/SessionMap";
+import { SpeakerCreate, SpeakerEdit } from "./components/Speaker";
+import SpeakerList from "./components/Speaker/SpeakerList";
+import { TagCreate, TagEdit, TagList } from "./components/Tag";
+import {
+    TagCategoryCreate,
+    TagCategoryEdit,
+    TagCategoryList,
+} from "./components/TagCategory";
+import {
+    TimedAssetCreate,
+    TimedAssetEdit,
+    TimedAssetList,
+} from "./components/TimedAsset";
+import { UiGroupCreate, UiGroupEdit } from "./components/UIGroup/index";
+import { UiGroupList } from "./components/UIGroup/UIGroupsList";
+import { UserCreate, UserEdit, UserList } from "./components/User";
 import authProvider from "./context/AuthProvider";
+import { useRoundwareDataProvider } from "./context/DataProviderContext";
 import { useProjects } from "./context/ProjectsContext";
 import adminTheme from "./styles";
 
@@ -102,9 +102,9 @@ function App({ basename }: { basename: string }): JSX.Element {
           show={ProjectShow}
           icon={AccountTree}
         />,
-        ...(selectedProject && process.env.REACT_APP_INCLUDE_TABS === "all"
+        ...(selectedProject && import.meta.env.VITE_INCLUDE_TABS === "all"
           ? Object.values(resourceLookup)
-          : process.env.REACT_APP_INCLUDE_TABS?.split(`,`)
+          : import.meta.env.VITE_INCLUDE_TABS?.split(`,`)
               ?.filter((r) => Object.keys(resourceLookup).includes(r))
               .map((r) => resourceLookup[r]) || []),
         <CustomRoutes key="custom-routes">
@@ -284,9 +284,9 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
 
 export const ResourceList = [
   `projects`,
-  ...(process.env.REACT_APP_INCLUDE_TABS === "all"
+  ...(import.meta.env.VITE_INCLUDE_TABS === "all"
     ? Object.keys(resourceLookup)
-    : process.env.REACT_APP_INCLUDE_TABS?.split(`,`)?.filter((r) =>
+    : import.meta.env.VITE_INCLUDE_TABS?.split(`,`)?.filter((r) =>
         Object.keys(resourceLookup).includes(r)
       ) || []),
 ];

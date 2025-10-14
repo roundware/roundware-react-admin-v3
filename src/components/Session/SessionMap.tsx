@@ -1,11 +1,11 @@
 import { Alert, Box, LinearProgress } from "@mui/material";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import {
-  SessionMapContextProvider,
-  useSesisonMap,
+    SessionMapContextProvider,
+    useSesisonMap,
 } from "context/SessionMapContext";
 import React from "react";
-import { mapLibraries } from "utils";
+import { mapLibraries } from "../../utils.tsx";
 import EventInfoWindow from "./EventInfoWindow";
 import SessionMapFilters from "./SessionMapFilters";
 import SessionMapMarkers from "./SessionMapMarkers";
@@ -28,7 +28,7 @@ const GoogleMapsWrapper = (props: { children: React.ReactNode }) => {
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY!,
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY!,
     libraries: mapLibraries,
   });
 

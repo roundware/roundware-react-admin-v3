@@ -1,7 +1,7 @@
 import { AuthProvider, Options } from "react-admin";
 
 const opts = {
-  obtainAuthTokenUrl: `${process.env.REACT_APP_SERVER_URL}/api/2/login/`,
+  obtainAuthTokenUrl: `${import.meta.env.VITE_SERVER_URL}/api/2/login/`,
 };
 const tokenAuthProvider: AuthProvider = {
   login: async ({ username, password }) => {

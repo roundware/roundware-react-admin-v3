@@ -1,10 +1,10 @@
-import App, { BaseApp } from 'App';
-import AccessDenied from 'components/Layout/AccessDenied';
-import SplashScreen from 'components/Layout/SplashScreen';
-import tokenAuthProvider from 'context/AuthProvider';
-import { useProjects } from 'context/ProjectsContext';
 import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation, useParams } from 'react-router-dom';
+import App, { BaseApp } from './App';
+import AccessDenied from './components/Layout/AccessDenied';
+import SplashScreen from './components/Layout/SplashScreen';
+import tokenAuthProvider from './context/AuthProvider';
+import { useProjects } from './context/ProjectsContext';
 
 const CurrentProjectApp = App;
 const ProjectRoute = () => {
@@ -44,7 +44,7 @@ const ProjectRoute = () => {
   if (isCurrentProjectRoute) {
     return <CurrentProjectApp key={3} basename='' />;
   }
-  const ids = process.env.REACT_APP_INCLUDE_PROJECT_IDS;
+  const ids = import.meta.env.VITE_INCLUDE_PROJECT_IDS;
   const projectIdsArray = (ids || '').split(',');
 
   if (

@@ -1,30 +1,30 @@
 import { History, Save } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import {
-  Alert,
-  Button,
-  LinearProgress,
-  Paper,
-  Slide,
-  Stack,
+    Alert,
+    Button,
+    LinearProgress,
+    Paper,
+    Slide,
+    Stack,
 } from "@mui/material";
 import {
-  GoogleMap,
-  MarkerClusterer,
-  useGoogleMap,
-  useJsApiLoader,
+    GoogleMap,
+    MarkerClusterer,
+    useGoogleMap,
+    useJsApiLoader,
 } from "@react-google-maps/api";
 import { Clusterer } from "@react-google-maps/marker-clusterer";
 import MapControl from "components/common/MapControl";
 import {
-  AssetMapContextProvider,
-  useAssetMapContext,
+    AssetMapContextProvider,
+    useAssetMapContext,
 } from "context/AssetMapContext";
 import React, { Fragment, useEffect, useState } from "react";
 import { useListController } from "react-admin";
 import { OverlappingMarkerSpiderfier } from "ts-overlapping-marker-spiderfier";
 import { IAsset } from "types/asset";
-import { mapLibraries } from "utils";
+import { mapLibraries } from "../../utils.tsx";
 import AssetMarker from "./AssetMarker";
 
 const AssetMarkers = () => {
@@ -163,7 +163,7 @@ const GoogleMapsWrapper = (props: { children: React.ReactNode }) => {
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY!,
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY!,
     libraries: mapLibraries,
   });
   const { data, total, setPerPage } = useListController();

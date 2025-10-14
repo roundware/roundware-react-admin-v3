@@ -7,20 +7,20 @@ import { useRoundwareDataProvider } from "context/DataProviderContext";
 import { IProject, useProjects } from "context/ProjectsContext";
 import React from "react";
 import {
-  BooleanInput,
-  Create,
-  DateTimeInput,
-  NumberInput,
-  RaRecord,
-  ReferenceArrayInput,
-  required,
-  SelectArrayInput,
-  SelectInput,
-  SimpleForm,
-  TextInput,
+    BooleanInput,
+    Create,
+    DateTimeInput,
+    NumberInput,
+    RaRecord,
+    ReferenceArrayInput,
+    required,
+    SelectArrayInput,
+    SelectInput,
+    SimpleForm,
+    TextInput,
 } from "react-admin";
 import { useNavigate } from "react-router-dom";
-import { handleLocalizedStrings } from "utils";
+import { handleLocalizedStrings } from "../../utils.tsx";
 const ProjectCreate = (): JSX.Element => {
   const dataProvider = useRoundwareDataProvider();
 
