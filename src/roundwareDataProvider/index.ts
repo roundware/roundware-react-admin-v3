@@ -25,7 +25,7 @@ import {
     UpdateManyResult,
     UpdateParams,
     UpdateResult,
-} from 'ra-core';
+} from 'react-admin';
 import { XMLHttpRequestWithAuthToken } from './tokenAuthProvider';
 
 const getPaginationQuery = (pagination: PaginationPayload) => {

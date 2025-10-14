@@ -1,38 +1,21 @@
-import { Box, Theme, Typography } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
+import { Box, Typography } from "@mui/material";
 import * as React from "react";
 import { EditButton, ShowButton } from "react-admin";
 import { useProjects } from "../../../context/ProjectsContext";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    color: theme.palette.text.primary,
-    padding: 10,
-    marginTop: theme.spacing(2),
-    marginBottom: "1em",
-  },
-  media: {
-    marginLeft: "auto",
-  },
-  actions: {
-    [theme.breakpoints.down("lg")]: {
-      padding: 0,
-      flexWrap: "wrap",
-      "& a": {
-        marginTop: "1em",
-        marginLeft: "0!important",
-        marginRight: "1em",
-      },
-    },
-  },
-}));
-
 const ProjectDetails = () => {
   const { selectedProject } = useProjects();
-  const classes = useStyles();
   if (!selectedProject) return null;
   return (
-    <Box display="flex" className={classes.root}>
+    <Box 
+      display="flex" 
+      sx={{ 
+        color: 'text.primary',
+        padding: 1.25,
+        marginTop: 2,
+        marginBottom: '1em'
+      }}
+    >
       <Box flex="1">
         <Typography variant="h5" component="h2" gutterBottom>
           {selectedProject?.name}

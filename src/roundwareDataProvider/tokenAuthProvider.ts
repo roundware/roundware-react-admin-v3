@@ -1,4 +1,4 @@
-import { AuthProvider, fetchUtils, Options, RaRecord } from "ra-core";
+import { AuthProvider, fetchUtils, Options, RaRecord } from "react-admin";
 
 function tokenAuthProvider(options: Options = {}): AuthProvider {
   const opts = {

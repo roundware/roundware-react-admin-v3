@@ -1,5 +1,6 @@
 import { Hearing, RecordVoiceOver, WatchLater } from "@mui/icons-material";
 import { CircularProgress, Grid } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 import AssetMediaTypesChart from "components/charts/AssetMediaTypesChart";
 import AssetsChart from "components/charts/AssetsChart";
 import BrowsersChart from "components/charts/BrowsersChart";
@@ -9,25 +10,31 @@ import ListenEventsChart from "components/charts/ListenEventsChart";
 import SessionsChart from "components/charts/SessionsChart";
 import { useProjects } from "context/ProjectsContext";
 import React from "react";
-import { useQuery } from "react-query";
 import { apiFetcher } from "roundwareDataProvider/tokenAuthProvider";
 import { ResourceList } from "../../../App";
 import CardWithIcon from "./CardWithIcon";
 
 const DashboardContent = () => {
   const project = useProjects();
-  const assetsCountQuery = useQuery(["assetsCount"], () =>
-    apiFetcher(
-      `/assets/count?project_id=${project?.selectedProject?.id}&submitted=true`
-    )
-  );
+  const assetsCountQuery = useQuery({
+    queryKey: ["assetsCount"],
+    queryFn: () =>
+      apiFetcher(
+        `/assets/count?project_id=${project?.selectedProject?.id}&submitted=true`
+      )
+  });
 
-  const listenEventsCountQuery = useQuery(["listeneventsCount"], () =>
-    apiFetcher(`/listenevents/count?project_id=${project?.selectedProject?.id}`)
-  );
-  const sessionsCountQuery = useQuery(["sessionsCount"], () =>
-    apiFetcher(`/sessions/count?project_id=${project?.selectedProject?.id}`)
-  );
+  const listenEventsCountQuery = useQuery({
+    queryKey: ["listeneventsCount"],
+    queryFn: () =>
+      apiFetcher(`/listenevents/count?project_id=${project?.selectedProject?.id}`)
+  });
+  
+  const sessionsCountQuery = useQuery({
+    queryKey: ["sessionsCount"],
+    queryFn: () =>
+      apiFetcher(`/sessions/count?project_id=${project?.selectedProject?.id}`)
+  });
 
   return (
     <ChartsDataProvider>

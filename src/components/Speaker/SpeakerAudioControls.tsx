@@ -1,15 +1,12 @@
 import { Delete } from "@mui/icons-material";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  Slider,
-  Tab,
-  Tabs,
-  Typography,
+    Box,
+    Button,
+    Slider,
+    Tab,
+    Tabs,
+    Typography,
 } from "@mui/material";
 import AudioRecorder from "components/common/AudioRecorder";
 import useFieldValue from "hooks/useFieldValue";
@@ -50,96 +47,84 @@ const SpeakerAudioControls = (): JSX.Element => {
   };
 
   return (
-    <Card variant="outlined">
-      <CardContent>
-        <Grid container direction="row">
-          <Grid item xs={12} md={12}>
-            <Tabs value={sourceMode} onChange={handleChange}>
-              <Tab label={`UPLOAD`} value={"UPLOAD"} />
-              <Tab label={`URI`} value={"URI"} />
-              <Tab label="RECORD" value="RECORD" />
-            </Tabs>
+    <Box sx={{ width: '100%' }}>
+      <Tabs value={sourceMode} onChange={handleChange}>
+        <Tab label={`UPLOAD`} value={"UPLOAD"} />
+        <Tab label={`URI`} value={"URI"} />
+        <Tab label="RECORD" value="RECORD" />
+      </Tabs>
 
-            <TabPanel value={`UPLOAD`} current={sourceMode}>
-              <FileInput
-                source="file"
-                accept={".mp3,.wav,.m4a"}
-                multiple={false}
-              >
-                <FileField source="src" title="title" fullWidth />
-              </FileInput>
-            </TabPanel>
+      <TabPanel value={`UPLOAD`} current={sourceMode}>
+        <FileInput
+          source="file"
+          accept={".mp3,.wav,.m4a"}
+          multiple={false}
+        >
+          <FileField source="src" title="title" fullWidth />
+        </FileInput>
+      </TabPanel>
 
-            <TabPanel value={`URI`} current={sourceMode}>
-              <TextInput source="uri" required label="File URI" fullWidth />
-              <TextInput source="backupuri" label="Back up URI" fullWidth />
-            </TabPanel>
+      <TabPanel value={`URI`} current={sourceMode}>
+        <TextInput source="uri" required label="File URI" fullWidth />
+        <TextInput source="backupuri" label="Back up URI" fullWidth />
+      </TabPanel>
 
-            <TabPanel value={`RECORD`} current={sourceMode}>
-              <AudioRecorder
-                onFinish={(b) =>
-                  setFile({
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    rawFile: new File([b], "admin_recorded"),
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    name: `admin-${Math.random()}`.split(`.`, ``),
-                    src: URL.createObjectURL(b),
-                  })
-                }
-              />
-              {file && (
-                <Button
-                  color="error"
-                  onClick={() => setFile(null)}
-                  startIcon={<Delete />}
-                >
-                  Delete
-                </Button>
-              )}
-            </TabPanel>
-
-            <Box>
-              <SpeakerAudioPlayer
-                src={
-                  sourceMode == "UPLOAD" || sourceMode == "RECORD"
-                    ? file?.src
-                    : uri
-                }
-              />
-            </Box>
-          </Grid>
-          <Grid item xs={12}>
-            Volume Range
-          </Grid>
-          <Grid
-            xs={12}
-            md={12}
-            item
-            container
-            direction="row"
-            spacing={3}
-            wrap="nowrap"
+      <TabPanel value={`RECORD`} current={sourceMode}>
+        <AudioRecorder
+          onFinish={(b) =>
+            setFile({
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              rawFile: new File([b], "admin_recorded"),
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              name: `admin-${Math.random()}`.split(`.`, ``),
+              src: URL.createObjectURL(b),
+            })
+          }
+        />
+        {file && (
+          <Button
+            color="error"
+            onClick={() => setFile(null)}
+            startIcon={<Delete />}
           >
-            <Grid item>
-              <VolumeUpIcon />
-            </Grid>
-            <Grid item style={{ flexGrow: 1 }}>
-              <Slider
-                value={range}
-                onChange={handleRangeChange}
-                valueLabelDisplay="auto"
-                step={0.01}
-                min={0}
-                max={1}
-                aria-labelledby="range-slider"
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
+            Delete
+          </Button>
+        )}
+      </TabPanel>
+
+      <Box sx={{ width: '100%', mt: 2 }}>
+        <SpeakerAudioPlayer
+          src={
+            sourceMode == "UPLOAD" || sourceMode == "RECORD"
+              ? file?.src
+              : uri
+          }
+        />
+      </Box>
+
+      {/* Volume Range - positioned below the audio player */}
+      <Box sx={{ mt: 2, width: '100%' }}>
+        <Typography variant="h6" gutterBottom>
+          Volume Range
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+          <VolumeUpIcon />
+          <Box sx={{ flexGrow: 1, px: 1 }}>
+            <Slider
+              value={range}
+              onChange={handleRangeChange}
+              valueLabelDisplay="auto"
+              step={0.01}
+              min={0}
+              max={1}
+              aria-labelledby="range-slider"
+            />
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

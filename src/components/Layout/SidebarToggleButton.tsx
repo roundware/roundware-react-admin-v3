@@ -1,19 +1,16 @@
-import * as React from "react";
-import { IconButton, Theme, Tooltip } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useTranslate } from "ra-core";
+import { IconButton, Tooltip } from "@mui/material";
+import * as React from "react";
+import { useTranslate } from "react-admin";
 import { useToggleSidebar } from "./useToggleSidebar";
 
 /**
  * A button that toggles the sidebar. Used by default in the <AppBar>.
  * @param props The component props
  * @param {String} props.className An optional class name to apply to the button
- * @param {ClassesOverride<typeof useStyles>} props.classes An object containing styles.
  */
 export const SidebarToggleButton = (props: SidebarToggleButtonProps) => {
   const translate = useTranslate();
-  const classes = useStyles(props);
   const { className } = props;
   const [open, toggleSidebar] = useToggleSidebar();
 
@@ -31,36 +28,15 @@ export const SidebarToggleButton = (props: SidebarToggleButtonProps) => {
         size="large"
       >
         <MenuIcon
-          classes={{
-            root: open
-              ? classes.menuButtonIconOpen
-              : classes.menuButtonIconClosed,
+          sx={{
+            transition: "transform 300ms cubic-bezier(0.4, 0, 0.2, 1)",
+            transform: open ? "rotate(180deg)" : "rotate(0deg)",
           }}
         />
       </IconButton>
     </Tooltip>
   );
 };
-
-const useStyles = makeStyles(
-  (theme: Theme) => ({
-    menuButtonIconClosed: {
-      transition: theme.transitions.create(["transform"], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      transform: "rotate(0deg)",
-    },
-    menuButtonIconOpen: {
-      transition: theme.transitions.create(["transform"], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      transform: "rotate(180deg)",
-    },
-  }),
-  { name: "RaSidebarToggleButton" }
-);
 
 export type SidebarToggleButtonProps = {
   className?: string;

@@ -15,7 +15,8 @@ import SpeakerDrawer from './SpeakerDrawer';
 import SpeakerPolygonGroup from './SpeakerPolygon';
 const containerStyle = {
   width: '100%',
-  height: '60vh',
+  height: '100%',
+  minHeight: '60vh',
 };
 
 // const center = {
@@ -88,8 +89,8 @@ const SpeakerShapesControl = (): JSX.Element => {
         transition: 'transform 0.1s ease-in-out',
       }}
     >
-      <Card variant='elevation' elevation={4} style={{ margin: 16 }}>
-        <CardContent>
+      <Card variant='elevation' elevation={4} style={{ width: '100%', height: '100%' }}>
+        <CardContent style={{ height: '100%' }}>
           <Grid container direction='column' spacing={2}>
             {/* speaker info */}
             <Grid item>

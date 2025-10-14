@@ -92,8 +92,8 @@ const DeleteWithBinary = ({ isBulk }: { isBulk?: boolean }) => {
   const [deleteBinary, setDeleteBinary] = useState(false);
   return (
     <>
-      <Button color='error' onClick={handleDeleteButton} startIcon={<Delete />}>
-        Delete
+      <Button color='error' onClick={handleDeleteButton} sx={{ minWidth: 'auto', px: 1 }}>
+        <Delete />
       </Button>
 
       <Dialog

@@ -2,15 +2,15 @@ import { Edit } from '@mui/icons-material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import {
-  Alert,
-  AlertTitle,
-  Button,
-  Grid,
-  IconButton,
-  Paper,
-  Stack,
-  Tooltip,
-  Typography,
+    Alert,
+    AlertTitle,
+    Button,
+    Grid,
+    IconButton,
+    Paper,
+    Stack,
+    Tooltip,
+    Typography,
 } from '@mui/material';
 import CopyResourceButton from 'components/common/CopyResource';
 import DeleteWithBinary from 'components/common/DeleteWithBinary';
@@ -18,12 +18,12 @@ import { useProjects } from 'context/ProjectsContext';
 import { useSpeakers } from 'context/SpeakersContext';
 import React from 'react';
 import {
-  BooleanField,
-  Datagrid,
-  EditButton,
-  List,
-  TextField,
-  useRecordContext,
+    BooleanField,
+    Datagrid,
+    EditButton,
+    List,
+    TextField,
+    useRecordContext,
 } from 'react-admin';
 import SpeakerShapesControl from './SpeakerShapesControl';
 const SpeakerList = (): JSX.Element => {
@@ -38,7 +38,6 @@ const SpeakerList = (): JSX.Element => {
   return (
     <>
       <Grid
-        spacing={3}
         container
         direction='row'
         wrap='nowrap'
@@ -50,11 +49,10 @@ const SpeakerList = (): JSX.Element => {
           xs={12}
           md={6}
           style={{
-            flexShrink: 1,
-            flexGrow: 0,
+            flex: '1 1 50%',
             overflowY: 'scroll',
             overflowX: 'visible',
-            width: '100%',
+            width: '50%',
             height: '80vh',
           }}
         >
@@ -153,6 +151,7 @@ const SpeakerList = (): JSX.Element => {
             <Datagrid
               bulkActionButtons={<DeleteWithBinary isBulk />}
               style={{ flexShrink: 1 }}
+              rowClick={false}
             >
               <SpeakerHighter />
 
@@ -170,7 +169,7 @@ const SpeakerList = (): JSX.Element => {
             </Datagrid>
           </List>
         </Grid>
-        <Grid xs={12} md={6} item style={{ flexShrink: 1, flexGrow: 1 }}>
+        <Grid xs={12} md={6} item style={{ flex: '1 1 50%', width: '50%' }}>
           <SpeakerShapesControl />
         </Grid>
       </Grid>

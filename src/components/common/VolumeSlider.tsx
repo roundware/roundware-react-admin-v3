@@ -1,6 +1,5 @@
-import { Stack, Slider, Typography } from "@mui/material";
-import withStyles from "@mui/styles/withStyles";
 import VolumeUp from "@mui/icons-material/VolumeUp";
+import { Slider, Stack, Typography } from "@mui/material";
 import React from "react";
 import useFieldValue from "../../hooks/useFieldValue";
 interface Props {
@@ -20,7 +19,7 @@ const VolumeSlider = ({ field = `volume` }: Props): JSX.Element => {
 
       <Typography variant="subtitle1">{(volume * 100).toFixed(0)} %</Typography>
 
-      <VolumeSliderVariant
+      <Slider
         orientation="vertical"
         valueLabelDisplay="off"
         value={(volume || 1) * 100}
@@ -36,5 +35,3 @@ const VolumeSlider = ({ field = `volume` }: Props): JSX.Element => {
 };
 
 export default VolumeSlider;
-
-export const VolumeSliderVariant = withStyles({})(Slider);

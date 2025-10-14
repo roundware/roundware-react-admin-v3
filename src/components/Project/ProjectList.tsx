@@ -9,9 +9,8 @@ import {
 } from "@mui/material";
 import Card from "@mui/material/Card";
 import makeStyles from "@mui/styles/makeStyles";
-import { useRedirect } from "ra-core";
 import React, { useState } from "react";
-import { List } from "react-admin";
+import { List, useRedirect } from "react-admin";
 import { useNavigate } from "react-router-dom";
 import { IProject, useProjects } from "../../context/ProjectsContext";
 const ProjectList = (): JSX.Element => {

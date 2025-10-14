@@ -1,18 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  LinearProgress,
-  Grid,
-  IconButton,
-  Slider,
-  Tooltip,
-  Typography,
-  SliderProps,
-} from "@mui/material";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ResetIcon from "@mui/icons-material/Restore";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
+import {
+    Box,
+    Grid,
+    IconButton,
+    LinearProgress,
+    Slider,
+    SliderProps,
+    Tooltip,
+    Typography,
+} from "@mui/material";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { Region, WaveForm, WaveSurfer } from "wavesurfer-react";
@@ -181,73 +182,56 @@ const AudioEditField = ({
           </WaveSurfer>
         </Grid>
 
-        <Grid item container justifyContent="space-between" direction="row">
-          <Grid
-            item
-            justifyContent="center"
-            alignItems="center"
-            direction="row"
-            container
-            wrap={"nowrap"}
-            xs={12}
-            md={8}
-          >
-            {loading ? (
-              <div>
-                <div>Loading Audio {progress} %</div>
-                <LinearProgress
-                  style={{ flexGrow: 1 }}
-                  variant="determinate"
-                  value={progress}
-                />
-              </div>
-            ) : (
-              <>
-                <Grid item>
-                  <Tooltip title="Reset Range">
-                    <IconButton onClick={resetRange} size="large">
-                      <ResetIcon />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-                <Grid item>
-                  <Tooltip title={playing ? `Pause Audio` : `Play Audio`}>
-                    <IconButton onClick={handlePlay} size={size}>
-                      {playing ? <PauseIcon /> : <PlayArrowIcon />}
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-                {buttons?.map((b) => (
-                  <Grid item key={b?.toString()}>
-                    {b}
-                  </Grid>
-                ))}
-              </>
-            )}
-          </Grid>
-          {audioSrc && !loading && (
-            <Grid
-              item
-              container
-              direction="row"
-              spacing={1}
-              alignItems="center"
-              justifyContent="flex-end"
-              md={4}
-              xs={12}
-            >
-              <Grid item>
-                <ZoomOutIcon />
-              </Grid>
-              <Grid item style={{ flexGrow: 1 }}>
-                <Slider onChange={handleOnZoom} />
-              </Grid>
-              <Grid item>
-                <ZoomInIcon />
-              </Grid>
-            </Grid>
+        {/* Playback Controls */}
+        <Grid item xs={12}>
+          {loading ? (
+            <Box>
+              <Typography>Loading Audio {progress} %</Typography>
+              <LinearProgress
+                variant="determinate"
+                value={progress}
+                sx={{ width: '100%' }}
+              />
+            </Box>
+          ) : (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2, mb: 2 }}>
+              <Tooltip title="Reset Range">
+                <IconButton onClick={resetRange} size="large">
+                  <ResetIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={playing ? `Pause Audio` : `Play Audio`}>
+                <IconButton onClick={handlePlay} size={size}>
+                  {playing ? <PauseIcon /> : <PlayArrowIcon />}
+                </IconButton>
+              </Tooltip>
+              {buttons?.map((b) => (
+                <Box key={b?.toString()}>
+                  {b}
+                </Box>
+              ))}
+            </Box>
           )}
         </Grid>
+
+        {/* Zoom Controls */}
+        {audioSrc && !loading && (
+          <Grid item xs={12}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 1 }}>
+              <ZoomOutIcon />
+              <Slider 
+                onChange={handleOnZoom} 
+                sx={{ flexGrow: 1 }}
+                min={1}
+                max={100}
+                defaultValue={10}
+                valueLabelDisplay="auto"
+                valueLabelFormat={(value) => `${value}x`}
+              />
+              <ZoomInIcon />
+            </Box>
+          </Grid>
+        )}
       </Grid>
     </div>
   );

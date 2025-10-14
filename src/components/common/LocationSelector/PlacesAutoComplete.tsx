@@ -1,20 +1,17 @@
-import React from "react";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import Autocomplete from "@mui/material/Autocomplete";
 import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import makeStyles from "@mui/styles/makeStyles";
 import parse from "autosuggest-highlight/parse";
 import throttle from "lodash/throttle";
-import { Theme } from "@mui/material";
+import React from "react";
 
 interface Props {
   onSelect: (lat: number, lng: number) => void;
 }
 
 const PlacesAutoComplete = ({ onSelect }: Props): JSX.Element => {
-  const classes = useStyles();
   const [value, setValue] =
     React.useState<google.maps.places.AutocompletePrediction | null>(null);
   const [inputValue, setInputValue] = React.useState("");
@@ -129,7 +126,12 @@ const PlacesAutoComplete = ({ onSelect }: Props): JSX.Element => {
           <li {...p}>
             <Grid container alignItems="center">
               <Grid item>
-                <LocationOnIcon className={classes.icon} />
+                <LocationOnIcon 
+                  sx={{ 
+                    color: "text.secondary",
+                    marginRight: 2 
+                  }} 
+                />
               </Grid>
               <Grid item xs>
                 {parts.map((part, index) => (
@@ -155,12 +157,6 @@ const autocompleteService: {
   current: null | google.maps.places.AutocompleteService;
 } = { current: null };
 
-const useStyles = makeStyles((theme: Theme) => ({
-  icon: {
-    color: theme.palette.text.secondary,
-    marginRight: theme.spacing(2),
-  },
-}));
 
 type PlaceType = google.maps.places.AutocompletePrediction;
 export default PlacesAutoComplete;

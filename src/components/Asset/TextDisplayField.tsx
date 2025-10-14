@@ -2,18 +2,18 @@ import Article from '@mui/icons-material/Article';
 import Download from '@mui/icons-material/Download';
 import { LoadingButton } from '@mui/lab';
 import {
-  Box,
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Stack,
+    Box,
+    Button,
+    CircularProgress,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    Stack,
 } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import { saveAs } from 'file-saver';
 import React, { useState } from 'react';
 import { useRecordContext } from 'react-admin';
-import { useQuery } from 'react-query';
 const TextDisplayField = () => {
   const [open, Open] = useState(false);
   const record = useRecordContext();
@@ -44,13 +44,11 @@ const TextDisplayField = () => {
 };
 
 export const TextDisplay = ({ file }: { file?: string }) => {
-  const textContentQuery = useQuery(
-    [`text`, file],
-    () => fetch(file ?? ``).then((res) => res.text()),
-    {
-      enabled: !!file,
-    }
-  );
+  const textContentQuery = useQuery({
+    queryKey: [`text`, file],
+    queryFn: () => fetch(file ?? ``).then((res) => res.text()),
+    enabled: !!file,
+  });
 
   const handleDownload = async () => {
     if (!file) return;

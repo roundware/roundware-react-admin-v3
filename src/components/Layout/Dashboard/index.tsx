@@ -1,14 +1,7 @@
-import { Box, CircularProgress, Theme } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
+import { Box, CircularProgress } from "@mui/material";
 import React from "react";
 import DashboardContent from "./DashboardContent";
 import ProjectDetails from "./ProjectDetails";
-
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    marginTop: theme.spacing(4),
-  },
-}));
 
 export const initialDays = 365;
 export const intervals = [
@@ -16,14 +9,12 @@ export const intervals = [
 ];
 
 const Dashboard = (): JSX.Element => {
-  const classes = useStyles();
 
   return (
-    <div className={classes.container}>
+    <Box sx={{ marginTop: 4 }}>
       <ProjectDetails />
-
       <DashboardContent />
-    </div>
+    </Box>
   );
 };
 
