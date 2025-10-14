@@ -1,30 +1,30 @@
 import { stringify } from 'query-string';
 import {
-  CreateParams,
-  CreateResult,
-  DataProvider,
-  DeleteManyParams,
-  DeleteManyResult,
-  DeleteParams,
-  DeleteResult,
-  fetchUtils,
-  FilterPayload,
-  GetListParams,
-  GetListResult,
-  GetManyParams,
-  GetManyReferenceParams,
-  GetManyReferenceResult,
-  GetManyResult,
-  GetOneParams,
-  GetOneResult,
-  Identifier,
-  PaginationPayload,
-  RaRecord,
-  SortPayload,
-  UpdateManyParams,
-  UpdateManyResult,
-  UpdateParams,
-  UpdateResult,
+    CreateParams,
+    CreateResult,
+    DataProvider,
+    DeleteManyParams,
+    DeleteManyResult,
+    DeleteParams,
+    DeleteResult,
+    fetchUtils,
+    FilterPayload,
+    GetListParams,
+    GetListResult,
+    GetManyParams,
+    GetManyReferenceParams,
+    GetManyReferenceResult,
+    GetManyResult,
+    GetOneParams,
+    GetOneResult,
+    Identifier,
+    PaginationPayload,
+    RaRecord,
+    SortPayload,
+    UpdateManyParams,
+    UpdateManyResult,
+    UpdateParams,
+    UpdateResult,
 } from 'ra-core';
 import { XMLHttpRequestWithAuthToken } from './tokenAuthProvider';
 
@@ -671,8 +671,11 @@ export class RoundwareDataProvider implements DataProvider {
         if (data instanceof File) {
           formData.append(root, data);
         } else if (Array.isArray(data)) {
+          // Handle ManyToMany fields properly - append each array item with the same key
           for (let i = 0; i < data.length; i++) {
-            appendFormData(data[i], root);
+            if (data[i] !== null && data[i] !== undefined) {
+              formData.append(root, data[i] as string);
+            }
           }
         } else if (typeof data === 'object' && data && !Array.isArray(data)) {
           for (const key in data) {
