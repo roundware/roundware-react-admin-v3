@@ -4,6 +4,7 @@
     "private": true,
     "dependencies": {
         "@date-io/date-fns": "^1.3.13",
+        "@hello-pangea/dnd": "^18.0.1",
         "@mui/icons-material": "^7.3.4",
         "@mui/lab": "^7.0.0",
         "@mui/material": "^7.3.4",
@@ -26,16 +27,13 @@
         "history": "^5.3.0",
         "interweave": "^13.0.0",
         "lodash": "^4.17.21",
-        
         "patch-package": "^6.4.7",
         "ra-data-simple-rest": "^5.12.0",
         "random-material-color": "^1.0.5",
         "react": "^18.3.1",
         "react-admin": "^5.12.0",
-        "@hello-pangea/dnd": "^18.0.1",
         "react-dom": "^18.3.1",
         "react-mic": "https://github.com/shreyas-jadhav/react-mic/raw/master/react-mic-12.4.6.tgz",
-        
         "react-spring": "^9.3.2",
         "recharts": "^2.1.14",
         "roundware-web-framework": "^0.12.8-alpha.14",
@@ -44,7 +42,7 @@
         "wavesurfer.js": "^4.6.0",
         "web-vitals": "^3.5.2"
     },
-  "resolutions": {},
+    "resolutions": {},
     "overrides": {
         "@svgr/webpack": "$@svgr/webpack",
         "@babel/runtime": "^7.26.10",
@@ -63,13 +61,8 @@
         "dev": "vite",
         "build": "vite build",
         "preview": "vite preview",
+        "lint": "eslint . --ext .ts,.tsx --max-warnings=0",
         "deploy": "cp ./build/index.html ./build/200.html && surge ./build dev-roundware-admin.surge.sh"
-    },
-    "eslintConfig": {
-        "extends": [
-            "react-app",
-            "react-app/jest"
-        ]
     },
     "browserslist": {
         "production": [
@@ -93,14 +86,16 @@
         "@types/lodash": "^4.14.186",
         "@types/node": "^24.7.2",
         "@types/react": "^18.3.12",
-        
         "@types/react-dom": "^18.3.1",
         "@types/react-mic": "^12.4.3",
-        
         "@types/react-window": "^1.8.5",
         "@types/wavesurfer.js": "^5.2.2",
+        "@typescript-eslint/eslint-plugin": "^8.46.1",
+        "@typescript-eslint/parser": "^8.46.1",
         "@vitejs/plugin-react": "^5.0.4",
-        
+        "eslint": "^9.37.0",
+        "eslint-plugin-react": "^7.37.5",
+        "eslint-plugin-react-hooks": "^7.0.0",
         "typescript": "^5.6.3",
         "vite": "^7.1.10"
     }
