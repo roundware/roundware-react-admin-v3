@@ -1,4 +1,5 @@
 import { LinearProgress, Stack, Typography } from '@mui/material';
+import DualListReferenceInput from 'components/common/DualListReferenceInput';
 import FileDownloadButton from 'components/common/FileDownloadButton';
 import FormToolbar from 'components/common/FormToolbar';
 import { useProjects } from 'context/ProjectsContext';
@@ -12,9 +13,7 @@ import {
   maxLength,
   NumberInput,
   RaRecord,
-  ReferenceArrayInput,
   ReferenceInput,
-  SelectArrayInput,
   SelectInput,
   SimpleForm,
   SimpleFormProps,
@@ -52,7 +51,7 @@ export const SpeakerEdit = (): JSX.Element => {
   const [update] = useUpdate();
 
   const success = useBoolean();
-  const save: SimpleFormProps[`onSubmit`] = async (values) => {
+  const save: SimpleFormProps[`onSubmit`] = async (values: any) => {
     values = transform(values as RaRecord);
     try {
       await update(
@@ -114,24 +113,22 @@ export const SpeakerEdit = (): JSX.Element => {
           <SelectInput optionText='name' fullWidth />
         </ReferenceInput>
 
-        <ReferenceArrayInput
+        <DualListReferenceInput
           reference='speakers'
           source='parents'
-          fullWidth
           label='Parents'
-        >
-          <SelectArrayInput optionText='code' fullWidth />
-        </ReferenceArrayInput>
+          optionText='code'
+          filter={{ project_id: selectedProject?.id }}
+        />
 
         {/* children */}
-        <ReferenceArrayInput
+        <DualListReferenceInput
           reference='speakers'
           source='children'
-          fullWidth
           label='Children'
-        >
-          <SelectArrayInput optionText='code' fullWidth />
-        </ReferenceArrayInput>
+          optionText='code'
+          filter={{ project_id: selectedProject?.id }}
+        />
 
         {progress > 0 && (
           <Stack sx={{ width: '100%' }}>
@@ -173,7 +170,7 @@ export const SpeakerCreate = (): JSX.Element => {
   const notify = useNotify();
   const success = useBoolean();
 
-  const save: SimpleFormProps[`onSubmit`] = async (values) => {
+  const save: SimpleFormProps[`onSubmit`] = async (values: any) => {
     values = transform(values as RaRecord);
     try {
       await create(
@@ -216,7 +213,6 @@ export const SpeakerCreate = (): JSX.Element => {
         warnWhenUnsavedChanges={!success.value}
         onSubmit={save}
         toolbar={<FormToolbar />}
-        redirect='/speakers'
         reValidateMode='onBlur'
       >
         <BooleanInput source='activeyn' fullWidth defaultChecked />
@@ -228,6 +224,23 @@ export const SpeakerCreate = (): JSX.Element => {
           fullWidth
           helperText='Meters'
         />
+
+        <DualListReferenceInput
+          reference='speakers'
+          source='parents'
+          label='Parents'
+          optionText='code'
+          filter={{ project_id: selectedProject?.id }}
+        />
+
+        <DualListReferenceInput
+          reference='speakers'
+          source='children'
+          label='Children'
+          optionText='code'
+          filter={{ project_id: selectedProject?.id }}
+        />
+
         {progress > 0 && (
           <Stack sx={{ width: '100%' }}>
             <Typography variant='subtitle2'>
