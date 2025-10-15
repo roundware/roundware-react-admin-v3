@@ -1,32 +1,32 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import {
+    DragDropContext,
+    Draggable,
+    Droppable,
+    type OnDragEndResponder,
+    type OnDragStartResponder,
+} from "@hello-pangea/dnd";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DragHandleSharpIcon from "@mui/icons-material/DragHandleSharp";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import TreeItem from "@mui/lab/TreeItem";
 import TreeView from "@mui/lab/TreeView";
 import {
-  Button,
-  ButtonGroup,
-  CircularProgress,
-  Divider,
-  Grid,
-  LinearProgress,
-  Paper,
-  Typography,
+    Button,
+    ButtonGroup,
+    CircularProgress,
+    Divider,
+    Grid,
+    LinearProgress,
+    Paper,
+    Typography,
 } from "@mui/material";
 import { alpha, Theme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import { useBuildUI } from "context/BuildUIContext";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { RaRecord, UpdateResult, useNotify } from "react-admin";
-import {
-  DragDropContext,
-  Draggable,
-  Droppable,
-  OnDragEndResponder,
-  OnDragStartResponder,
-} from "react-beautiful-dnd";
 import { UiItemNode } from "types/uiGroups";
 import TreeItemLabel from "./TreeItemLabel";
 const UIItemsTreeView = (): JSX.Element => {

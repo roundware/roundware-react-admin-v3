@@ -1,3 +1,9 @@
+import {
+    DragDropContext,
+    Draggable,
+    Droppable,
+    type OnDragEndResponder,
+} from "@hello-pangea/dnd";
 import ReorderIcon from "@mui/icons-material/DragHandle";
 import { CircularProgress, Fade } from "@mui/material";
 import { Theme } from "@mui/material/styles";
@@ -10,26 +16,20 @@ import { useBuildUI } from "context/BuildUIContext";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
 import React, { useMemo, useState } from "react";
 import {
-  Datagrid,
-  DatagridBody,
-  DatagridBodyProps,
-  DatagridHeaderProps,
-  DatagridProps,
-  DatagridRowProps,
-  DeleteResult,
-  FieldProps,
-  RaRecord,
-  RecordContextProvider,
-  UpdateResult,
-  useListContext,
-  useNotify,
+    Datagrid,
+    DatagridBody,
+    DatagridBodyProps,
+    DatagridHeaderProps,
+    DatagridProps,
+    DatagridRowProps,
+    DeleteResult,
+    FieldProps,
+    RaRecord,
+    RecordContextProvider,
+    UpdateResult,
+    useListContext,
+    useNotify,
 } from "react-admin";
-import {
-  DragDropContext,
-  Draggable,
-  Droppable,
-  OnDragEndResponder,
-} from "react-beautiful-dnd";
 
 export const DraggableDatagrid = (props: DatagridProps): JSX.Element => (
   <Datagrid

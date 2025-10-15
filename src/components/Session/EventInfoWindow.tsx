@@ -2,8 +2,7 @@ import { Box, Button, Divider, Typography } from "@mui/material";
 import { InfoWindow } from "@react-google-maps/api";
 import { useProjects } from "context/ProjectsContext";
 import { useSesisonMap } from "context/SessionMapContext";
-import moment from "moment";
-import React from "react";
+import { format } from "date-fns";
 import { ChipField, ReferenceArrayField, SingleFieldList } from "react-admin";
 import { Link } from "react-router-dom";
 
@@ -24,7 +23,9 @@ const EventInfoWindow = () => {
         <Typography variant="subtitle2">{selectedEvent.event_type}</Typography>
 
         <Typography gutterBottom>
-          {moment(selectedEvent.client_time).format(`h:mm A - MMMM D, YYYY`)}
+          {selectedEvent.client_time
+            ? format(new Date(selectedEvent.client_time), "h:mm a - MMMM d, yyyy")
+            : ""}
         </Typography>
 
         <Divider sx={{ my: 1 }} />

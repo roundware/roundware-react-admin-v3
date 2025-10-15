@@ -1,20 +1,20 @@
 import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogContentText,
-  DialogTitle as MuiDialogTitle,
-  Divider,
-  Grid,
-  IconButton,
-  Modal,
-  Paper,
-  StyledEngineProvider,
-  Typography,
+    Button,
+    Dialog,
+    DialogContent,
+    DialogContentText,
+    Divider,
+    Grid,
+    IconButton,
+    Modal,
+    DialogTitle as MuiDialogTitle,
+    Paper,
+    StyledEngineProvider,
+    Typography,
 } from "@mui/material";
 import { createStyles, makeStyles, withStyles, WithStyles } from "@mui/styles";
 import { InfoWindow } from "@react-google-maps/api";
-import moment from "moment";
+import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 
 import { Edit } from "@mui/icons-material";
@@ -84,7 +84,7 @@ export const AssetInfoWindowInner = ({ asset }: AssetInfoWindowInnerProps) => {
           <div key={elementName}>
             {showDividerIfEligible()}
             <Typography variant="body2">
-              {moment(asset.created).format("LLL")}
+              {asset.created ? format(new Date(asset.created), "PPp") : ""}
             </Typography>
           </div>
         );
