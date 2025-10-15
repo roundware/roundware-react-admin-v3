@@ -14,15 +14,11 @@ import {
     Tooltip,
     Typography,
 } from "@mui/material";
+import Wavesurfer from "@wavesurfer/react";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
-import { Region, WaveForm, WaveSurfer } from "wavesurfer-react";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import TimelinePlugin from "wavesurfer.js/dist/plugin/wavesurfer.timeline";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import RegionsPlugin from "wavesurfer.js/dist/plugins/regions.esm.js";
+import TimelinePlugin from "wavesurfer.js/dist/plugins/timeline.esm.js";
 import useFieldValue from "../../../hooks/useFieldValue";
 
 interface PropTypes {
@@ -44,47 +40,90 @@ const AudioEditField = ({
   const [id] = useFieldValue<number>(`id`);
   const [, setDurationInSec] = useFieldValue(`audio_length_in_seconds`);
 
-  const plugins = [
-    {
-      plugin: RegionsPlugin,
-      options: { dragSelection: false },
-    },
-    {
-      plugin: TimelinePlugin,
-      options: {
-        container: "#wavesurfer-timeline-" + id,
-      },
-    },
-  ];
+  // Keep a reference to the Regions plugin instance
+  const regionsPluginRef = React.useRef<any>(null);
+
+  // Timeline and Regions plugins
+  const plugins = useMemo(() => {
+    const timeline = TimelinePlugin.create();
+    const regions = RegionsPlugin.create();
+    regionsPluginRef.current = regions;
+    return [timeline, regions];
+  }, [id]);
 
   const [volume] = useFieldValue<number>(`volume`);
   const [progress, setProgress] = useState(0);
+  const [zoomLevel, setZoomLevel] = useState(100);
   const audioSrc = typeof value != "string" ? value.src : value;
   const [loading, setLoading] = useState(true);
   const wavesurferRef = React.useRef<any>();
-  const handleMount = React.useCallback(
-    (waveSurfer: any) => {
-      wavesurferRef.current = waveSurfer;
-      if (wavesurferRef.current) {
-        if (audioSrc) {
-          wavesurferRef.current.load(audioSrc);
-        }
-
-        // wavesurferRef.current.on("region-created", regionCreatedHandler);
-
-        wavesurferRef.current.on("ready", () => {
-          setLoading(false);
-          wavesurferRef.current.currentTime = start_time;
-        });
-
-        wavesurferRef.current.on("loading", (p: number) => {
-          setProgress(p);
-        });
-        wavesurferRef.current.on("error", (e: Error) => console.error(e));
+  const handleReady = useCallback((ws: any) => {
+    wavesurferRef.current = ws;
+    setLoading(false);
+    ws.on("loading", (p: number) => setProgress(p));
+    
+    // Set initial zoom immediately when ready
+    ws.zoom(zoomLevel);
+    
+    // Force redraw to ensure waveform renders
+    setTimeout(() => {
+      if (ws.renderer && ws.renderer.redraw) {
+        ws.renderer.redraw();
       }
-    },
-    [value]
-  );
+    }, 100);
+    
+    // Also set zoom when decode completes
+    ws.once("decode", () => {
+      ws.zoom(zoomLevel);
+      if (ws.renderer && ws.renderer.redraw) {
+        ws.renderer.redraw();
+      }
+      
+      // Create region for start/end time control
+      const regionsPlugin = regionsPluginRef.current;
+      console.log('Regions plugin (ref):', regionsPlugin);
+      console.log('Start time:', start_time, 'End time:', end_time);
+      
+      if (regionsPlugin) {
+        // Clear any existing regions
+        regionsPlugin.clearRegions();
+        
+        // Get duration for fallback
+        const duration = ws.getDuration() || 10;
+        const startValue = start_time || 0;
+        const endValue = end_time || duration;
+        
+        console.log('Creating region with start:', startValue, 'end:', endValue);
+        
+        try {
+          // Create region based on start_time and end_time values
+          const region = regionsPlugin.addRegion({
+            start: startValue,
+            end: endValue,
+            color: 'rgba(102, 205, 170, 0.35)',
+            drag: true,
+            resize: true,
+            content: 'Start/End Time'
+          });
+          
+          console.log('Region created successfully:', region);
+          
+          // Handle region updates
+          regionsPlugin.on('region-updated', (updatedRegion) => {
+            console.log('Region updated:', updatedRegion.start, updatedRegion.end);
+            if (updatedRegion === region) {
+              changeStartTime(Number(updatedRegion.start.toFixed(2)));
+              changeEndTime(Number(updatedRegion.end.toFixed(2)));
+            }
+          });
+        } catch (error) {
+          console.error('Error creating region:', error);
+        }
+      } else {
+        console.log('Regions plugin not available via ref');
+      }
+    });
+  }, [zoomLevel, start_time, end_time, changeStartTime, changeEndTime]);
 
   const [playing, setPlaying] = useState(false);
   const handlePlay = () => {
@@ -92,10 +131,7 @@ const AudioEditField = ({
       setPlaying(false);
       return wavesurferRef.current.pause();
     }
-    const region = Object.values(wavesurferRef.current.regions.list)[0];
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    region.play();
+    wavesurferRef.current.play();
     setPlaying(true);
   };
 
@@ -108,10 +144,6 @@ const AudioEditField = ({
   useEffect(() => {
     if (wavesurferRef && wavesurferRef.current && audioSrc) {
       setLoading(true);
-      const audioDuration = wavesurferRef.current.getDuration()?.toFixed(2);
-      setDurationInSec(Number(audioDuration));
-      changeEndTime(end_time || 0);
-      changeStartTime(start_time || 0);
       wavesurferRef.current.load(audioSrc);
     }
   }, [audioSrc]);
@@ -132,6 +164,75 @@ const AudioEditField = ({
     }
   }, [volume]);
 
+  // Recreate region when start_time or end_time changes
+  useEffect(() => {
+    if (wavesurferRef?.current && !loading) {
+      const ws = wavesurferRef.current;
+      const regionsPlugin = regionsPluginRef.current;
+      
+      if (regionsPlugin) {
+        // Clear existing regions
+        regionsPlugin.clearRegions();
+        
+        // Create new region with updated values
+        const duration = ws.getDuration() || 10;
+        const startValue = start_time || 0;
+        const endValue = end_time || duration;
+        
+        console.log('Recreating region with start:', startValue, 'end:', endValue);
+        
+        try {
+          const region = regionsPlugin.addRegion({
+            start: startValue,
+            end: endValue,
+            color: 'rgba(102, 205, 170, 0.35)',
+            drag: true,
+            resize: true,
+            content: 'Start/End Time'
+          });
+          
+          console.log('Region recreated successfully:', region);
+          
+          // Handle region updates
+          regionsPlugin.on('region-updated', (updatedRegion) => {
+            console.log('Region updated:', updatedRegion.start, updatedRegion.end);
+            if (updatedRegion === region) {
+              changeStartTime(Number(updatedRegion.start.toFixed(2)));
+              changeEndTime(Number(updatedRegion.end.toFixed(2)));
+            }
+          });
+        } catch (error) {
+          console.error('Error recreating region:', error);
+        }
+      }
+    }
+  }, [start_time, end_time, loading, changeStartTime, changeEndTime]);
+
+  // Test region creation on component mount
+  useEffect(() => {
+    if (wavesurferRef?.current && !loading) {
+      const regionsPlugin = regionsPluginRef.current;
+      
+      if (regionsPlugin) {
+        console.log('Testing region creation...');
+        try {
+          // Create a test region
+          const testRegion = regionsPlugin.addRegion({
+            start: 0,
+            end: 5,
+            color: 'rgba(0, 255, 0, 0.3)',
+            drag: true,
+            resize: true,
+            content: 'Test Region'
+          });
+          console.log('Test region created:', testRegion);
+        } catch (error) {
+          console.error('Error creating test region:', error);
+        }
+      }
+    }
+  }, [loading]);
+
   const onRangeUpdate = ({ start, end }: any) => {
     changeStartTime(Number(start?.toFixed(2)));
     changeEndTime(Number(end?.toFixed(2)));
@@ -146,8 +247,20 @@ const AudioEditField = ({
     event,
     value
   ) => {
-    if (wavesurferRef?.current && event && !Array.isArray(value)) {
-      wavesurferRef.current?.zoom(value * (value / 10));
+    if (event && !Array.isArray(value)) {
+      // Match the example: 10-1000 pixels per second
+      const newZoomLevel = Math.max(10, Math.min(1000, value));
+      setZoomLevel(newZoomLevel);
+      
+      if (wavesurferRef?.current) {
+        try {
+          const ws = wavesurferRef.current;
+          // Use the zoom method directly as in the example
+          ws.zoom(newZoomLevel);
+        } catch (error) {
+          console.error('Zoom error:', error);
+        }
+      }
     }
   };
 
@@ -162,24 +275,25 @@ const AudioEditField = ({
             </Typography>
           </Grid>
         )}
-        <Grid item style={{ height: loading ? 0 : `initial` }}>
-          <WaveSurfer plugins={plugins} onMount={handleMount}>
-            <WaveForm
-              id={"waveform-" + id}
-              fillParent={true}
-              mediaControls={true}
-              height={size === "small" ? 64 : 128}
-
-              // maxCanvasWidth={size === "small" ? 4000 : 6000}
-            >
-              <Region
-                start={start_time}
-                end={end_time}
-                onUpdateEnd={onRangeUpdate}
-              />
-            </WaveForm>
-            <div id={"wavesurfer-timeline-" + id}></div>
-          </WaveSurfer>
+        <Grid 
+          item 
+          style={{ 
+            height: loading ? 0 : `initial`,
+            width: "90%",
+            maxWidth: "90%",
+            margin: "0 auto"
+          }}
+        >
+          <Wavesurfer
+            plugins={plugins}
+            onReady={handleReady}
+            height={size === "small" ? 64 : 128}
+            width={size === "small" ? 280 : 800}
+            url={audioSrc}
+            scrollbar={true}
+            fillParent={false}
+            autoCenter={true}
+          />
         </Grid>
 
         {/* Playback Controls */}
@@ -222,11 +336,11 @@ const AudioEditField = ({
               <Slider 
                 onChange={handleOnZoom} 
                 sx={{ flexGrow: 1 }}
-                min={1}
-                max={100}
-                defaultValue={10}
+                min={10}
+                max={1000}
+                value={zoomLevel}
                 valueLabelDisplay="auto"
-                valueLabelFormat={(value) => `${value}x`}
+                valueLabelFormat={(value) => `${value}px/s`}
               />
               <ZoomInIcon />
             </Box>

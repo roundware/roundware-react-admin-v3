@@ -14,16 +14,12 @@ import {
     Tooltip,
     Typography,
 } from "@mui/material";
+import Wavesurfer from "@wavesurfer/react";
 import useFieldValue from "hooks/useFieldValue";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
-import { Region, WaveForm, WaveSurfer } from "wavesurfer-react";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import TimelinePlugin from "wavesurfer.js/dist/plugin/wavesurfer.timeline";
+import React, { useEffect, useMemo, useState } from "react";
+import RegionsPlugin from "wavesurfer.js/dist/plugins/regions.esm.js";
+import TimelinePlugin from "wavesurfer.js/dist/plugins/timeline.esm.js";
 
 interface PropTypes {
   size?: "small" | "medium";
@@ -42,50 +38,71 @@ const SpeakerAudioPlayer = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [id, setId] = useFieldValue(`id`);
 
-  const plugins = [
-    {
-      plugin: RegionsPlugin,
-      options: { dragSelection: false },
-    },
-    {
-      plugin: TimelinePlugin,
-      options: {
-        container: "#wavesurfer-timeline-" + id,
-      },
-    },
-  ];
+  // Timeline and Regions plugins
+  const plugins = useMemo(() => [
+    TimelinePlugin.create(),
+    RegionsPlugin.create()
+  ], [id]);
 
   const [minvolume] = useFieldValue(`minvolume`);
   const [maxvolume] = useFieldValue(`maxvolume`);
+  const [startTime, setStartTime] = useFieldValue(`start_time`);
+  const [endTime, setEndTime] = useFieldValue(`end_time`);
 
   const [loading, setLoading] = useState(true);
+  const [zoomLevel, setZoomLevel] = useState(100);
 
   const [progress, setProgress] = useState(0);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const wavesurferRef = React.useRef<any>();
-  const handleMount = React.useCallback(
-    (waveSurfer: unknown) => {
-      wavesurferRef.current = waveSurfer;
-      if (wavesurferRef.current) {
-        if (src) {
-          wavesurferRef.current.load(src);
-        }
-
-        // wavesurferRef.current.on("region-created", regionCreatedHandler);
-
-        wavesurferRef.current.on("ready", () => {
-          setLoading(false);
-        });
-
-        wavesurferRef.current.on("loading", (p: number) => {
-          setProgress(p);
-        });
-
-
+  const handleReady = React.useCallback((ws: any) => {
+    wavesurferRef.current = ws;
+    setLoading(false);
+    ws.on("loading", (p: number) => setProgress(p));
+    
+    // Set initial zoom immediately when ready
+    ws.zoom(zoomLevel);
+    
+    // Force redraw to ensure waveform renders
+    setTimeout(() => {
+      if (ws.renderer && ws.renderer.redraw) {
+        ws.renderer.redraw();
       }
-    },
-    [src]
-  );
+    }, 100);
+    
+    // Also set zoom when decode completes
+    ws.once("decode", () => {
+      ws.zoom(zoomLevel);
+      if (ws.renderer && ws.renderer.redraw) {
+        ws.renderer.redraw();
+      }
+      
+      // Create region for start/end time control
+      const regionsPlugin = ws.plugins.find(p => p.constructor.name === 'RegionsPlugin');
+      if (regionsPlugin && startTime !== undefined && endTime !== undefined) {
+        // Clear any existing regions
+        regionsPlugin.clearRegions();
+        
+        // Create region based on start_time and end_time values
+        const region = regionsPlugin.addRegion({
+          start: startTime || 0,
+          end: endTime || ws.getDuration() || 10,
+          color: 'rgba(255, 0, 0, 0.3)',
+          drag: true,
+          resize: true,
+          content: 'Start/End Time'
+        });
+        
+        // Handle region updates
+        regionsPlugin.on('region-updated', (updatedRegion) => {
+          if (updatedRegion === region) {
+            setStartTime(updatedRegion.start);
+            setEndTime(updatedRegion.end);
+          }
+        });
+      }
+    });
+  }, [zoomLevel, startTime, endTime, setStartTime, setEndTime]);
 
   const [playing, setPlaying] = useState(false);
   const handlePlay = () => {
@@ -98,10 +115,11 @@ const SpeakerAudioPlayer = ({
   };
 
   useEffect(() => {
-    if (wavesurferRef && wavesurferRef.current && src) {
+    if (wavesurferRef?.current && src) {
       wavesurferRef.current.load(src);
     }
   }, [src, wavesurferRef]);
+
 
   useEffect(() => {
     return () => {
@@ -112,44 +130,60 @@ const SpeakerAudioPlayer = ({
   const [currentVolume, setCurrentVolume] = useState(maxvolume);
 
   useEffect(() => {
-    if (wavesurferRef && wavesurferRef.current) {
-      wavesurferRef.current?.setVolume(currentVolume);
-    }
+    if (wavesurferRef?.current) wavesurferRef.current.setVolume(currentVolume);
   }, [currentVolume]);
 
   const handleOnZoom: SliderProps<typeof Slider>[`onChange`] = (
     event,
     value
   ) => {
-    if (wavesurferRef?.current && event && !Array.isArray(value)) {
-      wavesurferRef.current?.zoom(value * (value / 10));
+    if (event && !Array.isArray(value)) {
+      // Match the example: 10-1000 pixels per second
+      const newZoomLevel = Math.max(10, Math.min(1000, value));
+      setZoomLevel(newZoomLevel);
+      
+      if (wavesurferRef?.current) {
+        try {
+          const ws = wavesurferRef.current;
+          // Use the zoom method directly as in the example
+          ws.zoom(newZoomLevel);
+        } catch (error) {
+          console.error('Zoom error:', error);
+        }
+      }
     }
   };
 
   if (!src) return null;
   return (
-    <div style={{ width: size === "small" ? "280px" : "100%", minHeight: 160 }}>
+    <div style={{ 
+      width: size === "small" ? "280px" : "100%", 
+      minHeight: 160,
+      maxWidth: "100%",
+      overflow: "hidden",
+      position: "relative"
+    }}>
       <Grid container spacing={2} direction="column">
         <Grid
           item
           style={{
             visibility: loading ? "hidden" : "visible",
             height: loading ? 0 : "initial",
+            width: "90%",
+            maxWidth: "90%",
+            margin: "0 auto"
           }}
         >
-          <WaveSurfer plugins={plugins} onMount={handleMount}>
-            <WaveForm
-              id={"waveform-" + id}
-              fillParent={true}
-              mediaControls={true}
-              height={size === "small" ? 64 : 128}
-
-              // maxCanvasWidth={size === "small" ? 4000 : 6000}
-            >
-              <Region />
-            </WaveForm>
-            <div id={"wavesurfer-timeline-" + id}></div>
-          </WaveSurfer>
+          <Wavesurfer
+            plugins={plugins}
+            onReady={handleReady}
+            height={size === "small" ? 64 : 128}
+            width={size === "small" ? 280 : 800}
+            url={typeof src === 'string' ? src : undefined}
+            scrollbar={true}
+            fillParent={false}
+            autoCenter={true}
+          />
         </Grid>
 
         {/* Playback Controls */}
@@ -203,11 +237,11 @@ const SpeakerAudioPlayer = ({
               <Slider 
                 onChange={handleOnZoom} 
                 sx={{ flexGrow: 1 }}
-                min={1}
-                max={100}
-                defaultValue={10}
+                min={10}
+                max={1000}
+                value={zoomLevel}
                 valueLabelDisplay="auto"
-                valueLabelFormat={(value) => `${value}x`}
+                valueLabelFormat={(value) => `${value}px/s`}
               />
               <ZoomInIcon />
             </Box>

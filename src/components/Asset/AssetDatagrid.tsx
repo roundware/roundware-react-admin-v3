@@ -1,21 +1,21 @@
 import CopyResourceButton from 'components/common/CopyResource';
 import DeleteWithBinary from 'components/common/DeleteWithBinary';
 import { useRoundwareDataProvider } from 'context/DataProviderContext';
-import React, { FC, useLayoutEffect } from 'react';
+import { FC, useLayoutEffect } from 'react';
 import {
-  BooleanField,
-  ChipField,
-  Datagrid,
-  DateField,
-  EditButton,
-  FieldProps,
-  NumberField,
-  RaRecord,
-  ReferenceArrayField,
-  SingleFieldList,
-  TextField,
-  useListController,
-  useRecordContext,
+    BooleanField,
+    ChipField,
+    Datagrid,
+    DateField,
+    EditButton,
+    FieldProps,
+    NumberField,
+    RaRecord,
+    ReferenceArrayField,
+    SingleFieldList,
+    TextField,
+    useListController,
+    useRecordContext,
 } from 'react-admin';
 import AudioPlayerField from '../common/AudioPlayerField';
 import TextDisplayField from './TextDisplayField';
@@ -30,7 +30,7 @@ export const AssetDatagrid = (): JSX.Element => {
   }, []);
   return (
     <div>
-      <Datagrid optimized bulkActionButtons={<DeleteWithBinary isBulk />}>
+      <Datagrid optimized bulkActionButtons={<DeleteWithBinary isBulk />} rowClick={false}>
         <TextField source='id' />
         <BooleanField source='submitted' />
 
