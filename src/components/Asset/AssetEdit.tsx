@@ -6,7 +6,6 @@ import FileDownloadButton from 'components/common/FileDownloadButton';
 import LocationSelector from 'components/common/LocationSelector';
 import TagIdSelector from 'components/common/TagIdSelector';
 import TranslatableField from 'components/common/TranslatableField';
-import React from 'react';
 import {
     AutocompleteInput,
     BooleanInput,
@@ -102,7 +101,7 @@ const AssetEdit = (): JSX.Element => {
         onSuccess: () => redirect(`list`, `/assets`),
       }}
     >
-      <SimpleForm warnWhenUnsavedChanges>
+      <SimpleForm>
         <TextInput source='id' disabled fullWidth />
         <ReferenceInput
           label='Project'

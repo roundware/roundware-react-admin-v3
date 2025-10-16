@@ -70,36 +70,43 @@ const SpeakerAudioControls = (): JSX.Element => {
       </TabPanel>
 
       <TabPanel value={`RECORD`} current={sourceMode}>
-        <AudioRecorder
-          onFinish={(b) =>
-            setFile({
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              rawFile: new File([b], "admin_recorded"),
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              name: `admin-${Math.random()}`.split(`.`, ``),
-              src: URL.createObjectURL(b),
-            })
-          }
-        />
-        {file && (
-          <Button
-            color="error"
-            onClick={() => setFile(null)}
-            startIcon={<Delete />}
-          >
-            Delete
-          </Button>
+        {!file ? (
+          <AudioRecorder
+            onFinish={(b) =>
+              setFile({
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                rawFile: new File([b], "admin_recorded"),
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                name: `admin-${Math.random()}`.split(`.`, ``),
+                src: URL.createObjectURL(b),
+              })
+            }
+          />
+        ) : (
+          <Box>
+            <Button
+              color="error"
+              onClick={() => setFile(null)}
+              startIcon={<Delete />}
+              sx={{ mb: 2 }}
+            >
+              Delete Recording
+            </Button>
+            <SpeakerAudioPlayer src={file.src} />
+          </Box>
         )}
       </TabPanel>
 
       <Box sx={{ width: '100%', mt: 2 }}>
         <SpeakerAudioPlayer
           src={
-            sourceMode == "UPLOAD" || sourceMode == "RECORD"
+            sourceMode == "UPLOAD" || (sourceMode == "RECORD" && !file)
               ? file?.src
-              : uri
+              : sourceMode == "URI"
+              ? uri
+              : undefined
           }
         />
       </Box>

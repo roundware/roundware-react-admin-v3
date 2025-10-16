@@ -5,7 +5,7 @@ import FormToolbar from 'components/common/FormToolbar';
 import { useProjects } from 'context/ProjectsContext';
 import { useSpeakers } from 'context/SpeakersContext';
 import useBoolean from 'hooks/useBoolean';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   BooleanInput,
   Create,
@@ -210,7 +210,7 @@ export const SpeakerCreate = (): JSX.Element => {
   return (
     <Create redirect={false} transform={transform}>
       <SimpleForm
-        warnWhenUnsavedChanges={!success.value}
+        warnWhenUnsavedChanges
         onSubmit={save}
         toolbar={<FormToolbar />}
         reValidateMode='onBlur'

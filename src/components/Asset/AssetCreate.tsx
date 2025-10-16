@@ -3,7 +3,6 @@ import FormToolbar from "components/common/FormToolbar";
 import LocationSelector from "components/common/LocationSelector";
 import TagIdSelector from "components/common/TagIdSelector";
 import TranslatableField from "components/common/TranslatableField";
-import React from "react";
 import {
     AutocompleteInput,
     BooleanInput,
@@ -89,7 +88,7 @@ const AssetCreate = (): JSX.Element => {
         onSuccess: () => redirect(`list`, `/assets`),
       }}
     >
-      <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
+      <SimpleForm toolbar={<FormToolbar />}>
         <SelectInput
           source="media_type"
           choices={[
