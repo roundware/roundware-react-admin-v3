@@ -2,7 +2,7 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Box, Button, Grid, Stack, Tab, Tabs } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { FileField, FileInput } from 'react-admin';
 
 import Delete from '@mui/icons-material/Delete';
@@ -42,6 +42,7 @@ export const FileEdit = (): JSX.Element => {
           {mediaType === 'audio' && value && (
             <AudioEdit
               size='medium'
+              inEditView={true}
               buttons={[
                 <IconButton
                   key='del'

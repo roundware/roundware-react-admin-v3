@@ -23,6 +23,7 @@ import { IAsset } from '../../types/asset';
 import { handleLocalizedStrings } from '../../utils.tsx';
 import AssetShape from './AssetShape';
 
+
 const AssetEdit = (): JSX.Element => {
   const redirect = useRedirect();
 
@@ -98,7 +99,9 @@ const AssetEdit = (): JSX.Element => {
       transform={transform}
       mutationMode='pessimistic'
       mutationOptions={{
-        onSuccess: () => redirect(`list`, `/assets`),
+        onSuccess: () => {
+          redirect(`list`, `/assets`);
+        },
       }}
     >
       <SimpleForm>

@@ -221,8 +221,8 @@ const AudioPlayerField = ({
           )}
         </Grid>
 
-        {/* Zoom Controls */}
-        {file && !loading && (
+        {/* Zoom Controls - only show in edit view */}
+        {file && !loading && inEditView && (
           <Grid item xs={12}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 1 }}>
               <ZoomOutIcon />

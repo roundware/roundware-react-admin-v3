@@ -34,8 +34,11 @@ const AudioEditField = ({
 }: PropTypes): JSX.Element | null => {
   const [value] = useFieldValue<string | FileType2>(`file`);
   const [start_time, changeStartTime] = useFieldValue<number>(`start_time`);
-
   const [end_time, changeEndTime] = useFieldValue<number>(`end_time`);
+  
+  
+  
+  
 
   const [id] = useFieldValue<number>(`id`);
   const [, setDurationInSec] = useFieldValue(`audio_length_in_seconds`);
@@ -79,51 +82,10 @@ const AudioEditField = ({
         ws.renderer.redraw();
       }
       
-      // Create region for start/end time control
-      const regionsPlugin = regionsPluginRef.current;
-      console.log('Regions plugin (ref):', regionsPlugin);
-      console.log('Start time:', start_time, 'End time:', end_time);
+      // Region creation is now handled by the useEffect, not here
       
-      if (regionsPlugin) {
-        // Clear any existing regions
-        regionsPlugin.clearRegions();
-        
-        // Get duration for fallback
-        const duration = ws.getDuration() || 10;
-        const startValue = start_time || 0;
-        const endValue = end_time || duration;
-        
-        console.log('Creating region with start:', startValue, 'end:', endValue);
-        
-        try {
-          // Create region based on start_time and end_time values
-          const region = regionsPlugin.addRegion({
-            start: startValue,
-            end: endValue,
-            color: 'rgba(102, 205, 170, 0.35)',
-            drag: true,
-            resize: true,
-            content: 'Start/End Time'
-          });
-          
-          console.log('Region created successfully:', region);
-          
-          // Handle region updates
-          regionsPlugin.on('region-updated', (updatedRegion) => {
-            console.log('Region updated:', updatedRegion.start, updatedRegion.end);
-            if (updatedRegion === region) {
-              changeStartTime(Number(updatedRegion.start.toFixed(2)));
-              changeEndTime(Number(updatedRegion.end.toFixed(2)));
-            }
-          });
-        } catch (error) {
-          console.error('Error creating region:', error);
-        }
-      } else {
-        console.log('Regions plugin not available via ref');
-      }
     });
-  }, [zoomLevel, start_time, end_time, changeStartTime, changeEndTime]);
+  }, [zoomLevel, start_time, end_time]);
 
   const [playing, setPlaying] = useState(false);
   const handlePlay = () => {
@@ -166,6 +128,7 @@ const AudioEditField = ({
 
   // Recreate region when start_time or end_time changes
   useEffect(() => {
+    
     if (wavesurferRef?.current && !loading) {
       const ws = wavesurferRef.current;
       const regionsPlugin = regionsPluginRef.current;
@@ -179,8 +142,6 @@ const AudioEditField = ({
         const startValue = start_time || 0;
         const endValue = end_time || duration;
         
-        console.log('Recreating region with start:', startValue, 'end:', endValue);
-        
         try {
           const region = regionsPlugin.addRegion({
             start: startValue,
@@ -191,11 +152,8 @@ const AudioEditField = ({
             content: 'Start/End Time'
           });
           
-          console.log('Region recreated successfully:', region);
-          
           // Handle region updates
           regionsPlugin.on('region-updated', (updatedRegion) => {
-            console.log('Region updated:', updatedRegion.start, updatedRegion.end);
             if (updatedRegion === region) {
               changeStartTime(Number(updatedRegion.start.toFixed(2)));
               changeEndTime(Number(updatedRegion.end.toFixed(2)));
@@ -208,30 +166,6 @@ const AudioEditField = ({
     }
   }, [start_time, end_time, loading, changeStartTime, changeEndTime]);
 
-  // Test region creation on component mount
-  useEffect(() => {
-    if (wavesurferRef?.current && !loading) {
-      const regionsPlugin = regionsPluginRef.current;
-      
-      if (regionsPlugin) {
-        console.log('Testing region creation...');
-        try {
-          // Create a test region
-          const testRegion = regionsPlugin.addRegion({
-            start: 0,
-            end: 5,
-            color: 'rgba(0, 255, 0, 0.3)',
-            drag: true,
-            resize: true,
-            content: 'Test Region'
-          });
-          console.log('Test region created:', testRegion);
-        } catch (error) {
-          console.error('Error creating test region:', error);
-        }
-      }
-    }
-  }, [loading]);
 
   const onRangeUpdate = ({ start, end }: any) => {
     changeStartTime(Number(start?.toFixed(2)));

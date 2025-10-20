@@ -20,6 +20,7 @@ import { handleLocalizedStrings } from "../../utils.tsx";
 import AudioOptions from "../common/AudioOptions";
 import AssetShape from "./AssetShape";
 
+
 const AssetCreate = (): JSX.Element => {
   const dataProvider = useDataProvider();
   const { selectedProject } = useProjects();
@@ -85,7 +86,9 @@ const AssetCreate = (): JSX.Element => {
       // @ts-ignore
       transform={transform}
       mutationOptions={{
-        onSuccess: () => redirect(`list`, `/assets`),
+        onSuccess: () => {
+          redirect(`list`, `/assets`);
+        },
       }}
     >
       <SimpleForm toolbar={<FormToolbar />}>

@@ -2,7 +2,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { BuildUIContextProvider } from "./context/BuildUIContext";
 import { RoundwareDataProviderContextProvider } from "./context/DataProviderContext";
 import { ProjectsProvider } from "./context/ProjectsContext";
@@ -10,27 +10,44 @@ import { SpeakersProvider } from "./context/SpeakersContext";
 import "./index.css";
 import ProjectRoute from "./ProjectRoute";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
+const router = createBrowserRouter([
+  {
+    path: "/project/:projectId/*",
+    element: (
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <RoundwareDataProviderContextProvider>
           <ProjectsProvider>
             <SpeakersProvider>
               <BuildUIContextProvider>
-                <Routes>
-                  <Route
-                    path={`/project/:projectId/*`}
-                    element={<ProjectRoute />}
-                  />
-                  <Route path={`/*`} element={<ProjectRoute />} />
-                </Routes>
+                <ProjectRoute />
               </BuildUIContextProvider>
             </SpeakersProvider>
           </ProjectsProvider>
         </RoundwareDataProviderContextProvider>
       </LocalizationProvider>
-    </BrowserRouter>
+    ),
+  },
+  {
+    path: "/*",
+    element: (
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <RoundwareDataProviderContextProvider>
+          <ProjectsProvider>
+            <SpeakersProvider>
+              <BuildUIContextProvider>
+                <ProjectRoute />
+              </BuildUIContextProvider>
+            </SpeakersProvider>
+          </ProjectsProvider>
+        </RoundwareDataProviderContextProvider>
+      </LocalizationProvider>
+    ),
+  },
+]);
+
+ReactDOM.render(
+  <React.StrictMode>
+    <RouterProvider router={router} />
   </React.StrictMode>,
   document.getElementById("root")
 );
