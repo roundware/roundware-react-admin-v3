@@ -186,6 +186,7 @@ const SpeakerList = (): JSX.Element => {
                 key="activeyn"
                 source="activeyn"
                 label="Active"
+                defaultValue={true}
               />,
             ]}
           >
