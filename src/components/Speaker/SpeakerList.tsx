@@ -16,7 +16,6 @@ import CopyResourceButton from 'components/common/CopyResource';
 import DeleteWithBinary from 'components/common/DeleteWithBinary';
 import { useProjects } from 'context/ProjectsContext';
 import { useSpeakers } from 'context/SpeakersContext';
-import React from 'react';
 import {
     BooleanField,
     Datagrid,

@@ -9,6 +9,7 @@ import { useState } from 'react';
 import {
   BooleanInput,
   Create,
+  DateTimeInput,
   Edit,
   maxLength,
   NumberInput,
@@ -130,6 +131,11 @@ export const SpeakerEdit = (): JSX.Element => {
           filter={{ project_id: selectedProject?.id }}
         />
 
+        <Stack spacing={2} sx={{ mt: 2 }}>
+          <DateTimeInput source='created' fullWidth />
+          <DateTimeInput source='updated' fullWidth />
+        </Stack>
+
         {progress > 0 && (
           <Stack sx={{ width: '100%' }}>
             <Typography variant='subtitle2'>
@@ -240,6 +246,11 @@ export const SpeakerCreate = (): JSX.Element => {
           optionText='code'
           filter={{ project_id: selectedProject?.id }}
         />
+
+        <Stack spacing={2} sx={{ mt: 2 }}>
+          <DateTimeInput source='created' fullWidth defaultValue={new Date()} />
+          <DateTimeInput source='updated' fullWidth />
+        </Stack>
 
         {progress > 0 && (
           <Stack sx={{ width: '100%' }}>
