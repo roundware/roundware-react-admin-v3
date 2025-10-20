@@ -1,4 +1,5 @@
 import { LinearProgress, Stack, Typography } from '@mui/material';
+import ColorPicker from 'components/common/ColorPicker';
 import DualListReferenceInput from 'components/common/DualListReferenceInput';
 import FileDownloadButton from 'components/common/FileDownloadButton';
 import FormToolbar from 'components/common/FormToolbar';
@@ -26,6 +27,16 @@ import {
 } from 'react-admin';
 import { Navigate } from 'react-router-dom';
 import SpeakerAudioControls from './SpeakerAudioControls';
+
+// Validation function for hex colors
+const validateHexColor = (value: string) => {
+  if (!value) return undefined;
+  const hexPattern = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$/;
+  if (!hexPattern.test(value)) {
+    return 'Invalid hex color format. Use 6 or 8 character hex (e.g., #0000FF or #0000FF80)';
+  }
+  return undefined;
+};
 
 export const SpeakerEdit = (): JSX.Element => {
   const { selectedProject } = useProjects();
@@ -105,6 +116,24 @@ export const SpeakerEdit = (): JSX.Element => {
         <TextInput source='backupuri' fullWidth />
 
         <NumberInput source='attenuation_distance' required fullWidth />
+
+        <ColorPicker
+          source='fill_color'
+          label='Fill Color'
+          fullWidth
+          helperText='6 or 8 character hex color (e.g., #0000FF80)'
+          defaultValue='#0000FF80'
+          validate={validateHexColor}
+        />
+
+        <ColorPicker
+          source='border_color'
+          label='Border Color'
+          fullWidth
+          helperText='6 or 8 character hex color (e.g., #0000FF)'
+          defaultValue='#0000FF'
+          validate={validateHexColor}
+        />
 
         <ReferenceInput
           source='project_id'
@@ -229,6 +258,24 @@ export const SpeakerCreate = (): JSX.Element => {
           source='attenuation_distance'
           fullWidth
           helperText='Meters'
+        />
+
+        <ColorPicker
+          source='fill_color'
+          label='Fill Color'
+          fullWidth
+          helperText='6 or 8 character hex color (e.g., #0000FF80)'
+          defaultValue='#0000FF80'
+          validate={validateHexColor}
+        />
+
+        <ColorPicker
+          source='border_color'
+          label='Border Color'
+          fullWidth
+          helperText='6 or 8 character hex color (e.g., #0000FF)'
+          defaultValue='#0000FF'
+          validate={validateHexColor}
         />
 
         <DualListReferenceInput
