@@ -14,8 +14,10 @@ import {
 } from '@mui/material';
 import CopyResourceButton from 'components/common/CopyResource';
 import DeleteWithBinary from 'components/common/DeleteWithBinary';
+import { useRoundwareDataProvider } from 'context/DataProviderContext';
 import { useProjects } from 'context/ProjectsContext';
 import { useSpeakers } from 'context/SpeakersContext';
+import React from 'react';
 import {
     BooleanField,
     BooleanInput,
@@ -25,8 +27,10 @@ import {
     List,
     TextField,
     TextInput,
+    useListContext,
     useRecordContext,
 } from 'react-admin';
+import { ISpeaker } from 'types/speaker';
 import SpeakerShapesControl from './SpeakerShapesControl';
 const SpeakerList = (): JSX.Element => {
   const { selectedProject } = useProjects();
@@ -185,6 +189,7 @@ const SpeakerList = (): JSX.Element => {
               />,
             ]}
           >
+            <FilteredDataSync />
             <Datagrid
               bulkActionButtons={<DeleteWithBinary isBulk />}
               style={{ flexShrink: 1 }}
@@ -212,6 +217,39 @@ const SpeakerList = (): JSX.Element => {
       </Grid>
     </>
   );
+};
+
+// Component to sync filtered data with SpeakersContext
+const FilteredDataSync = () => {
+  const { data: filteredSpeakers, filterValues } = useListContext();
+  const { setSpeakers } = useSpeakers();
+  const { selectedProject } = useProjects();
+  const dataProvider = useRoundwareDataProvider();
+  
+  // Fetch ALL filtered speakers (not just current page) whenever filters change
+  React.useEffect(() => {
+    if (!selectedProject) return;
+    
+    const fetchAllFilteredSpeakers = async () => {
+      try {
+        const result = await dataProvider.getList('speakers', {
+          pagination: { page: 1, perPage: 0 }, // Get all results
+          sort: { field: 'id', order: 'ASC' },
+          filter: {
+            project_id: selectedProject.id,
+            ...filterValues, // Include all current filter values
+          },
+        });
+        setSpeakers(result.data as ISpeaker[]);
+      } catch (error) {
+        console.error('Error fetching filtered speakers:', error);
+      }
+    };
+    
+    fetchAllFilteredSpeakers();
+  }, [filterValues, selectedProject, dataProvider, setSpeakers]);
+  
+  return null; // This component doesn't render anything
 };
 
 const SpeakerHighter = () => {

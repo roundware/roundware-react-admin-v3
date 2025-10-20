@@ -10,6 +10,7 @@ import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import PlacesAutoComplete from 'components/common/LocationSelector/PlacesAutoComplete';
 import { useSpeakers } from 'context/SpeakersContext';
 import React, { useEffect, useState } from 'react';
+import { ISpeaker } from '../../types/speaker';
 import { mapLibraries } from '../../utils.tsx';
 import SpeakerDrawer from './SpeakerDrawer';
 import SpeakerPolygonGroup from './SpeakerPolygon';
@@ -24,12 +25,17 @@ const containerStyle = {
 //   lng: 100.6197,
 // };
 
+interface SpeakerShapesControlProps {
+  speakers?: ISpeaker[];
+}
+
 /**
  * shows / edit / create any shapes of type ISpeakerShape
  *
  */
-const SpeakerShapesControl = (): JSX.Element => {
-  const { selectedSpeaker, speakers } = useSpeakers();
+const SpeakerShapesControl = ({ speakers: propSpeakers }: SpeakerShapesControlProps): JSX.Element => {
+  const { selectedSpeaker, speakers: contextSpeakers } = useSpeakers();
+  const speakers = propSpeakers || contextSpeakers;
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
