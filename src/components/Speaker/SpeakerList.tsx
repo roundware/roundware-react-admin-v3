@@ -18,10 +18,13 @@ import { useProjects } from 'context/ProjectsContext';
 import { useSpeakers } from 'context/SpeakersContext';
 import {
     BooleanField,
+    BooleanInput,
     Datagrid,
+    DateTimeInput,
     EditButton,
     List,
     TextField,
+    TextInput,
     useRecordContext,
 } from 'react-admin';
 import SpeakerShapesControl from './SpeakerShapesControl';
@@ -146,7 +149,42 @@ const SpeakerList = (): JSX.Element => {
               </Alert>
             )}
           </Stack>
-          <List title='Speakers' component='div'>
+          <List 
+            title='Speakers' 
+            component='div'
+            filters={[
+              <TextInput
+                key="contains_code"
+                label="Speaker Code"
+                source="contains_code"
+              />,
+              <DateTimeInput
+                key="created_after"
+                label="Created After"
+                source="created__gte"
+              />,
+              <DateTimeInput
+                key="created_before"
+                label="Created Before"
+                source="created__lte"
+              />,
+              <DateTimeInput
+                key="updated_after"
+                label="Updated After"
+                source="updated__gte"
+              />,
+              <DateTimeInput
+                key="updated_before"
+                label="Updated Before"
+                source="updated__lte"
+              />,
+              <BooleanInput
+                key="activeyn"
+                source="activeyn"
+                label="Active"
+              />,
+            ]}
+          >
             <Datagrid
               bulkActionButtons={<DeleteWithBinary isBulk />}
               style={{ flexShrink: 1 }}
