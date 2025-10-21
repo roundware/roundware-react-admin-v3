@@ -4,6 +4,8 @@ import HistoryIcon from "@mui/icons-material/History";
 import RotateLeftIcon from "@mui/icons-material/RotateLeft";
 import RotateRightIcon from "@mui/icons-material/RotateRight";
 import SaveIcon from "@mui/icons-material/Save";
+import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
+import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
 import {
     Box,
     CircularProgress,
@@ -283,6 +285,46 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
   const handleRotateLeft = () => rotatePolygon(-5); // Rotate 5 degrees counter-clockwise
   const handleRotateRight = () => rotatePolygon(5); // Rotate 5 degrees clockwise
 
+  // Scaling functions
+  const scalePolygon = (scaleFactor: number) => {
+    if (!shapePath || !Array.isArray(shapePath)) return;
+    
+    // Calculate center of polygon
+    const center = {
+      lat: shapePath.reduce((sum, point) => sum + point.lat(), 0) / shapePath.length,
+      lng: shapePath.reduce((sum, point) => sum + point.lng(), 0) / shapePath.length,
+    };
+    
+    // Account for latitude scaling - longitude lines get closer together at higher latitudes
+    const latScale = Math.cos((center.lat * Math.PI) / 180);
+    
+    const scaledPath = shapePath.map(point => {
+      // Convert to relative coordinates
+      const lat = point.lat() - center.lat;
+      const lng = (point.lng() - center.lng) * latScale; // Scale longitude by latitude
+      
+      // Apply scaling
+      const newLat = lat * scaleFactor;
+      const newLng = lng * scaleFactor;
+      
+      return new google.maps.LatLng(
+        newLat + center.lat,
+        (newLng / latScale) + center.lng // Unscale longitude
+      );
+    });
+    
+    // Convert back to GeoJSON format and update the shape
+    const scaledGeoJSON = multiPolygon([
+      [googleMapPathToGeoJSONPath(scaledPath)]
+    ]).geometry;
+    
+    setShape(scaledGeoJSON);
+    setIsCurrentSpeakerSaved(false);
+  };
+
+  const handleScaleUp = () => scalePolygon(1.1); // Scale up by 10%
+  const handleScaleDown = () => scalePolygon(0.9); // Scale down by 10%
+
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -361,6 +403,20 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
                 <Tooltip title="Rotate Right (5°)" placement="right">
                   <IconButton onClick={handleRotateRight} size="large">
                     <RotateRightIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid item>
+                <Tooltip title="Scale Up (10%)" placement="right">
+                  <IconButton onClick={handleScaleUp} size="large">
+                    <ZoomOutMapIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid item>
+                <Tooltip title="Scale Down (10%)" placement="right">
+                  <IconButton onClick={handleScaleDown} size="large">
+                    <ZoomInMapIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
