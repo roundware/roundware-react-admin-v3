@@ -1,6 +1,8 @@
 import { Edit } from '@mui/icons-material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import PauseIcon from '@mui/icons-material/Pause';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import {
     Alert,
     AlertTitle,
@@ -10,7 +12,7 @@ import {
     Paper,
     Stack,
     Tooltip,
-    Typography,
+    Typography
 } from '@mui/material';
 import CopyResourceButton from 'components/common/CopyResource';
 import DeleteWithBinary from 'components/common/DeleteWithBinary';
@@ -197,6 +199,7 @@ const SpeakerList = (): JSX.Element => {
               rowClick={false}
             >
               <SpeakerHighter />
+              <SpeakerAudioPlayer />
 
               <TextField source='id' />
               <BooleanField source='activeyn' label='Active' />
@@ -265,6 +268,90 @@ const SpeakerHighter = () => {
         size='large'
       >
         {isSelected ? <LocationOnIcon /> : <LocationOnOutlinedIcon />}
+      </IconButton>
+    </Tooltip>
+  );
+};
+
+const SpeakerAudioPlayer = () => {
+  const record = useRecordContext();
+  const [playing, setPlaying] = React.useState(false);
+  const [audio, setAudio] = React.useState<HTMLAudioElement | null>(null);
+
+  React.useEffect(() => {
+    if (audio) {
+      audio.pause();
+      setPlaying(false);
+    }
+  }, [record?.id]); // Stop audio when switching speakers
+
+  React.useEffect(() => {
+    return () => {
+      if (audio) {
+        audio.pause();
+        audio.remove();
+      }
+    };
+  }, [audio]);
+
+  const handlePlayPause = () => {
+    if (!record?.uri) return;
+
+    if (playing && audio) {
+      audio.pause();
+      setPlaying(false);
+    } else {
+      // Stop any currently playing audio
+      if (audio) {
+        audio.pause();
+        audio.remove();
+      }
+
+      const newAudio = new Audio(record.uri);
+      
+      // Set volume to maximum and other properties
+      newAudio.volume = 1.0;
+      newAudio.muted = false;
+      newAudio.crossOrigin = 'anonymous';
+      newAudio.preload = 'metadata';
+      
+      // Add event listeners
+      newAudio.addEventListener('ended', () => {
+        setPlaying(false);
+      });
+      
+      newAudio.addEventListener('error', (e) => {
+        console.error('Audio error:', e);
+        setPlaying(false);
+      });
+      
+      // Load and play the audio
+      newAudio.load();
+      
+      newAudio.play().then(() => {
+        setAudio(newAudio);
+        setPlaying(true);
+      }).catch((error) => {
+        console.error('Audio play failed:', error);
+        setPlaying(false);
+      });
+    }
+  };
+
+  if (!record?.uri) {
+    return (
+      <Tooltip title="No audio file" placement="left">
+        <IconButton disabled size="small">
+          <PlayArrowIcon />
+        </IconButton>
+      </Tooltip>
+    );
+  }
+
+  return (
+    <Tooltip title={playing ? 'Pause' : 'Play'} placement="left">
+      <IconButton onClick={handlePlayPause} size="small">
+        {playing ? <PauseIcon /> : <PlayArrowIcon />}
       </IconButton>
     </Tooltip>
   );
