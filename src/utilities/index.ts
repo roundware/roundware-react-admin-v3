@@ -1,20 +1,20 @@
-import centerOfMass from "@turf/center-of-mass";
-import {
-  featureCollection,
-  MultiPolygon,
-  multiPolygon,
-  Polygon,
-  multiLineString,
-  polygon,
-  MultiLineString,
-  LineString,
-} from "@turf/helpers";
-import { polygonToLine } from "@turf/polygon-to-line";
 import area from "@turf/area";
 import buffer from "@turf/buffer";
+import centerOfMass from "@turf/center-of-mass";
+import {
+    featureCollection,
+    LineString,
+    multiLineString,
+    MultiLineString,
+    MultiPolygon,
+    multiPolygon,
+    Polygon,
+    polygon,
+    Position,
+} from "@turf/helpers";
 import { getCoord } from "@turf/invariant";
+import { polygonToLine } from "@turf/polygon-to-line";
 import { ISpeaker } from "types/speaker";
-import { Position } from "@turf/helpers";
 
 import { isEqual } from "lodash";
 export const getGoogleMapsCenter = (
@@ -105,10 +105,11 @@ export const getSpeakerGeoJSONObjectsForPath = (
   const boundary = multiLineString([path]).geometry;
 
   /** line string by subtracting attenuation distance */
-  const attenuation_border = polygonToLine(
-    buffer(polygon([path]).geometry, -attenuation_distance, { units: "meters" })
-      .geometry
-  ).geometry;
+  const bufferedPolygon = buffer(polygon([path]).geometry, -attenuation_distance, { units: "meters" });
+  if (!bufferedPolygon || !bufferedPolygon.geometry) {
+    throw new Error(`Attenuation distance (${attenuation_distance}m) is too large for this shape. Please use a smaller distance.`);
+  }
+  const attenuation_border = polygonToLine(bufferedPolygon.geometry).geometry;
 
   /** if area is becoming zero, alert the user about it */
   const speakerArea = area(polygon([path]));

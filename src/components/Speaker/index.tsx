@@ -115,7 +115,14 @@ export const SpeakerEdit = (): JSX.Element => {
         <TextInput source='uri' fullWidth />
         <TextInput source='backupuri' fullWidth />
 
-        <NumberInput source='attenuation_distance' required fullWidth />
+        <NumberInput 
+          source='attenuation_distance' 
+          required 
+          fullWidth 
+          min={0}
+          step={1}
+          helperText="Meters (positive integers only)"
+        />
 
         <ColorPicker
           source='fill_color'

@@ -29,6 +29,7 @@ import { useRoundwareDataProvider } from "context/DataProviderContext";
 import { useSpeakers } from "context/SpeakersContext";
 import useDebounce from "hooks/useDebounce";
 import React, { useEffect, useMemo, useState } from "react";
+import { useNotify } from "react-admin";
 import { ISpeaker } from "types/speaker";
 import {
     getSpeakerGeoJSONObjectsForPath,
@@ -56,12 +57,23 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
   const [distance, setDistance] = useState(
     Number(speaker.attenuation_distance)
   );
+  const [lastValidDistance, setLastValidDistance] = useState<number | null>(null);
+  const [hasUserChangedDistance, setHasUserChangedDistance] = useState(false);
+  const notify = useNotify();
 
   useEffect(() => {
     if (speaker.attenuation_distance)
       setDistance(Number(speaker.attenuation_distance));
     if (speaker.shape) setShape(speaker.shape);
+    setHasUserChangedDistance(false); // Reset user change flag when speaker changes
   }, [speaker]);
+
+  // Initialize lastValidDistance when speaker changes or distance is first available
+  useEffect(() => {
+    if (distance !== undefined && distance !== null) {
+      setLastValidDistance(distance);
+    }
+  }, [speaker?.id, distance]);
 
   const dataProvider = useRoundwareDataProvider();
 
@@ -92,25 +104,96 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
   };
 
   const debouncedDistance = useDebounce(distance, 1000);
+  
+  // Calculate maximum valid attenuation distance based on shape size
+  const calculateMaxValidDistance = (shape: any): number => {
+    if (!shape || !shape.coordinates) return 0;
+    
+    try {
+      // Get the bounding box of the shape
+      const coords = shape.coordinates[0][0]; // First ring of first polygon
+      let minLat = coords[0][1], maxLat = coords[0][1];
+      let minLng = coords[0][0], maxLng = coords[0][0];
+      
+      coords.forEach((coord: [number, number]) => {
+        minLat = Math.min(minLat, coord[1]);
+        maxLat = Math.max(maxLat, coord[1]);
+        minLng = Math.min(minLng, coord[0]);
+        maxLng = Math.max(maxLng, coord[0]);
+      });
+      
+      // Calculate approximate shape dimensions in meters
+      const latDiff = maxLat - minLat;
+      const lngDiff = maxLng - minLng;
+      
+      // Rough conversion to meters (1 degree ≈ 111km)
+      const latMeters = latDiff * 111000;
+      const lngMeters = lngDiff * 111000 * Math.cos((minLat + maxLat) * Math.PI / 360);
+      
+      // Use the smaller dimension as the maximum valid distance
+      const maxDimension = Math.min(latMeters, lngMeters);
+      
+      // Return 80% of the smaller dimension to be safe
+      return maxDimension * 0.8;
+    } catch (e) {
+      console.error('Error calculating max distance:', e);
+      return 0;
+    }
+  };
+
   // the inner border, should not be editable
   const attenuationBorderPath: google.maps.LatLng[] | null = useMemo(() => {
     if (!shape) return null;
+    
+    // Don't calculate if distance is 0 or undefined
+    if (distance === 0 || distance === undefined || distance === null) {
+      return null;
+    }
+    
     let polygon;
     try {
       polygon = buffer(shape, -distance, {
         units: "meters",
       });
+      
+      // If successful, update the last valid distance
+      if (polygon && (lastValidDistance === null || distance !== lastValidDistance)) {
+        setLastValidDistance(distance);
+      }
     } catch (e) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      alert("Attenuation Border Path: " + JSON.stringify(e?.message));
-      console.error(e);
+      console.error('Attenuation border calculation error:', e);
+      
+      // Only show error and reset if this is a user-initiated change (not initial load)
+      if (hasUserChangedDistance && lastValidDistance !== null && lastValidDistance !== distance) {
+        notify(`Error calculating attenuation border: ${e?.message || 'Unknown error'}. Resetting to previous value.`, { type: 'error' });
+        setDistance(lastValidDistance);
+        return null; // Will recalculate with valid distance
+      }
     }
 
     /** just use previous shape as something goes wrong */
     if (!polygon) return null;
     return polygonToGoogleMapPaths(polygon.geometry);
-  }, [shape, debouncedDistance, speaker]);
+  }, [shape, debouncedDistance, speaker, distance, lastValidDistance, notify, setDistance, hasUserChangedDistance]);
+
+  // Separate validation effect that runs when user changes distance
+  useEffect(() => {
+    if (lastValidDistance === null || !hasUserChangedDistance || !shape) return;
+    
+    // Don't validate if the distance matches the last valid distance (already validated)
+    if (lastValidDistance !== null && distance === lastValidDistance) {
+      return;
+    }
+    
+    // Check if distance is too large for the shape
+    const maxValidDistance = calculateMaxValidDistance(shape);
+    if (distance > maxValidDistance && maxValidDistance > 0) {
+      notify(`Attenuation distance (${distance}m) is too large for this shape. Maximum allowed: ${Math.round(maxValidDistance)}m. Resetting to previous value.`, { type: 'error' });
+      // Reset to last valid distance if available, otherwise use a safe default
+      const resetValue = lastValidDistance !== null ? lastValidDistance : Math.round(maxValidDistance * 0.5);
+      setDistance(resetValue);
+    }
+  }, [distance, hasUserChangedDistance, shape, lastValidDistance, notify, setDistance]);
 
   const shapePath = useMemo(() => {
     return polygonToGoogleMapPaths(shape);
@@ -142,26 +225,40 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
   const [saving, setSaving] = useState(false);
   const handleSave = () => {
     setSaving(true);
-    dataProvider
-      .update(`speakers`, {
-        id: speaker.id,
-        data: {
-          ...speaker,
-          ...getSpeakerGeoJSONObjectsForPath(
-            googleMapPathToGeoJSONPath(shapePath),
-            distance
-          ),
-          attenuation_distance: distance,
-        },
-        previousData: {
-          ...speaker,
-        },
-      })
-      .then(() => {
-        fetchData();
-        setIsCurrentSpeakerSaved(true);
-      })
-      .finally(() => setSaving(false));
+    
+    try {
+      const geoJSONObjects = getSpeakerGeoJSONObjectsForPath(
+        googleMapPathToGeoJSONPath(shapePath),
+        distance
+      );
+      
+      dataProvider
+        .update(`speakers`, {
+          id: speaker.id,
+          data: {
+            ...speaker,
+            ...geoJSONObjects,
+            attenuation_distance: distance,
+          },
+          previousData: {
+            ...speaker,
+          },
+        })
+        .then(() => {
+          fetchData();
+          setIsCurrentSpeakerSaved(true);
+          setHasUserChangedDistance(false); // Reset user change flag after successful save
+        })
+        .catch((error) => {
+          console.error('Error saving speaker:', error);
+          notify(`Error saving speaker: ${error.message}`, { type: 'error' });
+        })
+        .finally(() => setSaving(false));
+    } catch (error) {
+      console.error('Error processing speaker data:', error);
+      notify(`Error processing speaker data: ${error.message}`, { type: 'error' });
+      setSaving(false);
+    }
   };
 
   useEffect(() => {
@@ -444,8 +541,19 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
                       label="Attenuation Distance"
                       type="number"
                       defaultValue={distance}
-                      onChange={(e) => setDistance(Number(e.target.value))}
-                      helperText="Meters"
+                      inputProps={{
+                        min: 0,
+                        step: 1
+                      }}
+                      onChange={(e) => {
+                        const value = Number(e.target.value);
+                        // Only allow positive integers including 0
+                        if (value >= 0 && Number.isInteger(value)) {
+                          setDistance(value);
+                          setHasUserChangedDistance(true);
+                        }
+                      }}
+                      helperText="Meters (positive integers only)"
                     />
                   </Box>
                 </Popover>
