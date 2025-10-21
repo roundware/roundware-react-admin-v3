@@ -1,36 +1,36 @@
-import {
-  CircularProgress,
-  Grid,
-  IconButton,
-  Paper,
-  Tooltip,
-  Popover,
-  Box,
-  TextField,
-} from "@mui/material";
+import BlurCircularIcon from "@mui/icons-material/BlurCircular";
 import DeleteIcon from "@mui/icons-material/Delete";
 import HistoryIcon from "@mui/icons-material/History";
 import SaveIcon from "@mui/icons-material/Save";
-import BlurCircularIcon from "@mui/icons-material/BlurCircular";
 import {
-  Polygon,
-  PolygonProps,
-  Polyline,
-  useGoogleMap,
+    Box,
+    CircularProgress,
+    Grid,
+    IconButton,
+    Paper,
+    Popover,
+    TextField,
+    Tooltip,
+} from "@mui/material";
+import {
+    Polygon,
+    PolygonProps,
+    Polyline,
+    useGoogleMap,
 } from "@react-google-maps/api";
 import buffer from "@turf/buffer";
 import { multiPolygon } from "@turf/helpers";
 import MapControl from "components/common/MapControl";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
 import { useSpeakers } from "context/SpeakersContext";
+import useDebounce from "hooks/useDebounce";
 import React, { useEffect, useMemo, useState } from "react";
 import { ISpeaker } from "types/speaker";
 import {
-  polygonToGoogleMapPaths,
-  getSpeakerGeoJSONObjectsForPath,
-  googleMapPathToGeoJSONPath,
+    getSpeakerGeoJSONObjectsForPath,
+    googleMapPathToGeoJSONPath,
+    polygonToGoogleMapPaths,
 } from "utilities";
-import useDebounce from "hooks/useDebounce";
 interface Props {
   speaker: ISpeaker;
 }
@@ -117,7 +117,10 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
   const handleDragStart = () => setDragging(true);
   const updatePolygon = (e: google.maps.MapMouseEvent) => {
     if (e) console.info(`Polygon edited`);
-    setIsCurrentSpeakerSaved(false);
+    // Only mark as unsaved if we were actually dragging (editing the shape)
+    if (dragging) {
+      setIsCurrentSpeakerSaved(false);
+    }
     setDragging(false);
     const newPath = polygon?.getPath().getArray();
 
@@ -227,6 +230,12 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
     }
   };
 
+  const handleClick = () => {
+    if (selectedSpeaker != speaker.id) {
+      setSelectedSpeaker(speaker.id);
+    }
+  };
+
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -251,6 +260,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
         // onDragEnd={updatePolygon}
         onMouseUp={updatePolygon}
         onLoad={handleOnPolygonLoad}
+        onClick={handleClick}
         onDblClick={handleDblClick}
         options={shapePolygonOptions}
       />
@@ -258,6 +268,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
       {attenuationBorderPath && (
         <Polygon
           paths={attenuationBorderPath}
+          onClick={handleClick}
           options={attenuationBorderOptions}
           visible={!dragging}
         />

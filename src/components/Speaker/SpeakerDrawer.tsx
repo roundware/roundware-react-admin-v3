@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { useSpeakers } from "context/SpeakersContext";
-import { useRoundwareDataProvider } from "context/DataProviderContext";
-import { DrawingManager, DrawingManagerProps } from "@react-google-maps/api";
-import {
-  Paper,
-  Grid,
-  IconButton,
-  Tooltip,
-  CircularProgress,
-} from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
 import HistoryIcon from "@mui/icons-material/History";
-import MapControl from "components/common/MapControl";
+import SaveIcon from "@mui/icons-material/Save";
 import {
-  getSpeakerGeoJSONObjectsForPath,
-  googleMapPathToGeoJSONPath,
+    CircularProgress,
+    Grid,
+    IconButton,
+    Paper,
+    Tooltip,
+} from "@mui/material";
+import { DrawingManager, DrawingManagerProps } from "@react-google-maps/api";
+import MapControl from "components/common/MapControl";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
+import { useSpeakers } from "context/SpeakersContext";
+import React, { useEffect, useState } from "react";
+import {
+    getSpeakerGeoJSONObjectsForPath,
+    googleMapPathToGeoJSONPath,
 } from "utilities";
 
 type googleMapDrawnShapes =
@@ -214,10 +214,12 @@ const SpeakerDrawer = (): JSX.Element | null => {
       .finally(() => setSaving(false));
   };
 
+  // Only set unsaved when we actually start drawing a new shape
   useEffect(() => {
-    if (selectedSpeaker && !selectedSpeakerData?.shape)
+    if (selectedSpeaker && !selectedSpeakerData?.shape && drawnPaths) {
       setIsCurrentSpeakerSaved(false);
-  }, []);
+    }
+  }, [drawnPaths, selectedSpeaker, selectedSpeakerData?.shape]);
 
   /** removes current shape */
   const handleRedraw = () => setCurrentShape(null);

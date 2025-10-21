@@ -34,7 +34,8 @@ export const SpeakersProvider = ({
 
   const [isCurrentSpeakerSaved, setIsCurrentSpeakerSaved] = useState(true);
   const setSelectedSpeaker = (newId: number | null) => {
-    if (!isCurrentSpeakerSaved) {
+    // Only check for unsaved changes if we're switching to a different speaker
+    if (newId !== selectedSpeaker && !isCurrentSpeakerSaved) {
       const ans = confirm(
         "Would you like to save your speaker changes before editing a new speaker?"
       );
