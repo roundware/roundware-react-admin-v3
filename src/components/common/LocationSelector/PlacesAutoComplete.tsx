@@ -16,6 +16,7 @@ const PlacesAutoComplete = ({ onSelect }: Props): JSX.Element => {
     React.useState<google.maps.places.AutocompletePrediction | null>(null);
   const [inputValue, setInputValue] = React.useState("");
   const [options, setOptions] = React.useState<PlaceType[]>([]);
+  const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = React.useState(false);
 
   const fetch = React.useMemo(
     () =>
@@ -34,14 +35,30 @@ const PlacesAutoComplete = ({ onSelect }: Props): JSX.Element => {
     []
   );
 
+  // Check if Google Maps API is loaded
+  React.useEffect(() => {
+    const checkGoogleMaps = () => {
+      if (window.google && window.google.maps && window.google.maps.places) {
+        setIsGoogleMapsLoaded(true);
+        if (!autocompleteService.current) {
+          // TODO: Migrate to AutocompleteSuggestion API when available
+          // See: https://developers.google.com/maps/documentation/javascript/places-migration-overview
+          autocompleteService.current =
+            new window.google.maps.places.AutocompleteService();
+        }
+      } else {
+        // Retry after a short delay if Google Maps isn't loaded yet
+        setTimeout(checkGoogleMaps, 100);
+      }
+    };
+    
+    checkGoogleMaps();
+  }, []);
+
   React.useEffect(() => {
     let active = true;
 
-    if (!autocompleteService.current && window.google) {
-      autocompleteService.current =
-        new window.google.maps.places.AutocompleteService();
-    }
-    if (!autocompleteService.current) {
+    if (!isGoogleMapsLoaded || !autocompleteService.current) {
       return undefined;
     }
 
@@ -72,7 +89,20 @@ const PlacesAutoComplete = ({ onSelect }: Props): JSX.Element => {
     return () => {
       active = false;
     };
-  }, [value, inputValue, fetch]);
+  }, [value, inputValue, fetch, isGoogleMapsLoaded]);
+
+  // Show loading state if Google Maps isn't loaded yet
+  if (!isGoogleMapsLoaded) {
+    return (
+      <TextField
+        label="Loading Google Maps..."
+        variant="outlined"
+        fullWidth
+        disabled
+        style={{ width: 300 }}
+      />
+    );
+  }
 
   return (
     <Autocomplete
@@ -125,7 +155,7 @@ const PlacesAutoComplete = ({ onSelect }: Props): JSX.Element => {
         return (
           <li {...p}>
             <Grid container alignItems="center">
-              <Grid item>
+              <Grid>
                 <LocationOnIcon 
                   sx={{ 
                     color: "text.secondary",
@@ -133,7 +163,7 @@ const PlacesAutoComplete = ({ onSelect }: Props): JSX.Element => {
                   }} 
                 />
               </Grid>
-              <Grid item xs>
+              <Grid size={{ xs: true }}>
                 {parts.map((part, index) => (
                   <span
                     key={index}

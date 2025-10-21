@@ -99,26 +99,28 @@ const SpeakerShapesControl = ({ speakers: propSpeakers }: SpeakerShapesControlPr
         <CardContent style={{ height: '100%' }}>
           <Grid container direction='column' spacing={2}>
             {/* speaker info */}
-            <Grid item>
+            <Grid>
               <Typography variant='h5'>Shapes</Typography>
-              <Typography
-                variant='body1'
-                style={{ fontWeight: selectedSpeaker ? 'bold' : 'normal' }}
-              >
-                {selectedSpeaker ? (
-                  `Selected Speaker #${selectedSpeaker}`
-                ) : (
+              {selectedSpeaker ? (
+                <Typography
+                  variant='body1'
+                  style={{ fontWeight: 'bold' }}
+                >
+                  Selected Speaker #{selectedSpeaker}
+                </Typography>
+              ) : (
+                <div style={{ fontWeight: 'normal' }}>
                   <Grid container direction='row' alignItems='center'>
                     Select a Speaker to Edit using{' '}
                     <LocationOnOutlinedIcon fontSize={'medium'} /> Icon from
                     List, Or Double Click any shape
                   </Grid>
-                )}
-              </Typography>
+                </div>
+              )}
             </Grid>
 
             {/* locatoin seelctor */}
-            <Grid item>
+            <Grid>
               <PlacesAutoComplete
                 onSelect={(lat, lng) =>
                   setCenter({
@@ -130,7 +132,7 @@ const SpeakerShapesControl = ({ speakers: propSpeakers }: SpeakerShapesControlPr
             </Grid>
 
             {/* map */}
-            <Grid item>
+            <Grid>
               {isLoaded ? (
                 <GoogleMap
                   mapContainerStyle={containerStyle}

@@ -461,10 +461,17 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
       )}
 
       {isSelected && (
-        <MapControl position={window.google.maps.ControlPosition.LEFT_CENTER}>
-          <Paper>
+        <MapControl position={window.google.maps.ControlPosition.LEFT_TOP}>
+          <Paper 
+            sx={{ 
+              maxHeight: 'calc(100vh - 200px)', 
+              overflowY: 'auto',
+              margin: '8px',
+              marginTop: '60px'
+            }}
+          >
             <Grid direction="column" spacing={1}>
-              <Grid item>
+              <Grid>
                 <Tooltip title="Save Changes" placement="right">
                   <IconButton
                     onClick={handleSave}
@@ -475,49 +482,49 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
                   </IconButton>
                 </Tooltip>
               </Grid>
-              <Grid item>
+              <Grid>
                 <Tooltip title="Discard Changes" placement="right">
                   <IconButton onClick={handleDiscard} size="large">
                     <HistoryIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
-              <Grid item>
+              <Grid>
                 <Tooltip title="Delete Shape" placement="right">
                   <IconButton onClick={handleDelete} size="large">
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
-              <Grid item>
+              <Grid>
                 <Tooltip title="Rotate Left (5°)" placement="right">
                   <IconButton onClick={handleRotateLeft} size="large">
                     <RotateLeftIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
-              <Grid item>
+              <Grid>
                 <Tooltip title="Rotate Right (5°)" placement="right">
                   <IconButton onClick={handleRotateRight} size="large">
                     <RotateRightIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
-              <Grid item>
+              <Grid>
                 <Tooltip title="Scale Up (10%)" placement="right">
                   <IconButton onClick={handleScaleUp} size="large">
                     <ZoomOutMapIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
-              <Grid item>
+              <Grid>
                 <Tooltip title="Scale Down (10%)" placement="right">
                   <IconButton onClick={handleScaleDown} size="large">
                     <ZoomInMapIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
-              <Grid item>
+              <Grid>
                 <Tooltip title="Attenuation Distance" placement="right">
                   <IconButton onClick={handleOpenAD} size="large">
                     <BlurCircularIcon />

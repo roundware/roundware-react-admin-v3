@@ -40,8 +40,8 @@ const DashboardContent = () => {
     <ChartsDataProvider>
       <div>
         <Grid container spacing={4} mb={10}>
-          <Grid container item spacing={3} md={12} xs={12}>
-            <Grid item md={2} xs={6}>
+          <Grid container spacing={3} size={{ md: 12, xs: 12 }}>
+            <Grid size={{ md: 2, xs: 6 }}>
               <CardWithIcon
                 icon={Hearing}
                 title="Listens"
@@ -66,7 +66,7 @@ const DashboardContent = () => {
               />
             </Grid>
 
-            <Grid item md={2} xs={6}>
+            <Grid size={{ md: 2, xs: 6 }}>
               <CardWithIcon
                 icon={RecordVoiceOver}
                 title="Recordings"
@@ -91,7 +91,7 @@ const DashboardContent = () => {
               />
             </Grid>
 
-            <Grid item md={2} xs={12}>
+            <Grid size={{ md: 2, xs: 12 }}>
               <CardWithIcon
                 icon={WatchLater}
                 title="Sessions"
@@ -117,28 +117,28 @@ const DashboardContent = () => {
             </Grid>
           </Grid>
 
-          <Grid container item xs={12} md={12} spacing={3}>
-            <Grid item xs={12} md={4} lg={4}>
+          <Grid container size={{ xs: 12, md: 12 }} spacing={3}>
+            <Grid size={{ xs: 12, md: 4, lg: 4 }}>
               <AssetMediaTypesChart />
             </Grid>
 
-            <Grid container item xs={4} md={4}>
+            <Grid container size={{ xs: 4, md: 4 }}>
               <ClientTypeChart />
             </Grid>
 
-            <Grid container item xs={4} md={4}>
+            <Grid container size={{ xs: 4, md: 4 }}>
               <BrowsersChart />
             </Grid>
 
-            <Grid item xs={12} md={12} lg={12}>
+            <Grid size={{ xs: 12, md: 12, lg: 12 }}>
               <AssetsChart />
             </Grid>
 
-            <Grid item xs={12} md={12} lg={12}>
+            <Grid size={{ xs: 12, md: 12, lg: 12 }}>
               <SessionsChart />
             </Grid>
 
-            <Grid item xs={12} md={12} lg={12}>
+            <Grid size={{ xs: 12, md: 12, lg: 12 }}>
               <ListenEventsChart />
             </Grid>
 

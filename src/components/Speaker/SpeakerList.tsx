@@ -215,7 +215,7 @@ const SpeakerList = (): JSX.Element => {
             </Datagrid>
           </List>
         </Grid>
-        <Grid xs={12} md={6} item style={{ flex: '1 1 50%', width: '50%' }}>
+        <Grid size={{ xs: 12, md: 6 }} style={{ flex: '1 1 50%', width: '50%' }}>
           <SpeakerShapesControl />
         </Grid>
       </Grid>

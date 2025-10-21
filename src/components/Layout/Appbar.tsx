@@ -18,7 +18,11 @@ import { HideOnScroll, useRedirect, UserMenu } from "react-admin";
 import { useNavigate } from "react-router-dom";
 import RefreshButton from "./RefreshButton";
 import { SidebarToggleButton } from "./SidebarToggleButton";
-const AppBar = (): JSX.Element => {
+interface AppBarProps {
+  container?: React.ComponentType<any>;
+}
+
+const AppBar = ({ container = HideOnScroll }: AppBarProps): JSX.Element => {
   const isXSmall = useMediaQuery<Theme>((theme) =>
     theme.breakpoints.down("sm")
   );
@@ -116,8 +120,5 @@ const AppBar = (): JSX.Element => {
   );
 };
 
-AppBar.defaultProps = {
-  container: HideOnScroll,
-};
 
 export default memo(AppBar);

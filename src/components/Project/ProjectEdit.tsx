@@ -4,7 +4,7 @@ import LocationSelector from "components/common/LocationSelector";
 import TranslatableField from "components/common/TranslatableField";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
 import { useProjects } from "context/ProjectsContext";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
     BooleanInput,
     DateTimeInput,
@@ -181,7 +181,7 @@ const ProjectEdit = (): JSX.Element => {
           label="Legal Agreement"
         />
         <Grid container spacing={2} style={{ width: "100%" }}>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <CardBox title="Sharing">
               <TextInput
                 source="sharing_url"
@@ -196,7 +196,7 @@ const ProjectEdit = (): JSX.Element => {
               />
             </CardBox>
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <CardBox title="Out of Range">
               <NumberInput
                 source="out_of_range_distance"

@@ -1,7 +1,7 @@
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { BuildUIContextProvider } from "./context/BuildUIContext";
 import { RoundwareDataProviderContextProvider } from "./context/DataProviderContext";
@@ -43,13 +43,20 @@ const router = createBrowserRouter([
       </LocalizationProvider>
     ),
   },
-]);
+], {
+  future: {
+    v7_startTransition: true,
+  },
+});
 
-ReactDOM.render(
+const container = document.getElementById("root");
+if (!container) throw new Error("Failed to find the root element");
+
+const root = createRoot(container);
+root.render(
   <React.StrictMode>
     <RouterProvider router={router} />
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
