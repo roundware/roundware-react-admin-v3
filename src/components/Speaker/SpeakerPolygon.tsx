@@ -470,7 +470,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
               marginTop: '60px'
             }}
           >
-            <Grid direction="column" spacing={1}>
+            <Grid container direction="column" spacing={1}>
               <Grid>
                 <Tooltip title="Save Changes" placement="right">
                   <IconButton

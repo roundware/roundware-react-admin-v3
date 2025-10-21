@@ -399,7 +399,7 @@ const ColorPicker = ({
                 onChange={handleHexChange}
                 placeholder="#000000 or #00000080"
                 helperText="Enter 6 or 8 character hex color (with or without #)"
-                error={hexInput && !isValidHex(formatHex(hexInput))}
+                error={!!(hexInput && !isValidHex(formatHex(hexInput)))}
                 inputProps={{
                   style: { fontFamily: 'monospace' }
                 }}

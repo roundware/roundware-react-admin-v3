@@ -147,7 +147,7 @@ function TabPanel(props: {
     <div role="tabpanel" hidden={value !== current}>
       {value === current && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
