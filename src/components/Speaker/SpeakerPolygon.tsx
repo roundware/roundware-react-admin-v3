@@ -1,6 +1,8 @@
 import BlurCircularIcon from "@mui/icons-material/BlurCircular";
 import DeleteIcon from "@mui/icons-material/Delete";
 import HistoryIcon from "@mui/icons-material/History";
+import RotateLeftIcon from "@mui/icons-material/RotateLeft";
+import RotateRightIcon from "@mui/icons-material/RotateRight";
 import SaveIcon from "@mui/icons-material/Save";
 import {
     Box,
@@ -236,6 +238,51 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
     }
   };
 
+  // Rotation functions
+  const rotatePolygon = (angle: number) => {
+    if (!shapePath || !Array.isArray(shapePath)) return;
+    
+    // Calculate center of polygon
+    const center = {
+      lat: shapePath.reduce((sum, point) => sum + point.lat(), 0) / shapePath.length,
+      lng: shapePath.reduce((sum, point) => sum + point.lng(), 0) / shapePath.length,
+    };
+    
+    // Account for latitude scaling - longitude lines get closer together at higher latitudes
+    const latScale = Math.cos((center.lat * Math.PI) / 180);
+    
+    const rotatedPath = shapePath.map(point => {
+      // Convert to relative coordinates
+      const lat = point.lat() - center.lat;
+      const lng = (point.lng() - center.lng) * latScale; // Scale longitude by latitude
+      
+      // Apply rotation matrix
+      const radians = (angle * Math.PI) / 180;
+      const cos = Math.cos(radians);
+      const sin = Math.sin(radians);
+      
+      // Rotate around center
+      const newLat = lat * cos - lng * sin;
+      const newLng = (lat * sin + lng * cos) / latScale; // Unscale longitude
+      
+      return new google.maps.LatLng(
+        newLat + center.lat,
+        newLng + center.lng
+      );
+    });
+    
+    // Convert back to GeoJSON format and update the shape
+    const rotatedGeoJSON = multiPolygon([
+      [googleMapPathToGeoJSONPath(rotatedPath)]
+    ]).geometry;
+    
+    setShape(rotatedGeoJSON);
+    setIsCurrentSpeakerSaved(false);
+  };
+
+  const handleRotateLeft = () => rotatePolygon(-5); // Rotate 5 degrees counter-clockwise
+  const handleRotateRight = () => rotatePolygon(5); // Rotate 5 degrees clockwise
+
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -300,6 +347,20 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
                 <Tooltip title="Delete Shape" placement="right">
                   <IconButton onClick={handleDelete} size="large">
                     <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid item>
+                <Tooltip title="Rotate Left (5°)" placement="right">
+                  <IconButton onClick={handleRotateLeft} size="large">
+                    <RotateLeftIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid item>
+                <Tooltip title="Rotate Right (5°)" placement="right">
+                  <IconButton onClick={handleRotateRight} size="large">
+                    <RotateRightIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
