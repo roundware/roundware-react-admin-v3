@@ -8,25 +8,26 @@ import { useSpeakers } from 'context/SpeakersContext';
 import useBoolean from 'hooks/useBoolean';
 import { useState } from 'react';
 import {
-  BooleanInput,
-  Create,
-  DateTimeInput,
-  Edit,
-  maxLength,
-  NumberInput,
-  RaRecord,
-  ReferenceInput,
-  SelectInput,
-  SimpleForm,
-  SimpleFormProps,
-  TextInput,
-  useCreate,
-  useNotify,
-  useRefresh,
-  useUpdate,
+    BooleanInput,
+    Create,
+    DateTimeInput,
+    Edit,
+    maxLength,
+    NumberInput,
+    RaRecord,
+    ReferenceInput,
+    SelectInput,
+    SimpleForm,
+    SimpleFormProps,
+    TextInput,
+    useCreate,
+    useNotify,
+    useRefresh,
+    useUpdate,
 } from 'react-admin';
 import { Navigate } from 'react-router-dom';
 import SpeakerAudioControls from './SpeakerAudioControls';
+import VariantAudioControls from './VariantAudioControls';
 
 // Validation function for hex colors
 const validateHexColor = (value: string) => {
@@ -49,6 +50,11 @@ export const SpeakerEdit = (): JSX.Element => {
       delete data.uri;
       delete data.backupuri;
     } else delete data?.file;
+    
+    // Variant files are now handled by immediate upload in VariantAudioControls
+    // No need to process variantFiles here since they're uploaded directly
+    console.log('Transform function - varianturis:', data?.varianturis);
+    
     delete data.shape;
     delete data.attenuation_border;
     delete data.boundary;
@@ -114,6 +120,8 @@ export const SpeakerEdit = (): JSX.Element => {
         <FileDownloadButton source='uri' />
         <TextInput source='uri' fullWidth />
         <TextInput source='backupuri' fullWidth />
+
+        <VariantAudioControls />
 
         <NumberInput 
           source='attenuation_distance' 
@@ -200,6 +208,11 @@ export const SpeakerCreate = (): JSX.Element => {
       delete data.uri;
       delete data.backupuri;
     } else delete data?.file;
+    
+    // Variant files are now handled by immediate upload in VariantAudioControls
+    // No need to process variantFiles here since they're uploaded directly
+    console.log('Create transform function - varianturis:', data?.varianturis);
+    
     if (!data.minvolume) data.minvolume = 0.1;
     if (!data.maxvolume) data.maxvolume = 0.5;
     return data;
@@ -261,6 +274,7 @@ export const SpeakerCreate = (): JSX.Element => {
         <TextInput source='code' validate={maxLength(10)} fullWidth required />
 
         <SpeakerAudioControls />
+        <VariantAudioControls />
         <NumberInput
           source='attenuation_distance'
           fullWidth

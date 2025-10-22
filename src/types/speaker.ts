@@ -7,4 +7,5 @@ export interface ISpeaker {
   shape: MultiPolygon;
   created?: Date;
   updated?: Date;
+  varianturis?: string[];
 }
