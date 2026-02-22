@@ -1,0 +1,333 @@
+import {
+  CircularProgress,
+  Grid,
+  IconButton,
+  Paper,
+  Tooltip,
+  Popover,
+  Box,
+  TextField,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import HistoryIcon from "@mui/icons-material/History";
+import SaveIcon from "@mui/icons-material/Save";
+import BlurCircularIcon from "@mui/icons-material/BlurCircular";
+import {
+  Polygon,
+  PolygonProps,
+  Polyline,
+  useGoogleMap,
+} from "@react-google-maps/api";
+import buffer from "@turf/buffer";
+import { multiPolygon } from "@turf/helpers";
+import MapControl from "components/common/MapControl";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
+import { useSpeakers } from "context/SpeakersContext";
+import React, { useEffect, useMemo, useState } from "react";
+import { ISpeaker } from "types/speaker";
+import {
+  polygonToGoogleMapPaths,
+  getSpeakerGeoJSONObjectsForPath,
+  googleMapPathToGeoJSONPath,
+} from "utilities";
+import useDebounce from "hooks/useDebounce";
+interface Props {
+  speaker: ISpeaker;
+}
+/**
+ * this will render all the necesarry polygons for an individual speaker
+ */
+const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
+  const {
+    selectedSpeaker,
+    fetchData,
+    setSelectedSpeaker,
+    setSpeakers,
+    setIsCurrentSpeakerSaved,
+  } = useSpeakers();
+  const isSelected = selectedSpeaker == speaker.id;
+  const map = useGoogleMap();
+  const [shape, setShape] = useState(speaker.shape);
+
+  const [distance, setDistance] = useState(
+    Number(speaker.attenuation_distance)
+  );
+
+  useEffect(() => {
+    if (speaker.attenuation_distance)
+      setDistance(Number(speaker.attenuation_distance));
+    if (speaker.shape) setShape(speaker.shape);
+  }, [speaker]);
+
+  const dataProvider = useRoundwareDataProvider();
+
+  // the editable shape
+  const shapePolygonOptions: PolygonProps[`options`] = {
+    fillColor: speaker.activeyn ? `gray` : "lightblue",
+    fillOpacity: isSelected ? 0.5 : 0,
+    strokeColor: "red",
+    strokeOpacity: 1,
+    strokeWeight: 2,
+    clickable: true,
+    draggable: isSelected,
+    editable: isSelected,
+    geodesic: false,
+    zIndex: 3,
+  };
+
+  const attenuationBorderOptions = {
+    fillOpacity: 0,
+    strokeColor: isSelected ? `#ff0000` : "#000000",
+    strokeOpacity: 1,
+    strokeWeight: 1,
+    clickable: true,
+    draggable: false,
+    editable: false,
+    geodesic: false,
+    zIndex: 2,
+  };
+
+  const debouncedDistance = useDebounce(distance, 1000);
+  // the inner border, should not be editable
+  const attenuationBorderPath: google.maps.LatLng[] | null = useMemo(() => {
+    if (!shape) return null;
+    let polygon;
+    try {
+      polygon = buffer(shape, -distance, {
+        units: "meters",
+      });
+    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      alert("Attenuation Border Path: " + JSON.stringify(e?.message));
+      console.error(e);
+    }
+
+    /** just use previous shape as something goes wrong */
+    if (!polygon) return null;
+    return polygonToGoogleMapPaths(polygon.geometry);
+  }, [shape, debouncedDistance, speaker]);
+
+  const shapePath = useMemo(() => {
+    return polygonToGoogleMapPaths(shape);
+  }, [shape, speaker]);
+
+  const [dragging, setDragging] = useState(false);
+
+  const handleDragStart = () => setDragging(true);
+  const updatePolygon = (e: google.maps.MapMouseEvent) => {
+    if (e) console.info(`Polygon edited`);
+    setIsCurrentSpeakerSaved(false);
+    setDragging(false);
+    const newPath = polygon?.getPath().getArray();
+
+    if (Array.isArray(newPath)) {
+      const newMultiPolygon = multiPolygon([
+        [googleMapPathToGeoJSONPath(newPath)],
+      ]).geometry;
+      setShape(newMultiPolygon);
+    }
+  };
+  const [polygon, setPolygon] = useState<google.maps.Polygon>();
+  const handleOnPolygonLoad = (loadedPolygon: google.maps.Polygon) =>
+    setPolygon(loadedPolygon);
+
+  const [saving, setSaving] = useState(false);
+  const handleSave = () => {
+    setSaving(true);
+    dataProvider
+      .update(`speakers`, {
+        id: speaker.id,
+        data: {
+          ...speaker,
+          ...getSpeakerGeoJSONObjectsForPath(
+            googleMapPathToGeoJSONPath(shapePath),
+            distance
+          ),
+          attenuation_distance: distance,
+        },
+        previousData: {
+          ...speaker,
+        },
+      })
+      .then(() => {
+        fetchData();
+        setIsCurrentSpeakerSaved(true);
+      })
+      .finally(() => setSaving(false));
+  };
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (
+      isSelected &&
+      polygon &&
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      typeof polygon?.getBounds == "function" &&
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      polygon.getBounds()
+    ) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      map?.fitBounds(polygon.getBounds());
+    } else {
+      handleDiscard();
+    }
+  }, [isSelected, polygon, speaker]);
+
+  const polylineOptions = {
+    strokeColor: "#000000",
+    strokeOpacity: 0.1,
+    icons: [
+      {
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          fillOpacity: 0.5,
+          scale: 1,
+        },
+        offset: "0",
+        repeat: "10px",
+      },
+    ],
+  };
+
+  const handleDiscard = () => {
+    setShape(speaker.shape);
+    setIsCurrentSpeakerSaved(true);
+  };
+
+  const handleDelete = () => {
+    const confirmation = window.confirm(
+      `Deleting a speaker will only allow you to draw a new shape`
+    );
+
+    if (confirmation) {
+      setSpeakers((s) => {
+        setIsCurrentSpeakerSaved(false);
+        const sps = [...(s || [])].filter((s) => s?.id != selectedSpeaker);
+        sps.push({
+          ...s?.find((s) => s.id == selectedSpeaker),
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          shape: undefined,
+          attenuation_border: undefined,
+          boundary: undefined,
+        });
+        return sps;
+      });
+    }
+  };
+
+  const handleDblClick = () => {
+    if (selectedSpeaker != speaker.id) {
+      setSelectedSpeaker(speaker.id);
+    }
+  };
+
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null
+  );
+  const handleOpenAD: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    setAnchorEl(e.currentTarget || null);
+  };
+
+  const handleCloseAD = () => setAnchorEl(null);
+
+  return (
+    <div>
+      {/* original shape */}
+      <Polyline
+        path={polygonToGoogleMapPaths(speaker.shape)}
+        draggable={false}
+        options={polylineOptions}
+      />
+      {/* editable shape */}
+      <Polygon
+        paths={shapePath}
+        onDragStart={handleDragStart}
+        // onDragEnd={updatePolygon}
+        onMouseUp={updatePolygon}
+        onLoad={handleOnPolygonLoad}
+        onDblClick={handleDblClick}
+        options={shapePolygonOptions}
+      />
+
+      {attenuationBorderPath && (
+        <Polygon
+          paths={attenuationBorderPath}
+          options={attenuationBorderOptions}
+          visible={!dragging}
+        />
+      )}
+
+      {isSelected && (
+        <MapControl position={window.google.maps.ControlPosition.LEFT_CENTER}>
+          <Paper>
+            <Grid direction="column" spacing={1}>
+              <Grid item>
+                <Tooltip title="Save Changes" placement="right">
+                  <IconButton
+                    onClick={handleSave}
+                    disabled={saving}
+                    size="large"
+                  >
+                    {saving ? <CircularProgress /> : <SaveIcon />}
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid item>
+                <Tooltip title="Discard Changes" placement="right">
+                  <IconButton onClick={handleDiscard} size="large">
+                    <HistoryIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid item>
+                <Tooltip title="Delete Shape" placement="right">
+                  <IconButton onClick={handleDelete} size="large">
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid item>
+                <Tooltip title="Attenuation Distance" placement="right">
+                  <IconButton onClick={handleOpenAD} size="large">
+                    <BlurCircularIcon />
+                  </IconButton>
+                </Tooltip>
+                <Popover
+                  open={Boolean(anchorEl)}
+                  anchorEl={anchorEl}
+                  onClose={handleCloseAD}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                >
+                  <Box p={3}>
+                    <TextField
+                      label="Attenuation Distance"
+                      type="number"
+                      defaultValue={distance}
+                      onChange={(e) => setDistance(Number(e.target.value))}
+                      helperText="Meters"
+                    />
+                  </Box>
+                </Popover>
+              </Grid>
+            </Grid>
+          </Paper>
+        </MapControl>
+      )}
+    </div>
+  );
+};
+
+export default SpeakerPolygonsGroup;

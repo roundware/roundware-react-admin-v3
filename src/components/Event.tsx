@@ -1,0 +1,42 @@
+import React from "react";
+import {
+  CreateProps,
+  ListProps,
+  EditProps,
+  List,
+  Create,
+  Edit,
+  Datagrid,
+  SimpleForm,
+  TextInput,
+} from "react-admin";
+import { useProjects } from "../context/ProjectsContext";
+import FormToolbar from "./common/FormToolbar";
+export const EventsList = (): JSX.Element => {
+  const { selectedProject } = useProjects();
+  return (
+    <List filter={{ project_id: selectedProject?.id }}>
+      <Datagrid rowClick="edit"></Datagrid>
+    </List>
+  );
+};
+
+export const EventsEdit = (): JSX.Element => {
+  return (
+    <Edit>
+      <SimpleForm warnWhenUnsavedChanges>
+        <TextInput source="id" required />
+      </SimpleForm>
+    </Edit>
+  );
+};
+
+export const EventsCreate = (): JSX.Element => {
+  return (
+    <Create redirect="list">
+      <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
+        <TextInput source="id" required />
+      </SimpleForm>
+    </Create>
+  );
+};
