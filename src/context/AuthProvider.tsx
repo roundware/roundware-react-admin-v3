@@ -1,56 +1,120 @@
 import { AuthProvider, Options } from "react-admin";
 
-const opts = {
-  obtainAuthTokenUrl: `${process.env.REACT_APP_SERVER_URL}/api/2/login/`,
-};
+/**
+ * JWT-based auth provider for Roundware Server v3.
+ *
+ * Login: POST /api/3/auth/login/ with {email, password}
+ * Response: {access_token, refresh_token, expires_in, user, tenants}
+ *
+ * The first tenant slug from the login response is stored and sent as
+ * the X-Tenant-Slug header on every authenticated request.
+ */
+
 const tokenAuthProvider: AuthProvider = {
   login: async ({ username, password }) => {
-    const request = new Request(opts.obtainAuthTokenUrl, {
+    const loginUrl = `${process.env.REACT_APP_SERVER_URL}/api/3/auth/login/`;
+    const request = new Request(loginUrl, {
       method: "POST",
-      body: JSON.stringify({ username, password }),
+      // v3 uses "email" field; React Admin login form sends "username"
+      body: JSON.stringify({ email: username, password }),
       headers: new Headers({ "Content-Type": "application/json" }),
     });
     const response = await fetch(request);
     if (response.ok) {
-      localStorage.setItem("token", (await response.json()).token);
+      const json = await response.json();
+      localStorage.setItem("access_token", json.access_token);
+      localStorage.setItem("refresh_token", json.refresh_token);
+
+      // Store the first tenant slug for X-Tenant-Slug header
+      if (json.tenants && json.tenants.length > 0) {
+        localStorage.setItem("tenant_slug", json.tenants[0].slug);
+      }
+
+      // Store user info for getIdentity
+      if (json.user) {
+        localStorage.setItem("user_info", JSON.stringify(json.user));
+      }
       return;
     }
-    if (response.headers.get("content-type") !== "application/json") {
-      throw new Error(response.statusText);
-    }
 
-    const json = await response.json();
-    const error = json.non_field_errors;
-    throw new Error(error || response.statusText);
+    if (response.headers.get("content-type")?.includes("application/json")) {
+      const json = await response.json();
+      throw new Error(json.detail || json.non_field_errors || response.statusText);
+    }
+    throw new Error(response.statusText);
   },
-  logout: () => {
-    localStorage.removeItem("token");
+
+  logout: async () => {
+    const refreshToken = localStorage.getItem("refresh_token");
+    // Best-effort server-side logout
+    if (refreshToken) {
+      try {
+        await fetch(
+          `${process.env.REACT_APP_SERVER_URL}/api/3/auth/logout/`,
+          {
+            method: "POST",
+            body: JSON.stringify({ refresh_token: refreshToken }),
+            headers: new Headers({ "Content-Type": "application/json" }),
+          }
+        );
+      } catch {
+        // Ignore errors — we're logging out regardless
+      }
+    }
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("tenant_slug");
+    localStorage.removeItem("user_info");
     return Promise.resolve();
   },
+
   checkAuth: () =>
-    localStorage.getItem("token") ? Promise.resolve() : Promise.reject(),
+    localStorage.getItem("access_token")
+      ? Promise.resolve()
+      : Promise.reject(),
+
   checkError: (error) => {
     const status = error.status;
     if (status === 401 || status === 403) {
-      localStorage.removeItem("token");
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      localStorage.removeItem("tenant_slug");
+      localStorage.removeItem("user_info");
       return Promise.reject();
     }
     return Promise.resolve();
   },
+
+  getIdentity: () => {
+    try {
+      const userStr = localStorage.getItem("user_info");
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        return Promise.resolve({
+          id: user.id,
+          fullName: user.full_name || user.email,
+        });
+      }
+    } catch {
+      // Fall through
+    }
+    return Promise.reject();
+  },
+
   getPermissions: () => {
     return Promise.resolve();
   },
 };
 
 export function createOptionsFromToken(): Options {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("access_token");
   if (!token) {
     return {};
   }
   return {
     user: {
       authenticated: true,
-      token: "Token " + token,
+      token: "Bearer " + token,
     },
   };
 }
