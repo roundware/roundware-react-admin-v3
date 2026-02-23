@@ -113,6 +113,7 @@ const ListenEventsChart = () => {
   const [percentage, setPercentage] = useState(0);
 
   async function fetchForRange(inputRange: DateRange) {
+    if (!project?.selectedProject?.id) return;
     setPercentage(0);
     // determine extra range to fetch from backward;
     const start = inputRange[0];
@@ -123,7 +124,7 @@ const ListenEventsChart = () => {
       pageParam: 1,
       startDate: start,
       endDate: end,
-      projectId: project?.selectedProject?.id || 0,
+      projectId: project?.selectedProject?.id as number,
     });
 
     setAllFetchedData((prev) => [...prev, ...res.results]);
@@ -149,7 +150,7 @@ const ListenEventsChart = () => {
           pageParam: i + 2,
           startDate: start,
           endDate: end,
-          projectId: project?.selectedProject?.id || 0,
+          projectId: project?.selectedProject?.id as number,
         })
           .then((res) => {
             if (res?.results?.length) {

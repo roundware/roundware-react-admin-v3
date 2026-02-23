@@ -97,6 +97,7 @@ const SessionsChart = () => {
   const project = useProjects();
 
   async function fetchForRange(inputRange: DateRange) {
+    if (!project?.selectedProject?.id) return;
     // determine extra range to fetch from backward;
     const start = inputRange[0];
     const end = inputRange[1];
@@ -105,7 +106,7 @@ const SessionsChart = () => {
     const res = await fetchSessions({
       startDate: start,
       endDate: end,
-      projectId: project?.selectedProject?.id || 0,
+      projectId: project?.selectedProject?.id,
     });
 
     setSessions((prev) => [...prev, ...res]);
