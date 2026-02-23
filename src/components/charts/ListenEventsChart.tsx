@@ -73,7 +73,7 @@ const getSanitizedList = (events: RaRecord[]): SanitizedListenEvent[] => [
     .sort((a, b) => (a.start_time > b.start_time ? 1 : -1)),
 ];
 
-const PAGE_SIZE = 500;
+const PAGE_SIZE = 200;
 async function fetchListenEvents({
   pageParam = 1,
   startDate,

@@ -110,9 +110,10 @@ export class RoundwareDataProvider implements DataProvider {
     const { project_id, session_id, ...filters } = params.filter;
 
     /** get url query */
+    const effectiveProjectId = project_id || this.currentProjectId || undefined;
     const query = {
       ...getFilterQuery({
-        project_id: project_id || this.currentProjectId,
+        ...(effectiveProjectId ? { project_id: effectiveProjectId } : {}),
         session_id,
         admin: 1,
         // other filters;

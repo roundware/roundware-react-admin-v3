@@ -118,7 +118,7 @@ const getSanitizedList = (assets: RaRecord[]): IAsset[] => [
     .sort((a, b) => (a.created > b.created ? 1 : -1)),
 ];
 
-const PAGE_SIZE = 500;
+const PAGE_SIZE = 200;
 async function fetchAssets({
   pageParam = 1,
   startDate,
