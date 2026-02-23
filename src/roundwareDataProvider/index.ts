@@ -164,9 +164,10 @@ export class RoundwareDataProvider implements DataProvider {
       // should happen async
       if (Object.values(params.filter).length > 0) {
         // get without filter
+        const bgProjectId = params.filter.project_id || this.currentProjectId || undefined;
         const newQuery = {
           ...getFilterQuery({
-            project_id: params.filter.project_id || this.currentProjectId,
+            ...(bgProjectId ? { project_id: bgProjectId } : {}),
             session_id: params.filter.session_id,
             admin: 1,
             // not other filters;
