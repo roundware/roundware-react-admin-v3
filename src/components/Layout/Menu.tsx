@@ -1,4 +1,4 @@
-import { AccountTree } from "@mui/icons-material";
+import { AccountTree, Business } from "@mui/icons-material";
 import DefaultIcon from "@mui/icons-material/ViewList";
 import { useMediaQuery } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
@@ -7,6 +7,7 @@ import {
   Menu as RAMenu,
   MenuItemLink,
   MenuProps,
+  usePermissions,
   useResourceDefinitions,
   useSidebarState,
 } from "react-admin";
@@ -18,34 +19,25 @@ import PublicIcon from "@mui/icons-material/Public";
 import { capitalize } from "lodash";
 import { useProjects } from "../../context/ProjectsContext";
 import SubMenu from "./SubMenu";
+
 const useStyles = makeStyles(() => ({
   raMenu: {
     paddingTop: "30px",
   },
 }));
 
-const uiOrder: {
-  [key: string]: string[];
-} = {
-  primary: [
-    "assets",
-    "audiotracks",
-    `speakers`,
-    `tags`,
-    `uigroups`,
-    `timedassets`,
-  ],
-  secondary: [`envelopes`, `listenevents`, `sessions`, `tagcategories`],
-  global: [`languages`, `localizedstrings`, `users`],
+const uiOrder: { [key: string]: string[] } = {
+  primary: ["assets", "audiotracks", "speakers", "tags", "uigroups", "timedassets"],
+  secondary: ["envelopes", "listenevents", "sessions", "tagcategories"],
+  global: ["languages", "localizedstrings", "users"],
 };
 
-const icons: {
-  [index: string]: JSX.Element;
-} = {
+const icons: { [index: string]: JSX.Element } = {
   primary: <CategoryIcon />,
   secondary: <AdjustIcon />,
   global: <PublicIcon />,
 };
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const Menu = (props: MenuProps) => {
   const resourcesDefinitions = useResourceDefinitions();
@@ -55,6 +47,8 @@ export const Menu = (props: MenuProps) => {
   const classes = useStyles();
   const { selectedProject } = useProjects();
   const [, setOpen] = useSidebarState();
+  const { permissions } = usePermissions();
+  const isSuperuser = permissions?.isSuperuser === true;
   const openMenu = () => setOpen(true);
 
   const isBigScreen = useMediaQuery(`(min-width:1024px)`);
@@ -63,12 +57,11 @@ export const Menu = (props: MenuProps) => {
     setOpen(false);
   };
 
-  const [state, setState] = React.useState<{
-    [index: string]: boolean;
-  }>({
+  const [state, setState] = React.useState<{ [index: string]: boolean }>({
     primary: true,
     secondary: true,
     global: true,
+    platform: true,
   });
 
   const handleToggle = (menu: string) => {
@@ -80,18 +73,16 @@ export const Menu = (props: MenuProps) => {
       <div onMouseEnter={openMenu} onMouseLeave={closeMenu}>
         {selectedProject && (
           <MenuItemLink
-            key={`dashboard`}
-            primaryText={`Dashboard`}
+            key="dashboard"
+            primaryText="Dashboard"
             leftIcon={<DashboardIcon />}
-            to={{
-              pathname: `/project/${selectedProject.id}`,
-            }}
+            to={{ pathname: `/project/${selectedProject.id}` }}
           />
         )}
         {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
         {/* @ts-ignore */}
         <MenuItemLink
-          key={"projects"}
+          key="projects"
           to={{
             pathname: `/${
               selectedProject
@@ -99,7 +90,7 @@ export const Menu = (props: MenuProps) => {
                 : `projects`
             }`,
           }}
-          primaryText={selectedProject ? `Project` : `All Projects`}
+          primaryText={selectedProject ? "Project" : "All Projects"}
           leftIcon={<AccountTree />}
         />
 
@@ -114,7 +105,7 @@ export const Menu = (props: MenuProps) => {
               icon={icons[g]}
             >
               {uiOrder[g]
-                .map((i) => resources.find((r) => r.name == i))
+                .map((i) => resources.find((r) => r.name === i))
                 .map((resource) =>
                   resource ? (
                     <MenuItemLink
@@ -127,14 +118,31 @@ export const Menu = (props: MenuProps) => {
                         resource.name.toString().charAt(0).toUpperCase() +
                           resource.name.substr(1)
                       }
-                      leftIcon={
-                        resource.icon ? <resource.icon /> : <DefaultIcon />
-                      }
+                      leftIcon={resource.icon ? <resource.icon /> : <DefaultIcon />}
                     />
                   ) : null
                 )}
             </SubMenu>
           ))}
+
+        {/* Platform section — superusers only */}
+        {isSuperuser && (
+          <SubMenu
+            key="platform"
+            isOpen={state.platform}
+            name="Platform"
+            dense={false}
+            handleToggle={() => handleToggle("platform")}
+            icon={<Business />}
+          >
+            <MenuItemLink
+              key="tenants"
+              to={{ pathname: "/tenants" }}
+              primaryText="Tenants"
+              leftIcon={<Business />}
+            />
+          </SubMenu>
+        )}
       </div>
     </RAMenu>
   );

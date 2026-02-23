@@ -3,6 +3,7 @@ import {
   AccountTree,
   Audiotrack,
   Build,
+  Business,
   Email,
   Event,
   Hearing,
@@ -20,6 +21,22 @@ import {
   AudioTrackEdit,
   AudioTrackList,
 } from "components/AudioTrack";
+import {
+  EnvelopeCreate,
+  EnvelopeEdit,
+  EnvelopeList,
+} from "components/Envelope";
+import { EventsCreate, EventsEdit, EventsList } from "components/Event";
+import {
+  LanguageCreate,
+  LanguageEdit,
+  LanguageList,
+} from "components/Language";
+import {
+  LocalizedStringCreate,
+  LocalizedStringEdit,
+  LocalizedStringList,
+} from "components/LocalizedString";
 import { SpeakerCreate, SpeakerEdit } from "components/Speaker";
 import SpeakerList from "components/Speaker/SpeakerList";
 import { TagCreate, TagEdit, TagList } from "components/Tag";
@@ -35,17 +52,12 @@ import {
 } from "components/TimedAsset";
 import { UiGroupCreate, UiGroupEdit } from "components/UIGroup/index";
 import { UiGroupList } from "components/UIGroup/UIGroupsList";
+import { TenantCreate, TenantEdit, TenantList } from "components/Tenant";
 import { UserCreate, UserEdit, UserList } from "components/User";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
 import { createBrowserHistory } from "history";
 import React from "react";
-import {
-  Admin,
-  CustomRoutes,
-  EditGuesser,
-  ListGuesser,
-  Resource,
-} from "react-admin";
+import { Admin, CustomRoutes, Resource, usePermissions } from "react-admin";
 import { Route } from "react-router-dom";
 import AssetCreate from "./components/Asset/AssetCreate";
 import AssetEdit from "./components/Asset/AssetEdit";
@@ -75,6 +87,8 @@ const history = createBrowserHistory();
 function App({ basename }: { basename: string }): JSX.Element {
   const { selectedProject } = useProjects();
   const dataProvider = useRoundwareDataProvider();
+  const { permissions } = usePermissions();
+  const isSuperuser = permissions?.isSuperuser === true;
 
   return (
     <Admin
@@ -107,6 +121,17 @@ function App({ basename }: { basename: string }): JSX.Element {
           : process.env.REACT_APP_INCLUDE_TABS?.split(`,`)
               ?.filter((r) => Object.keys(resourceLookup).includes(r))
               .map((r) => resourceLookup[r]) || []),
+        // Tenants resource — always registered so references work,
+        // but only shown in the menu for superusers (Menu.tsx checks isSuperuser)
+        <Resource
+          name="tenants"
+          key="tenants"
+          list={isSuperuser ? TenantList : undefined}
+          edit={isSuperuser ? TenantEdit : undefined}
+          create={isSuperuser ? TenantCreate : undefined}
+          icon={Business}
+          options={{ label: "Tenants" }}
+        />,
         <CustomRoutes key="custom-routes">
           <Route path="/assets/map" element={<AssetMapPage />} />
           <Route path={`/session_map/:sessionId`} element={<SessionMap />} />
@@ -177,8 +202,9 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
     <Resource
       name="envelopes"
       key="envelopes"
-      list={ListGuesser}
-      edit={EditGuesser}
+      list={EnvelopeList}
+      edit={EnvelopeEdit}
+      create={EnvelopeCreate}
       icon={Email}
     />
   ),
@@ -186,12 +212,12 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
     <Resource
       name="events"
       key="events"
-      list={ListGuesser}
-      edit={EditGuesser}
+      list={EventsList}
+      edit={EventsEdit}
+      create={EventsCreate}
       icon={Event}
     />
   ),
-
   listenevents: (
     <Resource
       name="listenevents"
@@ -203,7 +229,6 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
       options={{ label: "Listen Events" }}
     />
   ),
-
   sessions: (
     <Resource
       name="sessions"
@@ -214,18 +239,6 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
       icon={AccessTime}
     />
   ),
-
-  // uiitems: (
-  //   <Resource
-  //     name="uiitems"
-  //     key="uiitems"
-  //     list={ListGuesser}
-  //     edit={EditGuesser}
-  //     icon={FeaturedPlayList}
-  //     options={{ label: "UI Items" }}
-  //   />
-  // ),
-
   tags: (
     <Resource
       name="tags"
@@ -236,7 +249,7 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
       icon={TagFaces}
     />
   ),
-  tag_categories: (
+  tagcategories: (
     <Resource
       name="tagcategories"
       key="tagcategories"
@@ -253,8 +266,9 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
     <Resource
       name="languages"
       key="languages"
-      list={ListGuesser}
-      edit={EditGuesser}
+      list={LanguageList}
+      edit={LanguageEdit}
+      create={LanguageCreate}
       icon={Language}
     />
   ),
@@ -265,8 +279,9 @@ const resourceLookup: { [index: string]: React.ReactNode } = {
       options={{
         label: "Localized Strings",
       }}
-      list={ListGuesser}
-      edit={EditGuesser}
+      list={LocalizedStringList}
+      edit={LocalizedStringEdit}
+      create={LocalizedStringCreate}
       icon={Translate}
     />
   ),

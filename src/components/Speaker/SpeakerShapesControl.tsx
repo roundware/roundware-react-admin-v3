@@ -96,6 +96,7 @@ const SpeakerShapesControl = (): JSX.Element => {
               <Typography variant='h5'>Shapes</Typography>
               <Typography
                 variant='body1'
+                component='div'
                 style={{ fontWeight: selectedSpeaker ? 'bold' : 'normal' }}
               >
                 {selectedSpeaker ? (

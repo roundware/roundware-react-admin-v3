@@ -8,6 +8,9 @@ import { AuthProvider, Options } from "react-admin";
  *
  * The first tenant slug from the login response is stored and sent as
  * the X-Tenant-Slug header on every authenticated request.
+ *
+ * getPermissions returns { isSuperuser: boolean } so components can
+ * conditionally render superuser-only UI (e.g. the Tenants tab).
  */
 
 const tokenAuthProvider: AuthProvider = {
@@ -30,7 +33,7 @@ const tokenAuthProvider: AuthProvider = {
         localStorage.setItem("tenant_slug", json.tenants[0].slug);
       }
 
-      // Store user info for getIdentity
+      // Store user info (including is_superuser) for getIdentity / getPermissions
       if (json.user) {
         localStorage.setItem("user_info", JSON.stringify(json.user));
       }
@@ -102,7 +105,16 @@ const tokenAuthProvider: AuthProvider = {
   },
 
   getPermissions: () => {
-    return Promise.resolve();
+    try {
+      const userStr = localStorage.getItem("user_info");
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        return Promise.resolve({ isSuperuser: !!user.is_superuser });
+      }
+    } catch {
+      // Fall through
+    }
+    return Promise.resolve({ isSuperuser: false });
   },
 };
 

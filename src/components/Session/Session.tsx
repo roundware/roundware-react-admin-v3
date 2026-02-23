@@ -32,14 +32,12 @@ export const SessionList = (): JSX.Element => {
         <SessionMapLink />
         <NumberField source="id" />
         <TextField source="device_id" />
-        <DateField source="starttime" showTime />
-        <DateField source="stoptime" showTime />
+        <DateField source="started_at" showTime />
+        <DateField source="stopped_at" showTime />
         <TextField source="client_type" />
         <TextField source="client_system" />
-        <BooleanField source="demo_stream_enabled" />
         <BooleanField source="geo_listen_enabled" />
         <TextField source="timezone" />
-
         <EditButton />
         <DeleteButton />
       </Datagrid>
@@ -64,15 +62,14 @@ export const SessionEdit = (): JSX.Element => {
     <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" disabled />
-        <TextInput source="device" required />
-        <DateTimeInput source="starttime" required />
-        <DateTimeInput source="stoptime" />
+        <TextInput source="device_id" />
+        <DateTimeInput source="started_at" />
+        <DateTimeInput source="stopped_at" />
         <TextInput source="client_type" />
         <TextInput source="client_system" />
-        <BooleanInput source="demo_stream_enabled" />
         <BooleanInput source="geo_listen_enabled" />
         <TextInput source="timezone" />
-        <ReferenceInput source="project_id" reference="projects" required>
+        <ReferenceInput source="project_id" reference="projects">
           <SelectInput optionText="name" />
         </ReferenceInput>
       </SimpleForm>
@@ -84,15 +81,14 @@ export const SessionCreate = (): JSX.Element => {
   return (
     <Create redirect="list">
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
-        <TextInput source="id" required />
-        <TextInput source="device" required />
-        <DateTimeInput source="starttime" required defaultValue={new Date()} />
-        <DateTimeInput source="stoptime" />
+        <ReferenceInput source="project_id" reference="projects">
+          <SelectInput optionText="name" required />
+        </ReferenceInput>
+        <TextInput source="device_id" />
         <TextInput source="client_type" />
         <TextInput source="client_system" />
-        <BooleanInput source="demo_stream_enabled" />
-        <BooleanInput source="geo_listen_enabled" />
-        <TextInput source="timezone" />
+        <BooleanInput source="geo_listen_enabled" defaultValue={true} />
+        <TextInput source="timezone" defaultValue="0000" />
       </SimpleForm>
     </Create>
   );
