@@ -88,7 +88,7 @@ async function fetchListenEvents({
   pageSize?: number;
 }) {
   const res = await apiFetcher(
-    `/listenevents?page=${pageParam}&paginate=true&page_size=${
+    `/listenevents/?page=${pageParam}&paginate=true&page_size=${
       pageSize || PAGE_SIZE
     }&start_time__gte=${startDate.toISOString()}&start_time__lte=${endDate.toISOString()}&admin=1&project_id=${projectId}`
   );

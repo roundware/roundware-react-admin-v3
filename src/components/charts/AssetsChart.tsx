@@ -133,7 +133,7 @@ async function fetchAssets({
   pageSize?: number;
 }) {
   const res = await apiFetcher(
-    `/assets?page=${pageParam}&paginate=true&page_size=${
+    `/assets/?page=${pageParam}&paginate=true&page_size=${
       pageSize || PAGE_SIZE
     }&created__gte=${startDate.toISOString()}&created__lte=${endDate.toISOString()}&admin=1&project_id=${projectId}`
   );

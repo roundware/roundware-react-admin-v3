@@ -76,7 +76,7 @@ async function fetchSessions({
   projectId: number;
 }) {
   const res = await apiFetcher(
-    `/sessions?starttime__gte=${startDate.toISOString()}&starttime__lte=${endDate.toISOString()}&admin=1&project_id=${projectId}`
+    `/sessions/?starttime__gte=${startDate.toISOString()}&starttime__lte=${endDate.toISOString()}&admin=1&project_id=${projectId}`
   );
 
   return res?.json as ISession[];

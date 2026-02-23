@@ -20,19 +20,19 @@ const DashboardContent = () => {
 
   const assetsCountQuery = useQuery(
     ["assetsCount", projectId],
-    () => apiFetcher(`/assets/count?project_id=${projectId}&submitted=true`),
+    () => apiFetcher(`/assets/count/?project_id=${projectId}&submitted=true`),
     { enabled: projectId != null }
   );
 
   const listenEventsCountQuery = useQuery(
     ["listeneventsCount", projectId],
-    () => apiFetcher(`/listenevents/count?project_id=${projectId}`),
+    () => apiFetcher(`/listenevents/count/?project_id=${projectId}`),
     { enabled: projectId != null }
   );
 
   const sessionsCountQuery = useQuery(
     ["sessionsCount", projectId],
-    () => apiFetcher(`/sessions/count?project_id=${projectId}`),
+    () => apiFetcher(`/sessions/count/?project_id=${projectId}`),
     { enabled: projectId != null }
   );
 
