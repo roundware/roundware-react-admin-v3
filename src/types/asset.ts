@@ -1,9 +1,21 @@
 import { IAssetData } from "roundware-web-framework/dist/types/asset";
 import { LocalizedString } from "types";
 
+/**
+ * Strip index signatures from a type, keeping only named properties.
+ * This lets us extend IAssetData without inheriting its broad index signature.
+ */
+type KnownKeys<T> = {
+  [K in keyof T as string extends K
+    ? never
+    : number extends K
+    ? never
+    : K]: T[K];
+};
+
 export interface IAsset
   extends Omit<
-    IAssetData,
+    KnownKeys<IAssetData>,
     | "filename"
     | "file"
     | "user"
