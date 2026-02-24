@@ -1,63 +1,31 @@
-import { AuthProvider, fetchUtils, Options, RaRecord } from "react-admin";
+import { fetchUtils, Options, RaRecord } from "react-admin";
 
-function tokenAuthProvider(options: Options = {}): AuthProvider {
-  const opts = {
-    obtainAuthTokenUrl: "/api-token-auth/",
-    ...options,
-  };
-  return {
-    login: async ({ username, password }) => {
-      const request = new Request(opts.obtainAuthTokenUrl, {
-        method: "POST",
-        body: JSON.stringify({ username, password }),
-        headers: new Headers({ "Content-Type": "application/json" }),
-      });
-      const response = await fetch(request);
-      if (response.ok) {
-        localStorage.setItem("token", (await response.json()).token);
-        return;
-      }
-      if (response.headers.get("content-type") !== "application/json") {
-        throw new Error(response.statusText);
-      }
-
-      const json = await response.json();
-      const error = json.non_field_errors;
-      throw new Error(error || response.statusText);
-    },
-    logout: () => {
-      localStorage.removeItem("token");
-      return Promise.resolve();
-    },
-    checkAuth: () =>
-      localStorage.getItem("token") ? Promise.resolve() : Promise.reject(),
-    checkError: (error) => {
-      const status = error.status;
-      if (status === 401 || status === 403) {
-        localStorage.removeItem("token");
-        return Promise.reject();
-      }
-      return Promise.resolve();
-    },
-    getPermissions: () => {
-      return Promise.resolve();
-    },
-  };
-}
-
-export function createOptionsFromToken() {
-  const token = localStorage.getItem("token");
+/**
+ * Build fetch options with JWT Bearer token + X-Tenant-Slug header.
+ * Used by the data provider, fetcher, apiFetcher, and XMLHttpRequest helper.
+ */
+export function createOptionsFromToken(): Options {
+  const token = localStorage.getItem("access_token");
+  const slug = localStorage.getItem("tenant_slug");
   if (!token) {
     return {};
   }
   return {
     user: {
       authenticated: true,
-      token: "Token " + token,
+      token: "Bearer " + token,
     },
+    headers: new Headers({
+      Accept: "application/json",
+      ...(slug ? { "X-Tenant-Slug": slug } : {}),
+    }),
   };
 }
 
+/**
+ * fetchJson wrapper that injects auth headers.
+ * Used by the RoundwareDataProvider constructor.
+ */
 export function fetchJsonWithAuthToken(url: string, options: object) {
   return fetchUtils.fetchJson(
     url,
@@ -65,6 +33,10 @@ export function fetchJsonWithAuthToken(url: string, options: object) {
   );
 }
 
+/**
+ * XHR-based upload with auth headers and progress callback.
+ * Used for multipart form data uploads (speakers, etc.) via the data provider.
+ */
 export function XMLHttpRequestWithAuthToken(
   uri: string,
   options: Options,
@@ -75,20 +47,28 @@ export function XMLHttpRequestWithAuthToken(
   json: RaRecord;
 }> {
   options = { ...options, ...createOptionsFromToken() };
+  const slug = localStorage.getItem("tenant_slug");
+
   return new Promise((resolve) => {
     const request = new XMLHttpRequest();
     request.open(options.method || "GET", uri);
-    Object.keys(options.headers || {}).forEach((h) =>
-      request.setRequestHeader(
-        h,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        options?.headers?.[h]
-      )
-    );
 
+    // Set auth headers
     if (options.user?.authenticated) {
       request.setRequestHeader(`Authorization`, options.user.token as string);
+    }
+    if (slug) {
+      request.setRequestHeader("X-Tenant-Slug", slug);
+    }
+
+    // Set any additional headers (skip Content-Type for FormData)
+    const headers = options.headers as Headers | undefined;
+    if (headers) {
+      headers.forEach((value, key) => {
+        if (key.toLowerCase() !== "authorization" && key.toLowerCase() !== "x-tenant-slug") {
+          request.setRequestHeader(key, value);
+        }
+      });
     }
 
     request.onload = () => {
@@ -102,17 +82,28 @@ export function XMLHttpRequestWithAuthToken(
   });
 }
 
+/**
+ * Generic fetcher with auth — used by the data provider.
+ */
 export function fetcher(url: string, options: Options = {}) {
-  options.user = createOptionsFromToken().user;
-  return fetchUtils.fetchJson(url, options);
+  const authOpts = createOptionsFromToken();
+  return fetchUtils.fetchJson(url, { ...options, ...authOpts });
 }
 
+/**
+ * API-scoped fetcher — prepends the server URL + /api/3 base path.
+ * Used by components for standalone API calls (upload-audio, counts, etc.).
+ */
 export function apiFetcher(url: string, options: Options = {}) {
-  options.user = createOptionsFromToken().user;
+  const authOpts = createOptionsFromToken();
   return fetchUtils.fetchJson(
-    `${import.meta.env.VITE_SERVER_URL}/api/2` + url,
-    options
+    `${import.meta.env.VITE_SERVER_URL}/api/3` + url,
+    { ...options, ...authOpts }
   );
 }
 
+// Default export kept for backward compat
+function tokenAuthProvider() {
+  return createOptionsFromToken();
+}
 export default tokenAuthProvider;

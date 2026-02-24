@@ -457,7 +457,7 @@ export class RoundwareDataProvider implements DataProvider {
 
     return Promise.all(
       params.ids.map((id) =>
-        this.httpClient(`${this.apiUrl} /${resource}/${id}/`, {
+        this.httpClient(`${this.apiUrl}/${resource}/${id}/`, {
           method: 'PATCH',
           body: JSON.stringify(params.data),
         })
@@ -545,7 +545,7 @@ export class RoundwareDataProvider implements DataProvider {
     this.checkProjectAccess(project_id);
 
     return this.httpClient(
-      `${this.apiUrl}/${resource}/${params.id}?${stringify(params.meta)}`,
+      `${this.apiUrl}/${resource}/${params.id}/?${stringify(params.meta)}`,
       {
         method: 'DELETE',
       }
@@ -566,7 +566,7 @@ export class RoundwareDataProvider implements DataProvider {
     return Promise.all(
       params.ids.map((id) =>
         this.httpClient(
-          `${this.apiUrl}/${resource}/${id}?${stringify(params.meta)}`,
+          `${this.apiUrl}/${resource}/${id}/?${stringify(params.meta)}`,
           {
             method: 'DELETE',
           }

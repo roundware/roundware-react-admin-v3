@@ -4,7 +4,7 @@ import { fetcher } from "roundwareDataProvider/tokenAuthProvider";
 import { AllowChildrenOnlyProps } from "./ProjectsContext";
 
 export const dataProvider = new RoundwareDataProvider(
-  `${import.meta.env.VITE_SERVER_URL}/api/2`,
+  `${import.meta.env.VITE_SERVER_URL}/api/3`,
   fetcher,
   false
 );
