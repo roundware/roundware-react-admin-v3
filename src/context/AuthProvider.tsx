@@ -66,12 +66,14 @@ const tokenAuthProvider: AuthProvider = {
   getPermissions: () => {
     try {
       const user = JSON.parse(localStorage.getItem("user") || "null");
+      const isSuperuser = user?.is_superuser ?? false;
       return Promise.resolve({
-        is_superuser: user?.is_superuser ?? false,
-        role: user?.is_superuser ? "superuser" : "user",
+        is_superuser: isSuperuser,
+        isSuperuser,
+        role: isSuperuser ? "superuser" : "user",
       });
     } catch {
-      return Promise.resolve({ is_superuser: false, role: "user" });
+      return Promise.resolve({ is_superuser: false, isSuperuser: false, role: "user" });
     }
   },
 
