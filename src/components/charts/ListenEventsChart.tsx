@@ -88,9 +88,9 @@ async function fetchListenEvents({
   pageSize?: number;
 }) {
   const res = await apiFetcher(
-    `/listenevents?page=${pageParam}&paginate=true&page_size=${
+    `/listenevents/?page=${pageParam}&paginate=true&page_size=${
       pageSize || PAGE_SIZE
-    }&start_time__gte=${startDate.toISOString()}&start_time__lte=${endDate.toISOString()}&admin=1&project_id=${projectId}`
+    }&start_time__gte=${startDate.toISOString()}&start_time__lte=${endDate.toISOString()}&project_id=${projectId}`
   );
 
   return res?.json as {
@@ -106,6 +106,7 @@ const INITIAL_RANGE = [subDays(new Date(), 120), new Date()] as DateRange;
 const ListenEventsChart = () => {
   const [viewRange, setViewRange] = useState<DateRange>(INITIAL_RANGE);
   const project = useProjects();
+  const projectId = project?.selectedProject?.id;
 
   const [range, setRange] = useState(INITIAL_RANGE);
   const [allFetchedData, setAllFetchedData] = useState([] as IListenEvent[]);
@@ -113,6 +114,7 @@ const ListenEventsChart = () => {
   const [percentage, setPercentage] = useState(0);
 
   async function fetchForRange(inputRange: DateRange) {
+    if (!projectId) return;
     setPercentage(0);
     // determine extra range to fetch from backward;
     const start = inputRange[0];
@@ -123,7 +125,7 @@ const ListenEventsChart = () => {
       pageParam: 1,
       startDate: start,
       endDate: end,
-      projectId: project?.selectedProject?.id || 0,
+      projectId,
     });
 
     setAllFetchedData((prev) => [...prev, ...res.results]);
@@ -149,7 +151,7 @@ const ListenEventsChart = () => {
           pageParam: i + 2,
           startDate: start,
           endDate: end,
-          projectId: project?.selectedProject?.id || 0,
+          projectId: projectId!,
         })
           .then((res) => {
             if (res?.results?.length) {

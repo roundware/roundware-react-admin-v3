@@ -16,24 +16,29 @@ import CardWithIcon from "./CardWithIcon";
 
 const DashboardContent = () => {
   const project = useProjects();
+  const projectId = project?.selectedProject?.id;
+
   const assetsCountQuery = useQuery({
-    queryKey: ["assetsCount"],
+    queryKey: ["assetsCount", projectId],
     queryFn: () =>
       apiFetcher(
-        `/assets/count?project_id=${project?.selectedProject?.id}&submitted=true`
-      )
+        `/assets/count/?project_id=${projectId}&submitted=true`
+      ),
+    enabled: !!projectId,
   });
 
   const listenEventsCountQuery = useQuery({
-    queryKey: ["listeneventsCount"],
+    queryKey: ["listeneventsCount", projectId],
     queryFn: () =>
-      apiFetcher(`/listenevents/count?project_id=${project?.selectedProject?.id}`)
+      apiFetcher(`/listenevents/count/?project_id=${projectId}`),
+    enabled: !!projectId,
   });
-  
+
   const sessionsCountQuery = useQuery({
-    queryKey: ["sessionsCount"],
+    queryKey: ["sessionsCount", projectId],
     queryFn: () =>
-      apiFetcher(`/sessions/count?project_id=${project?.selectedProject?.id}`)
+      apiFetcher(`/sessions/count/?project_id=${projectId}`),
+    enabled: !!projectId,
   });
 
   return (

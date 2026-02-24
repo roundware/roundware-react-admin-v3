@@ -133,9 +133,9 @@ async function fetchAssets({
   pageSize?: number;
 }) {
   const res = await apiFetcher(
-    `/assets?page=${pageParam}&paginate=true&page_size=${
+    `/assets/?page=${pageParam}&paginate=true&page_size=${
       pageSize || PAGE_SIZE
-    }&created__gte=${startDate.toISOString()}&created__lte=${endDate.toISOString()}&admin=1&project_id=${projectId}`
+    }&created__gte=${startDate.toISOString()}&created__lte=${endDate.toISOString()}&project_id=${projectId}`
   );
 
   return res?.json as {
@@ -151,10 +151,12 @@ const AssetsChart = (): JSX.Element => {
     useChartsData();
   const [viewRange, setViewRange] = useState<DateRange>(assetsAllFetchedRange);
   const project = useProjects();
+  const projectId = project?.selectedProject?.id;
 
   const [percentage, setPercentage] = useState(0);
 
   async function fetchForRange(inputRange: DateRange) {
+    if (!projectId) return;
     setPercentage(0);
     // determine extra range to fetch from backward;
     const start = inputRange[0];
@@ -165,7 +167,7 @@ const AssetsChart = (): JSX.Element => {
       pageParam: 1,
       startDate: start,
       endDate: end,
-      projectId: project?.selectedProject?.id || 0,
+      projectId,
     });
 
     setAssets((prev) => [...prev, ...res.results]);
@@ -191,7 +193,7 @@ const AssetsChart = (): JSX.Element => {
           pageParam: i + 2,
           startDate: start,
           endDate: end,
-          projectId: project?.selectedProject?.id || 0,
+          projectId: projectId!,
         })
           .then((res) => {
             if (res?.results?.length) {

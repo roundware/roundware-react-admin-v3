@@ -76,7 +76,7 @@ async function fetchSessions({
   projectId: number;
 }) {
   const res = await apiFetcher(
-    `/sessions?starttime__gte=${startDate.toISOString()}&starttime__lte=${endDate.toISOString()}&admin=1&project_id=${projectId}`
+    `/sessions/?starttime__gte=${startDate.toISOString()}&starttime__lte=${endDate.toISOString()}&project_id=${projectId}`
   );
 
   return res?.json as ISession[];
@@ -95,8 +95,10 @@ const SessionsChart = () => {
   );
 
   const project = useProjects();
+  const projectId = project?.selectedProject?.id;
 
   async function fetchForRange(inputRange: DateRange) {
+    if (!projectId) return;
     // determine extra range to fetch from backward;
     const start = inputRange[0];
     const end = inputRange[1];
@@ -105,7 +107,7 @@ const SessionsChart = () => {
     const res = await fetchSessions({
       startDate: start,
       endDate: end,
-      projectId: project?.selectedProject?.id || 0,
+      projectId,
     });
 
     setSessions((prev) => [...prev, ...res]);
