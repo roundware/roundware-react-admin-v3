@@ -1,40 +1,36 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import AudioOptions from 'components/common/AudioOptions';
-import EnvelopeIdSelector from 'components/common/EnvelopeIdSelector';
 import FileDownloadButton from 'components/common/FileDownloadButton';
 import LocationSelector from 'components/common/LocationSelector';
 import TagIdSelector from 'components/common/TagIdSelector';
-import TranslatableField from 'components/common/TranslatableField';
 import React from 'react';
 import {
   AutocompleteInput,
   BooleanInput,
-  DateTimeInput,
+  DateField,
   Edit,
+  NumberField,
   NumberInput,
   ReferenceInput,
   SelectInput,
   SimpleForm,
+  TextField,
   TextInput,
-  useDataProvider,
   useRedirect,
 } from 'react-admin';
-import { handleLocalizedStrings } from 'utils';
 import { IAsset } from '../../types/asset';
 import AssetShape from './AssetShape';
 
 const AssetEdit = (): JSX.Element => {
   const redirect = useRedirect();
 
-  const dataProvider = useDataProvider();
-
   const transform = async (data: Partial<IAsset>) => {
     if (!data.file) {
       // wants to remove file
       data.file = null;
     } else if (typeof data.file === 'string') {
-      // not edited; no need to include in PATCH request;
+      // not edited; no need to include in PATCH request
       delete data.file;
     } else {
       // pass the file blob
@@ -46,61 +42,16 @@ const AssetEdit = (): JSX.Element => {
         data.filename = data.file?.name;
       }
     }
-    if (data?.user) {
-      data.user_id = data?.user?.id;
-      delete data.user;
-    }
 
-    if (Number(data.envelope_ids) > 0) {
-      // this means user wants to specify an existing envelope_ids
-      // note though its plural, it doesn't want an array format
-      data.envelope_ids = Number(data.envelope_ids);
-    } else {
-      // we need to create a new envelope here; and pass that id
-      // using session_id = 1 for admin
-
-      const res = await dataProvider.create(`envelopes`, {
-        data: {
-          session_id: 1,
-        },
-      });
-      data.envelope_ids = [Number(res.data.id)];
-    }
-
-    if (data.loc_description_admin?.length)
-      data.description_loc_ids = await handleLocalizedStrings(
-        data.loc_description_admin,
-        dataProvider
-      );
-
-    if (data.loc_alt_text_admin?.length)
-      data.alt_text_loc_ids = await handleLocalizedStrings(
-        data.loc_alt_text_admin,
-        dataProvider
-      );
-
-    if (data.file) {
+    // Convert tag_ids array to comma-separated string for multipart form
+    if (Array.isArray(data.tag_ids)) {
       // @ts-ignore
-      data.tag_ids = data.tag_ids?.map(Number);
-
-      if (Array.isArray(data.alt_text_loc_ids))
-        data.alt_text_loc_ids = data.alt_text_loc_ids
-          ?.reduce(
-            (acc: string, el: number) => acc.toString() + el.toString() + ',',
-            ''
-          )
-          .slice(0, -1);
-
-      if (Array.isArray(data.description_loc_ids))
-        data.description_loc_ids = data.description_loc_ids
-          ?.reduce(
-            (acc: string, el: number) => acc.toString() + el.toString() + ',',
-            ''
-          )
-          .slice(0, -1);
+      data.tag_ids = data.tag_ids.map(Number);
     }
+
     return data;
   };
+
   return (
     <Edit
       title='Edit an asset'
@@ -112,7 +63,8 @@ const AssetEdit = (): JSX.Element => {
       }}
     >
       <SimpleForm warnWhenUnsavedChanges>
-        <TextInput source='id' disabled fullWidth />
+        <TextField source='id' />
+
         <ReferenceInput
           label='Project'
           source='project_id'
@@ -127,13 +79,13 @@ const AssetEdit = (): JSX.Element => {
             { id: 'audio', name: 'audio' },
             { id: 'photo', name: 'photo' },
             { id: 'text', name: 'text' },
-            // { id: "video", name: "video" },
           ]}
           fullWidth
         />
 
         <AudioOptions />
         <FileDownloadButton source='file' />
+
         <LocationSelector
           fieldNames={{
             latitude: `latitude`,
@@ -144,23 +96,31 @@ const AssetEdit = (): JSX.Element => {
         </LocationSelector>
 
         <NumberInput source='session_id' fullWidth />
-        <ReferenceInput label='User' source='user.id' reference='users'>
+
+        <ReferenceInput label='User' source='user_id' reference='users'>
           <AutocompleteInput
-            optionText={(r) =>
-              `${r.first_name} ${r.last_name} (@${r.username})`
-            }
+            optionText={(r) => `${r.full_name} (${r.email})`}
             label='User'
             fullWidth
-            filterToQuery={(s) => ({
-              search_str: s,
-            })}
+            filterToQuery={(s) => ({ search_str: s })}
           />
         </ReferenceInput>
 
         <TextInput multiline source='description' fullWidth />
-        <DateTimeInput source='created' fullWidth />
-        <DateTimeInput source='updated' fullWidth />
+
+        <DateField source='created_at' showTime label='Created' />
+        <DateField source='updated_at' showTime label='Updated' />
+
+        <NumberField
+          source='audio_length_sec'
+          label='Audio Length (s)'
+          options={{ maximumFractionDigits: 3 }}
+        />
+        <NumberInput source='start_time' fullWidth />
+        <NumberInput source='end_time' fullWidth />
+
         <BooleanInput source='submitted' fullWidth />
+
         <ReferenceInput
           label='Language'
           source='language_id'
@@ -168,15 +128,10 @@ const AssetEdit = (): JSX.Element => {
         >
           <SelectInput optionText='name' fullWidth />
         </ReferenceInput>
+
         <TagIdSelector source='tag_ids' multiple label='Tags' />
-        <TranslatableField
-          source='loc_description_admin'
-          label='Description Localized'
-        />
 
-        <TranslatableField source='loc_alt_text_admin' label='Alt Text' />
-
-        <EnvelopeIdSelector />
+        <NumberInput source='envelope_id' label='Envelope ID' fullWidth />
       </SimpleForm>
     </Edit>
   );
