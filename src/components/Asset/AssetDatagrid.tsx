@@ -1,6 +1,4 @@
-import CopyResourceButton from 'components/common/CopyResource';
 import DeleteWithBinary from 'components/common/DeleteWithBinary';
-import { useRoundwareDataProvider } from 'context/DataProviderContext';
 import { FC, useLayoutEffect } from 'react';
 import {
     BooleanField,
@@ -10,7 +8,6 @@ import {
     EditButton,
     FieldProps,
     NumberField,
-    RaRecord,
     ReferenceArrayField,
     SingleFieldList,
     TextField,
@@ -21,8 +18,6 @@ import AudioPlayerField from '../common/AudioPlayerField';
 import TextDisplayField from './TextDisplayField';
 
 export const AssetDatagrid = (): JSX.Element => {
-  const dataProvider = useRoundwareDataProvider();
-
   const { setPerPage, refetch } = useListController();
   useLayoutEffect(() => {
     setPerPage(10);
@@ -35,7 +30,7 @@ export const AssetDatagrid = (): JSX.Element => {
         <BooleanField source='submitted' />
 
         <AssetPreview label='Media' />
-        <DateField source='created' />
+        <DateField source='created_at' label='Created' />
         <NumberField source='latitude' options={{ maximumFractionDigits: 8 }} />
         <NumberField
           source='longitude'
@@ -48,50 +43,11 @@ export const AssetDatagrid = (): JSX.Element => {
           </SingleFieldList>
         </ReferenceArrayField>
         <NumberField
-          label='Audio Length(s)'
-          source='audio_length_in_seconds'
+          label='Audio Length (s)'
+          source='audio_length_sec'
           options={{ maximumFractionDigits: 3 }}
         />
         <EditButton />
-        <CopyResourceButton
-          assignFirst={async () => {
-            const res = await dataProvider.create(`envelopes`, {
-              data: {
-                session_id: 1,
-              },
-            });
-            return { envelope_ids: Number(res.data.id) };
-          }}
-          transform={(a) => {
-            if (Array.isArray(a.tag_ids)) a.tag_ids = a.tag_ids.join(`,`);
-            a.session_id = 1;
-            delete a.file;
-            delete a.user;
-            if (a.loc_description_admin?.length)
-              a.description_loc_ids = a.loc_description_admin
-                .map((r: RaRecord) => r.id)
-                .reduce(
-                  (acc: string, el: number) =>
-                    acc.toString() + el.toString() + ',',
-                  ''
-                )
-                .slice(0, -1);
-
-            if (a.loc_alt_text_admin?.length)
-              a.alt_text_loc_ids = a.loc_alt_text_admin
-                .map((r: RaRecord) => r.id)
-                .reduce(
-                  (acc: string, el: number) =>
-                    acc.toString() + el.toString() + ',',
-                  ''
-                )
-                .slice(0, -1);
-            delete a.loc_alt_text_admin;
-            delete a.loc_description_admin;
-            a.dummy = new Blob();
-            return a;
-          }}
-        />
         <DeleteWithBinary />
       </Datagrid>
     </div>
