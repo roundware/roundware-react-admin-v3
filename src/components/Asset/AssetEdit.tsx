@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import AudioOptions from 'components/common/AudioOptions';
 import FileDownloadButton from 'components/common/FileDownloadButton';
@@ -10,7 +9,7 @@ import {
   BooleanInput,
   DateField,
   Edit,
-  NumberField,
+  Labeled,
   NumberInput,
   ReferenceInput,
   SelectInput,
@@ -19,6 +18,7 @@ import {
   TextInput,
   useRedirect,
 } from 'react-admin';
+import { apiFetcher } from 'roundwareDataProvider/tokenAuthProvider';
 import { IAsset } from '../../types/asset';
 import AssetShape from './AssetShape';
 
@@ -26,24 +26,28 @@ const AssetEdit = (): JSX.Element => {
   const redirect = useRedirect();
 
   const transform = async (data: Partial<IAsset>) => {
-    if (!data.file) {
-      // wants to remove file
-      data.file = null;
-    } else if (typeof data.file === 'string') {
-      // not edited; no need to include in PATCH request
-      delete data.file;
-    } else {
-      // pass the file blob
-      // @ts-ignore
-      if (data.file?.src) {
-        // @ts-ignore
-        data.file = data.file?.rawFile;
-        // @ts-ignore
-        data.filename = data.file?.name;
+    const id = data.id;
+
+    // File uploads can't go through JSON PATCH — use the dedicated endpoint
+    // @ts-ignore
+    const rawFile = data.file?.rawFile ?? (data.file instanceof File ? data.file : null);
+    if (rawFile instanceof File || rawFile instanceof Blob) {
+      const formData = new FormData();
+      formData.append('file', rawFile);
+      try {
+        await apiFetcher(`/assets/${id}/upload-audio/`, {
+          method: 'POST',
+          body: formData,
+        });
+      } catch (e) {
+        console.error('Audio upload failed', e);
+        throw new Error('Audio upload failed — asset metadata not saved.');
       }
     }
+    // Remove file from PATCH body regardless (PATCH is JSON metadata only)
+    delete data.file;
 
-    // Convert tag_ids array to comma-separated string for multipart form
+    // Ensure tag IDs are numbers
     if (Array.isArray(data.tag_ids)) {
       // @ts-ignore
       data.tag_ids = data.tag_ids.map(Number);
@@ -63,7 +67,16 @@ const AssetEdit = (): JSX.Element => {
       }}
     >
       <SimpleForm warnWhenUnsavedChanges>
-        <TextField source='id' />
+        <Labeled label='ID'>
+          <TextField source='id' />
+        </Labeled>
+
+        <Labeled label='Created' fullWidth>
+          <DateField source='created_at' showTime />
+        </Labeled>
+        <Labeled label='Updated' fullWidth>
+          <DateField source='updated_at' showTime />
+        </Labeled>
 
         <ReferenceInput
           label='Project'
@@ -83,6 +96,7 @@ const AssetEdit = (): JSX.Element => {
           fullWidth
         />
 
+        {/* AudioOptions renders file picker + start/end/duration + volume + weight */}
         <AudioOptions />
         <FileDownloadButton source='file' />
 
@@ -107,17 +121,6 @@ const AssetEdit = (): JSX.Element => {
         </ReferenceInput>
 
         <TextInput multiline source='description' fullWidth />
-
-        <DateField source='created_at' showTime label='Created' />
-        <DateField source='updated_at' showTime label='Updated' />
-
-        <NumberField
-          source='audio_length_sec'
-          label='Audio Length (s)'
-          options={{ maximumFractionDigits: 3 }}
-        />
-        <NumberInput source='start_time' fullWidth />
-        <NumberInput source='end_time' fullWidth />
 
         <BooleanInput source='submitted' fullWidth />
 

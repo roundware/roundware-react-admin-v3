@@ -21,7 +21,7 @@ const AudioOptions = (): JSX.Element => {
   const [endTime, setEndTime] = useFieldValue(`end_time`);
   const [file] = useFieldValue(`file`);
   const [, setVolume] = useFieldValue(`volume`);
-  const [durationInSec] = useFieldValue(`audio_length_in_seconds`);
+  const [durationInSec] = useFieldValue(`audio_length_sec`);
   const styles = useStyles();
 
   useEffect(() => {
@@ -64,9 +64,10 @@ const AudioOptions = (): JSX.Element => {
                 <TextField
                   value={durationInSec || 0}
                   variant="filled"
-                  label="Audio Length"
+                  label="Audio Length (s)"
                   fullWidth
-                  InputProps={{ className: styles.inputBottom }}
+                  InputProps={{ className: styles.inputBottom, readOnly: true }}
+                  inputProps={{ style: { color: 'rgba(0,0,0,0.6)' } }}
                 />
               </Grid>
             </Grid>
