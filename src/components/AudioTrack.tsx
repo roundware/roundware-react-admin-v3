@@ -13,91 +13,63 @@ import {
   NumberInput,
   TextField,
   useRecordContext,
-  ReferenceArrayField,
-  SingleFieldList,
-  ChipField,
-  ReferenceArrayInput,
-  SelectArrayInput,
   SelectInput,
+  RaRecord,
 } from "react-admin";
+import { useProjects } from "../context/ProjectsContext";
 import CopyResourceButton from "./common/CopyResource";
 import FormToolbar from "./common/FormToolbar";
 import RangeSlider from "./common/RangeSlider";
+
 export const AudioTrackList = (): JSX.Element => {
   return (
-    <List
-      filters={
-        [`duration`, `deadair`].flatMap((k) => [
-          <NumberInput
-            source={"min" + k + "__gte"}
-            label={`Min ${k} Greater Than`}
-            key={"min" + k + "__gte"}
-          />,
-          <NumberInput
-            source={"min" + k + "__lte"}
-            label={`Min ${k} Lesser Than`}
-            key={"min" + k + "__lte"}
-          />,
-          <NumberInput
-            source={"max" + k + "__gte"}
-            key={"max" + k + "__gte"}
-            label={`Max ${k} Greater Than`}
-          />,
-          <NumberInput
-            source={"max" + k + "__lte"}
-            key={`max${k}__lte`}
-            label={`Max ${k} Lesser Than`}
-          />,
-        ]) as JSX.Element[]
-      }
-    >
+    <List>
       <Datagrid rowClick="edit">
         <TextField source="id" />
-        <BooleanField source="active" />
+        <BooleanField source="is_active" label="Active" />
         <RangeDisplay source="volume" label="Volume" />
         <RangeDisplay source="duration" label="Duration" />
-        <RangeDisplay source="deadair" label="Dead Air" />
-        <RangeDisplay source="fadeintime" label="Fade In Time" />
-        <RangeDisplay source="fadeouttime" label="Fade Out Time" />
-        <RangeDisplay source="panpos" label="Pan Position" />
-        <RangeDisplay source="panduration" label="Pan Duration" />
-
-        <BooleanField source="repeatrecordings" label="Repeat Recordings" />
+        <RangeDisplay source="dead_air" label="Dead Air" />
+        <RangeDisplay source="fade_in_time" label="Fade In Time" />
+        <RangeDisplay source="fade_out_time" label="Fade Out Time" />
+        <RangeDisplay source="pan_pos" label="Pan Position" />
+        <RangeDisplay source="pan_duration" label="Pan Duration" />
+        <BooleanField source="repeat_recordings" label="Repeat Recordings" />
         <BooleanField source="start_with_silence" label="Start With Silence" />
         <BooleanField
           source="fadeout_when_filtered"
           label="Fade Out When Filtered"
         />
-        <ReferenceArrayField source="tag_filters" reference="tags">
-          <SingleFieldList>
-            <ChipField source="value" />
-          </SingleFieldList>
-        </ReferenceArrayField>
-
-        <TextField source="timed_asset_priority" />
+        <TextField source="timed_asset_priority" label="Priority" />
         <CopyResourceButton />
       </Datagrid>
     </List>
   );
 };
+
+/**
+ * Display a min/max range from v3 field names (e.g. source="volume" → min_volume / max_volume).
+ */
 const RangeDisplay = ({ source }: FieldProps) => {
   const record = useRecordContext();
-  const min = record?.[`min${source}`];
-  const max = record?.[`max${source}`];
+  const min = record?.[`min_${source}`];
+  const max = record?.[`max_${source}`];
   return (
     <Typography>
       {min} - {max}
     </Typography>
   );
 };
+
 export const AudioTrackEdit = (): JSX.Element => {
   return (
-    <Edit>
+    <Edit mutationMode="pessimistic">
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required disabled />
-        <BooleanInput source="active" />
+        <BooleanInput source="is_active" label="Active" />
         <RangeSlider
-          source="volume"
+          minField="min_volume"
+          maxField="max_volume"
           label="Volume"
           min={0}
           max={1}
@@ -105,31 +77,36 @@ export const AudioTrackEdit = (): JSX.Element => {
           forceMax={1}
         />
         <RangeSlider
-          source="duration"
+          minField="min_duration"
+          maxField="max_duration"
           label="Playback Duration (seconds)"
           min={0}
           step={0.1}
         />
         <RangeSlider
-          source="deadair"
+          minField="min_dead_air"
+          maxField="max_dead_air"
           label="Silence Duration (seconds)"
           min={0}
           step={0.1}
         />
         <RangeSlider
-          source="fadeintime"
+          minField="min_fade_in_time"
+          maxField="max_fade_in_time"
           label="Fade In Time (seconds)"
           step={0.1}
           max={10}
         />
         <RangeSlider
-          source="fadeouttime"
+          minField="min_fade_out_time"
+          maxField="max_fade_out_time"
           label="Fade Out Time (seconds)"
           step={0.1}
           max={10}
         />
         <RangeSlider
-          source="panpos"
+          minField="min_pan_pos"
+          maxField="max_pan_pos"
           label="Pan Position"
           min={-1}
           max={1}
@@ -137,16 +114,12 @@ export const AudioTrackEdit = (): JSX.Element => {
           forceMax={1}
         />
         <RangeSlider
-          source="panduration"
+          minField="min_pan_duration"
+          maxField="max_pan_duration"
           label="Pan Duration (seconds)"
           step={0.1}
         />
         <NumberInput source="banned_duration" defaultValue={0} />
-
-        <ReferenceArrayInput source="tag_filters" reference="tags">
-          <SelectArrayInput optionText="value" />
-        </ReferenceArrayInput>
-
         <SelectInput
           source="timed_asset_priority"
           choices={[
@@ -156,8 +129,7 @@ export const AudioTrackEdit = (): JSX.Element => {
             { id: "discard", name: "Discard" },
           ]}
         />
-
-        <BooleanInput source="repeatrecordings" label="Repeat Recordings" />
+        <BooleanInput source="repeat_recordings" label="Repeat Recordings" />
         <BooleanInput source="start_with_silence" label="Start With Silence" />
         <BooleanInput
           source="fadeout_when_filtered"
@@ -169,12 +141,20 @@ export const AudioTrackEdit = (): JSX.Element => {
 };
 
 export const AudioTrackCreate = (): JSX.Element => {
+  const { selectedProject } = useProjects();
+
+  const transform = (data: RaRecord) => ({
+    ...data,
+    project_id: selectedProject?.id,
+  });
+
   return (
-    <Create redirect="list">
+    <Create redirect="list" transform={transform}>
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
-        <BooleanInput source="active" />
+        <BooleanInput source="is_active" label="Active" defaultValue={true} />
         <RangeSlider
-          source="volume"
+          minField="min_volume"
+          maxField="max_volume"
           label="Volume"
           min={0}
           max={1}
@@ -183,35 +163,40 @@ export const AudioTrackCreate = (): JSX.Element => {
           forceMax={1}
         />
         <RangeSlider
-          source="duration"
+          minField="min_duration"
+          maxField="max_duration"
           label="Playback Duration (seconds)"
           step={0.1}
           min={0}
           defaultValue={[0, 100]}
         />
         <RangeSlider
-          source="deadair"
+          minField="min_dead_air"
+          maxField="max_dead_air"
           label="Silence Duration (seconds)"
           step={0.1}
           min={0}
           defaultValue={[0, 50]}
         />
         <RangeSlider
-          source="fadeintime"
+          minField="min_fade_in_time"
+          maxField="max_fade_in_time"
           step={0.1}
           label="Fade In Time (seconds)"
           defaultValue={[0, 5]}
           max={10}
         />
         <RangeSlider
-          source="fadeouttime"
+          minField="min_fade_out_time"
+          maxField="max_fade_out_time"
           step={0.1}
           label="Fade Out Time (seconds)"
           defaultValue={[0, 5]}
           max={10}
         />
         <RangeSlider
-          source="panpos"
+          minField="min_pan_pos"
+          maxField="max_pan_pos"
           label="Pan Position"
           min={-1}
           max={1}
@@ -220,7 +205,8 @@ export const AudioTrackCreate = (): JSX.Element => {
           forceMax={1}
         />
         <RangeSlider
-          source="panduration"
+          minField="min_pan_duration"
+          maxField="max_pan_duration"
           label="Pan Duration (seconds)"
           step={0.1}
           defaultValue={[0, 60]}
@@ -230,11 +216,6 @@ export const AudioTrackCreate = (): JSX.Element => {
           helperText="Seconds"
           defaultValue={0}
         />
-
-        <ReferenceArrayInput source="tag_filters" reference="tags">
-          <SelectArrayInput optionText="value" />
-        </ReferenceArrayInput>
-
         <SelectInput
           source="timed_asset_priority"
           choices={[
@@ -243,9 +224,9 @@ export const AudioTrackCreate = (): JSX.Element => {
             { id: "lowest", name: "Lowest" },
             { id: "discard", name: "Discard" },
           ]}
+          defaultValue="normal"
         />
-
-        <BooleanInput source="repeatrecordings" label="Repeat Recordings" />
+        <BooleanInput source="repeat_recordings" label="Repeat Recordings" />
         <BooleanInput source="start_with_silence" label="Start With Silence" />
         <BooleanInput
           source="fadeout_when_filtered"
