@@ -32,8 +32,8 @@ const SpeakerAudioControls = (): JSX.Element => {
     setSourceMode(newValue);
   };
 
-  const [minVolume, setMinVolume] = useFieldValue<number>(`minvolume`, 0.0);
-  const [maxVolume, setMaxVolume] = useFieldValue<number>(`maxvolume`, 1.0);
+  const [minVolume, setMinVolume] = useFieldValue<number>(`min_volume`, 0.0);
+  const [maxVolume, setMaxVolume] = useFieldValue<number>(`max_volume`, 1.0);
   const [range, setRange] = useState([
     typeof minVolume == "number" ? minVolume : 0.0,
     typeof maxVolume == "number" ? maxVolume : 1.0,
@@ -66,7 +66,7 @@ const SpeakerAudioControls = (): JSX.Element => {
 
       <TabPanel value={`URI`} current={sourceMode}>
         <TextInput source="uri" required label="File URI" fullWidth />
-        <TextInput source="backupuri" label="Back up URI" fullWidth />
+        <TextInput source="backup_uri" label="Back up URI" fullWidth />
       </TabPanel>
 
       <TabPanel value={`RECORD`} current={sourceMode}>

@@ -6,7 +6,7 @@ import FormToolbar from 'components/common/FormToolbar';
 import { useProjects } from 'context/ProjectsContext';
 import { useSpeakers } from 'context/SpeakersContext';
 import useBoolean from 'hooks/useBoolean';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
     BooleanInput,
     Create,
@@ -26,6 +26,7 @@ import {
     useUpdate,
 } from 'react-admin';
 import { Navigate } from 'react-router-dom';
+import { apiFetcher } from 'roundwareDataProvider/tokenAuthProvider';
 import SpeakerAudioControls from './SpeakerAudioControls';
 import VariantAudioControls from './VariantAudioControls';
 
@@ -43,18 +44,25 @@ export const SpeakerEdit = (): JSX.Element => {
   const { selectedProject } = useProjects();
   const { fetchData } = useSpeakers();
 
+  // Capture the raw file before transform strips it
+  const pendingFileRef = useRef<File | Blob | null>(null);
+
+  const extractRawFile = (data: RaRecord) => {
+    if (data?.file?.rawFile instanceof File || data?.file?.rawFile instanceof Blob) {
+      pendingFileRef.current = data.file.rawFile;
+    } else {
+      pendingFileRef.current = null;
+    }
+  };
+
   const transform = (data: RaRecord) => {
-    data.project = selectedProject?.id;
-    if (typeof data?.file?.src == 'string') {
-      data.file = data.file.rawFile;
-      delete data.uri;
-      delete data.backupuri;
-    } else delete data?.file;
-    
-    // Variant files are now handled by immediate upload in VariantAudioControls
-    // No need to process variantFiles here since they're uploaded directly
-    console.log('Transform function - varianturis:', data?.varianturis);
-    
+    extractRawFile(data);
+    data.project_id = selectedProject?.id;
+    // Always strip file from JSON body — upload goes via separate endpoint
+    delete data.file;
+    delete data.uri;
+    delete data.backup_uri;
+
     delete data.shape;
     delete data.attenuation_border;
     delete data.boundary;
@@ -78,17 +86,27 @@ export const SpeakerEdit = (): JSX.Element => {
           data: values,
           previousData: values,
           id: values.id,
-          meta: {
-            onProgress: (ev: { loaded: number; total: number }) => {
-              const newPercent = (ev.loaded / ev.total) * 100;
-              setProgress((prev) => (prev > newPercent ? prev : newPercent));
-            },
-          },
         },
         {
           returnPromise: true,
           mutationMode: 'pessimistic',
-          onSuccess: () => {
+          onSuccess: async () => {
+            // Upload audio file via dedicated endpoint if one was selected
+            if (pendingFileRef.current) {
+              setProgress(50);
+              const formData = new FormData();
+              formData.append('file', pendingFileRef.current);
+              try {
+                await apiFetcher(`/speakers/${values.id}/upload-audio/`, {
+                  method: 'POST',
+                  body: formData,
+                });
+              } catch (e) {
+                console.error('Speaker audio upload failed', e);
+                notify('Audio upload failed', { type: 'warning' });
+              }
+              pendingFileRef.current = null;
+            }
             fetchData();
             refresh();
             success.setTrue();
@@ -119,7 +137,7 @@ export const SpeakerEdit = (): JSX.Element => {
         <SpeakerAudioControls />
         <FileDownloadButton source='uri' />
         <TextInput source='uri' fullWidth />
-        <TextInput source='backupuri' fullWidth />
+        <TextInput source='backup_uri' fullWidth />
 
         <VariantAudioControls />
 
@@ -201,20 +219,22 @@ export const SpeakerCreate = (): JSX.Element => {
   const { selectedProject } = useProjects();
   const { fetchData, setSelectedSpeaker, addToNewlyCreatedSpeakers } =
     useSpeakers();
+  // Capture the raw file before transform strips it
+  const pendingFileRef = useRef<File | Blob | null>(null);
+
+  const extractRawFile = (data: RaRecord) => {
+    if (data?.file?.rawFile instanceof File || data?.file?.rawFile instanceof Blob) {
+      pendingFileRef.current = data.file.rawFile;
+    } else {
+      pendingFileRef.current = null;
+    }
+  };
+
   const transform = (data: RaRecord) => {
-    data.project = selectedProject?.id;
-    if (typeof data?.file?.src == 'string') {
-      data.file = data.file.rawFile;
-      delete data.uri;
-      delete data.backupuri;
-    } else delete data?.file;
-    
-    // Variant files are now handled by immediate upload in VariantAudioControls
-    // No need to process variantFiles here since they're uploaded directly
-    console.log('Create transform function - varianturis:', data?.varianturis);
-    
-    if (!data.minvolume) data.minvolume = 0.1;
-    if (!data.maxvolume) data.maxvolume = 0.5;
+    extractRawFile(data);
+    data.project_id = selectedProject?.id;
+    // Always strip file from JSON body — upload goes via separate endpoint
+    delete data.file;
     return data;
   };
 
@@ -232,17 +252,27 @@ export const SpeakerCreate = (): JSX.Element => {
         `speakers`,
         {
           data: values,
-          meta: {
-            onProgress: (ev: { loaded: number; total: number }) => {
-              const newPercent = (ev.loaded / ev.total) * 100;
-              setProgress((prev) => (prev > newPercent ? prev : newPercent));
-            },
-          },
         },
         {
           returnPromise: true,
 
           onSuccess: async (data) => {
+            // Upload audio file via dedicated endpoint if one was selected
+            if (pendingFileRef.current) {
+              setProgress(50);
+              const formData = new FormData();
+              formData.append('file', pendingFileRef.current);
+              try {
+                await apiFetcher(`/speakers/${data.id}/upload-audio/`, {
+                  method: 'POST',
+                  body: formData,
+                });
+              } catch (e) {
+                console.error('Speaker audio upload failed', e);
+                notify('Audio upload failed', { type: 'warning' });
+              }
+              pendingFileRef.current = null;
+            }
             await fetchData();
             setSelectedSpeaker(parseInt(data.id.toString()));
             success.setTrue();

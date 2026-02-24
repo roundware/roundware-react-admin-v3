@@ -44,8 +44,12 @@ const SpeakerAudioPlayer = ({
     RegionsPlugin.create()
   ], [id]);
 
-  const [minvolume] = useFieldValue(`minvolume`);
-  const [maxvolume] = useFieldValue(`maxvolume`);
+  const [minvolume] = useFieldValue(`min_volume`);
+  const [maxvolume] = useFieldValue(`max_volume`);
+
+  // Guard against non-finite values reaching the Web Audio API
+  const safeVolume = (v: unknown, fallback: number) =>
+    typeof v === "number" && isFinite(v) ? v : fallback;
   const [startTime, setStartTime] = useFieldValue(`start_time`);
   const [endTime, setEndTime] = useFieldValue(`end_time`);
 
@@ -127,10 +131,10 @@ const SpeakerAudioPlayer = ({
     };
   }, []);
 
-  const [currentVolume, setCurrentVolume] = useState(maxvolume);
+  const [currentVolume, setCurrentVolume] = useState(safeVolume(maxvolume, 1.0));
 
   useEffect(() => {
-    if (wavesurferRef?.current) wavesurferRef.current.setVolume(currentVolume);
+    if (wavesurferRef?.current) wavesurferRef.current.setVolume(safeVolume(currentVolume, 1.0));
   }, [currentVolume]);
 
   const handleOnZoom: SliderProps<typeof Slider>[`onChange`] = (
@@ -201,7 +205,7 @@ const SpeakerAudioPlayer = ({
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2, mb: 2 }}>
               <Tooltip title="Play at Min Volume">
                 <IconButton
-                  onClick={() => setCurrentVolume(minvolume)}
+                  onClick={() => setCurrentVolume(safeVolume(minvolume, 0.0))}
                   size="large"
                 >
                   <VolumeDown />
@@ -209,7 +213,7 @@ const SpeakerAudioPlayer = ({
               </Tooltip>
               <Tooltip title="Play at Max Volume">
                 <IconButton
-                  onClick={() => setCurrentVolume(maxvolume)}
+                  onClick={() => setCurrentVolume(safeVolume(maxvolume, 1.0))}
                   size="large"
                 >
                   <VolumeUp />
