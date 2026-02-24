@@ -57,7 +57,7 @@ import { UserCreate, UserEdit, UserList } from "components/User";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
 import { createBrowserHistory } from "history";
 import React from "react";
-import { Admin, CustomRoutes, Resource, usePermissions } from "react-admin";
+import { Admin, CustomRoutes, Resource } from "react-admin";
 import { Route } from "react-router-dom";
 import AssetCreate from "./components/Asset/AssetCreate";
 import AssetEdit from "./components/Asset/AssetEdit";
@@ -87,8 +87,6 @@ const history = createBrowserHistory();
 function App({ basename }: { basename: string }): JSX.Element {
   const { selectedProject } = useProjects();
   const dataProvider = useRoundwareDataProvider();
-  const { permissions } = usePermissions();
-  const isSuperuser = permissions?.isSuperuser === true;
 
   return (
     <Admin
@@ -121,14 +119,14 @@ function App({ basename }: { basename: string }): JSX.Element {
           : process.env.REACT_APP_INCLUDE_TABS?.split(`,`)
               ?.filter((r) => Object.keys(resourceLookup).includes(r))
               .map((r) => resourceLookup[r]) || []),
-        // Tenants resource — always registered so references work,
-        // but only shown in the menu for superusers (Menu.tsx checks isSuperuser)
+        // Tenants resource — always registered; menu entry hidden for non-superusers
+        // (Menu.tsx runs inside <Admin> where usePermissions is safe to call)
         <Resource
           name="tenants"
           key="tenants"
-          list={isSuperuser ? TenantList : undefined}
-          edit={isSuperuser ? TenantEdit : undefined}
-          create={isSuperuser ? TenantCreate : undefined}
+          list={TenantList}
+          edit={TenantEdit}
+          create={TenantCreate}
           icon={Business}
           options={{ label: "Tenants" }}
         />,
