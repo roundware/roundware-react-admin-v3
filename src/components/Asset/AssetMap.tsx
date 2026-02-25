@@ -10,83 +10,25 @@ import {
 } from "@mui/material";
 import {
     GoogleMap,
-    MarkerClusterer,
     useGoogleMap,
     useJsApiLoader,
 } from "@react-google-maps/api";
-import { Clusterer } from "@react-google-maps/marker-clusterer";
 import MapControl from "components/common/MapControl";
 import {
     AssetMapContextProvider,
     useAssetMapContext,
 } from "context/AssetMapContext";
-import React, { Fragment, useEffect, useState } from "react";
+import { useMarkerClusterer } from "hooks/useMarkerClusterer";
+import React, { useEffect } from "react";
 import { useListController } from "react-admin";
-import { OverlappingMarkerSpiderfier } from "ts-overlapping-marker-spiderfier";
 import { IAsset } from "types/asset";
 import { mapLibraries } from "../../utils.tsx";
 import AssetMarker from "./AssetMarker";
 
 const AssetMarkers = () => {
   const { data, ...lc } = useListController();
-
-  const [markerClusterer, setMarkerClusterer] = useState<Clusterer | null>(
-    null
-  );
-
-  const markers = (clusterer: Clusterer) => {
-    const childrenRenderer = (oms: OverlappingMarkerSpiderfier | null) =>
-      oms
-        ? data.map((asset: IAsset) => (
-            <AssetMarker
-              key={asset.id}
-              asset={asset}
-              clusterer={clusterer}
-              oms={oms}
-            />
-          ))
-        : [];
-    return (
-      <OverlappingMarkerSpiderfierComponent>
-        {childrenRenderer}
-      </OverlappingMarkerSpiderfierComponent>
-    );
-  };
-  const recluster = () => {
-    if (markerClusterer) {
-      const markerObjs = markerClusterer.markers.slice();
-      markerClusterer.clearMarkers();
-      markerClusterer.repaint();
-      markerClusterer.addMarkers(markerObjs, false);
-    }
-  };
-
-  const options = {
-    imagePath:
-      "https://github.com/googlemaps/v3-utility-library/raw/master/packages/markerclustererplus/images/m",
-  };
-
-  const wait_for_full_page = async () => {
-    return new Promise<void>((resolve, reject) => {
-      const checkStart = Date.now();
-      const checkLength = () => {
-        if (markerClusterer && data.length >= markerClusterer.markers.length) {
-          resolve();
-        } else if (Date.now() > checkStart + 3000) {
-          reject(
-            "asset page contains a different number of entries than the marker clusterer"
-          );
-        } else {
-          setTimeout(checkLength, 100);
-        }
-      };
-      checkLength();
-    });
-  };
-  useEffect(() => {
-    if (!(markerClusterer && markerClusterer.ready)) return;
-    wait_for_full_page().then(recluster);
-  }, [markerClusterer && markerClusterer.ready, data]);
+  const map = useGoogleMap();
+  const clusterer = useMarkerClusterer(map, { maxZoom: 16, minimumClusterSize: 3 });
 
   const { promises, handleSave, saving, setPromises } = useAssetMapContext();
   if (!data) return <LinearProgress />;
@@ -123,40 +65,11 @@ const AssetMarkers = () => {
           </Slide>
         </Stack>
       </MapControl>
-      <MarkerClusterer
-        maxZoom={16}
-        onLoad={setMarkerClusterer}
-        minimumClusterSize={3}
-        options={options}
-      >
-        {markers}
-      </MarkerClusterer>
+      {data.map((asset: IAsset) => (
+        <AssetMarker key={asset.id} asset={asset} clusterer={clusterer} />
+      ))}
     </>
   );
-};
-const OverlappingMarkerSpiderfierComponent = (props: {
-  children: (props: OverlappingMarkerSpiderfier | null) => React.ReactNode;
-}) => {
-  const map = useGoogleMap();
-  const [spiderfier, set_spiderfier] =
-    useState<OverlappingMarkerSpiderfier | null>(null);
-
-  useEffect(() => {
-    if (!spiderfier && map) {
-      const oms_obj = new OverlappingMarkerSpiderfier(map, {
-        markersWontMove: true,
-        markersWontHide: true,
-        basicFormatEvents: true,
-      });
-      set_spiderfier(oms_obj);
-    }
-  }, [spiderfier, map]);
-
-  if (!map || !spiderfier) {
-    return null;
-  }
-
-  return <Fragment>{props.children(spiderfier)}</Fragment>;
 };
 
 const GoogleMapsWrapper = (props: { children: React.ReactNode }) => {
@@ -168,7 +81,7 @@ const GoogleMapsWrapper = (props: { children: React.ReactNode }) => {
   });
   const { data, total, setPerPage } = useListController();
   useEffect(() => {
-    if (data.length != total) setPerPage(total);
+    if (data && data.length != total) setPerPage(total);
   }, [total]);
 
 

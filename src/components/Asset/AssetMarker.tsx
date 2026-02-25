@@ -1,18 +1,16 @@
-import { Marker } from "@react-google-maps/api";
-import { Clusterer } from "@react-google-maps/marker-clusterer";
+import { MarkerClusterer } from "@googlemaps/markerclusterer";
+import { MarkerF } from "@react-google-maps/api";
 import { useAssetMapContext } from "context/AssetMapContext";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
 import { clone, isEqual } from "lodash";
-import React, { useEffect, useMemo, useState } from "react";
-import { OverlappingMarkerSpiderfier } from "ts-overlapping-marker-spiderfier";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { IAsset } from "types/asset";
 import { AssetInfoWindowInner } from "./AssetInfoWindow";
 interface AssetMarkerProps {
   asset: IAsset;
-  clusterer: Clusterer;
-  oms: OverlappingMarkerSpiderfier;
+  clusterer?: MarkerClusterer | null;
 }
-const AssetMarker = ({ asset, clusterer, oms }: AssetMarkerProps) => {
+const AssetMarker = ({ asset, clusterer }: AssetMarkerProps) => {
   const [position, setposition] = useState({
     lat: asset.latitude,
     lng: asset.longitude,
@@ -30,6 +28,9 @@ const AssetMarker = ({ asset, clusterer, oms }: AssetMarkerProps) => {
     [position.lat, position.lng, asset.latitude, asset.longitude]
   );
 
+  const markerRef = useRef<google.maps.Marker | null>(null);
+
+  // Sync position when promises are cleared (revert unsaved changes)
   useEffect(() => {
     if (promises.length == 0)
       setposition({
@@ -38,10 +39,28 @@ const AssetMarker = ({ asset, clusterer, oms }: AssetMarkerProps) => {
       });
   }, [asset.latitude, asset.longitude, promises]);
 
+  // Register/unregister marker with clusterer.
+  // The clusterer may arrive after the marker mounts (useState in the hook
+  // triggers a re-render), so this effect handles late-binding.
+  // addMarker is idempotent in @googlemaps/markerclusterer (checks internal array).
+  useEffect(() => {
+    const marker = markerRef.current;
+    if (!clusterer || !marker) return;
+    clusterer.addMarker(marker);
+    return () => {
+      clusterer.removeMarker(marker);
+    };
+  }, [clusterer]);
+
   return (
-    <Marker
+    <MarkerF
+      onLoad={(marker) => {
+        markerRef.current = marker;
+      }}
+      onUnmount={() => {
+        markerRef.current = null;
+      }}
       position={position}
-      clusterer={clusterer}
       icon={{
         // url: isEdited
         //   ? `https://fonts.gstatic.com/s/i/materialicons/edit_location/v16/24px.svg`
@@ -54,8 +73,6 @@ const AssetMarker = ({ asset, clusterer, oms }: AssetMarkerProps) => {
         strokeWeight: 0.5,
         scale: 1,
       }}
-      onLoad={(m) => oms.addMarker(m, () => setSelectedAsset(asset))}
-      noClustererRedraw={true}
       draggable
       onClick={() => setSelectedAsset(asset)}
       onDragEnd={(ev) => {
@@ -118,7 +135,7 @@ const AssetMarker = ({ asset, clusterer, oms }: AssetMarkerProps) => {
           }}
         />
       )}
-    </Marker>
+    </MarkerF>
   );
 };
 

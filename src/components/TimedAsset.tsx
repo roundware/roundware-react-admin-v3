@@ -24,30 +24,30 @@ export const TimedAssetList = (): JSX.Element => {
     <List
       filters={[
         <NumberInput
-          source="start__gte"
-          key="start__gte"
+          source="start_sec__gte"
+          key="start_sec__gte"
           label="Starts Greater Than"
         />,
         <NumberInput
-          source="start__lte"
-          key="start__lte"
+          source="start_sec__lte"
+          key="start_sec__lte"
           label="Starts Lesser Than"
         />,
 
         <NumberInput
-          source="end__gte"
-          key="end__gte"
+          source="end_sec__gte"
+          key="end_sec__gte"
           label="Ends Greater Than"
         />,
 
         <NumberInput
-          source="end__lte"
-          key="end__gte"
-          label="Ends Greater Than"
+          source="end_sec__lte"
+          key="end_sec__lte"
+          label="Ends Lesser Than"
         />,
       ]}
       sort={{
-        field: "start",
+        field: "start_sec",
         order: "ASC",
       }}
     >
@@ -60,8 +60,8 @@ export const TimedAssetList = (): JSX.Element => {
           <AudioPlayerField source="file" />
         </ReferenceField>
 
-        <NumberField source="start" sortable sortBy="ASC" />
-        <NumberField source="end" sortable />
+        <NumberField source="start_sec" sortable sortBy="ASC" />
+        <NumberField source="end_sec" sortable />
         <EditButton />
         <DeleteButton />
       </Datagrid>
@@ -71,7 +71,7 @@ export const TimedAssetList = (): JSX.Element => {
 
 export const TimedAssetEdit = (): JSX.Element => {
   return (
-    <Edit>
+    <Edit mutationMode="pessimistic">
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" disabled />
         <ReferenceInput source="asset_id" reference="assets">
@@ -80,7 +80,7 @@ export const TimedAssetEdit = (): JSX.Element => {
 
         <AudioPlayerField source="asset_id" inEditView label="Audio" />
 
-        <RangeSlider minField="start" maxField="end" />
+        <RangeSlider minField="start_sec" maxField="end_sec" />
       </SimpleForm>
     </Edit>
   );
@@ -94,7 +94,7 @@ export const TimedAssetCreate = (): JSX.Element => {
           <SelectInput optionText={(record) => `${record?.id}`} />
         </ReferenceInput>
         <AudioPlayerField source="asset_id" inEditView label="Audio" />
-        <RangeSlider minField="start" maxField="end" />
+        <RangeSlider minField="start_sec" maxField="end_sec" />
       </SimpleForm>
     </Create>
   );

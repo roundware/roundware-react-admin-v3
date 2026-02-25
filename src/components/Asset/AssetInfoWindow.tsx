@@ -1,25 +1,24 @@
 import {
+    Box,
     Button,
     Dialog,
     DialogContent,
     DialogContentText,
+    DialogTitle as MuiDialogTitle,
     Divider,
     Grid,
     IconButton,
     Modal,
-    DialogTitle as MuiDialogTitle,
     Paper,
     StyledEngineProvider,
     Typography,
 } from "@mui/material";
-import { createStyles, makeStyles, withStyles, WithStyles } from "@mui/styles";
-import { InfoWindow } from "@react-google-maps/api";
+import { InfoWindowF } from "@react-google-maps/api";
 import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 
 import { Edit } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
-import { Theme } from "@mui/material";
 import { Interweave } from "interweave";
 import { useListController, useRedirect } from "react-admin";
 import { IAsset } from "types/asset";
@@ -34,8 +33,6 @@ interface AssetInfoWindowInnerProps {
 export const AssetInfoWindowInner = ({ asset }: AssetInfoWindowInnerProps) => {
   const [imageAssets, setImageAssets] = useState<IAsset[]>([]);
   const [textAssets, setTextAssets] = useState<IAsset[]>([]);
-
-  const classes = useStyles();
 
   const [showDialog, setShowDialog] = useState(false);
 
@@ -84,7 +81,7 @@ export const AssetInfoWindowInner = ({ asset }: AssetInfoWindowInnerProps) => {
           <div key={elementName}>
             {showDividerIfEligible()}
             <Typography variant="body2">
-              {asset.created ? format(new Date(asset.created), "PPp") : ""}
+              {(asset.created_at || asset.created) ? format(new Date(asset.created_at || asset.created), "PPp") : ""}
             </Typography>
           </div>
         );
@@ -117,7 +114,7 @@ export const AssetInfoWindowInner = ({ asset }: AssetInfoWindowInnerProps) => {
                 <Button
                   onClick={() => setShowDialog(true)}
                   size="small"
-                  className={classes.readMoreButton}
+                  sx={{ color: "info.dark" }}
                 >
                   Read more
                 </Button>
@@ -175,16 +172,17 @@ export const AssetInfoWindowInner = ({ asset }: AssetInfoWindowInnerProps) => {
 
   const redirect = useRedirect();
   return (
-    <InfoWindow
+    <InfoWindowF
       options={{
         disableAutoPan: false,
         pixelOffset: new google.maps.Size(0, -30),
         maxWidth: 320,
+        minWidth: 280,
       }}
       position={position}
     >
       <StyledEngineProvider injectFirst>
-        <Paper>
+        <Paper sx={{ minWidth: 260, p: 1 }}>
           {[
             `date`,
             `tags`,
@@ -204,12 +202,11 @@ export const AssetInfoWindowInner = ({ asset }: AssetInfoWindowInnerProps) => {
           </Button>
         </Paper>
       </StyledEngineProvider>
-    </InfoWindow>
+    </InfoWindowF>
   );
 };
 
 const LightboxModal = ({ imageUrl }: { imageUrl: string }) => {
-  const classes = useStyles();
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -224,7 +221,22 @@ const LightboxModal = ({ imageUrl }: { imageUrl: string }) => {
     <div>
       <img src={imageUrl} width={150} onClick={handleOpen} />
       <Modal open={open} onClose={handleClose}>
-        <img src={imageUrl} className={classes.paper} />
+        <Box
+          component="img"
+          src={imageUrl}
+          sx={{
+            position: "absolute",
+            height: "auto",
+            width: "auto",
+            maxHeight: "90%",
+            maxWidth: "90%",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            outline: 0,
+            minWidth: 300,
+          }}
+        />
       </Modal>
     </div>
   );
@@ -240,7 +252,6 @@ const TextDisplay = ({ textUrl }: { textUrl: string }) => {
     });
   }, []);
   const [showDialog, setShowDialog] = useState(false);
-  const classes = useStyles();
   return (
     <div>
       <Interweave
@@ -254,7 +265,7 @@ const TextDisplay = ({ textUrl }: { textUrl: string }) => {
         <Button
           onClick={() => setShowDialog(true)}
           size="small"
-          className={classes.readMoreButton}
+          sx={{ color: "info.dark" }}
         >
           Read more
         </Button>
@@ -275,58 +286,29 @@ const TextDisplay = ({ textUrl }: { textUrl: string }) => {
   );
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
-  paper: {
-    position: "absolute",
-    height: "auto",
-    width: "auto",
-    maxHeight: "90%",
-    maxWidth: "90%",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    outline: 0,
-    minWidth: 300,
-  },
-  readMoreButton: {
-    color: theme.palette.info.dark,
-  },
-}));
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      margin: 0,
-      padding: theme.spacing(2),
-    },
-    closeButton: {
-      position: "absolute",
-      right: theme.spacing(1),
-      top: theme.spacing(1),
-      color: theme.palette.grey[500],
-    },
-  });
-export interface DialogTitleProps extends WithStyles<typeof styles> {
+interface DialogTitleProps {
   id: string;
   children: React.ReactNode;
   onClose: () => void;
 }
 
-const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
-  const { children, onClose, ...other } = props;
-  return (
-    <MuiDialogTitle {...other}>
-      <Grid container justifyContent="space-between">
-        <Grid item>
-          <Typography variant="h6">{children}</Typography>
-        </Grid>
-        {onClose ? (
-          <Grid item>
-            <IconButton aria-label="close" onClick={onClose}>
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-        ) : null}
+const DialogTitle = ({ children, onClose, ...other }: DialogTitleProps) => (
+  <MuiDialogTitle sx={{ m: 0, p: 2 }} {...other}>
+    <Grid container justifyContent="space-between">
+      <Grid size="auto">
+        <Typography variant="h6">{children}</Typography>
       </Grid>
-    </MuiDialogTitle>
-  );
-});
+      {onClose ? (
+        <Grid size="auto">
+          <IconButton
+            aria-label="close"
+            onClick={onClose}
+            sx={{ color: "grey.500" }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Grid>
+      ) : null}
+    </Grid>
+  </MuiDialogTitle>
+);

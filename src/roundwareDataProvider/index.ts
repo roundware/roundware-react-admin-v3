@@ -128,9 +128,11 @@ export class RoundwareDataProvider implements DataProvider {
     this.checkProjectAccess(project_id);
 
     /** get url query */
+    const effectiveProjectId = project_id || this.currentProjectId || undefined;
     const query = {
       ...getFilterQuery({
-        project_id: project_id || this.currentProjectId,
+        // Don't send project_id when listing projects themselves or when it's falsy
+        ...(resource !== 'projects' && effectiveProjectId ? { project_id: effectiveProjectId } : {}),
         session_id,
         admin: 1,
         // other filters;
@@ -181,9 +183,10 @@ export class RoundwareDataProvider implements DataProvider {
       // should happen async
       if (Object.values(params.filter).length > 0) {
         // get without filter
+        const refetchProjectId = params.filter.project_id || this.currentProjectId || undefined;
         const newQuery = {
           ...getFilterQuery({
-            project_id: params.filter.project_id || this.currentProjectId,
+            ...(resource !== 'projects' && refetchProjectId ? { project_id: refetchProjectId } : {}),
             session_id: params.filter.session_id,
             admin: 1,
             // not other filters;
@@ -499,8 +502,10 @@ export class RoundwareDataProvider implements DataProvider {
     );
     const json = result.json;
 
-    /** make new request for latest object with admin params */
-    const newData = await this.getOneJson(
+    /** make new request for latest object with admin params
+     *  getOneJson already adds the record to the internal cache,
+     *  so no extra push is needed here. */
+    await this.getOneJson(
       resource,
       json.id,
       {
@@ -509,30 +514,6 @@ export class RoundwareDataProvider implements DataProvider {
       true
     );
 
-    const cachedList = this.getResource(resource, this.currentProjectId);
-
-    /** push newly fetched record to cache */
-    if (Array.isArray(cachedList)) {
-      cachedList.push(newData as RaRecord);
-      this.setResourse(resource, cachedList, this.currentProjectId);
-    } else {
-      /** list not available yet then do a new req */
-      this.getList(
-        resource,
-        {
-          filter: {},
-          sort: {
-            field: 'id',
-            order: 'ASC',
-          },
-          pagination: {
-            page: 0,
-            perPage: 0,
-          },
-        },
-        true
-      );
-    }
     return {
       data: { ...json },
     };

@@ -1,6 +1,5 @@
 import { Box, Grid } from "@mui/material";
 import Slider, { SliderProps } from "@mui/material/Slider";
-import makeStyles from '@mui/styles/makeStyles';
 import Typography from "@mui/material/Typography";
 import useFieldValue from "hooks/useFieldValue";
 import React from "react";
@@ -44,20 +43,6 @@ const RangeSlider = ({
     }
   };
 
-  const useStyles = makeStyles({
-    root: {
-      "&>.MuiSlider-thumb": {
-        "&:nth-child(4)": {
-          color: "#ed7d31 !important",
-        },
-        "&:nth-child(5)": {
-          color: "secondary.main !important",
-        },
-      },
-    },
-  });
-  const classes = useStyles();
-
   return (
     <Box mb={3} mt={2}>
       <Typography gutterBottom>{label}</Typography>
@@ -76,10 +61,19 @@ const RangeSlider = ({
             : max
         }
         step={step}
-        className={classes.root}
+        sx={{
+          '& .MuiSlider-thumb': {
+            '&:nth-of-type(4)': {
+              color: '#ed7d31',
+            },
+            '&:nth-of-type(5)': {
+              color: 'secondary.main',
+            },
+          },
+        }}
       />
       <Grid container spacing={2}>
-        <Grid item>
+        <Grid size="auto">
           <Typography
             style={{
               color: "#ed7d31",
@@ -103,7 +97,7 @@ const RangeSlider = ({
             />
           </Typography>
         </Grid>
-        <Grid item>
+        <Grid size="auto">
           <Typography variant="caption" color="secondary">
             <NumberInput
               source={maxField || `max${source}`}

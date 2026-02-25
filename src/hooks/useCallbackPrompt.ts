@@ -1,56 +1,28 @@
-import { useCallback, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
-import { useBlocker } from "./useBlocker";
-import { Transition } from "history";
-export function useCallbackPrompt(when: boolean): (boolean | (() => void))[] {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [showPrompt, setShowPrompt] = useState(false);
-  const [lastLocation, setLastLocation] = useState<
-    | null
-    | ({
-        retry(): void;
-      } & Transition)
-  >(null);
-  const [confirmedNavigation, setConfirmedNavigation] = useState(false);
+import { useCallback } from "react";
+import { useBlocker } from "react-router-dom";
 
-  const cancelNavigation = useCallback(() => {
-    setShowPrompt(false);
-  }, []);
-
-  // handle blocking when user click on another route prompt will be shown
-  const handleBlockedNavigation = useCallback(
-    (nextLocation) => {
-      // in if condition we are checking next location and current location are equals or not
-      if (
-        !confirmedNavigation &&
-        nextLocation.location.pathname !== location.pathname
-      ) {
-        setShowPrompt(true);
-        setLastLocation(nextLocation);
-        return false;
-      }
-      return true;
-    },
-    [confirmedNavigation]
-  );
+/**
+ * Hook that shows a navigation-blocking prompt when `when` is true.
+ * Returns [showPrompt, confirmNavigation, cancelNavigation].
+ *
+ * Rewritten to use React Router v6's built-in useBlocker (the old
+ * implementation relied on `navigator.block()` from the `history`
+ * library, which was removed in React Router 6.4+).
+ */
+export function useCallbackPrompt(when: boolean): [boolean, () => void, () => void] {
+  const blocker = useBlocker(when);
 
   const confirmNavigation = useCallback(() => {
-    setShowPrompt(false);
-    setConfirmedNavigation(true);
-  }, []);
-
-  useEffect(() => {
-    if (confirmedNavigation && lastLocation) {
-      navigate(lastLocation.location.pathname);
+    if (blocker.state === "blocked") {
+      blocker.proceed();
     }
-  }, [confirmedNavigation, lastLocation]);
+  }, [blocker]);
 
-  useBlocker(handleBlockedNavigation, when);
+  const cancelNavigation = useCallback(() => {
+    if (blocker.state === "blocked") {
+      blocker.reset();
+    }
+  }, [blocker]);
 
-  return [showPrompt, confirmNavigation, cancelNavigation] as [
-    boolean,
-    () => void,
-    () => void
-  ];
+  return [blocker.state === "blocked", confirmNavigation, cancelNavigation];
 }

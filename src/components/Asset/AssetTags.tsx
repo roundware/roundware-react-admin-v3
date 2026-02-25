@@ -12,7 +12,7 @@ export const TagDisplay = ({ tagId }: TagDisplayProps) => {
   if (tag.data) {
     return (
       <>
-        <Chip size="small" label={tag.data.description} />
+        <Chip size="small" label={tag.data.value || tag.data.description} />
         <br />
       </>
     );
