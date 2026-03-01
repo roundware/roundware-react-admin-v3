@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import tokenAuthProvider from "./AuthProvider";
 import { useRoundwareDataProvider } from "./DataProviderContext";
@@ -11,7 +11,7 @@ export interface IProject {
   pub_date: string;
   audio_format: string;
   auto_submit: boolean;
-  max_recording_length: number;
+  max_recording_length_sec: number;
   listen_questions_dynamic: boolean;
   speak_questions_dynamic: boolean;
   sharing_url: string;
@@ -66,11 +66,7 @@ export const ProjectsProvider = ({
     setProject(project);
   };
 
-  useEffect(() => {
-    refetch();
-  }, []);
-
-  const refetch = () =>
+  const refetch = useCallback(() =>
     dataProvider
       .getList<IProject>(`projects`, {
         filter: {},
@@ -94,7 +90,33 @@ export const ProjectsProvider = ({
         console.error(e);
         tokenAuthProvider.logout({});
         navigate(`/`);
-      });
+      }), [dataProvider, project, navigate]);
+
+  // Initial fetch on mount
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    const slug = localStorage.getItem("tenant_slug");
+    if (token && slug) {
+      refetch();
+    }
+  }, []);
+
+  // Re-fetch (or reset) when auth state changes (login/logout)
+  useEffect(() => {
+    const handleAuthChange = () => {
+      const token = localStorage.getItem("access_token");
+      const slug = localStorage.getItem("tenant_slug");
+      if (token && slug) {
+        refetch();
+      } else {
+        // Logged out — clear stale project state
+        setProjectsList(null);
+        setProject(null);
+      }
+    };
+    window.addEventListener("roundware-auth-change", handleAuthChange);
+    return () => window.removeEventListener("roundware-auth-change", handleAuthChange);
+  }, [refetch]);
 
   return (
     <ProjectsContext.Provider

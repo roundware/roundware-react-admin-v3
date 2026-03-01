@@ -5,13 +5,15 @@ import {
   CreateButton,
   ExportButton,
 } from "react-admin";
+import { useCanEdit } from "../../hooks/useCanEdit";
 import PreviewUi from "./PreviewUi";
 
 const UIGroupListActions = (): JSX.Element => {
+  const canEdit = useCanEdit();
   return (
     <TopToolbar>
       <FilterButton />
-      <CreateButton />
+      {canEdit && <CreateButton />}
       <ExportButton />
       <PreviewUi />
     </TopToolbar>

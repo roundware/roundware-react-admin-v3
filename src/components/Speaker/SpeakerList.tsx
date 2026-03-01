@@ -6,13 +6,15 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import {
     Alert,
     AlertTitle,
+    Box,
     Button,
-    Grid,
     IconButton,
     Paper,
     Stack,
     Tooltip,
-    Typography
+    Typography,
+    useMediaQuery,
+    useTheme,
 } from '@mui/material';
 import CopyResourceButton from 'components/common/CopyResource';
 import DeleteWithBinary from 'components/common/DeleteWithBinary';
@@ -42,26 +44,26 @@ const SpeakerList = (): JSX.Element => {
     setSelectedSpeaker,
     selectedSpeaker,
   } = useSpeakers();
+  const theme = useTheme();
+  const isWide = useMediaQuery(theme.breakpoints.up('xl'));
   if (!selectedProject) return <>No Project Selected.</>;
   return (
     <>
-      <Grid
-        container
-        direction='row'
-        wrap='nowrap'
-        style={{ marginTop: 28 }}
+      <Box
         component={Paper}
+        sx={{
+          marginTop: '28px',
+          display: 'flex',
+          flexDirection: isWide ? 'row' : 'column',
+        }}
       >
-        <Grid
-          item
-          xs={12}
-          md={6}
-          style={{
-            flex: '1 1 50%',
-            overflowY: 'scroll',
+        <Box
+          sx={{
+            flex: isWide ? '1 1 50%' : '0 0 auto',
+            overflowY: 'auto',
             overflowX: 'visible',
-            width: '50%',
-            height: '80vh',
+            width: isWide ? '50%' : '100%',
+            height: isWide ? '80vh' : 'auto',
           }}
         >
           <Stack spacing={2}>
@@ -214,11 +216,17 @@ const SpeakerList = (): JSX.Element => {
               <DeleteWithBinary />
             </Datagrid>
           </List>
-        </Grid>
-        <Grid size={{ xs: 12, md: 6 }} style={{ flex: '1 1 50%', width: '50%' }}>
+        </Box>
+        <Box
+          sx={{
+            flex: isWide ? '1 1 50%' : '0 0 auto',
+            width: isWide ? '50%' : '100%',
+            height: isWide ? 'auto' : '600px',
+          }}
+        >
           <SpeakerShapesControl />
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </>
   );
 };

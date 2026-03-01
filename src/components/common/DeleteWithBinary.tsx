@@ -21,9 +21,13 @@ import {
   useRefresh,
   useResourceContext,
 } from 'react-admin';
+import { useCanEdit } from '../../hooks/useCanEdit';
 
 const DeleteWithBinary = ({ isBulk }: { isBulk?: boolean }) => {
+  const canEdit = useCanEdit();
   const [openDialog, setOpenDialog] = useState(false);
+
+  if (!canEdit) return null;
 
   const record = useRecordContext();
 

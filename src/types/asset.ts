@@ -1,3 +1,4 @@
+import { MultiPolygon } from "@turf/helpers";
 import { IAssetData } from "roundware-web-framework/dist/types/asset";
 import { LocalizedString } from "types";
 
@@ -27,7 +28,7 @@ export interface IAsset
   description: string;
   latitude: number;
   longitude: number;
-  shape: null;
+  shape: MultiPolygon | null;
   filename?: string;
   file: string | { src: string } | Blob | null;
   volume: number;

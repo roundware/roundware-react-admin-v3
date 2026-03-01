@@ -16,12 +16,11 @@ import {
     SimpleForm,
     TextField,
     TextInput,
-    useDataProvider,
     useRedirect,
     useRefresh,
 } from "react-admin";
 import { ITag } from "../types/tags";
-import { handleLocalizedStrings } from "../utils.tsx";
+import { buildLocalizationsPayload } from "../utils.tsx";
 import CopyResourceButton from "./common/CopyResource";
 import FormToolbar from "./common/FormToolbar";
 import TranslatableField from "./common/TranslatableField";
@@ -64,23 +63,17 @@ export const TagList = (): JSX.Element => {
 };
 
 export const TagEdit = (): JSX.Element => {
-  const dataProvider = useDataProvider();
-  const transform = async (record: RaRecord): Promise<RaRecord> => {
-    const r = record as Partial<ITag>;
-
-    if (r.loc_msg_admin) {
-      r.loc_msg = await handleLocalizedStrings(r.loc_msg_admin, dataProvider);
-    }
-    if (r.loc_description_admin) {
-      r.loc_description = await handleLocalizedStrings(
-        r.loc_description_admin,
-        dataProvider
-      );
-    }
-
-    delete r.loc_msg_admin;
-    delete r.loc_description_admin;
-    return r as RaRecord;
+  const transform = (record: RaRecord): RaRecord => {
+    const data = { ...record };
+    data.localizations = buildLocalizationsPayload(data, {
+      loc_msg_admin: "value",
+      loc_description_admin: "description",
+    });
+    delete data.loc_msg_admin;
+    delete data.loc_description_admin;
+    delete data.loc_msg;
+    delete data.loc_description;
+    return data;
   };
 
   const { refetchData } = useBuildUI();
@@ -136,22 +129,17 @@ export const TagEdit = (): JSX.Element => {
 };
 
 export const TagCreate = (): JSX.Element => {
-  const dataProvider = useDataProvider();
-  const transform = async (record: RaRecord): Promise<RaRecord> => {
-    const r = record as Partial<ITag>;
-
-    if (r.loc_msg_admin)
-      r.loc_msg = await handleLocalizedStrings(r.loc_msg_admin, dataProvider);
-
-    if (r.loc_description_admin)
-      r.loc_description = await handleLocalizedStrings(
-        r.loc_description_admin,
-        dataProvider
-      );
-
-    delete r.loc_msg_admin;
-    delete r.loc_description_admin;
-    return r as RaRecord;
+  const transform = (record: RaRecord): RaRecord => {
+    const data = { ...record };
+    data.localizations = buildLocalizationsPayload(data, {
+      loc_msg_admin: "value",
+      loc_description_admin: "description",
+    });
+    delete data.loc_msg_admin;
+    delete data.loc_description_admin;
+    delete data.loc_msg;
+    delete data.loc_description;
+    return data;
   };
   const refresh = useRefresh();
   const { refetchData } = useBuildUI();

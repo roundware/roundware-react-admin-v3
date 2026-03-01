@@ -3,6 +3,11 @@ import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import {
     Box,
     Button,
+    FormControl,
+    FormControlLabel,
+    FormLabel,
+    Radio,
+    RadioGroup,
     Slider,
     Tab,
     Tabs,
@@ -20,6 +25,7 @@ const SpeakerAudioControls = (): JSX.Element => {
   } | null>(`file`);
 
   const [uri] = useFieldValue(`uri`);
+  const [setAs, setSetAs] = useFieldValue<string>(`set_as`, `uri`);
 
   const [sourceMode, setSourceMode] = useState<`UPLOAD` | `URI` | `RECORD`>(
     uri ? "URI" : `UPLOAD`
@@ -62,6 +68,17 @@ const SpeakerAudioControls = (): JSX.Element => {
         >
           <FileField source="src" title="title" fullWidth />
         </FileInput>
+        <FormControl sx={{ mt: 1 }}>
+          <FormLabel>Set uploaded audio as</FormLabel>
+          <RadioGroup
+            row
+            value={setAs || "uri"}
+            onChange={(e) => setSetAs(e.target.value)}
+          >
+            <FormControlLabel value="uri" control={<Radio />} label="URI" />
+            <FormControlLabel value="backup_uri" control={<Radio />} label="Backup URI" />
+          </RadioGroup>
+        </FormControl>
       </TabPanel>
 
       <TabPanel value={`URI`} current={sourceMode}>

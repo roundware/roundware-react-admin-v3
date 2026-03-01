@@ -1,7 +1,6 @@
-import { AccountTree, Business } from "@mui/icons-material";
+import { AccountTree, Business, Groups, Settings } from "@mui/icons-material";
 import DefaultIcon from "@mui/icons-material/ViewList";
 import { useMediaQuery } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import * as React from "react";
 import {
   Menu as RAMenu,
@@ -20,16 +19,10 @@ import { capitalize } from "lodash";
 import { useProjects } from "../../context/ProjectsContext";
 import SubMenu from "./SubMenu";
 
-const useStyles = makeStyles(() => ({
-  raMenu: {
-    paddingTop: "30px",
-  },
-}));
-
 const uiOrder: { [key: string]: string[] } = {
   primary: ["assets", "audiotracks", "speakers", "tags", "uigroups", "timedassets"],
   secondary: ["envelopes", "listenevents", "sessions", "tagcategories"],
-  global: ["languages", "localizedstrings", "users"],
+  global: ["languages", "localizedstrings", "users", "notifications"],
 };
 
 const icons: { [index: string]: JSX.Element } = {
@@ -44,7 +37,6 @@ export const Menu = (props: MenuProps) => {
   const resources = Object.keys(resourcesDefinitions).map(
     (name) => resourcesDefinitions[name]
   );
-  const classes = useStyles();
   const { selectedProject } = useProjects();
   const [, setOpen] = useSidebarState();
   const { permissions } = usePermissions();
@@ -61,6 +53,7 @@ export const Menu = (props: MenuProps) => {
     primary: true,
     secondary: true,
     global: true,
+    tenant: true,
     platform: true,
   });
 
@@ -69,7 +62,7 @@ export const Menu = (props: MenuProps) => {
   };
 
   return (
-    <RAMenu {...props} className={classes.raMenu}>
+    <RAMenu {...props} sx={{ pt: "30px" }}>
       <div onMouseEnter={openMenu} onMouseLeave={closeMenu}>
         {selectedProject && (
           <MenuItemLink
@@ -124,6 +117,29 @@ export const Menu = (props: MenuProps) => {
                 )}
             </SubMenu>
           ))}
+
+        {/* Tenant section — visible to all authenticated users */}
+        <SubMenu
+          key="tenant"
+          isOpen={state.tenant}
+          name="Tenant"
+          dense={false}
+          handleToggle={() => handleToggle("tenant")}
+          icon={<Groups />}
+        >
+          <MenuItemLink
+            key="team"
+            to={{ pathname: "/team" }}
+            primaryText="Team"
+            leftIcon={<Groups />}
+          />
+          <MenuItemLink
+            key="settings"
+            to={{ pathname: "/settings" }}
+            primaryText="Settings"
+            leftIcon={<Settings />}
+          />
+        </SubMenu>
 
         {/* Platform section — superusers only */}
         {isSuperuser && (

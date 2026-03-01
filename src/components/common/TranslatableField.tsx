@@ -114,11 +114,13 @@ const TranslatableField = ({
               (h: LocalizedString) => h.language_id !== selectedLanguage
             );
 
+            const lang = languages.find((l) => l.id === selectedLanguage);
             const newLanguageObject: LocalizedString = {
               ...[...value].find(
                 (h: LocalizedString) => h.language_id == selectedLanguage
               ),
               language_id: selectedLanguage,
+              language_code: lang?.language_code,
               text: newText,
             };
             setValue(

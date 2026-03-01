@@ -19,6 +19,8 @@ interface Props {
     latitude: string;
     longitude: string;
   };
+  /** Optional element rendered inline to the right of the lat/lon fields. */
+  headerAction?: React.ReactNode;
 }
 
 const containerStyle = {
@@ -74,7 +76,7 @@ const LocationSelector = (props: PropsWithChildren<Props>): JSX.Element => {
   }, [latStr, lngStr]);
 
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" sx={{ width: "100%" }}>
       <CardContent>
         <Grid container direction="column" spacing={2}>
           <Grid container item xs={12} alignItems="center">
@@ -82,11 +84,11 @@ const LocationSelector = (props: PropsWithChildren<Props>): JSX.Element => {
               <LocationOnIcon />
             </Grid>
             <Grid item>
-              <Typography variant="h6">Location Coordinates</Typography>
+              <Typography variant="h6">Location</Typography>
             </Grid>
           </Grid>
           <Grid item xs={12}>
-            <Stack spacing={1} direction="row">
+            <Stack spacing={1} direction="row" alignItems="center">
               <TextField
                 value={latStr}
                 label="Latitude"
@@ -97,6 +99,7 @@ const LocationSelector = (props: PropsWithChildren<Props>): JSX.Element => {
                 label="Longitude"
                 onChange={(e) => setLngStr(e.target.value)}
               />
+              {props.headerAction}
             </Stack>
           </Grid>
           <Grid item>
@@ -110,8 +113,11 @@ const LocationSelector = (props: PropsWithChildren<Props>): JSX.Element => {
                     <GoogleMap
                       mapContainerStyle={containerStyle}
                       onLoad={onLoad}
-
-                      // onUnmount={onUnmount}
+                      options={{
+                        disableDefaultUI: true,
+                        zoomControl: true,
+                        mapTypeControl: true,
+                      }}
                     >
                       <SelectorPin
                         onChange={handleOnLocationChange}

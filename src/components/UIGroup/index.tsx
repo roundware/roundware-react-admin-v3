@@ -2,7 +2,6 @@
 import FormToolbar from "components/common/FormToolbar";
 import TranslatableField from "components/common/TranslatableField";
 import { useBuildUI } from "context/BuildUIContext";
-import { useRoundwareDataProvider } from "context/DataProviderContext";
 import { useProjects } from "context/ProjectsContext";
 import React, { useMemo } from "react";
 import {
@@ -21,36 +20,31 @@ import {
     useRefresh,
 } from "react-admin";
 import { IUIGroup } from "types/uiGroups";
-import { handleLocalizedStrings } from "../../utils.tsx";
+import { buildLocalizationsPayload } from "../../utils.tsx";
 import UIItemFilterField from "./UIItemFilterField";
 import UiModeField from "./UiModeField";
 
 export const UiGroupEdit = (): JSX.Element => {
   const { refetchData } = useBuildUI();
-  const dataProvider = useRoundwareDataProvider();
-  const transform = async (record: RaRecord): Promise<RaRecord> => {
-    const r = record as Omit<
-      Partial<IUIGroup>,
-      `header_text_loc` | `ui_items`
-    > & {
-      header_text_loc: number[];
-      ui_items: number[];
+  const transform = (record: RaRecord): RaRecord => {
+    const data = { ...record } as Record<string, unknown> & {
+      ui_items?: Array<{ id: number } | number>;
     };
 
-    r.ui_items =
-      r?.ui_items?.map(
+    data.ui_items =
+      data?.ui_items?.map(
         (i) =>
           // @ts-ignore
           i.id
       ) || [];
 
-    if (r.header_text_loc_admin?.length)
-      r.header_text_loc = await handleLocalizedStrings(
-        r.header_text_loc_admin,
-        dataProvider
-      );
-    delete r.header_text_loc_admin;
-    return r as RaRecord;
+    data.localizations = buildLocalizationsPayload(
+      data as Record<string, unknown>,
+      { header_text_loc_admin: "header_text" },
+    );
+    delete data.header_text_loc_admin;
+    delete data.header_text_loc;
+    return data as RaRecord;
   };
 
   const refresh = useRefresh();
@@ -127,7 +121,6 @@ export const UiGroupEdit = (): JSX.Element => {
 
 export const UiGroupCreate = (): JSX.Element => {
   const { refetchData, uiGroups } = useBuildUI();
-  const dataProvider = useRoundwareDataProvider();
   const { selectedProject } = useProjects();
 
   const refresh = useRefresh();
@@ -146,27 +139,24 @@ export const UiGroupCreate = (): JSX.Element => {
     return lastIndex + 1;
   }, [uiGroups]);
 
-  const transform = async (record: RaRecord): Promise<RaRecord> => {
-    const r = record as Omit<Partial<IUIGroup>, `header_text_loc`> & {
-      header_text_loc: number[];
-      ui_items: number[];
+  const transform = (record: RaRecord): RaRecord => {
+    const data = { ...record } as Record<string, unknown> & {
+      ui_items?: Array<{ id: number } | number>;
     };
 
-    r.project_id = selectedProject?.id;
+    data.project_id = selectedProject?.id;
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    r.ui_items = r?.ui_items?.map((i) => i.id) || [];
+    data.ui_items = data?.ui_items?.map((i) => i.id) || [];
 
-    if (r.header_text_loc_admin)
-      r.header_text_loc = await handleLocalizedStrings(
-        r.header_text_loc_admin,
-        dataProvider
-      );
-
-    r.index = newIndex;
-    delete r.header_text_loc_admin;
-    return r as RaRecord;
+    data.localizations = buildLocalizationsPayload(
+      data as Record<string, unknown>,
+      { header_text_loc_admin: "header_text" },
+    );
+    data.index = newIndex;
+    delete data.header_text_loc_admin;
+    delete data.header_text_loc;
+    return data as RaRecord;
   };
   return (
     <Create

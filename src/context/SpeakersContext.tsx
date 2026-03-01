@@ -1,5 +1,5 @@
 import { useRoundwareDataProvider } from "context/DataProviderContext";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ISpeaker } from "types/speaker";
 import { AllowChildrenOnlyProps, useProjects } from "./ProjectsContext";
 
@@ -32,10 +32,18 @@ export const SpeakersProvider = ({
     fetchData();
   }, [selectedProject?.id]);
 
-  const [isCurrentSpeakerSaved, setIsCurrentSpeakerSaved] = useState(true);
+  const [isCurrentSpeakerSaved, _setIsCurrentSpeakerSaved] = useState(true);
+  // Ref mirrors state so that setSelectedSpeaker always reads the latest value,
+  // even when called from a .then() callback where React has batched setState.
+  const savedRef = useRef(true);
+  const setIsCurrentSpeakerSaved = (val: boolean | ((prev: boolean) => boolean)) => {
+    const resolved = typeof val === "function" ? val(savedRef.current) : val;
+    savedRef.current = resolved;
+    _setIsCurrentSpeakerSaved(resolved);
+  };
   const setSelectedSpeaker = (newId: number | null) => {
     // Only check for unsaved changes if we're switching to a different speaker
-    if (newId !== selectedSpeaker && !isCurrentSpeakerSaved) {
+    if (newId !== selectedSpeaker && !savedRef.current) {
       const ans = confirm(
         "Would you like to save your speaker changes before editing a new speaker?"
       );

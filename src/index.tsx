@@ -8,39 +8,42 @@ import { RoundwareDataProviderContextProvider } from "./context/DataProviderCont
 import { ProjectsProvider } from "./context/ProjectsContext";
 import { SpeakersProvider } from "./context/SpeakersContext";
 import "./index.css";
+import RegisterPage from "./pages/RegisterPage";
 import ProjectRoute from "./ProjectRoute";
+
+const AppProviders = ({ children }: { children: React.ReactNode }) => (
+  <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <RoundwareDataProviderContextProvider>
+      <ProjectsProvider>
+        <SpeakersProvider>
+          <BuildUIContextProvider>
+            {children}
+          </BuildUIContextProvider>
+        </SpeakersProvider>
+      </ProjectsProvider>
+    </RoundwareDataProviderContextProvider>
+  </LocalizationProvider>
+);
 
 const router = createBrowserRouter([
   {
+    path: "/register",
+    element: <RegisterPage />,
+  },
+  {
     path: "/project/:projectId/*",
     element: (
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <RoundwareDataProviderContextProvider>
-          <ProjectsProvider>
-            <SpeakersProvider>
-              <BuildUIContextProvider>
-                <ProjectRoute />
-              </BuildUIContextProvider>
-            </SpeakersProvider>
-          </ProjectsProvider>
-        </RoundwareDataProviderContextProvider>
-      </LocalizationProvider>
+      <AppProviders>
+        <ProjectRoute />
+      </AppProviders>
     ),
   },
   {
     path: "/*",
     element: (
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <RoundwareDataProviderContextProvider>
-          <ProjectsProvider>
-            <SpeakersProvider>
-              <BuildUIContextProvider>
-                <ProjectRoute />
-              </BuildUIContextProvider>
-            </SpeakersProvider>
-          </ProjectsProvider>
-        </RoundwareDataProviderContextProvider>
-      </LocalizationProvider>
+      <AppProviders>
+        <ProjectRoute />
+      </AppProviders>
     ),
   },
 ], {

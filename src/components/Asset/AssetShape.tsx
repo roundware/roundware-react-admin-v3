@@ -1,222 +1,261 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import HistoryIcon from "@mui/icons-material/History";
-import { Grid, IconButton, Paper, Tooltip } from "@mui/material";
+import RotateLeftIcon from "@mui/icons-material/RotateLeft";
+import RotateRightIcon from "@mui/icons-material/RotateRight";
+import SaveIcon from "@mui/icons-material/Save";
+import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
+import ZoomOutMapIcon from "@mui/icons-material/ZoomOutMap";
 import {
-  DrawingManager,
-  DrawingManagerProps,
-  Polygon,
-} from "@react-google-maps/api";
+    CircularProgress,
+    Grid,
+    IconButton,
+    Paper,
+    Tooltip,
+} from "@mui/material";
+import { PolygonF } from "@react-google-maps/api";
 import { multiPolygon, MultiPolygon } from "@turf/helpers";
 import MapControl from "components/common/MapControl";
-import useFieldValue from "hooks/useFieldValue";
-import React, { useEffect, useState } from "react";
+import { useRoundwareDataProvider } from "context/DataProviderContext";
+import { useDrawingManager } from "hooks/useDrawingManager";
+import React, { useEffect, useMemo, useState } from "react";
+import { Identifier, useNotify, useRecordContext } from "react-admin";
 import { googleMapPathToGeoJSONPath, polygonToGoogleMapPaths } from "utilities";
 
-type googleMapDrawnShapes =
-  | google.maps.Circle
-  | google.maps.Polygon
-  | google.maps.Rectangle
-  | null;
-const AssetShape = (): JSX.Element | null => {
-  const [assetShape, setAssetShape] = useFieldValue<MultiPolygon | undefined>(
-    `shape`
+interface AssetShapeProps {
+  isDrawingMode: boolean;
+  setIsDrawingMode: (v: boolean) => void;
+  onShapeChange?: (hasShape: boolean) => void;
+}
+
+// Module-level shape cache — our direct dataProvider.update() calls don't
+// update React Admin's React Query cache, so record.shape can be stale.
+// This cache is the source of truth for shape state after save/delete.
+export const shapeCache = new Map<Identifier, MultiPolygon | null>();
+
+/** Read shape for an asset, preferring our cache over the (possibly stale) record. */
+function getInitialShape(
+  record: { id?: Identifier; shape?: MultiPolygon | null } | undefined
+): MultiPolygon | null {
+  if (record?.id != null && shapeCache.has(record.id)) {
+    return shapeCache.get(record.id) ?? null;
+  }
+  return record?.shape ?? null;
+}
+
+const AssetShape = ({
+  isDrawingMode,
+  setIsDrawingMode,
+  onShapeChange,
+}: AssetShapeProps): JSX.Element | null => {
+  const record = useRecordContext();
+  const dataProvider = useRoundwareDataProvider();
+  const notify = useNotify();
+
+  const [shape, setShape] = useState<MultiPolygon | null>(() =>
+    getInitialShape(record)
   );
-  /** to keep track of current shape and remove previous from map */
-  const [drawnShape, setDrawnShape] = useState<googleMapDrawnShapes>();
+  const [saving, setSaving] = useState(false);
 
-  /** GeoJSON polygon path of current drawn shape */
-  const [drawnPaths, setDrawnPaths] = useState<number[][] | null>(null);
+  // Reset when navigating to a different asset.
+  useEffect(() => {
+    setShape(getInitialShape(record));
+    setIsDrawingMode(false);
+  }, [record?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  /** listeners for keeping track when shape is edited */
-  const [listeners, setListeners] = useState<google.maps.MapsEventListener[]>(
-    []
-  );
+  // ---------------------------------------------------------------------------
+  // Drawing completion handlers.
+  //
+  // The DrawingManager creates a Google Maps overlay (circle, polygon, or
+  // rectangle).  We extract its geometry, convert to GeoJSON, set shape state,
+  // and then IMMEDIATELY remove the overlay from the map.  The PolygonF
+  // component takes over for display and editing.  Keeping the overlay around
+  // would cause a "double shape" (two identical, overlapping, editable shapes).
+  // ---------------------------------------------------------------------------
 
-  /** on new circle drawn */
   const handleOnCircleComplete = (circle: google.maps.Circle) => {
-    setCurrentShape(circle);
-
-    /** setup listeners to get new paths when circle is edited */
-    const circleListeners = [`radius_changed`, `center_changed`].map((e) =>
-      google.maps.event.addListener(circle, e, () => getPathsFromCircle(circle))
-    );
-    /** save listeners to clear when new shape drawn */
-    setListeners(circleListeners);
-
-    getPathsFromCircle(circle);
-  };
-
-  /** calculate paths from given circle */
-  const getPathsFromCircle = (circle: google.maps.Circle) => {
     const numPts = 64;
     const path: google.maps.LatLng[] = [];
     for (let i = 0; i < numPts; i++) {
       path.push(
         google.maps.geometry.spherical.computeOffset(
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           circle.getCenter()!,
           circle.getRadius(),
           (i * 360) / numPts
         )
       );
     }
-
-    setDrawnPaths(googleMapPathToGeoJSONPath(path));
+    setShape(multiPolygon([[googleMapPathToGeoJSONPath(path)]]).geometry);
+    circle.setMap(null); // remove overlay — PolygonF takes over
   };
 
-  /** on new polygon,  sets listeners for edit changes for polygon */
   const handleOnPolygonComplete = (polygon: google.maps.Polygon) => {
-    setCurrentShape(polygon);
-    /** listeners for edit changes */
-    const polygonListeners = [
-      `insert_at`,
-      `remove_at`,
-      `set_at`,
-      `dragend`,
-      `mouseup`,
-    ].map((e) =>
-      google.maps.event.addListener(polygon, e, () =>
-        getPathFromPolygon(polygon)
-      )
+    setShape(
+      multiPolygon([
+        [googleMapPathToGeoJSONPath(polygon.getPath().getArray())],
+      ]).geometry
     );
-    setListeners(polygonListeners);
-    getPathFromPolygon(polygon);
+    polygon.setMap(null); // remove overlay — PolygonF takes over
   };
 
-  /** gets path from given polygon */
-  const getPathFromPolygon = (polygon: google.maps.Polygon) => {
-    setDrawnPaths(googleMapPathToGeoJSONPath(polygon.getPath().getArray()));
-  };
-
-  useEffect(() => {
-    if (drawnPaths) setAssetShape(multiPolygon([[drawnPaths]]).geometry);
-  }, [drawnPaths]);
-
-  /** on new rectangle shape */
   const handleOnRectangleComplete = (rectangle: google.maps.Rectangle) => {
-    setCurrentShape(rectangle);
-    const rectangleListeners = [`bounds_changed`].map((e) =>
-      google.maps.event.addListener(rectangle, e, () =>
-        getPathFromRectangle(rectangle)
-      )
-    );
-    setListeners(rectangleListeners);
-    getPathFromRectangle(rectangle);
-  };
-
-  /** calculates paths from givem rectangle */
-  const getPathFromRectangle = (rectangle: google.maps.Rectangle) => {
     const bounds = rectangle.getBounds();
-    if (!bounds) return;
-    const NE = bounds.getNorthEast();
-    const SW = bounds.getSouthWest();
-    // North West
-    const NW = new google.maps.LatLng(NE.lat(), SW.lng());
-    // South East
-    const SE = new google.maps.LatLng(SW.lat(), NE.lng());
-    setDrawnPaths(googleMapPathToGeoJSONPath([NW, NE, SE, SW]));
+    if (bounds) {
+      const NE = bounds.getNorthEast();
+      const SW = bounds.getSouthWest();
+      const NW = new google.maps.LatLng(NE.lat(), SW.lng());
+      const SE = new google.maps.LatLng(SW.lat(), NE.lng());
+      setShape(
+        multiPolygon([[googleMapPathToGeoJSONPath([NW, NE, SE, SW])]]).geometry
+      );
+    }
+    rectangle.setMap(null); // remove overlay — PolygonF takes over
   };
 
-  /** removes previous shape from map & paths and sets current shape
-   *  NOTE: this must be called before saving new paths of shape
-   */
-  const setCurrentShape = (shape: googleMapDrawnShapes) => {
-    setDrawnShape((prev) => {
-      if (prev) prev?.setMap(null);
-      /** remove previous paths */
-      setDrawnPaths(null);
-      /** shows hand for editing the newly created shape */
-      drawingManager?.setDrawingMode(null);
-      /** remove previous listeners */
-      listeners.forEach((l) => l.remove());
-      return shape;
-    });
-  };
-
-  /** reusable options for each shape in in drawinManageOptions  */
-  const shapeOptions = {
-    fillColor: "blue",
-    fillOpacity: 0.6,
-    strokeWeight: 2,
-    clickable: false,
-    editable: true,
-    draggable: true,
-    zIndex: 1,
-  };
-  /** options for drawing manager component */
-  const drawingManagerOptions: DrawingManagerProps[`options`] = {
-    drawingControlOptions: {
-      drawingModes: [`circle`, `polygon`, `rectangle`].map(
-        (t) =>
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          //   @ts-ignore
-          google.maps.drawing.OverlayType[t.toUpperCase()]
-      ),
+  useDrawingManager({
+    enabled: isDrawingMode && !shape,
+    drawingModes: [
+      google.maps.drawing.OverlayType.CIRCLE,
+      google.maps.drawing.OverlayType.POLYGON,
+      google.maps.drawing.OverlayType.RECTANGLE,
+    ],
+    shapeOptions: {
+      fillColor: "blue",
+      fillOpacity: 0.6,
+      strokeWeight: 2,
+      clickable: false,
+      editable: true,
+      draggable: true,
+      zIndex: 1,
     },
-    circleOptions: shapeOptions,
-    polygonOptions: shapeOptions,
-    rectangleOptions: shapeOptions,
-  };
+    onCircleComplete: handleOnCircleComplete,
+    onPolygonComplete: handleOnPolygonComplete,
+    onRectangleComplete: handleOnRectangleComplete,
+  });
 
-  /** drawing manager instance */
-  const [drawingManager, setDrawingManager] =
-    useState<google.maps.drawing.DrawingManager>();
-  const handleLoad = (dm: google.maps.drawing.DrawingManager) => {
-    setDrawingManager(dm);
-  };
-
-  /** removes current shape */
-  const handleRedraw = () => {
-    setCurrentShape(null);
-    setAssetShape(undefined);
-  };
-
+  // --- Editable polygon for existing / just-drawn shapes ---
   const [polygon, setPolygon] = useState<google.maps.Polygon>();
-  const handleOnPolygonLoad = (loadedPolygon: google.maps.Polygon) =>
-    setPolygon(loadedPolygon);
+  const shapePath = useMemo(
+    () => (shape ? polygonToGoogleMapPaths(shape) : null),
+    [shape]
+  );
+
   const updatePolygon = (e: google.maps.MapMouseEvent) => {
-    if (e) console.info(`Polygon edited`);
-
+    if (e) console.info("Polygon edited");
     const newPath = polygon?.getPath().getArray();
-
     if (Array.isArray(newPath)) {
-      const newMultiPolygon = multiPolygon([
-        [googleMapPathToGeoJSONPath(newPath)],
-      ]).geometry;
-      setAssetShape(newMultiPolygon);
+      setShape(
+        multiPolygon([[googleMapPathToGeoJSONPath(newPath)]]).geometry
+      );
     }
   };
-  /** if selected asset already has a shape don't show drawing manager */
 
-  return (
-    <div>
-      {assetShape ? (
-        <>
-          {/* editable shape */}
-          <Polygon
-            paths={polygonToGoogleMapPaths(assetShape)}
-            onMouseUp={updatePolygon}
-            onLoad={handleOnPolygonLoad}
-            editable
-          />
-        </>
-      ) : (
-        <DrawingManager
-          onCircleComplete={handleOnCircleComplete}
-          onPolygonComplete={handleOnPolygonComplete}
-          onRectangleComplete={handleOnRectangleComplete}
-          onLoad={handleLoad}
-          options={drawingManagerOptions}
-          onUnmount={() => {
-            drawnShape?.setMap(null);
-          }}
-        />
-      )}
+  // --- Rotation (from SpeakerPolygon) ---
+  const rotatePolygon = (angle: number) => {
+    if (!shapePath || !Array.isArray(shapePath)) return;
+    const center = {
+      lat: shapePath.reduce((sum, p) => sum + p.lat(), 0) / shapePath.length,
+      lng: shapePath.reduce((sum, p) => sum + p.lng(), 0) / shapePath.length,
+    };
+    const latScale = Math.cos((center.lat * Math.PI) / 180);
+    const rotatedPath = shapePath.map((point) => {
+      const lat = point.lat() - center.lat;
+      const lng = (point.lng() - center.lng) * latScale;
+      const rad = (angle * Math.PI) / 180;
+      const cos = Math.cos(rad);
+      const sin = Math.sin(rad);
+      return new google.maps.LatLng(
+        lat * cos - lng * sin + center.lat,
+        (lat * sin + lng * cos) / latScale + center.lng
+      );
+    });
+    setShape(multiPolygon([[googleMapPathToGeoJSONPath(rotatedPath)]]).geometry);
+  };
+
+  // --- Scaling (from SpeakerPolygon) ---
+  const scalePolygon = (factor: number) => {
+    if (!shapePath || !Array.isArray(shapePath)) return;
+    const center = {
+      lat: shapePath.reduce((sum, p) => sum + p.lat(), 0) / shapePath.length,
+      lng: shapePath.reduce((sum, p) => sum + p.lng(), 0) / shapePath.length,
+    };
+    const latScale = Math.cos((center.lat * Math.PI) / 180);
+    const scaledPath = shapePath.map((point) => {
+      const lat = (point.lat() - center.lat) * factor;
+      const lng = (point.lng() - center.lng) * latScale * factor;
+      return new google.maps.LatLng(
+        lat + center.lat,
+        lng / latScale + center.lng
+      );
+    });
+    setShape(multiPolygon([[googleMapPathToGeoJSONPath(scaledPath)]]).geometry);
+  };
+
+  // --- Save ---
+  const handleSave = () => {
+    if (!record?.id || !shape) return;
+    setSaving(true);
+    dataProvider
+      .update("assets", {
+        id: record.id,
+        data: { shape },
+        previousData: record,
+      })
+      .then(() => {
+        shapeCache.set(record.id, shape);
+        setIsDrawingMode(false);
+        onShapeChange?.(true);
+        notify("Shape saved", { type: "success" });
+      })
+      .catch((err: Error) =>
+        notify(`Error saving shape: ${err.message}`, { type: "error" })
+      )
+      .finally(() => setSaving(false));
+  };
+
+  // --- Discard ---
+  const handleDiscard = () => {
+    setShape(getInitialShape(record));
+    setIsDrawingMode(false);
+  };
+
+  // --- Delete ---
+  const handleDelete = () => {
+    if (!window.confirm("Delete the shape? You can draw a new one.")) return;
+    if (!record?.id) return;
+    setSaving(true);
+    dataProvider
+      .update("assets", {
+        id: record.id,
+        data: { shape: null },
+        previousData: record,
+      })
+      .then(() => {
+        setShape(null);
+        shapeCache.set(record.id, null);
+        setIsDrawingMode(false);
+        onShapeChange?.(false);
+        notify("Shape deleted", { type: "success" });
+      })
+      .catch((err: Error) =>
+        notify(`Error deleting shape: ${err.message}`, { type: "error" })
+      )
+      .finally(() => setSaving(false));
+  };
+
+  // === RENDER ===
+
+  // State 1: No shape, drawing not active → nothing on the map
+  if (!shape && !isDrawingMode) return null;
+
+  // State 2: Drawing mode, no shape yet → drawing tools + cancel
+  if (!shape && isDrawingMode) {
+    return (
       <MapControl position={window.google.maps.ControlPosition.LEFT_CENTER}>
-        <Paper>
-          <Grid direction="column" container spacing={1}>
-            <Grid item>
-              <Tooltip title="Redraw" placement="right">
-                <IconButton onClick={handleRedraw} size="large">
+        <Paper sx={{ margin: "8px" }}>
+          <Grid direction="column" container spacing={0}>
+            <Grid>
+              <Tooltip title="Cancel" placement="right">
+                <IconButton onClick={handleDiscard} size="medium">
                   <HistoryIcon />
                 </IconButton>
               </Tooltip>
@@ -224,7 +263,92 @@ const AssetShape = (): JSX.Element | null => {
           </Grid>
         </Paper>
       </MapControl>
-    </div>
+    );
+  }
+
+  // State 3: Shape exists → editable polygon + controls
+  return (
+    <>
+      {shapePath && (
+        <PolygonF
+          paths={shapePath}
+          onMouseUp={updatePolygon}
+          onLoad={(p) => setPolygon(p)}
+          editable
+          draggable
+          options={{
+            fillColor: "blue",
+            fillOpacity: 0.4,
+            strokeColor: "blue",
+            strokeWeight: 2,
+            zIndex: 1,
+          }}
+        />
+      )}
+
+      <MapControl position={window.google.maps.ControlPosition.LEFT_TOP}>
+        <Paper
+          sx={{
+            maxHeight: "calc(100vh - 120px)",
+            overflowY: "auto",
+            margin: "8px",
+            marginTop: "10px",
+          }}
+        >
+          <Grid container direction="column" spacing={0}>
+            <Grid>
+              <Tooltip title="Save Shape" placement="right">
+                <IconButton onClick={handleSave} disabled={saving} size="medium">
+                  {saving ? <CircularProgress size={24} /> : <SaveIcon />}
+                </IconButton>
+              </Tooltip>
+            </Grid>
+            <Grid>
+              <Tooltip title="Discard Changes" placement="right">
+                <IconButton onClick={handleDiscard} size="medium">
+                  <HistoryIcon />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+            <Grid>
+              <Tooltip title="Delete Shape" placement="right">
+                <IconButton onClick={handleDelete} size="medium">
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+            <Grid>
+              <Tooltip title="Rotate Left (5°)" placement="right">
+                <IconButton onClick={() => rotatePolygon(-5)} size="medium">
+                  <RotateLeftIcon />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+            <Grid>
+              <Tooltip title="Rotate Right (5°)" placement="right">
+                <IconButton onClick={() => rotatePolygon(5)} size="medium">
+                  <RotateRightIcon />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+            <Grid>
+              <Tooltip title="Scale Up (10%)" placement="right">
+                <IconButton onClick={() => scalePolygon(1.1)} size="medium">
+                  <ZoomOutMapIcon />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+            <Grid>
+              <Tooltip title="Scale Down (10%)" placement="right">
+                <IconButton onClick={() => scalePolygon(0.9)} size="medium">
+                  <ZoomInMapIcon />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+          </Grid>
+        </Paper>
+      </MapControl>
+    </>
   );
 };
 

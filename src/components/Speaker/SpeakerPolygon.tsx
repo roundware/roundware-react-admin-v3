@@ -17,9 +17,9 @@ import {
     Tooltip,
 } from "@mui/material";
 import {
-    Polygon,
+    PolygonF,
     PolygonProps,
-    Polyline,
+    PolylineF,
     useGoogleMap,
 } from "@react-google-maps/api";
 import buffer from "@turf/buffer";
@@ -434,13 +434,13 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
   return (
     <div>
       {/* original shape */}
-      <Polyline
+      <PolylineF
         path={polygonToGoogleMapPaths(speaker.shape)}
         draggable={false}
         options={polylineOptions}
       />
       {/* editable shape */}
-      <Polygon
+      <PolygonF
         paths={shapePath}
         onDragStart={handleDragStart}
         // onDragEnd={updatePolygon}
@@ -452,7 +452,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
       />
 
       {attenuationBorderPath && (
-        <Polygon
+        <PolygonF
           paths={attenuationBorderPath}
           onClick={handleClick}
           options={attenuationBorderOptions}
@@ -462,71 +462,71 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
 
       {isSelected && (
         <MapControl position={window.google.maps.ControlPosition.LEFT_TOP}>
-          <Paper 
-            sx={{ 
-              maxHeight: 'calc(100vh - 200px)', 
+          <Paper
+            sx={{
+              maxHeight: 'calc(100vh - 120px)',
               overflowY: 'auto',
               margin: '8px',
-              marginTop: '60px'
+              marginTop: '10px'
             }}
           >
-            <Grid container direction="column" spacing={1}>
+            <Grid container direction="column" spacing={0}>
               <Grid>
                 <Tooltip title="Save Changes" placement="right">
                   <IconButton
                     onClick={handleSave}
                     disabled={saving}
-                    size="large"
+                    size="medium"
                   >
-                    {saving ? <CircularProgress /> : <SaveIcon />}
+                    {saving ? <CircularProgress size={24} /> : <SaveIcon />}
                   </IconButton>
                 </Tooltip>
               </Grid>
               <Grid>
                 <Tooltip title="Discard Changes" placement="right">
-                  <IconButton onClick={handleDiscard} size="large">
+                  <IconButton onClick={handleDiscard} size="medium">
                     <HistoryIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
               <Grid>
                 <Tooltip title="Delete Shape" placement="right">
-                  <IconButton onClick={handleDelete} size="large">
+                  <IconButton onClick={handleDelete} size="medium">
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
               <Grid>
                 <Tooltip title="Rotate Left (5°)" placement="right">
-                  <IconButton onClick={handleRotateLeft} size="large">
+                  <IconButton onClick={handleRotateLeft} size="medium">
                     <RotateLeftIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
               <Grid>
                 <Tooltip title="Rotate Right (5°)" placement="right">
-                  <IconButton onClick={handleRotateRight} size="large">
+                  <IconButton onClick={handleRotateRight} size="medium">
                     <RotateRightIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
               <Grid>
                 <Tooltip title="Scale Up (10%)" placement="right">
-                  <IconButton onClick={handleScaleUp} size="large">
+                  <IconButton onClick={handleScaleUp} size="medium">
                     <ZoomOutMapIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
               <Grid>
                 <Tooltip title="Scale Down (10%)" placement="right">
-                  <IconButton onClick={handleScaleDown} size="large">
+                  <IconButton onClick={handleScaleDown} size="medium">
                     <ZoomInMapIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
               <Grid>
                 <Tooltip title="Attenuation Distance" placement="right">
-                  <IconButton onClick={handleOpenAD} size="large">
+                  <IconButton onClick={handleOpenAD} size="medium">
                     <BlurCircularIcon />
                   </IconButton>
                 </Tooltip>

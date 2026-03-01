@@ -7,10 +7,10 @@ import {
     Paper,
     Tooltip,
 } from "@mui/material";
-import { DrawingManager, DrawingManagerProps } from "@react-google-maps/api";
 import MapControl from "components/common/MapControl";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
 import { useSpeakers } from "context/SpeakersContext";
+import { useDrawingManager } from "hooks/useDrawingManager";
 import React, { useEffect, useState } from "react";
 import {
     getSpeakerGeoJSONObjectsForPath,
@@ -129,6 +129,13 @@ const SpeakerDrawer = (): JSX.Element | null => {
     setDrawnPaths(googleMapPathToGeoJSONPath([NW, NE, SE, SW]));
   };
 
+  /** drawing manager instance */
+  const [drawingManager, setDrawingManager] =
+    useState<google.maps.drawing.DrawingManager>();
+  const handleLoad = (dm: google.maps.drawing.DrawingManager) => {
+    setDrawingManager(dm);
+  };
+
   /** removes previous shape from map & paths and sets current shape
    *  NOTE: this must be called before saving new paths of shape
    */
@@ -155,27 +162,24 @@ const SpeakerDrawer = (): JSX.Element | null => {
     draggable: true,
     zIndex: 1,
   };
-  /** options for drawing manager component */
-  const drawingManagerOptions: DrawingManagerProps[`options`] = {
-    drawingControlOptions: {
-      drawingModes: [`circle`, `polygon`, `rectangle`].map(
-        (t) =>
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          //   @ts-ignore
-          google.maps.drawing.OverlayType[t.toUpperCase()]
-      ),
-    },
-    circleOptions: shapeOptions,
-    polygonOptions: shapeOptions,
-    rectangleOptions: shapeOptions,
-  };
 
-  /** drawing manager instance */
-  const [drawingManager, setDrawingManager] =
-    useState<google.maps.drawing.DrawingManager>();
-  const handleLoad = (dm: google.maps.drawing.DrawingManager) => {
-    setDrawingManager(dm);
-  };
+  /** Whether the drawing manager should be active */
+  const shouldDraw = !!selectedSpeaker && !selectedSpeakerData?.shape;
+
+  /** Hook manages DrawingManager lifecycle — no JSX component needed */
+  useDrawingManager({
+    enabled: shouldDraw,
+    drawingModes: [
+      google.maps.drawing.OverlayType.CIRCLE,
+      google.maps.drawing.OverlayType.POLYGON,
+      google.maps.drawing.OverlayType.RECTANGLE,
+    ],
+    shapeOptions,
+    onCircleComplete: handleOnCircleComplete,
+    onPolygonComplete: handleOnPolygonComplete,
+    onRectangleComplete: handleOnRectangleComplete,
+    onLoad: handleLoad,
+  });
 
   /** status of async call */
   const [saving, setSaving] = useState(false);
@@ -204,11 +208,10 @@ const SpeakerDrawer = (): JSX.Element | null => {
       })
       .then(() => {
         setIsCurrentSpeakerSaved(true);
-        /** remove drawn shape */
+        /** remove drawn shape from map (the saved PolygonF takes over) */
         handleRedraw();
-        /** deselect speaker */
-        setSelectedSpeaker(null);
-        /** get new saved speakers data */
+        /** refresh speakers — speaker now has shape, so SpeakerPolygon
+         *  renders edit controls while SpeakerDrawer hides (shouldDraw=false) */
         fetchData();
       })
       .finally(() => setSaving(false));
@@ -224,18 +227,11 @@ const SpeakerDrawer = (): JSX.Element | null => {
   /** removes current shape */
   const handleRedraw = () => setCurrentShape(null);
 
-  /** if selected speaker already has a shape don't show drawing manager */
-  if (!selectedSpeaker || selectedSpeakerData?.shape) return null;
+  /** if selected speaker already has a shape don't show controls */
+  if (!shouldDraw) return null;
 
   return (
     <div>
-      <DrawingManager
-        onCircleComplete={handleOnCircleComplete}
-        onPolygonComplete={handleOnPolygonComplete}
-        onRectangleComplete={handleOnRectangleComplete}
-        onLoad={handleLoad}
-        options={drawingManagerOptions}
-      />
       <MapControl position={window.google.maps.ControlPosition.LEFT_CENTER}>
         <Paper>
           <Grid direction="column" spacing={1}>

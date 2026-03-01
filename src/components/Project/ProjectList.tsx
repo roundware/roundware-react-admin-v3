@@ -10,7 +10,7 @@ import {
 import Card from "@mui/material/Card";
 import makeStyles from "@mui/styles/makeStyles";
 import React, { useState } from "react";
-import { List, useRedirect } from "react-admin";
+import { List, usePermissions, useRedirect } from "react-admin";
 import { useNavigate } from "react-router-dom";
 import { IProject, useProjects } from "../../context/ProjectsContext";
 const ProjectList = (): JSX.Element => {
@@ -52,9 +52,11 @@ const ProjectCard = () => {
 
   const [textFilter, setTextFilter] = useState("");
 
+  const { permissions } = usePermissions();
   const possibleProjects = (
     import.meta.env.VITE_INCLUDE_PROJECT_IDS || "all"
   ).split(`,`);
+  const allowedProjectIds: number[] | null = permissions?.project_ids ?? null;
   return (
     <>
       <Grid item xs={12}>
@@ -78,8 +80,9 @@ const ProjectCard = () => {
               : true
           )
           .filter((p) => {
-            if (possibleProjects.includes("all")) return true;
-            return possibleProjects.includes(p.id.toString());
+            if (!possibleProjects.includes("all") && !possibleProjects.includes(p.id.toString())) return false;
+            if (allowedProjectIds !== null && !allowedProjectIds.includes(p.id)) return false;
+            return true;
           })
           .map((p) => (
             <Grid key={p?.id} item>

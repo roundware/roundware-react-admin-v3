@@ -1,3 +1,4 @@
+import CopyResourceButton from 'components/common/CopyResource';
 import DeleteWithBinary from 'components/common/DeleteWithBinary';
 import { FC, useLayoutEffect } from 'react';
 import {
@@ -16,6 +17,11 @@ import {
 } from 'react-admin';
 import AudioPlayerField from '../common/AudioPlayerField';
 import TextDisplayField from './TextDisplayField';
+
+const assetCopyTransform = (data: Record<string, unknown>) => {
+  const { created_at, updated_at, file, file_key, ...rest } = data;
+  return rest;
+};
 
 export const AssetDatagrid = (): JSX.Element => {
   const { setPerPage, refetch } = useListController();
@@ -48,6 +54,7 @@ export const AssetDatagrid = (): JSX.Element => {
           options={{ maximumFractionDigits: 3 }}
         />
         <EditButton />
+        <CopyResourceButton transform={assetCopyTransform} />
         <DeleteWithBinary />
       </Datagrid>
     </div>

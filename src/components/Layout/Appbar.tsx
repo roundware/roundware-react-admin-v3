@@ -14,10 +14,11 @@ import {
 } from "@mui/material";
 import { useProjects } from "context/ProjectsContext";
 import React, { memo, useState } from "react";
-import { HideOnScroll, useRedirect, UserMenu } from "react-admin";
+import { HideOnScroll, usePermissions, useRedirect, UserMenu } from "react-admin";
 import { useNavigate } from "react-router-dom";
 import RefreshButton from "./RefreshButton";
 import { SidebarToggleButton } from "./SidebarToggleButton";
+import TenantSelector from "./TenantSelector";
 interface AppBarProps {
   container?: React.ComponentType<any>;
 }
@@ -28,6 +29,7 @@ const AppBar = ({ container = HideOnScroll }: AppBarProps): JSX.Element => {
   );
 
   const redirect = useRedirect();
+  const { permissions } = usePermissions();
   const { projectsList, selectedProject, selectProject } = useProjects();
 
   const [isCreate, setIsCreate] = useState(false);
@@ -53,6 +55,9 @@ const AppBar = ({ container = HideOnScroll }: AppBarProps): JSX.Element => {
   const possibleProjects = (
     import.meta.env.VITE_INCLUDE_PROJECT_IDS || "all"
   ).split(`,`);
+
+  // User's allowed project IDs from auth (null = unrestricted)
+  const allowedProjectIds: number[] | null = permissions?.project_ids ?? null;
 
   return (
     <HideOnScroll>
@@ -98,8 +103,11 @@ const AppBar = ({ container = HideOnScroll }: AppBarProps): JSX.Element => {
                   )}
                   {projectsList
                     ?.filter((p) => {
-                      if (possibleProjects.includes("all")) return true;
-                      return possibleProjects.includes(p.id.toString());
+                      // Env-based filter (VITE_INCLUDE_PROJECT_IDS)
+                      if (!possibleProjects.includes("all") && !possibleProjects.includes(p.id.toString())) return false;
+                      // User-level project access filter
+                      if (allowedProjectIds !== null && !allowedProjectIds.includes(p.id)) return false;
+                      return true;
                     })
                     .map((p) => (
                       <MenuItem key={p?.id} value={p?.id}>
@@ -110,7 +118,8 @@ const AppBar = ({ container = HideOnScroll }: AppBarProps): JSX.Element => {
               </FormControl>
             </Stack>
           </Stack>
-          <Stack spacing={1} direction="row">
+          <Stack spacing={1} direction="row" alignItems="center">
+            <TenantSelector />
             <RefreshButton />
             <UserMenu />
           </Stack>

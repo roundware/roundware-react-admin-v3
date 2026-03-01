@@ -44,8 +44,9 @@ export const SpeakerEdit = (): JSX.Element => {
   const { selectedProject } = useProjects();
   const { fetchData } = useSpeakers();
 
-  // Capture the raw file before transform strips it
+  // Capture the raw file and set_as before transform strips them
   const pendingFileRef = useRef<File | Blob | null>(null);
+  const pendingSetAsRef = useRef<string>("uri");
 
   const extractRawFile = (data: RaRecord) => {
     if (data?.file?.rawFile instanceof File || data?.file?.rawFile instanceof Blob) {
@@ -53,6 +54,7 @@ export const SpeakerEdit = (): JSX.Element => {
     } else {
       pendingFileRef.current = null;
     }
+    pendingSetAsRef.current = data?.set_as || "uri";
   };
 
   const transform = (data: RaRecord) => {
@@ -62,6 +64,7 @@ export const SpeakerEdit = (): JSX.Element => {
     delete data.file;
     delete data.uri;
     delete data.backup_uri;
+    delete data.set_as;
 
     delete data.shape;
     delete data.attenuation_border;
@@ -96,6 +99,7 @@ export const SpeakerEdit = (): JSX.Element => {
               setProgress(50);
               const formData = new FormData();
               formData.append('file', pendingFileRef.current);
+              formData.append('set_as', pendingSetAsRef.current);
               try {
                 await apiFetcher(`/speakers/${values.id}/upload-audio/`, {
                   method: 'POST',
@@ -219,8 +223,9 @@ export const SpeakerCreate = (): JSX.Element => {
   const { selectedProject } = useProjects();
   const { fetchData, setSelectedSpeaker, addToNewlyCreatedSpeakers } =
     useSpeakers();
-  // Capture the raw file before transform strips it
+  // Capture the raw file and set_as before transform strips them
   const pendingFileRef = useRef<File | Blob | null>(null);
+  const pendingSetAsRef = useRef<string>("uri");
 
   const extractRawFile = (data: RaRecord) => {
     if (data?.file?.rawFile instanceof File || data?.file?.rawFile instanceof Blob) {
@@ -228,6 +233,7 @@ export const SpeakerCreate = (): JSX.Element => {
     } else {
       pendingFileRef.current = null;
     }
+    pendingSetAsRef.current = data?.set_as || "uri";
   };
 
   const transform = (data: RaRecord) => {
@@ -235,6 +241,7 @@ export const SpeakerCreate = (): JSX.Element => {
     data.project_id = selectedProject?.id;
     // Always strip file from JSON body — upload goes via separate endpoint
     delete data.file;
+    delete data.set_as;
     return data;
   };
 
@@ -262,6 +269,7 @@ export const SpeakerCreate = (): JSX.Element => {
               setProgress(50);
               const formData = new FormData();
               formData.append('file', pendingFileRef.current);
+              formData.append('set_as', pendingSetAsRef.current);
               try {
                 await apiFetcher(`/speakers/${data.id}/upload-audio/`, {
                   method: 'POST',

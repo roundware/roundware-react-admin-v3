@@ -1,42 +1,40 @@
 import { addDays, isAfter, isBefore, subDays } from "date-fns";
 import { trim } from "lodash";
-import { DataProvider, RaRecord } from "react-admin";
 import { LocalizedString } from "types";
 export const dateFormatter = (v: string): string | undefined => {
   if (!v) return;
   return new Date(v).toISOString();
 };
 
-export const handleLocalizedStrings = async (
-  messages: LocalizedString[],
-  dataProvider: DataProvider
-): Promise<number[]> => {
-  if (!messages) return [];
-  // update, delete or create the localized string
-  // if empty text then just delete
-  // if no id then create
-  // else update
-  const promises = messages
-    .filter((m) => !!m)
-    .map((m) =>
-      dataProvider[m.id ? (m.text ? `update` : `delete`) : `create`](
-        `localizedstrings`,
-        {
-          id: m.id as RaRecord[`id`],
-          data: m,
-          previousData: m as RaRecord,
-        }
-      )
-    );
+/**
+ * Convert per-field `_loc_admin` arrays (from backend admin response) into
+ * an inline `localizations` dict for PATCH/POST.
+ *
+ * @param record  The form record containing `_loc_admin` arrays.
+ * @param fieldMap  Maps admin field names to backend field_name values, e.g.
+ *   `{"loc_msg_admin": "value", "loc_description_admin": "description"}`.
+ * @returns `{lang_code: {field_name: text | null}}` dict ready for the API.
+ */
+export function buildLocalizationsPayload(
+  record: Record<string, unknown>,
+  fieldMap: Record<string, string>,
+): Record<string, Record<string, string | null>> {
+  const localizations: Record<string, Record<string, string | null>> = {};
 
-  // execute requests  in parallel
-  const responses = await Promise.all(promises);
+  for (const [adminField, backendField] of Object.entries(fieldMap)) {
+    const entries = record[adminField] as LocalizedString[] | undefined;
+    if (!entries || !Array.isArray(entries)) continue;
 
-  // filter ids that need to be deleted and sent what was create dor updated
-  return responses
-    .filter((r) => !messages.some((m) => m.text == "" && m.id == r.data.id))
-    .map((r) => parseInt(r.data.id.toString()));
-};
+    for (const entry of entries) {
+      const langCode = entry.language_code;
+      if (!langCode) continue;
+      if (!localizations[langCode]) localizations[langCode] = {};
+      localizations[langCode][backendField] = entry.text || null;
+    }
+  }
+
+  return localizations;
+}
 
 export const mapLibraries: ["places", "drawing"] = ["places", "drawing"];
 

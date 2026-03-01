@@ -5,12 +5,15 @@ import {
   Datagrid,
   Edit,
   List,
+  PasswordInput,
   RaRecord,
+  SelectInput,
   SimpleForm,
   TextField,
   TextInput,
 } from 'react-admin';
 import { useProjects } from '../context/ProjectsContext';
+
 export const UserList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   return (
@@ -19,9 +22,9 @@ export const UserList = (): JSX.Element => {
       filters={[
         <TextInput
           alwaysOn
-          source='search_str'
+          source='search'
           label='Search'
-          key={'search_str'}
+          key={'search'}
           InputProps={{
             endAdornment: <Search />,
           }}
@@ -33,12 +36,10 @@ export const UserList = (): JSX.Element => {
     >
       <Datagrid rowClick={'edit'}>
         <TextField source='id' />
-        <TextField source='username' />
         <TextField source='first_name' />
         <TextField source='last_name' />
         <TextField source='email' />
-        <TextField source='device_id' />
-        <TextField source='client_type' />
+        <TextField source='role' />
       </Datagrid>
     </List>
   );
@@ -46,22 +47,21 @@ export const UserList = (): JSX.Element => {
 
 export const UserEdit = (): JSX.Element => {
   return (
-    <Edit
-      transform={(r: RaRecord) => {
-        if (!r.device_id) {
-          delete r.device_id;
-        }
-        return r;
-      }}
-    >
+    <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source='id' disabled />
-        <TextInput source='username' />
-        <TextInput source='fist_name' />
+        <TextInput source='first_name' />
         <TextInput source='last_name' />
         <TextInput source='email' />
-        {/* <TextInput source="device_id" defaultValue="" /> */}
-        {/* <TextInput source="client_type" /> */}
+        <SelectInput
+          source='role'
+          choices={[
+            { id: 'owner', name: 'Owner' },
+            { id: 'admin', name: 'Admin' },
+            { id: 'editor', name: 'Editor' },
+            { id: 'viewer', name: 'Viewer' },
+          ]}
+        />
       </SimpleForm>
     </Edit>
   );
@@ -69,22 +69,22 @@ export const UserEdit = (): JSX.Element => {
 
 export const UserCreate = (): JSX.Element => {
   return (
-    <Create
-      transform={(r: RaRecord) => {
-        if (!r.device_id) {
-          delete r.device_id;
-        }
-        return r;
-      }}
-      redirect='list'
-    >
+    <Create redirect='list'>
       <SimpleForm warnWhenUnsavedChanges>
-        <TextInput source='username' />
         <TextInput source='first_name' />
         <TextInput source='last_name' />
         <TextInput source='email' />
-        {/* <TextInput source="device_id" defaultValue="" /> */}
-        {/* <TextInput source="client_type" /> */}
+        <PasswordInput source='password' />
+        <SelectInput
+          source='role'
+          choices={[
+            { id: 'viewer', name: 'Viewer' },
+            { id: 'editor', name: 'Editor' },
+            { id: 'admin', name: 'Admin' },
+            { id: 'owner', name: 'Owner' },
+          ]}
+          defaultValue='viewer'
+        />
       </SimpleForm>
     </Create>
   );

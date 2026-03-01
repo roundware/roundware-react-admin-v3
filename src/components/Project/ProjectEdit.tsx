@@ -2,7 +2,6 @@ import { Grid } from "@mui/material";
 import CardBox from "components/common/CardBox";
 import LocationSelector from "components/common/LocationSelector";
 import TranslatableField from "components/common/TranslatableField";
-import { useRoundwareDataProvider } from "context/DataProviderContext";
 import { useProjects } from "context/ProjectsContext";
 import { useState } from "react";
 import {
@@ -19,29 +18,27 @@ import {
     TextInput,
 } from "react-admin";
 import { useNavigate } from "react-router-dom";
-import { handleLocalizedStrings } from "../../utils.tsx";
+import { buildLocalizationsPayload } from "../../utils.tsx";
+
+const PROJECT_LOC_FIELD_MAP: Record<string, string> = {
+  description_loc_admin: "description",
+  sharing_message_loc_admin: "sharing_message",
+  out_of_range_message_loc_admin: "out_of_range_message",
+  legal_agreement_loc_admin: "legal_agreement",
+  demo_stream_message_loc_admin: "demo_stream_message",
+};
+
 const ProjectEdit = (): JSX.Element => {
-  const dataProvider = useRoundwareDataProvider();
-
   const pc = useProjects();
-  const transform = async (r: RaRecord) => {
+  const transform = (r: RaRecord): RaRecord => {
     const data = { ...r };
-
-    const fields = [
-      `sharing_message_loc`,
-      `out_of_range_message_loc`,
-      `legal_agreement_loc`,
-      `demo_stream_message_loc`,
-      `description_loc`,
-    ];
-
-    const promises = fields.map((f) =>
-      handleLocalizedStrings(data[f + "_admin"], dataProvider).then(
-        (ids) => (data[f] = ids)
-      )
-    );
-
-    await Promise.all(promises);
+    data.localizations = buildLocalizationsPayload(data, PROJECT_LOC_FIELD_MAP);
+    // Clean up admin/legacy fields
+    for (const key of Object.keys(PROJECT_LOC_FIELD_MAP)) {
+      delete data[key];
+      // Also remove legacy _loc (ID array) fields
+      delete data[key.replace("_admin", "")];
+    }
     return data;
   };
   const [warn, setWarn] = useState(true);
@@ -146,22 +143,19 @@ const ProjectEdit = (): JSX.Element => {
             helperText="Radius in meters of active range each Asset"
           />
           <NumberInput
-            source="max_recording_length"
+            source="max_recording_length_sec"
             validate={required()}
             fullWidth
             helperText="Max time users can speak"
           />
+          {/* audio_format and audio_stream_bitrate hidden — managed server-side */}
           <TextInput
             source="audio_format"
             defaultValue="mp3"
-            validate={required()}
-            fullWidth
+            sx={{ visibility: "hidden", position: "absolute" }}
           />
-
           <SelectInput
             source="audio_stream_bitrate"
-            validate={required()}
-            fullWidth
             defaultValue={"128"}
             choices={[
               { id: "64", name: "64" },
@@ -173,6 +167,7 @@ const ProjectEdit = (): JSX.Element => {
               { id: "256", name: "256" },
               { id: "320", name: "320" },
             ]}
+            sx={{ visibility: "hidden", position: "absolute" }}
           />
         </CardBox>
         <TranslatableField
@@ -186,7 +181,6 @@ const ProjectEdit = (): JSX.Element => {
               <TextInput
                 source="sharing_url"
                 fullWidth
-                validate={required()}
                 helperText="URL of web sharing page"
               />
               <TranslatableField
@@ -207,7 +201,6 @@ const ProjectEdit = (): JSX.Element => {
               <TextInput
                 source="out_of_range_url"
                 fullWidth
-                validate={required()}
                 helperText="Default static stream that plays when listener is out of range upon opening client"
               />
               <TranslatableField

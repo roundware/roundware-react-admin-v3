@@ -325,7 +325,7 @@ export class RoundwareDataProvider implements DataProvider {
     resource: string,
     { id, ...query }: GetOneParams
   ): Promise<GetOneResult<RecordType>> {
-    const data = await this.getOneJson(resource, id, query);
+    const data = await this.getOneJson(resource, id, { admin: 1, ...query });
     if (!data) throw new Error(`Not Found`);
 
     const project_id = this.currentProjectId;

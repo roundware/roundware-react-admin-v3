@@ -1,4 +1,16 @@
 import { AuthProvider } from "react-admin";
+import { dataProvider } from "./DataProviderContext";
+
+/**
+ * Tenant info stored in localStorage.
+ */
+export interface StoredTenant {
+  id: number;
+  name: string;
+  slug: string;
+  role: string;
+  project_ids: number[] | null;
+}
 
 /**
  * JWT-based auth provider for Roundware Server v3.
@@ -28,22 +40,38 @@ const tokenAuthProvider: AuthProvider = {
     }
 
     const json = await response.json();
-    // Store JWT access token
-    localStorage.setItem("access_token", json.access_token);
-    // Store tenant slug from first tenant
+    // IMPORTANT: Write tenant_slug and tenants BEFORE access_token.
+    // Components check access_token to determine auth state; if it exists
+    // they immediately fire API requests with X-Tenant-Slug from localStorage.
+    // Writing the slug first eliminates the race window.
     if (json.tenants?.length) {
-      localStorage.setItem("tenant_slug", json.tenants[0].slug);
+      localStorage.setItem("tenants", JSON.stringify(json.tenants));
+      // Default to first tenant if no slug is already set
+      if (!localStorage.getItem("tenant_slug")) {
+        localStorage.setItem("tenant_slug", json.tenants[0].slug);
+      }
     }
     // Store user info for getPermissions / getIdentity
     if (json.user) {
       localStorage.setItem("user", JSON.stringify(json.user));
     }
+    // Store JWT access token LAST — this is the "auth gate" that signals
+    // the app is authenticated and may start making API calls.
+    localStorage.setItem("access_token", json.access_token);
+    // Notify ProjectsContext (and other listeners) that auth state changed
+    window.dispatchEvent(new Event("roundware-auth-change"));
   },
 
   logout: () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("tenant_slug");
+    localStorage.removeItem("tenants");
     localStorage.removeItem("user");
+    // Clear data provider cache so stale data doesn't bleed across sessions
+    dataProvider.cachedProjectData.clear();
+    dataProvider.currentProjectId = 0;
+    dataProvider.revalidatingResources = [];
+    window.dispatchEvent(new Event("roundware-auth-change"));
     return Promise.resolve();
   },
 
@@ -54,12 +82,18 @@ const tokenAuthProvider: AuthProvider = {
 
   checkError: (error) => {
     const status = error.status;
-    if (status === 401 || status === 403) {
+    if (status === 401) {
       localStorage.removeItem("access_token");
       localStorage.removeItem("tenant_slug");
+      localStorage.removeItem("tenants");
       localStorage.removeItem("user");
+      // Clear data provider cache so stale data doesn't bleed into re-login
+      dataProvider.cachedProjectData.clear();
+      dataProvider.currentProjectId = 0;
+      dataProvider.revalidatingResources = [];
       return Promise.reject();
     }
+    // 403 = authenticated but insufficient role — don't log out
     return Promise.resolve();
   },
 
@@ -67,13 +101,22 @@ const tokenAuthProvider: AuthProvider = {
     try {
       const user = JSON.parse(localStorage.getItem("user") || "null");
       const isSuperuser = user?.is_superuser ?? false;
+      const tenants: StoredTenant[] = JSON.parse(localStorage.getItem("tenants") || "[]");
+      const currentSlug = localStorage.getItem("tenant_slug");
+      const currentTenant = tenants.find((t) => t.slug === currentSlug);
+      const role = isSuperuser
+        ? "superuser"
+        : currentTenant?.role ?? "user";
+      const project_ids = currentTenant?.project_ids ?? null;
       return Promise.resolve({
         is_superuser: isSuperuser,
         isSuperuser,
-        role: isSuperuser ? "superuser" : "user",
+        role,
+        tenants,
+        project_ids,
       });
     } catch {
-      return Promise.resolve({ is_superuser: false, isSuperuser: false, role: "user" });
+      return Promise.resolve({ is_superuser: false, isSuperuser: false, role: "user", tenants: [], project_ids: null });
     }
   },
 
@@ -81,9 +124,12 @@ const tokenAuthProvider: AuthProvider = {
     try {
       const user = JSON.parse(localStorage.getItem("user") || "null");
       if (user) {
+        const displayName = [user.first_name, user.last_name]
+          .filter(Boolean)
+          .join(" ") || user.email;
         return Promise.resolve({
           id: user.id,
-          fullName: user.full_name || user.email,
+          fullName: displayName,
         });
       }
     } catch {
@@ -92,5 +138,14 @@ const tokenAuthProvider: AuthProvider = {
     return Promise.resolve({ id: 0, fullName: "Unknown" });
   },
 };
+
+/**
+ * Switch to a different tenant. Updates localStorage and reloads.
+ */
+export function switchTenant(slug: string): void {
+  localStorage.setItem("tenant_slug", slug);
+  window.location.href = "/#/projects";
+  window.location.reload();
+}
 
 export default tokenAuthProvider;

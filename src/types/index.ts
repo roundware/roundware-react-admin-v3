@@ -11,10 +11,11 @@ export interface ILanguage {
 
 
 export interface LocalizedString {
-  
+
     id?: number;
     language?: string;
+    language_code?: string;
     text: string;
     language_id: number;
-  
+
 }

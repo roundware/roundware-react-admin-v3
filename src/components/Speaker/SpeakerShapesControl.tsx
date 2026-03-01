@@ -17,7 +17,7 @@ import SpeakerPolygonGroup from './SpeakerPolygon';
 const containerStyle = {
   width: '100%',
   height: '100%',
-  minHeight: '60vh',
+  minHeight: '600px',
 };
 
 // const center = {
@@ -53,21 +53,41 @@ const SpeakerShapesControl = ({ speakers: propSpeakers }: SpeakerShapesControlPr
       // @ts-ignore
       google.maps.Polygon.prototype.getBounds = function () {
         const bounds = new google.maps.LatLngBounds();
-        this.getPaths().forEach((p) => {
+        this.getPaths().forEach((p: google.maps.MVCArray<google.maps.LatLng>) => {
           p.forEach((element: google.maps.LatLng) => bounds.extend(element));
         });
         return bounds;
       };
       setMap(map);
-      const bounds = new window.google.maps.LatLngBounds();
-      map.fitBounds(bounds);
-      map.panTo(new google.maps.LatLng(0, 0));
-      map.setZoom(1);
 
-      // map.setOptions({
-      //   center: getGoogleMapsCenter(speakers?.filter((s) => s?.shape) || []),
-      //   zoom: 1,
-      // });
+      // Fit map to existing speaker shapes, or default to zoom 15
+      const shapedSpeakers = (speakers || []).filter((s) => s?.shape?.coordinates);
+      if (shapedSpeakers.length > 0) {
+        const bounds = new google.maps.LatLngBounds();
+        shapedSpeakers.forEach((s) => {
+          // Walk all [lng, lat] pairs in the GeoJSON MultiPolygon
+          try {
+            // coordinates: [polygon][ring][point] where point = [lng, lat]
+            const points: number[][] = s.shape.coordinates.flat(2);
+            points.forEach((pt: number[]) => {
+              if (Array.isArray(pt) && pt.length >= 2) {
+                bounds.extend(new google.maps.LatLng(pt[1], pt[0]));
+              }
+            });
+          } catch {
+            // skip malformed shapes
+          }
+        });
+        if (!bounds.isEmpty()) {
+          map.fitBounds(bounds);
+        } else {
+          map.panTo(new google.maps.LatLng(0, 0));
+          map.setZoom(15);
+        }
+      } else {
+        map.panTo(new google.maps.LatLng(0, 0));
+        map.setZoom(15);
+      }
     },
     [speakers]
   );
@@ -139,6 +159,11 @@ const SpeakerShapesControl = ({ speakers: propSpeakers }: SpeakerShapesControlPr
                   onLoad={onLoad}
                   onUnmount={onUnmount}
                   center={center}
+                  options={{
+                    disableDefaultUI: true,
+                    zoomControl: true,
+                    mapTypeControl: true,
+                  }}
                 >
                   {/* show a drawing manager only when there no shape, */}
                   <SpeakerDrawer />

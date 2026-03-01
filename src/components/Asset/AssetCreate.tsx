@@ -87,7 +87,7 @@ const AssetCreate = (): JSX.Element => {
 
         <ReferenceInput label="User" source="user_id" reference="users">
           <AutocompleteInput
-            optionText={(r) => `${r.full_name} (${r.email})`}
+            optionText={(r) => `${r.first_name} ${r.last_name} (${r.email})`}
             label="User"
             fullWidth
             filterToQuery={(s) => ({ search_str: s })}
