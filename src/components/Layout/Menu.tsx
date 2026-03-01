@@ -31,7 +31,7 @@ const icons: { [index: string]: JSX.Element } = {
   global: <PublicIcon />,
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+ 
 export const Menu = (props: MenuProps) => {
   const resourcesDefinitions = useResourceDefinitions();
   const resources = Object.keys(resourcesDefinitions).map(

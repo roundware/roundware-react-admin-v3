@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Card, CardContent, CardHeader } from "@mui/material";
 import { useChartsData } from "components/charts/ChartsData";
@@ -120,7 +120,7 @@ const BrowsersChart = (): JSX.Element => {
                   verticalAlign="bottom"
                   align="center"
                   height={40}
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                   
                   formatter={(value: any, name: any) => {
                     return `${name?.payload?.name} (${name?.payload?.total})`;
                   }}

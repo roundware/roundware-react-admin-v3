@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import { Box, Card, Divider, Typography } from "@mui/material";
 import * as React from "react";
 import { createElement, FC, ReactNode } from "react";

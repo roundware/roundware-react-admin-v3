@@ -19,7 +19,7 @@ type SessionMapContextType = {
   setSelectedEvent: React.Dispatch<React.SetStateAction<EventPayload | null>>;
 };
 const SessionMapContext = React.createContext<SessionMapContextType>(
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+   
   undefined!
 );
 

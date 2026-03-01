@@ -175,7 +175,7 @@ const AssetLocationWithShape = () => {
     } else {
       setHasShape(!!record?.shape);
     }
-  }, [record?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [record?.id]);  
 
   return (
     <LocationSelector

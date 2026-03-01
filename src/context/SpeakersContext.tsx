@@ -15,7 +15,7 @@ export interface ISpeakerContext {
   })[];
   addToNewlyCreatedSpeakers: (speakerId: number) => void;
 }
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+ 
 export const SpeakerContext = React.createContext<ISpeakerContext>(undefined!);
 export const useSpeakers = (): ISpeakerContext =>
   React.useContext(SpeakerContext);

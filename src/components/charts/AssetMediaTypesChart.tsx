@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import { Box, Card, CardContent, CardHeader, Typography } from "@mui/material";
 import { useChartsData } from "components/charts/ChartsData";
 import React from "react";
@@ -73,7 +73,7 @@ const AssetMediaTypesChart = (): JSX.Element => {
   const { assets, assetsAllFetchedRange } = useChartsData();
   const redirect = useRedirect();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const handleOnClick = (payload: any) => {
     if (ResourceList.includes(`assets`))
       redirect(

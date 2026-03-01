@@ -39,7 +39,7 @@ export const DraggableDatagrid = (props: DatagridProps): JSX.Element => (
   />
 );
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     wrapper: {

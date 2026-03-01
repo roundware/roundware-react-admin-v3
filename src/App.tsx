@@ -126,7 +126,7 @@ function App({ basename }: { basename: string }): JSX.Element {
       // @ts-ignore
       dashboard={Dashboard}
       basename={basename}
-      // eslint-disable-next-line react/no-children-prop
+       
       children={[
         <Resource
           name="projects"

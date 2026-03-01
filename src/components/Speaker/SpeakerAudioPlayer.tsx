@@ -27,15 +27,15 @@ interface PropTypes {
   src?: string | unknown;
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+ 
 const SpeakerAudioPlayer = ({
   size = "medium",
   src,
   buttons,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   ...props
 }: PropTypes) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   const [id, setId] = useFieldValue(`id`);
 
   // Timeline and Regions plugins
@@ -57,7 +57,7 @@ const SpeakerAudioPlayer = ({
   const [zoomLevel, setZoomLevel] = useState(100);
 
   const [progress, setProgress] = useState(0);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const wavesurferRef = React.useRef<any>();
   const handleReady = React.useCallback((ws: any) => {
     wavesurferRef.current = ws;

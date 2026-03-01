@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import History from "@mui/icons-material/History";
 import { LoadingButton } from "@mui/lab";

@@ -23,7 +23,7 @@ const EnvelopeIdSelector = (): JSX.Element => {
             : `createNew`
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const handleChangeMode = (e: any, value: "manual" | "createNew") => {
         // clear the previous envelope ids value
         if (value === "createNew") {

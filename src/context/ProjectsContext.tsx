@@ -44,7 +44,7 @@ export interface IProjectsContext {
   setProjectsList: React.Dispatch<React.SetStateAction<IProject[] | null>>;
   refetch: () => Promise<void>;
 }
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+ 
 const ProjectsContext = React.createContext<IProjectsContext>(undefined!);
 
 export const useProjects = (): IProjectsContext =>

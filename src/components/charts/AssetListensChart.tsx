@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
+ 
+ 
 import { Box, Slider, Toolbar, Typography } from "@mui/material";
 import { capitalize, uniqBy } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";

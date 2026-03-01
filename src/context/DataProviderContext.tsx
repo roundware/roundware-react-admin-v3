@@ -10,7 +10,7 @@ export const dataProvider = new RoundwareDataProvider(
 );
 
 export const RoundwareDataProviderContext =
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+   
   React.createContext<RoundwareDataProvider>(undefined!);
 
 export const useRoundwareDataProvider = (): RoundwareDataProvider =>

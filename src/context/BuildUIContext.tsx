@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+ 
 import React, { useCallback, useEffect, useState } from "react";
 import { ITag } from "types/tags";
 import { IUIGroup, UiItemNode } from "types/uiGroups";
@@ -17,9 +17,9 @@ export interface IBuildUIContext {
   dummyPatchForGroup: (id: number) => Promise<void>;
   getTagsForGroup: (groupId: number) => Promise<ITag[]>;
 }
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+ 
 export const BuildUIContext = React.createContext<IBuildUIContext>(undefined!);
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+ 
 export const useBuildUI = () => React.useContext(BuildUIContext);
 
 export const BuildUIContextProvider = ({
@@ -170,7 +170,7 @@ export const BuildUIContextProvider = ({
 };
 
 function list_to_tree(list: UiItemNode[]) {
-  // eslint-disable-next-line prefer-const
+   
   let map: {
     [index: number]: number;
   } = {};

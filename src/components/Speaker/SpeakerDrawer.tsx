@@ -69,7 +69,7 @@ const SpeakerDrawer = (): JSX.Element | null => {
     for (let i = 0; i < numPts; i++) {
       path.push(
         google.maps.geometry.spherical.computeOffset(
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+           
           circle.getCenter()!,
           circle.getRadius(),
           (i * 360) / numPts
@@ -187,7 +187,7 @@ const SpeakerDrawer = (): JSX.Element | null => {
   /* saves to db and refetch */
   const handleSave = () => {
     setSaving(true);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     const { attenuation_distance } = selectedSpeakerData!;
     if (!Array.isArray(drawnPaths) || !attenuation_distance) return;
     const objects = getSpeakerGeoJSONObjectsForPath(

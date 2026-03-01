@@ -31,8 +31,7 @@ const SpeakerAudioControls = (): JSX.Element => {
     uri ? "URI" : `UPLOAD`
   );
   const handleChange = (
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    event: React.ChangeEvent<{}>,
+    event: React.ChangeEvent<Record<string, unknown>>,
     newValue: `UPLOAD` | `URI`
   ) => {
     setSourceMode(newValue);

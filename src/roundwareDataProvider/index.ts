@@ -660,7 +660,7 @@ export class RoundwareDataProvider implements DataProvider {
           }
         } else if (typeof data === 'object' && data && !Array.isArray(data)) {
           for (const key in data) {
-            // eslint-disable-next-line no-prototype-builtins
+             
             if (data.hasOwnProperty(key)) {
               if (root === '') {
                 appendFormData((data as Record<string, unknown>)[key], key);

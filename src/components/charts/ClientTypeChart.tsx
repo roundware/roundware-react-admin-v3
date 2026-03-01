@@ -121,7 +121,7 @@ const ClientTypeChart = () => {
                 <Tooltip />
                 <Legend
                   verticalAlign="bottom"
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                   
                   formatter={(value: any, name: any) => {
                     return `${name?.payload?.name} (${name?.payload?.total})`;
                   }}

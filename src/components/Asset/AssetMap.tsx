@@ -75,7 +75,7 @@ const AssetMarkers = () => {
 const GoogleMapsWrapper = (props: { children: React.ReactNode }) => {
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY!,
     libraries: mapLibraries,
   });

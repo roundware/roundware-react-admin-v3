@@ -23,7 +23,7 @@ type AssetContextType = {
   selectedAsset: IAsset | null;
   setSelectedAsset: React.Dispatch<React.SetStateAction<IAsset | null>>;
 };
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+ 
 const AssetMapContext = React.createContext<AssetContextType>(undefined!);
 export const useAssetMapContext = () => React.useContext(AssetMapContext);
 

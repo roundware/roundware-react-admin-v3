@@ -60,7 +60,7 @@ const AssetShape = ({
   useEffect(() => {
     setShape(getInitialShape(record));
     setIsDrawingMode(false);
-  }, [record?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [record?.id]);  
 
   // ---------------------------------------------------------------------------
   // Drawing completion handlers.
