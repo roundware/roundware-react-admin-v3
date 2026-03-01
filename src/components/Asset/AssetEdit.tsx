@@ -24,7 +24,7 @@ import {
 } from 'react-admin';
 import { apiFetcher } from 'roundwareDataProvider/tokenAuthProvider';
 import { IAsset } from '../../types/asset';
-import { buildLocalizationsPayload } from '../../utils.tsx';
+import { buildLocalizationsPayload } from '../../utils';
 import AssetShape, { shapeCache } from './AssetShape';
 
 const AssetEdit = (): JSX.Element => {

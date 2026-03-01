@@ -15,7 +15,7 @@ import {
   LinearProgress,
   Button,
 } from "@mui/material";
-import { DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
+import { DraggableProvidedDragHandleProps } from "@hello-pangea/dnd";
 import DragHandleSharpIcon from "@mui/icons-material/DragHandleSharp";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
@@ -236,12 +236,12 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
         justifyContent="space-between"
       >
         <Grid container>
-          <Grid item {...dragHandleProps}>
+          <Grid {...dragHandleProps}>
             <Tooltip title="Drag to Change Order">
               <DragHandleSharpIcon />
             </Tooltip>
           </Grid>
-          <Grid item>
+          <Grid>
             <Typography>
               (
               {uiGroups.findIndex((g) => g.id == i.ui_group_id) +
@@ -253,7 +253,6 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
           </Grid>
         </Grid>
         <Grid
-          item
           container
           spacing={1}
           justifyContent="flex-end"
@@ -261,7 +260,7 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
           alignContent="center"
         >
           {canNestItems && (
-            <Grid item>
+            <Grid>
               <Tooltip title="Nest Items">
                 <IconButton onClick={handleOpenNestingDialog} size="large">
                   <PlaylistAddIcon />
@@ -272,19 +271,18 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
                   <DialogContent>
                     <Grid container spacing={2} direction="column">
                       <Grid
-                        item
                         container
                         justifyContent="space-between"
                         alignItems="center"
                         spacing={2}
                       >
-                        <Grid item>
+                        <Grid>
                           <Typography>
                             Select Tags To Nest below &ldquo;{i.displayText}
                             &rdquo;
                           </Typography>
                         </Grid>
-                        <Grid item>
+                        <Grid>
                           <IconButton
                             onClick={handleCloseNestDialog}
                             size="large"
@@ -294,13 +292,13 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
                         </Grid>
                       </Grid>
                       {loadingTags && (
-                        <Grid item>
+                        <Grid>
                           <LinearProgress />
                         </Grid>
                       )}
-                      <Grid item container direction="column">
+                      <Grid container direction="column">
                         {nestableTags?.map((t) => (
-                          <Grid item key={t.id}>
+                          <Grid key={t.id}>
                             <FormControlLabel
                               control={<Checkbox checked={isTagNested(t.id)} />}
                               label={t.value}
@@ -310,7 +308,7 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
                           </Grid>
                         ))}
 
-                        <Grid item>
+                        <Grid>
                           <Button
                             variant="text"
                             onClick={handleRedirect}
@@ -328,12 +326,12 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
             </Grid>
           )}
           {updating && (
-            <Grid item>
+            <Grid>
               <CircularProgress size={16} />
             </Grid>
           )}
 
-          <Grid item>
+          <Grid>
             <Tooltip title="Is Default Selected">
               <FormControlLabel
                 control={
@@ -348,7 +346,7 @@ const TreeItemLabel = ({ uiItem, dragHandleProps }: Props): JSX.Element => {
             </Tooltip>
           </Grid>
 
-          <Grid item>
+          <Grid>
             <Tooltip title="Delete Ui Item">
               <IconButton onClick={handleOpenConfirm} size="large">
                 <DeleteIcon />

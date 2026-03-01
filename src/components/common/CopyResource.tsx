@@ -28,8 +28,9 @@ const CopyResourceButton = ({
   const refresh = useRefresh();
 
   const copy = async () => {
+    if (!r) return;
     try {
-      const record: Omit<Partial<typeof r>, "id"> = cloneDeep(r);
+      const record: any = cloneDeep(r);
       setLoading(true);
       const resourceName = window.location.pathname.split(`/`).reverse()[0];
       const a = await assignFirst();

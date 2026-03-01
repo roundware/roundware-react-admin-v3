@@ -14,6 +14,7 @@ const CustomLayout = (props: LayoutProps): JSX.Element => {
   return (
     <Layout
       {...props}
+      // @ts-expect-error React.memo wrapping
       appBar={Appbar}
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore

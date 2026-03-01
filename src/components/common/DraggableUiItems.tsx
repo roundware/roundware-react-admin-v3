@@ -15,13 +15,14 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
-import { Draggable, DragDropContext, Droppable } from "react-beautiful-dnd";
-import { OnDragEndResponder } from "react-beautiful-dnd";
+import { Draggable, DragDropContext, Droppable } from "@hello-pangea/dnd";
+import { OnDragEndResponder } from "@hello-pangea/dnd";
 import { IUIGroup, IUIItems } from "types/uiGroups";
 
-const DraggableUiItems = (): JSX.Element => {
+const DraggableUiItems = (): JSX.Element | null => {
   const record = useRecordContext();
   const notify = useNotify();
+  if (!record) return null;
   const [update, { isLoading }] = useUpdate(`uiitems`, {
     id: record.id,
     data: {},
@@ -33,7 +34,7 @@ const DraggableUiItems = (): JSX.Element => {
       data: { uiitems: newUiItems },
     });
 
-  const onDragEnd: OnDragEndResponder = (result, provided) => {
+  const onDragEnd: OnDragEndResponder = (result: any, provided: any) => {
     const { source, destination } = result;
 
     if (!destination?.index) return;
@@ -65,7 +66,7 @@ const DraggableUiItems = (): JSX.Element => {
       <TableContainer>
         <Table aria-label="questions list">
           <Droppable droppableId="droppable-questions" type="QUESTION">
-            {(provided, snapshot) => (
+            {(provided: any, snapshot: any) => (
               <TableBody ref={provided.innerRef} {...provided.droppableProps}>
                 {fields.map((question, index) => {
                   return (
@@ -74,7 +75,7 @@ const DraggableUiItems = (): JSX.Element => {
                       draggableId={String(question.id)}
                       index={index}
                     >
-                      {(provided, snapshot) => (
+                      {(provided: any, snapshot: any) => (
                         <TableRow
                           hover
                           tabIndex={-1}

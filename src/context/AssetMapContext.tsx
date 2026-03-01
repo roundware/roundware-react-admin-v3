@@ -35,7 +35,7 @@ export const AssetMapContextProvider = (
   const { refetch, setPerPage, total } = useListController();
   const saving = useBoolean();
   useLayoutEffect(() => {
-    setPerPage(total);
+    setPerPage(total ?? 25);
     refetch();
   }, [total]);
   const [showPromp, confirmNav, cancelNav] = useCallbackPrompt(

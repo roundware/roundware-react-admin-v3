@@ -11,7 +11,7 @@ import PlacesAutoComplete from 'components/common/LocationSelector/PlacesAutoCom
 import { useSpeakers } from 'context/SpeakersContext';
 import React, { useEffect, useState } from 'react';
 import { ISpeaker } from '../../types/speaker';
-import { mapLibraries } from '../../utils.tsx';
+import { mapLibraries } from '../../utils';
 import SpeakerDrawer from './SpeakerDrawer';
 import SpeakerPolygonGroup from './SpeakerPolygon';
 const containerStyle = {

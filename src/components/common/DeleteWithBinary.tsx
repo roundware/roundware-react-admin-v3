@@ -30,6 +30,7 @@ const DeleteWithBinary = ({ isBulk }: { isBulk?: boolean }) => {
   if (!canEdit) return null;
 
   const record = useRecordContext();
+  if (!record) return null;
 
   const lc = useListContext();
 

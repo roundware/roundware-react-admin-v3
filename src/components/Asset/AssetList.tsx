@@ -69,7 +69,7 @@ export const AssetList = (): JSX.Element => {
       ]}
       sort={{
         field: "id",
-        order: "DSC",
+        order: "DESC",
       }}
       actions={<ListActions />}
     >

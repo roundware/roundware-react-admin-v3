@@ -15,7 +15,7 @@ import {
     Typography
 } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
-import { UseInputValue, useGetList, useInput } from 'react-admin';
+import { useGetList, useInput } from 'react-admin';
 
 type IdType = string | number;
 
@@ -53,7 +53,7 @@ export default function DualListReferenceInput(props: DualListReferenceInputProp
     field,
     fieldState,
     isRequired,
-  }: UseInputValue<IdType[]> = useInput<IdType[]>({ source });
+  } = useInput({ source });
 
   const currentIds: IdType[] = Array.isArray(field.value) ? field.value : [];
 
@@ -151,7 +151,7 @@ export default function DualListReferenceInput(props: DualListReferenceInputProp
         </Typography>
       )}
       <Grid container spacing={2} alignItems='stretch'>
-        <Grid item xs={5}>
+        <Grid size={{ xs: 5 }}>
           <Stack spacing={1} sx={{ height: '100%' }}>
             <TextField
               size='small'
@@ -175,7 +175,7 @@ export default function DualListReferenceInput(props: DualListReferenceInputProp
             </List>
           </Stack>
         </Grid>
-        <Grid item xs={2}>
+        <Grid size={{ xs: 2 }}>
           <Stack alignItems='center' justifyContent='center' spacing={1} sx={{ height: '100%' }}>
             <IconButton aria-label='Add selected' onClick={moveToSelected} disabled={disabled || isLoading || availableChecked.size === 0}>
               <ArrowForwardIcon />
@@ -191,7 +191,7 @@ export default function DualListReferenceInput(props: DualListReferenceInputProp
             </IconButton>
           </Stack>
         </Grid>
-        <Grid item xs={5}>
+        <Grid size={{ xs: 5 }}>
           <Stack spacing={1} sx={{ height: '100%' }}>
             <TextField
               size='small'

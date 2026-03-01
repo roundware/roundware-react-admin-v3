@@ -51,7 +51,7 @@ const ProjectRoute = () => {
     ids !== 'all' &&
     selectedProject &&
     !projectIdsArray.some(
-      (id) => id.toString() === selectedProject.id.toString()
+      (id: string) => id.toString() === selectedProject.id.toString()
     )
   ) {
     return <AccessDenied />;

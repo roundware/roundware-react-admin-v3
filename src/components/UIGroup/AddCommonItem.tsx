@@ -249,23 +249,23 @@ const AddCommonItem = ({ group }: { group: IUIGroup }): JSX.Element => {
       <Dialog keepMounted={false} open={showDialog}>
         <DialogContent>
           <Grid container direction="column" spacing={2}>
-            <Grid item container spacing={4} wrap="nowrap" alignItems="center">
-              <Grid item>
+            <Grid container spacing={4} wrap="nowrap" alignItems="center">
+              <Grid>
                 <Typography variant="h6">
                   Common Items For All Levels
                 </Typography>
               </Grid>
 
-              <Grid item>
+              <Grid>
                 <IconButton onClick={handleClose} size="large">
                   <CloseIcon />
                 </IconButton>
               </Grid>
             </Grid>
 
-            <Grid item container direction="column">
+            <Grid container direction="column">
               {tagsToDisplay?.map((i) => (
-                <Grid item key={i.id}>
+                <Grid key={i.id}>
                   <FormControlLabel
                     label={`${i?.value} (${getTagCount(i)}/${
                       prevGroup ? previousGroupItems?.length : 1

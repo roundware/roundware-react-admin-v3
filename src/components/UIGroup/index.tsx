@@ -20,7 +20,7 @@ import {
     useRefresh,
 } from "react-admin";
 import { IUIGroup } from "types/uiGroups";
-import { buildLocalizationsPayload } from "../../utils.tsx";
+import { buildLocalizationsPayload } from "../../utils";
 import UIItemFilterField from "./UIItemFilterField";
 import UiModeField from "./UiModeField";
 

@@ -59,7 +59,7 @@ const ProjectCard = () => {
   const allowedProjectIds: number[] | null = permissions?.project_ids ?? null;
   return (
     <>
-      <Grid item xs={12}>
+      <Grid size={{ xs: 12 }}>
         <TextField
           placeholder="Search By Project Name"
           onChange={(e) => setTextFilter(e.target.value)}
@@ -69,7 +69,7 @@ const ProjectCard = () => {
           }}
         />
       </Grid>
-      <Grid item>
+      <Grid>
         <CreateProjectCard />
       </Grid>
       {Array.isArray(projectsList) &&
@@ -85,7 +85,7 @@ const ProjectCard = () => {
             return true;
           })
           .map((p) => (
-            <Grid key={p?.id} item>
+            <Grid key={p?.id}>
               <Card
                 onClick={() => handleOnProjectSelect(p)}
                 key={p?.id}

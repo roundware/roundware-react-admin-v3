@@ -69,7 +69,7 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
   const dataProvider = useRoundwareDataProvider();
   const { refetchData, uiItemsList } = useBuildUI();
   const allGroups = useMemo(
-    () => Object.values(data).sort((a, b) => (a.index > b.index ? 1 : -1)),
+    () => Object.values(data || {}).sort((a: any, b: any) => (a.index > b.index ? 1 : -1)),
     [data]
   );
 

@@ -20,7 +20,7 @@ import {
     useRefresh,
 } from "react-admin";
 import { ITag } from "../types/tags";
-import { buildLocalizationsPayload } from "../utils.tsx";
+import { buildLocalizationsPayload } from "../utils";
 import CopyResourceButton from "./common/CopyResource";
 import FormToolbar from "./common/FormToolbar";
 import TranslatableField from "./common/TranslatableField";

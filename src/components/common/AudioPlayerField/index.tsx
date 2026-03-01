@@ -50,7 +50,7 @@ const AudioPlayerField = ({
   ...props
 }: PropTypes): JSX.Element | null => {
   const { file, start_time, end_time, ...record } =
-    hooks[inEditView ? `useEditContext` : `useRecordContext`](props);
+    hooks[inEditView ? `useEditContext` : `useRecordContext`](props) as any;
 
   // Timeline and Regions plugins
   const plugins = useMemo(() => [
@@ -90,7 +90,7 @@ const AudioPlayerField = ({
       }
       
       // Create region for start/end time control
-      const regionsPlugin = ws.plugins.find(p => p.constructor.name === 'RegionsPlugin');
+      const regionsPlugin = ws.plugins.find((p: any) => p.constructor.name === 'RegionsPlugin');
       if (regionsPlugin) {
         // Clear any existing regions
         regionsPlugin.clearRegions();
@@ -106,7 +106,7 @@ const AudioPlayerField = ({
         });
         
         // Handle region updates - for now just log, can be enhanced later
-        regionsPlugin.on('region-updated', (updatedRegion) => {
+        regionsPlugin.on('region-updated', (updatedRegion: any) => {
           if (updatedRegion === region) {
             console.log('Region updated:', updatedRegion.start, updatedRegion.end);
           }
@@ -172,7 +172,6 @@ const AudioPlayerField = ({
     >
       <Grid container spacing={2} direction="column">
         <Grid
-          item
           style={{
             visibility: loading ? "hidden" : "visible",
             height: loading ? 0 : "initial",
@@ -182,18 +181,19 @@ const AudioPlayerField = ({
           }}
         >
           <Wavesurfer
-            plugins={plugins}
-            onReady={handleReady}
-            height={size === "small" ? 64 : 128}
-            width={size === "small" ? 280 : 800}
-            url={file}
-            scrollbar={true}
-            fillParent={false}
-            autoCenter={true}
+            {...{
+              plugins,
+              onReady: handleReady,
+              height: size === "small" ? 64 : 128,
+              width: size === "small" ? 280 : 800,
+              url: file,
+              scrollbar: true,
+              fillParent: false,
+              autoCenter: true,
+            } as any}
           />
         </Grid>
         <Grid
-          item
           justifyContent="center"
           alignItems="center"
           direction="row"
@@ -207,13 +207,13 @@ const AudioPlayerField = ({
             />
           ) : (
             <>
-              <Grid item>
+              <Grid>
                 <IconButton onClick={handlePlay} size={size}>
                   {playing ? <PauseIcon /> : <PlayArrowIcon />}
                 </IconButton>
               </Grid>
               {buttons?.map((b) => (
-                <Grid item key={b?.toString()}>
+                <Grid key={b?.toString()}>
                   {b}
                 </Grid>
               ))}
@@ -223,7 +223,7 @@ const AudioPlayerField = ({
 
         {/* Zoom Controls - only show in edit view */}
         {file && !loading && inEditView && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 1 }}>
               <ZoomOutIcon />
               <Slider 

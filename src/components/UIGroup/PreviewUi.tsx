@@ -74,9 +74,9 @@ const PreviewUi = (): JSX.Element => {
       <Dialog open={show} maxWidth="xs" fullWidth onClose={handleClose}>
         <DialogTitle>
           <Grid container justifyContent="space-between" alignItems="center">
-            <Grid item>{currentGroup?.header_text_loc}</Grid>
+            <Grid>{currentGroup?.header_text_loc}</Grid>
 
-            <Grid item>
+            <Grid>
               <IconButton onClick={handleClose} size="large">
                 <CloseIcon />
               </IconButton>
@@ -84,7 +84,7 @@ const PreviewUi = (): JSX.Element => {
           </Grid>
         </DialogTitle>
         <DialogContent>
-          <Grid item container direction="column" spacing={2}>
+          <Grid container direction="column" spacing={2}>
             {currentGroup?.ui_items?.filter(
               (i) => i.parent_id == null || selectedTags.includes(i.parent_id)
             ).length
@@ -95,9 +95,8 @@ const PreviewUi = (): JSX.Element => {
                   )
                   .map((i: IUIGroup[`ui_items`][0]) => (
                     <Grid
-                      item
                       key={i?.id}
-                      xs={12}
+                      size={{ xs: 12 }}
                       onClick={() => handleOnItemSelect(i.id)}
                     >
                       <MuiButton

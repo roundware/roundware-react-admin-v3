@@ -38,11 +38,10 @@ export const FileEdit = (): JSX.Element => {
   return (
     <div style={{ width: '100%', marginBottom: 16 }}>
       <Grid container direction='column'>
-        <Grid item style={{ marginRight: 16 }}>
+        <Grid style={{ marginRight: 16 }}>
           {mediaType === 'audio' && value && (
             <AudioEdit
               size='medium'
-              inEditView={true}
               buttons={[
                 <IconButton
                   key='del'
@@ -67,7 +66,7 @@ export const FileEdit = (): JSX.Element => {
             </>
           )}
         </Grid>
-        <Grid item>
+        <Grid>
           {mediaType !== 'audio' && !value && (
             <FileInput
               source='file'
@@ -79,7 +78,7 @@ export const FileEdit = (): JSX.Element => {
               accept={getFileExtensions(mediaType).reduce(
                 (acc, el) => (acc += acc + ',.' + el),
                 ''
-              )}
+              ) as any}
             >
               <FileField source='src' title='title' fullWidth />
             </FileInput>
@@ -110,7 +109,7 @@ export const FileEdit = (): JSX.Element => {
                     accept={getFileExtensions(mediaType).reduce(
                       (acc, el) => (acc += acc + ',.' + el),
                       ''
-                    )}
+                    ) as any}
                   >
                     <FileField source='src' title='title' fullWidth />
                   </FileInput>

@@ -110,7 +110,7 @@ const UIItemsTreeView = (): JSX.Element => {
                             label={
                               <TreeItemLabel
                                 uiItem={i}
-                                dragHandleProps={provided.dragHandleProps}
+                                dragHandleProps={provided.dragHandleProps ?? undefined}
                               />
                             }
                             collapseIcon={
@@ -251,7 +251,7 @@ const UIItemsTreeView = (): JSX.Element => {
 
   return (
     <Grid container spacing={3} direction="column">
-      <Grid item xs={12} alignItems="center">
+      <Grid size={{ xs: 12 }} alignItems="center">
         <Typography variant="h6">Organize UI Items</Typography>
         <Typography
           variant="subtitle2"
@@ -261,9 +261,9 @@ const UIItemsTreeView = (): JSX.Element => {
         </Typography>
       </Grid>
       <Divider />
-      <Grid item container justifyContent="space-between" alignItems="center">
-        <Grid item>Select UI Group </Grid>
-        <Grid item>
+      <Grid container justifyContent="space-between" alignItems="center">
+        <Grid>Select UI Group </Grid>
+        <Grid>
           <ButtonGroup>
             {uiGroups.map((g) => (
               <Button
@@ -279,7 +279,7 @@ const UIItemsTreeView = (): JSX.Element => {
         </Grid>
       </Grid>
       <Divider />
-      <Grid item xs={12}>
+      <Grid size={{ xs: 12 }}>
         <Paper style={{ padding: 10 }}>
           <TreeView
             defaultCollapseIcon={<ExpandMoreIcon />}

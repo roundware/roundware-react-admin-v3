@@ -84,7 +84,7 @@ const AssetShape = ({
         )
       );
     }
-    setShape(multiPolygon([[googleMapPathToGeoJSONPath(path)]]).geometry);
+    setShape(multiPolygon([[googleMapPathToGeoJSONPath(path)]] as any).geometry);
     circle.setMap(null); // remove overlay — PolygonF takes over
   };
 
@@ -92,7 +92,7 @@ const AssetShape = ({
     setShape(
       multiPolygon([
         [googleMapPathToGeoJSONPath(polygon.getPath().getArray())],
-      ]).geometry
+      ] as any).geometry
     );
     polygon.setMap(null); // remove overlay — PolygonF takes over
   };
@@ -105,7 +105,7 @@ const AssetShape = ({
       const NW = new google.maps.LatLng(NE.lat(), SW.lng());
       const SE = new google.maps.LatLng(SW.lat(), NE.lng());
       setShape(
-        multiPolygon([[googleMapPathToGeoJSONPath([NW, NE, SE, SW])]]).geometry
+        multiPolygon([[googleMapPathToGeoJSONPath([NW, NE, SE, SW])]] as any).geometry
       );
     }
     rectangle.setMap(null); // remove overlay — PolygonF takes over
@@ -144,7 +144,7 @@ const AssetShape = ({
     const newPath = polygon?.getPath().getArray();
     if (Array.isArray(newPath)) {
       setShape(
-        multiPolygon([[googleMapPathToGeoJSONPath(newPath)]]).geometry
+        multiPolygon([[googleMapPathToGeoJSONPath(newPath)]] as any).geometry
       );
     }
   };
@@ -168,7 +168,7 @@ const AssetShape = ({
         (lat * sin + lng * cos) / latScale + center.lng
       );
     });
-    setShape(multiPolygon([[googleMapPathToGeoJSONPath(rotatedPath)]]).geometry);
+    setShape(multiPolygon([[googleMapPathToGeoJSONPath(rotatedPath)]] as any).geometry);
   };
 
   // --- Scaling (from SpeakerPolygon) ---
@@ -187,7 +187,7 @@ const AssetShape = ({
         lng / latScale + center.lng
       );
     });
-    setShape(multiPolygon([[googleMapPathToGeoJSONPath(scaledPath)]]).geometry);
+    setShape(multiPolygon([[googleMapPathToGeoJSONPath(scaledPath)]] as any).geometry);
   };
 
   // --- Save ---

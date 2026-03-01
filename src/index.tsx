@@ -48,6 +48,7 @@ const router = createBrowserRouter([
   },
 ], {
   future: {
+    // @ts-expect-error React Router v6→v7 migration flag
     v7_startTransition: true,
   },
 });

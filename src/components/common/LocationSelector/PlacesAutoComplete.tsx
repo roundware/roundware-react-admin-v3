@@ -163,7 +163,7 @@ const PlacesAutoComplete = ({ onSelect }: Props): JSX.Element => {
                   }} 
                 />
               </Grid>
-              <Grid size={{ xs: true }}>
+              <Grid size="grow">
                 {parts.map((part, index) => (
                   <span
                     key={index}

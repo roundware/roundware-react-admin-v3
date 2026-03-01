@@ -82,7 +82,7 @@ const SpeakerAudioPlayer = ({
       }
       
       // Create region for start/end time control
-      const regionsPlugin = ws.plugins.find(p => p.constructor.name === 'RegionsPlugin');
+      const regionsPlugin = ws.plugins.find((p: any) => p.constructor.name === 'RegionsPlugin');
       if (regionsPlugin && startTime !== undefined && endTime !== undefined) {
         // Clear any existing regions
         regionsPlugin.clearRegions();
@@ -98,7 +98,7 @@ const SpeakerAudioPlayer = ({
         });
         
         // Handle region updates
-        regionsPlugin.on('region-updated', (updatedRegion) => {
+        regionsPlugin.on('region-updated', (updatedRegion: any) => {
           if (updatedRegion === region) {
             setStartTime(updatedRegion.start);
             setEndTime(updatedRegion.end);
@@ -169,7 +169,6 @@ const SpeakerAudioPlayer = ({
     }}>
       <Grid container spacing={2} direction="column">
         <Grid
-          item
           style={{
             visibility: loading ? "hidden" : "visible",
             height: loading ? 0 : "initial",
@@ -179,19 +178,21 @@ const SpeakerAudioPlayer = ({
           }}
         >
           <Wavesurfer
-            plugins={plugins}
-            onReady={handleReady}
-            height={size === "small" ? 64 : 128}
-            width={size === "small" ? 280 : 800}
-            url={typeof src === 'string' ? src : undefined}
-            scrollbar={true}
-            fillParent={false}
-            autoCenter={true}
+            {...{
+              plugins,
+              onReady: handleReady,
+              height: size === "small" ? 64 : 128,
+              width: size === "small" ? 280 : 800,
+              url: typeof src === 'string' ? src : undefined,
+              scrollbar: true,
+              fillParent: false,
+              autoCenter: true,
+            } as any}
           />
         </Grid>
 
         {/* Playback Controls */}
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           {loading ? (
             <Box>
               <Typography>Loading Audio {progress} %</Typography>
@@ -235,7 +236,7 @@ const SpeakerAudioPlayer = ({
 
         {/* Zoom Controls */}
         {src && !loading && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 1 }}>
               <ZoomOutIcon />
               <Slider 

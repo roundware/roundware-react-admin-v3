@@ -5,7 +5,7 @@ import {
     useSesisonMap,
 } from "context/SessionMapContext";
 import React from "react";
-import { mapLibraries } from "../../utils.tsx";
+import { mapLibraries } from "../../utils";
 import EventInfoWindow from "./EventInfoWindow";
 import SessionMapFilters from "./SessionMapFilters";
 import SessionMapMarkers from "./SessionMapMarkers";

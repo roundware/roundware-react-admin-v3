@@ -24,7 +24,7 @@ import { useProjects } from "../../context/ProjectsContext";
 import useBoolean from "../../hooks/useBoolean";
 import { apiFetcher } from "../../roundwareDataProvider/tokenAuthProvider";
 import { ISession } from "../../types/session";
-import { DateRange, isWithinRange } from "../../utils.tsx";
+import { DateRange, isWithinRange } from "../../utils";
 import { CenteredLoading } from "../Layout/Dashboard";
 import { useChartsData } from "./ChartsData";
 import DateRangeSlider from "./DateRangeSlider";

@@ -31,7 +31,6 @@ const AudioRecorder = ({ onFinish }: Props) => {
       mimeType: "audio/webm",
       scrollingWaveform: true,
       renderRecordedAudio: false,
-      bufferSize: 2048,
       audioBitsPerSecond: 128000,
     });
     recordPluginRef.current = record;

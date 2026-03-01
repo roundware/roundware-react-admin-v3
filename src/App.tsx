@@ -121,6 +121,7 @@ function App({ basename }: { basename: string }): JSX.Element {
       title="Roundware Admin"
       dataProvider={dataProvider}
       authProvider={authProvider}
+      // @ts-expect-error legacy history prop
       history={history}
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -143,8 +144,8 @@ function App({ basename }: { basename: string }): JSX.Element {
         ...(selectedProject && import.meta.env.VITE_INCLUDE_TABS === "all"
           ? Object.values(lookup)
           : import.meta.env.VITE_INCLUDE_TABS?.split(`,`)
-              ?.filter((r) => Object.keys(lookup).includes(r))
-              .map((r) => lookup[r]) || []),
+              ?.filter((r: string) => Object.keys(lookup).includes(r))
+              .map((r: string) => lookup[r]) || []),
         // Tenants resource — always registered; menu entry hidden for non-superusers
         // (Menu.tsx runs inside <Admin> where usePermissions is safe to call)
         <Resource
@@ -263,7 +264,7 @@ export const ResourceList = [
   `projects`,
   ...(import.meta.env.VITE_INCLUDE_TABS === "all"
     ? resourceKeys
-    : import.meta.env.VITE_INCLUDE_TABS?.split(`,`)?.filter((r) =>
+    : import.meta.env.VITE_INCLUDE_TABS?.split(`,`)?.filter((r: string) =>
         resourceKeys.includes(r)
       ) || []),
 ];

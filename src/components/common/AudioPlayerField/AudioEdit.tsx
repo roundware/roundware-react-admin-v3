@@ -153,7 +153,7 @@ const AudioEditField = ({
           });
           
           // Handle region updates
-          regionsPlugin.on('region-updated', (updatedRegion) => {
+          regionsPlugin.on('region-updated', (updatedRegion: any) => {
             if (updatedRegion === region) {
               changeStartTime(Number(updatedRegion.start.toFixed(2)));
               changeEndTime(Number(updatedRegion.end.toFixed(2)));
@@ -203,15 +203,14 @@ const AudioEditField = ({
     <div style={{ width: size === "small" ? "280px" : "100%" }}>
       <Grid container spacing={2} direction="column">
         {!loading && (
-          <Grid item>
+          <Grid>
             <Typography variant="subtitle2">
               Select a region to set Start Time and End Time
             </Typography>
           </Grid>
         )}
-        <Grid 
-          item 
-          style={{ 
+        <Grid
+          style={{
             height: loading ? 0 : `initial`,
             width: "90%",
             maxWidth: "90%",
@@ -219,19 +218,21 @@ const AudioEditField = ({
           }}
         >
           <Wavesurfer
-            plugins={plugins}
-            onReady={handleReady}
-            height={size === "small" ? 64 : 128}
-            width={size === "small" ? 280 : 800}
-            url={audioSrc}
-            scrollbar={true}
-            fillParent={false}
-            autoCenter={true}
+            {...{
+              plugins,
+              onReady: handleReady,
+              height: size === "small" ? 64 : 128,
+              width: size === "small" ? 280 : 800,
+              url: audioSrc,
+              scrollbar: true,
+              fillParent: false,
+              autoCenter: true,
+            } as any}
           />
         </Grid>
 
         {/* Playback Controls */}
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           {loading ? (
             <Box>
               <Typography>Loading Audio {progress} %</Typography>
@@ -264,7 +265,7 @@ const AudioEditField = ({
 
         {/* Zoom Controls */}
         {audioSrc && !loading && (
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 1 }}>
               <ZoomOutIcon />
               <Slider 

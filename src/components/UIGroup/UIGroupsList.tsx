@@ -22,14 +22,14 @@ export const UiGroupList = (): JSX.Element => {
     <>
       <Box pt={5}>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <BuildUIHeader />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Divider />
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <List
               filters={[
                 <RadioButtonGroupInput
@@ -88,7 +88,7 @@ export const UiGroupList = (): JSX.Element => {
               </DraggableDatagrid>
             </List>
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <UIItemsTreeView />
           </Grid>
         </Grid>
@@ -107,13 +107,13 @@ const RowActions = (props: DatagridRowProps): JSX.Element => {
       alignItems={"center"}
       justifyContent="center"
     >
-      <Grid item>
+      <Grid>
         <EditButton label="" />
       </Grid>
-      <Grid item>
+      <Grid>
         <AddCommonItem group={props.record as IUIGroup} />
       </Grid>
-      <Grid item>
+      <Grid>
         <DeleteUiGroupButton />
       </Grid>
     </Grid>

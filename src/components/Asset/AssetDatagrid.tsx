@@ -35,7 +35,7 @@ export const AssetDatagrid = (): JSX.Element => {
         <TextField source='id' />
         <BooleanField source='submitted' />
 
-        <AssetPreview label='Media' />
+        <AssetPreview source='file' label='Media' />
         <DateField source='created_at' label='Created' />
         <NumberField source='latitude' options={{ maximumFractionDigits: 8 }} />
         <NumberField

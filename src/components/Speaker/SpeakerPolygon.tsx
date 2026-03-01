@@ -23,7 +23,7 @@ import {
     useGoogleMap,
 } from "@react-google-maps/api";
 import buffer from "@turf/buffer";
-import { multiPolygon } from "@turf/helpers";
+import { multiPolygon, Polygon } from "@turf/helpers";
 import MapControl from "components/common/MapControl";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
 import { useSpeakers } from "context/SpeakersContext";
@@ -165,7 +165,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
       
       // Only show error and reset if this is a user-initiated change (not initial load)
       if (hasUserChangedDistance && lastValidDistance !== null && lastValidDistance !== distance) {
-        notify(`Error calculating attenuation border: ${e?.message || 'Unknown error'}. Resetting to previous value.`, { type: 'error' });
+        notify(`Error calculating attenuation border: ${(e as Error)?.message || 'Unknown error'}. Resetting to previous value.`, { type: 'error' });
         setDistance(lastValidDistance);
         return null; // Will recalculate with valid distance
       }
@@ -173,7 +173,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
 
     /** just use previous shape as something goes wrong */
     if (!polygon) return null;
-    return polygonToGoogleMapPaths(polygon.geometry);
+    return polygonToGoogleMapPaths(polygon.geometry as Polygon);
   }, [shape, debouncedDistance, speaker, distance, lastValidDistance, notify, setDistance, hasUserChangedDistance]);
 
   // Separate validation effect that runs when user changes distance
@@ -214,7 +214,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
     if (Array.isArray(newPath)) {
       const newMultiPolygon = multiPolygon([
         [googleMapPathToGeoJSONPath(newPath)],
-      ]).geometry;
+      ] as any).geometry;
       setShape(newMultiPolygon);
     }
   };
@@ -254,7 +254,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
           notify(`Error saving speaker: ${error.message}`, { type: 'error' });
         })
         .finally(() => setSaving(false));
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error processing speaker data:', error);
       notify(`Error processing speaker data: ${error.message}`, { type: 'error' });
       setSaving(false);
@@ -373,7 +373,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
     // Convert back to GeoJSON format and update the shape
     const rotatedGeoJSON = multiPolygon([
       [googleMapPathToGeoJSONPath(rotatedPath)]
-    ]).geometry;
+    ] as any).geometry;
     
     setShape(rotatedGeoJSON);
     setIsCurrentSpeakerSaved(false);
@@ -413,7 +413,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
     // Convert back to GeoJSON format and update the shape
     const scaledGeoJSON = multiPolygon([
       [googleMapPathToGeoJSONPath(scaledPath)]
-    ]).geometry;
+    ] as any).geometry;
     
     setShape(scaledGeoJSON);
     setIsCurrentSpeakerSaved(false);

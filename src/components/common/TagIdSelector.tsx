@@ -21,7 +21,7 @@ const options = {
     field: "id",
     order: "ASC",
   },
-};
+} as any;
 type TagWithCategory = Exclude<ITag, "tag_category_id"> & {
   category_name: string;
 };

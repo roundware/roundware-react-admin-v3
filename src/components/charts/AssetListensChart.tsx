@@ -16,7 +16,7 @@ import {
     YAxis,
 } from "recharts";
 import { IListenEvent } from "types/listenEvents";
-import { isWithinRange } from "../../utils.tsx";
+import { isWithinRange } from "../../utils";
 import { CenteredLoading } from "../Layout/Dashboard";
 
 interface Props {

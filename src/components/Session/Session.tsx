@@ -49,7 +49,7 @@ const SessionMapLink = () => {
   const record = useRecordContext();
   const pc = useProjects();
   return (
-    <Link to={`/project/${pc.selectedProject?.id}/session_map/${record.id}`}>
+    <Link to={`/project/${pc.selectedProject?.id}/session_map/${record?.id}`}>
       <IconButton>
         <Map />
       </IconButton>

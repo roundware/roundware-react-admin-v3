@@ -34,11 +34,11 @@ const AudioOptions = (): JSX.Element => {
       <CardContent>
         <Typography variant="h6">Audio</Typography>
         <Grid container spacing={3}>
-          <Grid item container xs={12}>
-            <Grid item xs={12} md={8}>
+          <Grid container size={{ xs: 12 }}>
+            <Grid size={{ xs: 12, md: 8 }}>
               <FileEdit />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <Stack direction="row" spacing={3} justifyContent="center" alignItems="center" sx={{ height: '100%' }}>
                 <VolumeSlider />
                 <CustomSlider
@@ -51,8 +51,8 @@ const AudioOptions = (): JSX.Element => {
               </Stack>
             </Grid>
           </Grid>
-          <Grid item container className={styles.timesContainer} spacing={0}>
-            <Grid item xs={4}>
+          <Grid container className={styles.timesContainer} spacing={0}>
+            <Grid size={{ xs: 4 }}>
               <TextField
                 value={typeof startTime === 'number' ? startTime.toFixed(2) : '0.00'}
                 variant="filled"
@@ -61,7 +61,7 @@ const AudioOptions = (): JSX.Element => {
                 InputProps={{ readOnly: true, className: styles.inputLeft }}
               />
             </Grid>
-            <Grid item xs={4}>
+            <Grid size={{ xs: 4 }}>
               <TextField
                 value={typeof endTime === 'number' ? endTime.toFixed(2) : '0.00'}
                 variant="filled"
@@ -70,7 +70,7 @@ const AudioOptions = (): JSX.Element => {
                 InputProps={{ readOnly: true, className: styles.inputRight }}
               />
             </Grid>
-            <Grid item xs={4}>
+            <Grid size={{ xs: 4 }}>
               <TextField
                 value={typeof durationInSec === 'number' ? durationInSec.toFixed(2) : '0.00'}
                 variant="filled"

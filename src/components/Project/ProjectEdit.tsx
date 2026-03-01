@@ -18,7 +18,7 @@ import {
     TextInput,
 } from "react-admin";
 import { useNavigate } from "react-router-dom";
-import { buildLocalizationsPayload } from "../../utils.tsx";
+import { buildLocalizationsPayload } from "../../utils";
 
 const PROJECT_LOC_FIELD_MAP: Record<string, string> = {
   description_loc_admin: "description",
@@ -72,10 +72,12 @@ const ProjectEdit = (): JSX.Element => {
             reference="languages"
             label="Languages"
             validate={required()}
-            fullWidth
-            helperText="Projects can have multiple Languages assigned to them"
           >
-            <SelectArrayInput optionText="name" />
+            <SelectArrayInput
+              optionText="name"
+              fullWidth
+              helperText="Projects can have multiple Languages assigned to them"
+            />
           </ReferenceArrayInput>
           <TranslatableField
             label="Description"

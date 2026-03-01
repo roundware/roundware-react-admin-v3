@@ -31,8 +31,8 @@ const SpeakerAudioControls = (): JSX.Element => {
     uri ? "URI" : `UPLOAD`
   );
   const handleChange = (
-    event: React.ChangeEvent<Record<string, unknown>>,
-    newValue: `UPLOAD` | `URI`
+    _event: React.SyntheticEvent,
+    newValue: `UPLOAD` | `URI` | `RECORD`
   ) => {
     setSourceMode(newValue);
   };
@@ -62,7 +62,7 @@ const SpeakerAudioControls = (): JSX.Element => {
       <TabPanel value={`UPLOAD`} current={sourceMode}>
         <FileInput
           source="file"
-          accept={".mp3,.wav,.m4a"}
+          accept={".mp3,.wav,.m4a" as any}
           multiple={false}
         >
           <FileField source="src" title="title" fullWidth />

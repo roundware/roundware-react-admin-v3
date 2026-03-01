@@ -72,7 +72,7 @@ const renderCustomizedLabel = ({
       y={y}
       fill={fill.toString()}
       fontSize={12}
-      textAnchor={x > cx ? "start" : "end"}
+      textAnchor={x > (cx as number) ? "start" : "end"}
       dominantBaseline="central"
     >
       {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}

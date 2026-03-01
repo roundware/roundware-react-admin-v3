@@ -21,14 +21,14 @@ export const getGoogleMapsCenter = (
   speakers: ISpeaker[]
 ): google.maps.LatLng => {
   // get polygons from all speakers
-  const polygons = speakers.map((s) => multiPolygon(s.shape.coordinates));
+  const polygons = speakers.map((s) => multiPolygon(s.shape.coordinates as any));
 
   // create a feature collection
   const polygonCollection = featureCollection(polygons);
 
   // now get the center of it
 
-  const center = centerOfMass(polygonCollection);
+  const center = centerOfMass(polygonCollection as any);
   const [lat, lng] = getCoord(center);
   return new window.google.maps.LatLng(lng, lat);
 };
@@ -99,7 +99,7 @@ export const getSpeakerGeoJSONObjectsForPath = (
   }
 
   /** get multipolygon with single polygon forom the path */
-  const shape = multiPolygon([[path]]).geometry;
+  const shape = multiPolygon([[path]] as any).geometry;
 
   /** boundary */
   const boundary = multiLineString([path]).geometry;
@@ -109,7 +109,7 @@ export const getSpeakerGeoJSONObjectsForPath = (
   if (!bufferedPolygon || !bufferedPolygon.geometry) {
     throw new Error(`Attenuation distance (${attenuation_distance}m) is too large for this shape. Please use a smaller distance.`);
   }
-  const attenuation_border = polygonToLine(bufferedPolygon.geometry).geometry;
+  const attenuation_border = polygonToLine(bufferedPolygon.geometry as Polygon).geometry as LineString | MultiLineString;
 
   /** if area is becoming zero, alert the user about it */
   const speakerArea = area(polygon([path]));

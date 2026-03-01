@@ -34,7 +34,7 @@ const EnvelopeIdSelector = (): JSX.Element => {
 
     return (
         <Grid container direction="column" spacing={2}>
-            <Grid item>
+            <Grid>
                 <FormControl component="fieldset">
                     <FormLabel component="legend">Envelope ID</FormLabel>
                     <RadioGroup
@@ -59,7 +59,7 @@ const EnvelopeIdSelector = (): JSX.Element => {
                 </FormControl>
             </Grid>
             {mode === "manual" && (
-                <Grid item>
+                <Grid>
                     <TextField
                         value={
                             envelope_ids?.toString() == "0"

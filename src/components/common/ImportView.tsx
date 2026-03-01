@@ -55,7 +55,7 @@ const ImportView = ({ handleClose }: { handleClose: () => void }) => {
   const [filter, setFilter] = useState("");
   const [page, setPage] = useState(1);
   const perPage = 10;
-  const sort = { field: "id", order: "ASC" };
+  const sort = { field: "id", order: "DESC" as const };
   const [data, setData] = useState<IAsset[]>([]);
   const total = data.length;
   const pc = useProjects();
@@ -229,8 +229,12 @@ const ImportView = ({ handleClose }: { handleClose: () => void }) => {
                   },
                   isFetching: !data,
                   isLoading: !data,
+                  isPending: !data,
                   selectedIds: [],
                   onSelect: () => {
+                    return;
+                  },
+                  onSelectAll: () => {
                     return;
                   },
                   onToggleItem: () => {
@@ -258,12 +262,12 @@ const ImportView = ({ handleClose }: { handleClose: () => void }) => {
                     return;
                   },
                   filter: {},
-                }}
+                } as any}
               >
                 <div>
                   <Card sx={{ overflow: "scroll" }}>
                     <Datagrid>
-                      <AssetPreview />
+                      <AssetPreview source="file" />
                       <BooleanField source="submitted" />
                       <TextField source="description" />
                       <TextField source="media_type" label="Media Type" />
@@ -356,7 +360,7 @@ const EditForm = ({
     <RecordContextProvider value={record}>
       <SimpleForm
         warnWhenUnsavedChanges
-        onSubmit={(fv) => onSubmit(fv as IAsset)}
+        onSubmit={(fv: any) => onSubmit(fv as IAsset)}
       >
         <ReferenceInput
           label="Project"
@@ -385,6 +389,7 @@ const EditForm = ({
             longitude: `longitude`,
           }}
         >
+          {/* @ts-expect-error AssetShape optional in view mode */}
           <AssetShape />
         </LocationSelector>
 

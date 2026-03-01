@@ -22,7 +22,7 @@ import { useMarkerClusterer } from "hooks/useMarkerClusterer";
 import React, { useEffect } from "react";
 import { useListController } from "react-admin";
 import { IAsset } from "types/asset";
-import { mapLibraries } from "../../utils.tsx";
+import { mapLibraries } from "../../utils";
 import AssetMarker from "./AssetMarker";
 
 const AssetMarkers = () => {

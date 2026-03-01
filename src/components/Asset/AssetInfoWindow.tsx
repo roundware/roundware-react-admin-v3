@@ -38,6 +38,7 @@ export const AssetInfoWindowInner = ({ asset }: AssetInfoWindowInnerProps) => {
 
   const { data } = useListController();
   useEffect(() => {
+    if (!data) return;
     if (Array.isArray(asset?.envelope_ids) && asset?.envelope_ids?.length > 0) {
       setImageAssets(
         data.filter(
@@ -81,7 +82,7 @@ export const AssetInfoWindowInner = ({ asset }: AssetInfoWindowInnerProps) => {
           <div key={elementName}>
             {showDividerIfEligible()}
             <Typography variant="body2">
-              {(asset.created_at || asset.created) ? format(new Date(asset.created_at || asset.created), "PPp") : ""}
+              {asset.created ? format(new Date(asset.created), "PPp") : ""}
             </Typography>
           </div>
         );

@@ -79,7 +79,7 @@ export class RoundwareDataProvider implements DataProvider {
     const projectIdsArray = (ids || '')?.split(',');
 
     if (
-      !projectIdsArray.some((id) => id.toString() === project_id.toString())
+      !projectIdsArray.some((id: string | number) => id.toString() === project_id.toString())
     ) {
       throw new Error(`Access Denied`);
     }
@@ -138,7 +138,7 @@ export class RoundwareDataProvider implements DataProvider {
         // other filters;
         ...filters,
       }),
-      ...getOrderingQuery(params.sort),
+      ...getOrderingQuery(params.sort!),
       // ...(paginate && getPaginationQuery(params.pagination)),
     };
 
@@ -301,7 +301,7 @@ export class RoundwareDataProvider implements DataProvider {
 
     /** do pagination client side, resources from cache can't be paginated */
     const total = json.length;
-    const { page, perPage } = params.pagination;
+    const { page, perPage } = params?.pagination ?? { page: 0, perPage: 0 };
 
     /** if page 0 and perPage 0 then understand that client doesn't want pagination */
     if (page > 0 && perPage > 0) {
@@ -481,7 +481,7 @@ export class RoundwareDataProvider implements DataProvider {
       (v) => v instanceof File || v instanceof Blob
     );
     if (needsFormData) {
-      params.data = this.getFormData(params.data);
+      params.data = this.getFormData(params.data as RaRecord) as any;
     }
     const client = needsFormData
       ? XMLHttpRequestWithAuthToken

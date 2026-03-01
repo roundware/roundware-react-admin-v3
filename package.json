@@ -61,6 +61,7 @@
         "build": "vite build",
         "preview": "vite preview",
         "lint": "eslint . --ext .ts,.tsx --max-warnings=0",
+        "typecheck": "tsc --noEmit",
         "deploy": "cp ./build/index.html ./build/200.html && surge ./build dev-roundware-admin.surge.sh"
     },
     "browserslist": {

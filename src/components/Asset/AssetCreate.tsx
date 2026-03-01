@@ -72,6 +72,7 @@ const AssetCreate = (): JSX.Element => {
         <LocationSelector
           fieldNames={{ latitude: `latitude`, longitude: `longitude` }}
         >
+          {/* @ts-expect-error AssetShape used as display-only */}
           <AssetShape />
         </LocationSelector>
         <TextInput multiline source="description" fullWidth minRows={2} />

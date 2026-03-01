@@ -235,14 +235,14 @@ const SpeakerDrawer = (): JSX.Element | null => {
       <MapControl position={window.google.maps.ControlPosition.LEFT_CENTER}>
         <Paper>
           <Grid direction="column" spacing={1}>
-            <Grid item>
+            <Grid>
               <Tooltip title="Save" placement="right">
                 <IconButton onClick={handleSave} disabled={saving} size="large">
                   {saving ? <CircularProgress /> : <SaveIcon />}
                 </IconButton>
               </Tooltip>
             </Grid>
-            <Grid item>
+            <Grid>
               <Tooltip title="Redraw" placement="right">
                 <IconButton onClick={handleRedraw} size="large">
                   <HistoryIcon />

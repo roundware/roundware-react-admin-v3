@@ -66,7 +66,7 @@ export const AssetMapPage = (): JSX.Element => {
         ]}
         sort={{
           field: "id",
-          order: "DSC",
+          order: "DESC",
         }}
         actions={<ListActions />}
       >

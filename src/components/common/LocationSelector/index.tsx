@@ -79,15 +79,15 @@ const LocationSelector = (props: PropsWithChildren<Props>): JSX.Element => {
     <Card variant="outlined" sx={{ width: "100%" }}>
       <CardContent>
         <Grid container direction="column" spacing={2}>
-          <Grid container item xs={12} alignItems="center">
-            <Grid item>
+          <Grid container size={{ xs: 12 }} alignItems="center">
+            <Grid>
               <LocationOnIcon />
             </Grid>
-            <Grid item>
+            <Grid>
               <Typography variant="h6">Location</Typography>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Stack spacing={1} direction="row" alignItems="center">
               <TextField
                 value={latStr}
@@ -102,14 +102,14 @@ const LocationSelector = (props: PropsWithChildren<Props>): JSX.Element => {
               {props.headerAction}
             </Stack>
           </Grid>
-          <Grid item>
+          <Grid>
             {isLoaded ? (
               <>
                 <Grid container spacing={2} direction="column">
-                  <Grid item>
+                  <Grid>
                     <PlacesAutoComplete onSelect={handleOnLocationChange} />
                   </Grid>
-                  <Grid item>
+                  <Grid>
                     <GoogleMap
                       mapContainerStyle={containerStyle}
                       onLoad={onLoad}

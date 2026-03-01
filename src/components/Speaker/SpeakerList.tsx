@@ -265,7 +265,7 @@ const FilteredDataSync = () => {
 };
 
 const SpeakerHighter = () => {
-  const { id } = useRecordContext();
+  const { id } = useRecordContext() ?? {};
   const { setSelectedSpeaker, selectedSpeaker } = useSpeakers();
 
   const isSelected = id == selectedSpeaker;
