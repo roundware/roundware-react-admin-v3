@@ -6,7 +6,6 @@ import { useProjects } from "context/ProjectsContext";
 import { useState } from "react";
 import {
     BooleanInput,
-    DateTimeInput,
     Edit,
     NumberInput,
     RaRecord,
@@ -92,16 +91,6 @@ const ProjectEdit = (): JSX.Element => {
               longitude: "longitude",
             }}
           />
-          <DateTimeInput
-            source="pub_date"
-            defaultValue={new Date()}
-            style={{ marginBottom: 0 }}
-            // format={dateFormatter}
-            label="Publish Date"
-            required
-            fullWidth
-          />
-
           <BooleanInput source="listen_questions_dynamic" fullWidth />
           <BooleanInput source="speak_questions_dynamic" fullWidth />
         </CardBox>

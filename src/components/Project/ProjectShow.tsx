@@ -10,19 +10,23 @@ import {
   ReferenceField,
   useShowController,
   useRedirect,
+  usePermissions,
   Labeled,
 } from "react-admin";
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
+  Button,
   Card,
   CardContent,
   Divider,
   Grid,
   Typography,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useProjects } from "../../context/ProjectsContext";
 import LocalizedShowField from "../common/LocalizedShowField";
+import DeleteProjectDialog from "./DeleteProjectDialog";
 
 /** Thin wrapper that renders a labelled field inside a fixed-width grid cell. */
 const Field = ({
@@ -62,9 +66,16 @@ const Section = ({
 );
 
 const ProjectShow = (): JSX.Element => {
-  const { selectedProject } = useProjects();
+  const { selectedProject, refetch } = useProjects();
   const redirect = useRedirect();
   const { record } = useShowController();
+  const { permissions } = usePermissions();
+  const [showDelete, setShowDelete] = useState(false);
+
+  const canDelete =
+    permissions?.role === "superuser" ||
+    permissions?.role === "owner" ||
+    permissions?.role === "admin";
 
   React.useEffect(() => {
     if (!record) return;
@@ -73,10 +84,39 @@ const ProjectShow = (): JSX.Element => {
     }
   }, [selectedProject, record]);
 
+  const handleDeleted = () => {
+    refetch();
+    redirect("/projects");
+  };
+
   return (
     <Show title="Project Details">
       <SimpleShowLayout>
         <Box sx={{ p: 1 }}>
+          {/* ---- Delete Button ---- */}
+          {canDelete && record && (
+            <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 1 }}>
+              <Button
+                variant="outlined"
+                color="error"
+                size="small"
+                startIcon={<DeleteIcon />}
+                onClick={() => setShowDelete(true)}
+              >
+                Delete Project
+              </Button>
+            </Box>
+          )}
+
+          {showDelete && record && (
+            <DeleteProjectDialog
+              open
+              projects={[{ id: record.id as number, name: record.name as string }]}
+              onClose={() => setShowDelete(false)}
+              onDeleted={handleDeleted}
+            />
+          )}
+
           {/* ---- General ---- */}
           <Section title="General">
             <Field md={6}>

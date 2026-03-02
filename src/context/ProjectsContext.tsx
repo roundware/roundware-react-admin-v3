@@ -8,7 +8,7 @@ export interface IProject {
   description?: string;
   latitude: number;
   longitude: number;
-  pub_date: string;
+  created_at: string;
   audio_format: string;
   auto_submit: boolean;
   max_recording_length_sec: number;

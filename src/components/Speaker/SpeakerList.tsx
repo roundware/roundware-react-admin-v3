@@ -40,6 +40,7 @@ const SpeakerList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   const {
     fetchData,
+    speakers,
     speakersWithoutShape,
     setSelectedSpeaker,
     selectedSpeaker,
@@ -217,15 +218,17 @@ const SpeakerList = (): JSX.Element => {
             </Datagrid>
           </List>
         </Box>
-        <Box
-          sx={{
-            flex: isWide ? '1 1 50%' : '0 0 auto',
-            width: isWide ? '50%' : '100%',
-            height: isWide ? 'auto' : '600px',
-          }}
-        >
-          <SpeakerShapesControl />
-        </Box>
+        {speakers && speakers.length > 0 && (
+          <Box
+            sx={{
+              flex: isWide ? '1 1 50%' : '0 0 auto',
+              width: isWide ? '50%' : '100%',
+              height: isWide ? 'auto' : '600px',
+            }}
+          >
+            <SpeakerShapesControl />
+          </Box>
+        )}
       </Box>
     </>
   );

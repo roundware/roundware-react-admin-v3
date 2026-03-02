@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   Create,
   Datagrid,
@@ -6,7 +7,6 @@ import {
   Edit,
   EditButton,
   List,
-  NumberField,
   ReferenceField,
   ReferenceInput,
   SearchInput,
@@ -14,8 +14,37 @@ import {
   SimpleForm,
   TextField,
   TextInput,
+  useRecordContext,
 } from 'react-admin';
 import FormToolbar from './common/FormToolbar';
+
+/** Maps entity_type values to React Admin resource names */
+const ENTITY_RESOURCE_MAP: Record<string, string> = {
+  project: 'projects',
+  tag: 'tags',
+  ui_group: 'uigroups',
+  asset: 'assets',
+};
+
+/** Renders entity_id as a clickable link to the entity's edit page */
+const EntityIdLink = (_props: { label?: string }) => {
+  const record = useRecordContext();
+  if (!record) return null;
+  const { entity_type, entity_id } = record;
+  const resource = ENTITY_RESOURCE_MAP[entity_type as string];
+  if (!resource || entity_id == null) {
+    return <span>{String(entity_id ?? '')}</span>;
+  }
+  return (
+    <Link
+      to={`/${resource}/${entity_id}`}
+      onClick={(e) => e.stopPropagation()}
+      style={{ color: '#1976d2', textDecoration: 'none' }}
+    >
+      {String(entity_id)}
+    </Link>
+  );
+};
 
 const localizedStringFilters = [
   <SearchInput source="search" alwaysOn key="search" />,
@@ -26,6 +55,7 @@ const localizedStringFilters = [
       { id: 'project', name: 'Project' },
       { id: 'tag', name: 'Tag' },
       { id: 'ui_group', name: 'UI Group' },
+      { id: 'asset', name: 'Asset' },
     ]}
     alwaysOn
   />,
@@ -39,9 +69,9 @@ export const LocalizedStringList = (): JSX.Element => {
   return (
     <List filters={localizedStringFilters}>
       <Datagrid rowClick="edit">
-        <NumberField source="id" />
+        <TextField source="id" label="ID" />
         <TextField source="entity_type" />
-        <NumberField source="entity_id" />
+        <EntityIdLink label="Entity ID" />
         <ReferenceField source="language_id" reference="languages">
           <TextField source="language_code" />
         </ReferenceField>
@@ -82,6 +112,7 @@ export const LocalizedStringCreate = (): JSX.Element => {
             { id: 'project', name: 'Project' },
             { id: 'tag', name: 'Tag' },
             { id: 'ui_group', name: 'UI Group' },
+            { id: 'asset', name: 'Asset' },
           ]}
         />
         <TextInput source="entity_id" required />
