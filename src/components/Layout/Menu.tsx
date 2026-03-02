@@ -1,4 +1,4 @@
-import { AccountTree, Business, Groups, Settings } from "@mui/icons-material";
+import { AccountTree, AddCircleOutline, Business, Groups, Settings } from "@mui/icons-material";
 import DefaultIcon from "@mui/icons-material/ViewList";
 import { useMediaQuery } from "@mui/material";
 import * as React from "react";
@@ -85,6 +85,12 @@ export const Menu = (props: MenuProps) => {
           }}
           primaryText={selectedProject ? "Project" : "All Projects"}
           leftIcon={<AccountTree />}
+        />
+        <MenuItemLink
+          key="wizard"
+          to={{ pathname: "/wizard" }}
+          primaryText="New Project"
+          leftIcon={<AddCircleOutline />}
         />
 
         {selectedProject &&

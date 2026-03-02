@@ -88,6 +88,7 @@ import authProvider from "./context/AuthProvider";
 import { useRoundwareDataProvider } from "./context/DataProviderContext";
 import { useProjects } from "./context/ProjectsContext";
 import CustomLoginPage from "./pages/CustomLoginPage";
+import ProjectWizardPage from "./pages/ProjectWizard";
 import TeamMembersPage from "./pages/TeamMembersPage";
 import TenantSettingsPage from "./pages/TenantSettingsPage";
 import adminTheme from "./styles";
@@ -160,6 +161,7 @@ function App({ basename }: { basename: string }): JSX.Element {
         <CustomRoutes key="custom-routes">
           <Route path="/assets/map" element={<AssetMapPage />} />
           <Route path={`/session_map/:sessionId`} element={<SessionMap />} />
+          <Route path="/wizard" element={<ProjectWizardPage />} />
           <Route path="/team" element={<TeamMembersPage />} />
           <Route path="/settings" element={<TenantSettingsPage />} />
         </CustomRoutes>,

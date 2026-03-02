@@ -13,7 +13,7 @@ import {
     useMediaQuery,
 } from "@mui/material";
 import { useProjects } from "context/ProjectsContext";
-import React, { memo, useState } from "react";
+import React, { memo } from "react";
 import { HideOnScroll, usePermissions, useRedirect, UserMenu } from "react-admin";
 import { useNavigate } from "react-router-dom";
 import RefreshButton from "./RefreshButton";
@@ -32,10 +32,8 @@ const AppBar = ({ container = HideOnScroll }: AppBarProps): JSX.Element => {
   const { permissions } = usePermissions();
   const { projectsList, selectedProject, selectProject } = useProjects();
 
-  const [isCreate, setIsCreate] = useState(false);
   const navigate = useNavigate();
   const handleOnChange = (event: SelectChangeEvent<string | number>) => {
-    setIsCreate(false);
     const { value } = event.target;
 
     if (value == "none") {
@@ -43,9 +41,7 @@ const AppBar = ({ container = HideOnScroll }: AppBarProps): JSX.Element => {
       return navigate(`/projects`);
     }
     if (value === "create") {
-      setIsCreate(true);
-      selectProject(null);
-      return navigate(`/projects/create`);
+      return navigate(`/wizard`);
     }
     selectProject(projectsList?.find((p) => p?.id === value) || null);
     if ([`none`, `create`].includes(value.toString())) return;
@@ -90,7 +86,7 @@ const AppBar = ({ container = HideOnScroll }: AppBarProps): JSX.Element => {
                 <Select
                   defaultValue={selectedProject?.id || "none"}
                   id="grouped-select"
-                  value={isCreate ? `create` : selectedProject?.id || "none"}
+                  value={selectedProject?.id || "none"}
                   onChange={handleOnChange}
                   size="small"
                 >
@@ -103,6 +99,8 @@ const AppBar = ({ container = HideOnScroll }: AppBarProps): JSX.Element => {
                   )}
                   {projectsList
                     ?.filter((p) => {
+                      // Always show the currently selected project in the dropdown
+                      if (selectedProject && p.id === selectedProject.id) return true;
                       // Env-based filter (VITE_INCLUDE_PROJECT_IDS)
                       if (!possibleProjects.includes("all") && !possibleProjects.includes(p.id.toString())) return false;
                       // User-level project access filter
