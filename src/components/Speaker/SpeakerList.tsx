@@ -188,8 +188,8 @@ const SpeakerList = (): JSX.Element => {
                 source="updated__lte"
               />,
               <BooleanInput
-                key="activeyn"
-                source="activeyn"
+                key="is_active"
+                source="is_active"
                 label="Active"
                 defaultValue={true}
               />,
@@ -205,7 +205,7 @@ const SpeakerList = (): JSX.Element => {
               <SpeakerAudioPlayer />
 
               <TextField source='id' />
-              <BooleanField source='activeyn' label='Active' />
+              <BooleanField source='is_active' label='Active' />
               <TextField source='code' />
 
               {/* <TextField source="backupuri" />

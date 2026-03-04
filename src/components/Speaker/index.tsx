@@ -22,10 +22,11 @@ import {
     TextInput,
     useCreate,
     useNotify,
+    useRecordContext,
     useRefresh,
     useUpdate,
 } from 'react-admin';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { apiFetcher } from 'roundwareDataProvider/tokenAuthProvider';
 import SpeakerAudioControls from './SpeakerAudioControls';
 import VariantAudioControls from './VariantAudioControls';
@@ -43,6 +44,7 @@ const validateHexColor = (value: string) => {
 export const SpeakerEdit = (): JSX.Element => {
   const { selectedProject } = useProjects();
   const { fetchData } = useSpeakers();
+  const { id: speakerId } = useParams<{ id: string }>();
 
   // Capture the raw file and set_as before transform strips them
   const pendingFileRef = useRef<File | Blob | null>(null);
@@ -59,7 +61,6 @@ export const SpeakerEdit = (): JSX.Element => {
 
   const transform = (data: RaRecord) => {
     extractRawFile(data);
-    data.project_id = selectedProject?.id;
     // Always strip file from JSON body — upload goes via separate endpoint
     delete data.file;
     delete data.uri;
@@ -69,6 +70,16 @@ export const SpeakerEdit = (): JSX.Element => {
     delete data.shape;
     delete data.attenuation_border;
     delete data.boundary;
+
+    // Strip fields the server doesn't accept on PATCH
+    delete data.id;
+    delete data.project_id;
+    delete data.parents;
+    delete data.children;
+    delete data.created_at;
+    delete data.updated_at;
+    delete data.variant_uris;
+    delete data.varianturis;
 
     return data;
   };
@@ -83,34 +94,38 @@ export const SpeakerEdit = (): JSX.Element => {
   const save: SimpleFormProps[`onSubmit`] = async (values: any) => {
     values = transform(values as RaRecord);
     try {
+      // Upload audio file FIRST so the server has the new uri before
+      // the data provider refetches and caches the speaker after PATCH.
+      if (pendingFileRef.current) {
+        setProgress(50);
+        const formData = new FormData();
+        formData.append('file', pendingFileRef.current);
+        formData.append('set_as', pendingSetAsRef.current);
+        try {
+          await apiFetcher(`/speakers/${speakerId}/upload-audio/`, {
+            method: 'POST',
+            body: formData,
+          });
+        } catch (e) {
+          console.error('Speaker audio upload failed', e);
+          notify('Audio upload failed', { type: 'warning' });
+        }
+        pendingFileRef.current = null;
+      }
+
+      // PATCH speaker metadata — the data provider will refetch after this,
+      // picking up the uri set by the upload above.
       await update(
         `speakers`,
         {
           data: values,
           previousData: values,
-          id: values.id,
+          id: speakerId,
         },
         {
           returnPromise: true,
           mutationMode: 'pessimistic',
-          onSuccess: async () => {
-            // Upload audio file via dedicated endpoint if one was selected
-            if (pendingFileRef.current) {
-              setProgress(50);
-              const formData = new FormData();
-              formData.append('file', pendingFileRef.current);
-              formData.append('set_as', pendingSetAsRef.current);
-              try {
-                await apiFetcher(`/speakers/${values.id}/upload-audio/`, {
-                  method: 'POST',
-                  body: formData,
-                });
-              } catch (e) {
-                console.error('Speaker audio upload failed', e);
-                notify('Audio upload failed', { type: 'warning' });
-              }
-              pendingFileRef.current = null;
-            }
+          onSuccess: () => {
             fetchData();
             refresh();
             success.setTrue();
@@ -129,14 +144,14 @@ export const SpeakerEdit = (): JSX.Element => {
   if (success.value)
     return <Navigate to={`/project/${selectedProject?.id}/speakers`} />;
   return (
-    <Edit transform={transform}>
+    <Edit>
       <SimpleForm
         reValidateMode='onBlur'
         warnWhenUnsavedChanges
         onSubmit={save}
       >
-        <TextInput source='id' fullWidth />
-        <BooleanInput source='activeyn' fullWidth />
+        <TextInput source='id' fullWidth InputProps={{ readOnly: true }} />
+        <BooleanInput source='is_active' fullWidth />
         <TextInput source='code' fullWidth validate={maxLength(10)} />
         <SpeakerAudioControls />
         <FileDownloadButton source='uri' />
@@ -145,10 +160,10 @@ export const SpeakerEdit = (): JSX.Element => {
 
         <VariantAudioControls />
 
-        <NumberInput 
-          source='attenuation_distance' 
-          required 
-          fullWidth 
+        <NumberInput
+          source='attenuation_distance'
+          required
+          fullWidth
           min={0}
           step={1}
           helperText="Meters (positive integers only)"
@@ -198,8 +213,8 @@ export const SpeakerEdit = (): JSX.Element => {
         />
 
         <Stack spacing={2} sx={{ mt: 2 }}>
-          <DateTimeInput source='created' fullWidth />
-          <DateTimeInput source='updated' fullWidth />
+          <DateTimeInput source='created_at' fullWidth InputProps={{ readOnly: true }} />
+          <DateTimeInput source='updated_at' fullWidth InputProps={{ readOnly: true }} />
         </Stack>
 
         {progress > 0 && (
@@ -242,6 +257,10 @@ export const SpeakerCreate = (): JSX.Element => {
     // Always strip file from JSON body — upload goes via separate endpoint
     delete data.file;
     delete data.set_as;
+    // Strip fields the server doesn't accept on POST
+    delete data.parents;
+    delete data.children;
+    delete data.varianturis;
     return data;
   };
 
@@ -301,14 +320,14 @@ export const SpeakerCreate = (): JSX.Element => {
   if (success.value)
     return <Navigate to={`/project/${selectedProject?.id}/speakers`} />;
   return (
-    <Create redirect={false} transform={transform}>
+    <Create redirect={false}>
       <SimpleForm
         warnWhenUnsavedChanges
         onSubmit={save}
         toolbar={<FormToolbar />}
         reValidateMode='onBlur'
       >
-        <BooleanInput source='activeyn' fullWidth defaultChecked />
+        <BooleanInput source='is_active' fullWidth defaultChecked />
         <TextInput source='code' validate={maxLength(10)} fullWidth required />
 
         <SpeakerAudioControls />
@@ -352,11 +371,6 @@ export const SpeakerCreate = (): JSX.Element => {
           optionText='code'
           filter={{ project_id: selectedProject?.id }}
         />
-
-        <Stack spacing={2} sx={{ mt: 2 }}>
-          <DateTimeInput source='created' fullWidth defaultValue={new Date()} />
-          <DateTimeInput source='updated' fullWidth />
-        </Stack>
 
         {progress > 0 && (
           <Stack sx={{ width: '100%' }}>

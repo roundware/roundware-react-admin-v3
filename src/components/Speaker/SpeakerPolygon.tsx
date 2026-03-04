@@ -77,11 +77,11 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
 
   const dataProvider = useRoundwareDataProvider();
 
-  // the editable shape
+  // the editable shape — use the speaker's actual colors
   const shapePolygonOptions: PolygonProps[`options`] = {
-    fillColor: speaker.activeyn ? `gray` : "lightblue",
-    fillOpacity: isSelected ? 0.5 : 0,
-    strokeColor: "red",
+    fillColor: speaker.fill_color || "#0000FF80",
+    fillOpacity: isSelected ? 0.5 : 0.3,
+    strokeColor: speaker.border_color || "#0000FF",
     strokeOpacity: 1,
     strokeWeight: 2,
     clickable: true,
@@ -236,12 +236,13 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
         .update(`speakers`, {
           id: speaker.id,
           data: {
-            ...speaker,
+            // Only send fields we're actually changing — spreading ...speaker
+            // would overwrite fill_color/border_color with stale cached values.
             ...geoJSONObjects,
             attenuation_distance: distance,
           },
           previousData: {
-            ...speaker,
+            id: speaker.id,
           },
         })
         .then(() => {

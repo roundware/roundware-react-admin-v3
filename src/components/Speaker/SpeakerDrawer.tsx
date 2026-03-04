@@ -197,13 +197,13 @@ const SpeakerDrawer = (): JSX.Element | null => {
     dataProvider
       .update(`speakers`, {
         data: {
-          ...selectedSpeakerData,
+          // Only send geo fields — spreading ...selectedSpeakerData would
+          // overwrite fill_color/border_color with stale cached values.
           ...objects,
         },
         id: Number(selectedSpeaker),
         previousData: {
           id: Number(selectedSpeaker),
-          ...selectedSpeakerData,
         },
       })
       .then(() => {

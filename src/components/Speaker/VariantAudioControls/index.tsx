@@ -19,21 +19,17 @@ import { useRecordContext } from "react-admin";
 import VariantAudioPlayer from "./VariantAudioPlayer";
 
 const VariantAudioControls = (): JSX.Element => {
-  const [varianturis, setVarianturis] = useFieldValue<string[]>(`varianturis`, []);
+  const [variantUris, setVariantUris] = useFieldValue<string[]>(`variant_uris`, []);
   const record = useRecordContext();
   const [uploading, setUploading] = React.useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [deleteBinary, setDeleteBinary] = React.useState(false);
   const [variantToDelete, setVariantToDelete] = React.useState<number | null>(null);
   const dataProvider = useRoundwareDataProvider();
-  
+
   const speakerId = record?.id || 'new';
-  
-  // Debug logging
-  console.log('VariantAudioControls render - varianturis:', varianturis);
 
   const handleAddVariant = async (file: File) => {
-    console.log('Adding variant file:', file.name);
     setUploading(true);
     
     try {
@@ -42,7 +38,6 @@ const VariantAudioControls = (): JSX.Element => {
       formData.append('file', file);
       formData.append('audio_compression', 'false'); // Optional: can be made configurable
       
-      console.log('Uploading variant file using data provider...');
       
       // Use the data provider's httpClient to make the request
       const result = await dataProvider.httpClient(
@@ -54,12 +49,10 @@ const VariantAudioControls = (): JSX.Element => {
         }
       );
       
-      console.log('Upload successful, updated speaker:', result.json);
       
-      // Update the varianturis array with the new URI
-      const newUris = [...varianturis, ...result.json.varianturis.filter((uri: string) => !varianturis.includes(uri))];
-      setVarianturis(newUris);
-      console.log('Updated varianturis:', newUris);
+      // Update the variant_uris array with the new URI
+      const newUris = [...variantUris, ...result.json.variant_uris.filter((uri: string) => !variantUris.includes(uri))];
+      setVariantUris(newUris);
     } catch (error) {
       console.error('Error uploading variant file:', error);
       // TODO: Show error notification to user
@@ -77,8 +70,7 @@ const VariantAudioControls = (): JSX.Element => {
   const handleConfirmDelete = async () => {
     if (variantToDelete === null) return;
     
-    const uriToRemove = varianturis[variantToDelete];
-    console.log('Removing variant URI:', uriToRemove, 'delete-binary:', deleteBinary);
+    const uriToRemove = variantUris[variantToDelete];
     
     try {
       // Use the data provider's httpClient to make the request
@@ -96,11 +88,8 @@ const VariantAudioControls = (): JSX.Element => {
         }
       );
       
-      console.log('Remove successful, updated speaker:', result.json);
-      
-      // Update the varianturis array
-      setVarianturis(result.json.varianturis);
-      console.log('Updated varianturis after removal:', result.json.varianturis);
+      // Update the variant_uris array
+      setVariantUris(result.json.variant_uris);
     } catch (error) {
       console.error('Error removing variant URI:', error);
       // TODO: Show error notification to user
@@ -146,12 +135,12 @@ const VariantAudioControls = (): JSX.Element => {
       </Box>
 
       {/* Display existing variants from database */}
-      {varianturis && varianturis.length > 0 && (
+      {variantUris && variantUris.length > 0 && (
         <Box sx={{ mb: 2 }}>
           <Typography variant="subtitle2" gutterBottom>
             Existing Variants:
           </Typography>
-          {varianturis.map((uri, index) => (
+          {variantUris.map((uri, index) => (
             <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, p: 1, border: 1, borderColor: 'divider', borderRadius: 1 }}>
               <Chip label={uri.split('/').pop() || `Variant ${index + 1}`} size="small" />
               <VariantAudioPlayer src={uri} />
