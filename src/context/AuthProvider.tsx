@@ -10,6 +10,8 @@ export interface StoredTenant {
   slug: string;
   role: string;
   project_ids: number[] | null;
+  plan_name: string | null;
+  project_count: number;
 }
 
 /**

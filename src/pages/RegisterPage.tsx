@@ -72,16 +72,18 @@ const RegisterPage = () => {
       const data = await response.json();
 
       // Store auth data (same as login flow in AuthProvider)
-      localStorage.setItem("access_token", data.access_token);
+      // Write tenant info BEFORE access_token (see AuthProvider for details)
       if (data.tenants?.length) {
+        localStorage.setItem("tenants", JSON.stringify(data.tenants));
         localStorage.setItem("tenant_slug", data.tenants[0].slug);
       }
       if (data.user) {
         localStorage.setItem("user", JSON.stringify(data.user));
       }
+      localStorage.setItem("access_token", data.access_token);
 
-      // Redirect to home — the app will detect the token and load
-      navigate("/");
+      // Redirect to plan selection for new users
+      navigate("/onboarding/plan");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed.");
     } finally {
