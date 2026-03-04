@@ -119,7 +119,7 @@ const SpeakerShapesControl = ({ speakers: propSpeakers }: SpeakerShapesControlPr
         <CardContent style={{ height: '100%' }}>
           <Grid container direction='column' spacing={2}>
             {/* speaker info */}
-            <Grid>
+            <Grid size="auto">
               <Typography variant='h5'>Shapes</Typography>
               {selectedSpeaker ? (
                 <Typography
@@ -140,7 +140,7 @@ const SpeakerShapesControl = ({ speakers: propSpeakers }: SpeakerShapesControlPr
             </Grid>
 
             {/* locatoin seelctor */}
-            <Grid>
+            <Grid size="auto">
               <PlacesAutoComplete
                 onSelect={(lat, lng) =>
                   setCenter({
@@ -152,7 +152,7 @@ const SpeakerShapesControl = ({ speakers: propSpeakers }: SpeakerShapesControlPr
             </Grid>
 
             {/* map */}
-            <Grid>
+            <Grid size="auto">
               {isLoaded ? (
                 <GoogleMap
                   mapContainerStyle={containerStyle}

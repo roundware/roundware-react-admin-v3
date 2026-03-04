@@ -472,7 +472,7 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
             }}
           >
             <Grid container direction="column" spacing={0}>
-              <Grid>
+              <Grid size="auto">
                 <Tooltip title="Save Changes" placement="right">
                   <IconButton
                     onClick={handleSave}
@@ -483,49 +483,49 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
                   </IconButton>
                 </Tooltip>
               </Grid>
-              <Grid>
+              <Grid size="auto">
                 <Tooltip title="Discard Changes" placement="right">
                   <IconButton onClick={handleDiscard} size="medium">
                     <HistoryIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
-              <Grid>
+              <Grid size="auto">
                 <Tooltip title="Delete Shape" placement="right">
                   <IconButton onClick={handleDelete} size="medium">
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
-              <Grid>
+              <Grid size="auto">
                 <Tooltip title="Rotate Left (5°)" placement="right">
                   <IconButton onClick={handleRotateLeft} size="medium">
                     <RotateLeftIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
-              <Grid>
+              <Grid size="auto">
                 <Tooltip title="Rotate Right (5°)" placement="right">
                   <IconButton onClick={handleRotateRight} size="medium">
                     <RotateRightIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
-              <Grid>
+              <Grid size="auto">
                 <Tooltip title="Scale Up (10%)" placement="right">
                   <IconButton onClick={handleScaleUp} size="medium">
                     <ZoomOutMapIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
-              <Grid>
+              <Grid size="auto">
                 <Tooltip title="Scale Down (10%)" placement="right">
                   <IconButton onClick={handleScaleDown} size="medium">
                     <ZoomInMapIcon />
                   </IconButton>
                 </Tooltip>
               </Grid>
-              <Grid>
+              <Grid size="auto">
                 <Tooltip title="Attenuation Distance" placement="right">
                   <IconButton onClick={handleOpenAD} size="medium">
                     <BlurCircularIcon />
