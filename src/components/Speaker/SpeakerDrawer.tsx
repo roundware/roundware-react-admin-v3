@@ -186,10 +186,9 @@ const SpeakerDrawer = (): JSX.Element | null => {
 
   /* saves to db and refetch */
   const handleSave = () => {
-    setSaving(true);
-     
     const { attenuation_distance } = selectedSpeakerData!;
-    if (!Array.isArray(drawnPaths) || !attenuation_distance) return;
+    if (!Array.isArray(drawnPaths) || attenuation_distance == null) return;
+    setSaving(true);
     const objects = getSpeakerGeoJSONObjectsForPath(
       drawnPaths,
       attenuation_distance
