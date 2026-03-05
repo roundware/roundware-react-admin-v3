@@ -59,8 +59,10 @@ export const SpeakerEdit = (): JSX.Element => {
     pendingSetAsRef.current = data?.set_as || "uri";
   };
 
-  const transform = (data: RaRecord) => {
-    extractRawFile(data);
+  const transform = (record: RaRecord) => {
+    extractRawFile(record);
+    // Work with a mutable copy so TypeScript allows deleting required keys
+    const data: Record<string, any> = { ...record };
     // Always strip file from JSON body — upload goes via separate endpoint
     delete data.file;
     delete data.uri;
@@ -81,7 +83,7 @@ export const SpeakerEdit = (): JSX.Element => {
     delete data.variant_uris;
     delete data.varianturis;
 
-    return data;
+    return data as RaRecord;
   };
 
   const refresh = useRefresh();
