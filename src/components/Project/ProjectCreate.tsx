@@ -132,6 +132,14 @@ const ProjectCreate = (): JSX.Element => {
             fullWidth
             helperText="Max time users can speak"
           />
+          <NumberInput
+            source="speaker_attenuation_distance"
+            fullWidth
+            min={0}
+            step={1}
+            defaultValue={3}
+            helperText="Default attenuation distance (meters) for new speakers created via the web app; can be overridden per-speaker"
+          />
           {/* audio_format and audio_stream_bitrate hidden — managed server-side */}
           <TextInput
             source="audio_format"
