@@ -5,7 +5,7 @@ import {
     useSesisonMap,
 } from "context/SessionMapContext";
 import React from "react";
-import { mapLibraries } from "../../utils";
+import { mapLibraries, mapsApiVersion } from "../../utils";
 import EventInfoWindow from "./EventInfoWindow";
 import SessionMapFilters from "./SessionMapFilters";
 import SessionMapMarkers from "./SessionMapMarkers";
@@ -27,7 +27,7 @@ const SessionMap = () => {
 const GoogleMapsWrapper = (props: { children: React.ReactNode }) => {
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
-     
+    version: mapsApiVersion,
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY!,
     libraries: mapLibraries,
   });

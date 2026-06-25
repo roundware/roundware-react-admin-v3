@@ -22,7 +22,7 @@ import { useMarkerClusterer } from "hooks/useMarkerClusterer";
 import React, { useEffect } from "react";
 import { useListController } from "react-admin";
 import { IAsset } from "types/asset";
-import { mapLibraries } from "../../utils";
+import { mapLibraries, mapsApiVersion } from "../../utils";
 import AssetMarker from "./AssetMarker";
 
 const AssetMarkers = () => {
@@ -75,7 +75,7 @@ const AssetMarkers = () => {
 const GoogleMapsWrapper = (props: { children: React.ReactNode }) => {
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
-     
+    version: mapsApiVersion,
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY!,
     libraries: mapLibraries,
   });

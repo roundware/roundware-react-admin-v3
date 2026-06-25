@@ -11,7 +11,7 @@ import PlacesAutoComplete from 'components/common/LocationSelector/PlacesAutoCom
 import { useSpeakers } from 'context/SpeakersContext';
 import React, { useEffect, useState } from 'react';
 import { ISpeaker } from '../../types/speaker';
-import { mapLibraries } from '../../utils';
+import { mapLibraries, mapsApiVersion } from '../../utils';
 import SpeakerDrawer from './SpeakerDrawer';
 import SpeakerPolygonGroup from './SpeakerPolygon';
 const containerStyle = {
@@ -38,7 +38,7 @@ const SpeakerShapesControl = ({ speakers: propSpeakers }: SpeakerShapesControlPr
   const speakers = propSpeakers || contextSpeakers;
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-     
+    version: mapsApiVersion,
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY!,
     libraries: mapLibraries,
   });

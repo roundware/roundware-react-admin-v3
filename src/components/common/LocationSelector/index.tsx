@@ -11,7 +11,7 @@ import {
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import useFieldValue from "hooks/useFieldValue";
 import React, { PropsWithChildren, useEffect, useState } from "react";
-import { mapLibraries } from "utils";
+import { mapLibraries, mapsApiVersion } from "utils";
 import PlacesAutoComplete from "./PlacesAutoComplete";
 import SelectorPin from "./SelectorPin";
 interface Props {
@@ -46,7 +46,7 @@ const LocationSelector = (props: PropsWithChildren<Props>): JSX.Element => {
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-     
+    version: mapsApiVersion,
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY!,
     libraries: mapLibraries,
   });

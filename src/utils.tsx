@@ -38,6 +38,11 @@ export function buildLocalizationsPayload(
 
 export const mapLibraries: ["places", "drawing"] = ["places", "drawing"];
 
+// Pin the Maps JS API version: Google removed DrawingManager (used for speaker
+// shapes) as of v3.65. 3.64 is the last version that still includes it.
+// TODO: replace DrawingManager with a custom polygon editor and drop this pin.
+export const mapsApiVersion = "3.64";
+
 export function csvToJSON<T>(csv: string): T[] {
   const lines = csv.split("\r\n");
 
