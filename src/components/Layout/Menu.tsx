@@ -72,6 +72,14 @@ export const Menu = (props: MenuProps) => {
             to={{ pathname: `/project/${selectedProject.id}` }}
           />
         )}
+        {selectedProject && (
+          <MenuItemLink
+            key="publish"
+            primaryText="Publish"
+            leftIcon={<PublicIcon />}
+            to={{ pathname: `/project/${selectedProject.id}/publish` }}
+          />
+        )}
         {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
         {/* @ts-ignore */}
         <MenuItemLink

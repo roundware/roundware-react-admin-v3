@@ -42,6 +42,7 @@ import {
 } from "./components/Language";
 import CustomLayout from "./components/Layout";
 import Dashboard from "./components/Layout/Dashboard";
+import PublishPage from "./pages/Publish";
 import {
     ListenEventsCreate,
     ListenEventsEdit,
@@ -162,6 +163,7 @@ function App({ basename }: { basename: string }): JSX.Element {
           <Route path="/assets/map" element={<AssetMapPage />} />
           <Route path={`/session_map/:sessionId`} element={<SessionMap />} />
           <Route path="/wizard" element={<ProjectWizardPage />} />
+          <Route path="/publish" element={<PublishPage />} />
           <Route path="/team" element={<TeamMembersPage />} />
           <Route path="/settings" element={<TenantSettingsPage />} />
         </CustomRoutes>,
