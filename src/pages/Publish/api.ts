@@ -6,6 +6,7 @@ export interface DeploymentState {
   subdomain: string | null;
   hostname: string | null;
   url: string | null;
+  base_domain: string;
 }
 
 export interface SubdomainCheck {

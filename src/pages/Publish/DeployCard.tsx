@@ -28,8 +28,6 @@ interface Props {
   onChange?: () => void;
 }
 
-const BASE_DOMAIN = "roundware.com";
-
 const DeployCard: React.FC<Props> = ({ projectId, onChange }) => {
   const [state, setState] = useState<DeploymentState | null>(null);
   const [subdomain, setSubdomain] = useState("");
@@ -74,6 +72,7 @@ const DeployCard: React.FC<Props> = ({ projectId, onChange }) => {
   }, [subdomain, state?.subdomain]);
 
   const value = subdomain.trim().toLowerCase();
+  const baseDomain = state?.base_domain ?? "roundware.app";
   const isCurrent = state?.deployed && value === state.subdomain;
   const canDeploy = !!value && !checking && (isCurrent || check?.available === true);
 
@@ -97,7 +96,13 @@ const DeployCard: React.FC<Props> = ({ projectId, onChange }) => {
     setError(null);
     try {
       await undeployProject(projectId);
-      setState({ deployed: false, subdomain: null, hostname: null, url: null });
+      setState((prev) => ({
+        deployed: false,
+        subdomain: null,
+        hostname: null,
+        url: null,
+        base_domain: prev?.base_domain ?? baseDomain,
+      }));
       onChange?.();
     } catch (e) {
       setError(errMessage(e));
@@ -152,7 +157,7 @@ const DeployCard: React.FC<Props> = ({ projectId, onChange }) => {
           placeholder="my-tour"
           InputProps={{
             endAdornment: (
-              <InputAdornment position="end">.{BASE_DOMAIN}</InputAdornment>
+              <InputAdornment position="end">.{baseDomain}</InputAdornment>
             ),
           }}
           helperText={
