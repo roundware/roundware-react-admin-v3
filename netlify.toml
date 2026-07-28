@@ -1,0 +1,17 @@
+[build]
+  command = "npm run build"
+  publish = "build"
+
+[build.environment]
+  # Pin the Node major so CI builds match local development.
+  NODE_VERSION = "24"
+
+# React Admin routes entirely on the client (/publish, /project/:id/..., /team).
+# Without this, refreshing on any route — or opening a deep link — returns 404,
+# because no such file exists on disk. Serve index.html for every path and let
+# the router resolve it.
+# (Mirrored in public/_redirects so manual drag-and-drop deploys behave too.)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
