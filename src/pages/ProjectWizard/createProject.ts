@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------------------
 import { apiFetcher } from "../../roundwareDataProvider/tokenAuthProvider";
 import { CreationStep, TempId, WizardState } from "./types";
+import { getTemplate } from "./templates";
 
 type ProgressCallback = (steps: CreationStep[]) => void;
 
@@ -72,11 +73,21 @@ export async function executeCreation(
       out_of_range_distance: state.project.out_of_range_distance,
       repeat_mode: state.project.repeat_mode,
       ordering: state.project.ordering,
+      recording_method: state.project.recording_method,
       sharing_url: state.project.sharing_url,
       legal_agreement: state.project.legal_agreement,
     };
     if (state.project.localizations) {
       projectBody.localizations = state.project.localizations;
+    }
+    // Seed ui_config_json from the chosen template. Read from the template
+    // rather than wizard state because the wizard has no config step — the
+    // document is applied once at creation and edited afterwards in the
+    // project's settings. "Start from Scratch" sends nothing and inherits the
+    // web app's defaults.
+    const template = state.templateKey ? getTemplate(state.templateKey) : undefined;
+    if (template && Object.keys(template.config).length > 0) {
+      projectBody.ui_config_json = template.config;
     }
     const { json } = await post("/projects/", projectBody);
     projectId = json.id;

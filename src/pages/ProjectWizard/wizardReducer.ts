@@ -33,6 +33,7 @@ export const DEFAULT_PROJECT: WizardProject = {
   out_of_range_distance: 1000,
   repeat_mode: "stop",
   ordering: "random",
+  recording_method: "standard",
   sharing_url: "",
   legal_agreement:
     "I agree that any content I upload to this project can be used freely by the project owners for any project-related artistic or educational purpose.",

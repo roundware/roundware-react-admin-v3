@@ -16,6 +16,29 @@ const artinstallation: WizardTemplate = {
     ordering: "random",
     repeat_mode: "continuous",
     auto_submit: true,
+    recording_method: "standard",
+  },
+  // A single fixed site, usually one room. Continuous playback, no map at all,
+  // and a short auto-reset so the piece is ready for the next visitor.
+  config: {
+    speak: { uploadAsSpeaker: false },
+    listen: {
+      availableListenModes: ["map"],
+      geoListenMode: ["map"],
+      autoplay: true,
+    },
+    map: {
+      bounds: "auto",
+      assetDisplay: "circle",
+      rangeCircleOverlayVisible: false,
+      showListenerLocationMarker: false,
+      showBoundsMarkers: false,
+      speakerDisplay: "none",
+      listenMapOverlayDisplay: false,
+    },
+    ui: {
+      listenSidebar: { active: false, defaultOpen: false },
+    },
   },
   audiotrack: {
     min_volume: 0.4,

@@ -17,6 +17,28 @@ const soundmap: WizardTemplate = {
     ordering: "random",
     repeat_mode: "stop",
     out_of_range_distance: 2000,
+    recording_method: "standard",
+  },
+  // The map *is* the experience: browse a whole region from anywhere, so map
+  // listen mode rather than walking, and the sidebar open by default.
+  config: {
+    speak: { uploadAsSpeaker: false },
+    listen: {
+      availableListenModes: ["map", "walking"],
+      geoListenMode: ["map"],
+      autoplay: false,
+    },
+    map: {
+      bounds: "auto",
+      assetDisplay: "pin",
+      rangeCircleOverlayVisible: true,
+      showListenerLocationMarker: true,
+      speakerDisplay: "none",
+      assetTypeDisplay: ["audio", "photo", "text"],
+    },
+    ui: {
+      listenSidebar: { active: true, defaultOpen: true },
+    },
   },
   audiotrack: {
     min_volume: 0.5,

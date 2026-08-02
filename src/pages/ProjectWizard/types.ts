@@ -51,6 +51,8 @@ export interface WizardProject {
   out_of_range_distance: number;
   repeat_mode: string;
   ordering: string;
+  /** "standard" | "looping" — a column, so it is set here rather than in config */
+  recording_method: string;
   sharing_url: string;
   legal_agreement: string;
   /** Per-language localizations: { lang_code: { field: text } } */
@@ -139,12 +141,47 @@ export interface WizardState {
 
 // ---- Template type --------------------------------------------------------
 
+/**
+ * A template's seed for the project's `ui_config_json`.
+ *
+ * The section names are the ones the server accepts — they mirror
+ * `KNOWN_SECTIONS` in the server's `src/app/core/ui_config.py`, so a typo like
+ * `speek` fails to compile here rather than 422-ing at the last step of the
+ * wizard. Section *contents* are deliberately loose: the whole point of the
+ * JSONB home is that adding a setting needs no schema change anywhere.
+ *
+ * Two rules the compiler cannot enforce, both from
+ * roundware-server-v3/docs/009-configuration.md:
+ *
+ *  1. Do not set a key that a project column owns — the server rejects those
+ *     (§7 decision 4). In practice: nothing under `speak` except
+ *     `uploadAsSpeaker`, `defaultSpeakTags`, `baseRecordingLoopSelectionMethod`,
+ *     the clickTrack/looping keys; and nothing in `features` except
+ *     `autoConcludeDuration`, `concludeDuration`, `speakerToggleIds`.
+ *     Column-backed settings go in the template's `project` block instead.
+ *  2. Keys must match the web app's `configTypes.ts` exactly. An unrecognised
+ *     nested key is *not* an error — it simply never matches anything and is
+ *     silently ignored.
+ */
+export interface TemplateConfig {
+  project?: Record<string, unknown>;
+  listen?: Record<string, unknown>;
+  speak?: Record<string, unknown>;
+  map?: Record<string, unknown>;
+  ui?: Record<string, unknown>;
+  features?: Record<string, unknown>;
+  theme?: Record<string, unknown>;
+  locale?: string;
+}
+
 export interface WizardTemplate {
   key: string;
   name: string;
   description: string;
   icon: string; // MUI icon name hint (rendered in TemplateStep)
   project: Partial<WizardProject>;
+  /** Seeds the project's ui_config_json. See TemplateConfig. */
+  config: TemplateConfig;
   audiotrack: Partial<WizardAudiotrack>;
   categories: Omit<WizardTagCategory, "tempId">[];
   /** Tags reference categories by index in the categories array above */

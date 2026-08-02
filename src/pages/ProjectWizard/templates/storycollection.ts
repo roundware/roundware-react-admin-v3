@@ -16,6 +16,27 @@ const storycollection: WizardTemplate = {
     ordering: "random",
     repeat_mode: "stop",
     auto_submit: false,
+    recording_method: "standard",
+  },
+  // Not a geographic project — long-form stories collected from anywhere. The
+  // map is still available to browse the archive, but location is incidental.
+  config: {
+    speak: { uploadAsSpeaker: false },
+    listen: {
+      availableListenModes: ["map"],
+      geoListenMode: ["map"],
+      autoplay: false,
+    },
+    map: {
+      bounds: "auto",
+      assetDisplay: "pin",
+      rangeCircleOverlayVisible: false,
+      showListenerLocationMarker: false,
+      speakerDisplay: "none",
+    },
+    ui: {
+      listenSidebar: { active: true, defaultOpen: true },
+    },
   },
   audiotrack: {
     min_volume: 0.7,

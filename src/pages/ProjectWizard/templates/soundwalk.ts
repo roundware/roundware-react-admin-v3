@@ -17,6 +17,24 @@ const soundwalk: WizardTemplate = {
     ordering: "random",
     repeat_mode: "stop",
     out_of_range_distance: 500,
+    recording_method: "standard",
+  },
+  // Walking is the point: default to the walking listen mode, tight zoom, and
+  // bounds that follow the route rather than a fixed frame.
+  config: {
+    speak: { uploadAsSpeaker: false },
+    listen: {
+      availableListenModes: ["map", "walking"],
+      geoListenMode: ["walking"],
+      autoplay: true,
+    },
+    map: {
+      bounds: "auto",
+      assetDisplay: "pin",
+      rangeCircleOverlayVisible: true,
+      showListenerLocationMarker: true,
+      speakerDisplay: "none",
+    },
   },
   audiotrack: {
     min_volume: 0.6,

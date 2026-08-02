@@ -16,6 +16,8 @@ import DirectionsWalkIcon from "@mui/icons-material/DirectionsWalk";
 import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
 import MapIcon from "@mui/icons-material/Map";
 import PaletteIcon from "@mui/icons-material/Palette";
+import PodcastsIcon from "@mui/icons-material/Podcasts";
+import GraphicEqIcon from "@mui/icons-material/GraphicEq";
 import BuildIcon from "@mui/icons-material/Build";
 
 import { WizardState } from "../types";
@@ -33,6 +35,8 @@ const iconMap: Record<string, React.ReactElement> = {
   RecordVoiceOver: <RecordVoiceOverIcon sx={{ fontSize: 48 }} />,
   Map: <MapIcon sx={{ fontSize: 48 }} />,
   Palette: <PaletteIcon sx={{ fontSize: 48 }} />,
+  Podcasts: <PodcastsIcon sx={{ fontSize: 48 }} />,
+  GraphicEq: <GraphicEqIcon sx={{ fontSize: 48 }} />,
 };
 
 const TemplateStep: React.FC<TemplateStepProps> = ({ state, dispatch }) => {
