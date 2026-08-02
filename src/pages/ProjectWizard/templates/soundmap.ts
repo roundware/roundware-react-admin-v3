@@ -2,6 +2,7 @@ import { WizardTemplate } from "../types";
 
 const soundmap: WizardTemplate = {
   key: "soundmap",
+  active: true,
   name: "Sound Map",
   description:
     "Community sound mapping project where participants contribute geo-tagged audio recordings to build a collective sonic portrait of a place.",

@@ -21,6 +21,7 @@ import { WizardTemplate } from "../types";
  */
 const standard: WizardTemplate = {
   key: "standard",
+  active: true,
   name: "Standard",
   description:
     "A plain, general-purpose project with listening and recording enabled and no location setup required. Start here if you are not sure — you can change anything later.",

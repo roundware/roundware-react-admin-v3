@@ -2,6 +2,7 @@ import { WizardTemplate } from "../types";
 
 const soundwalk: WizardTemplate = {
   key: "soundwalk",
+  active: true,
   name: "Sound Walk",
   description:
     "Outdoor, geo-enabled project for guided audio walks. Participants contribute and listen to sounds tied to specific locations along a walking route.",

@@ -15,6 +15,7 @@ import { WizardTemplate } from "../types";
  */
 const podcast: WizardTemplate = {
   key: "podcast",
+  active: true,
   name: "Podcast / Radio Show",
   description:
     "Collect audio from your listeners. Built for capturing contributions rather than exploring a map — no location required, with a speak-first interface and prompts tied to your show.",

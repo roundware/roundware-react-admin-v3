@@ -25,6 +25,7 @@ import { WizardTemplate } from "../types";
  */
 const collectiveloops: WizardTemplate = {
   key: "collectiveloops",
+  active: true,
   name: "Collective Loops",
   description:
     "Participants record over a shared looping base track, and each contribution joins a continuous collective mix that everyone hears. Best for installations and choral pieces rather than map browsing.",

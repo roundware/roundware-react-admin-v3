@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------------------
 import React from "react";
 import {
+  Alert,
   Box,
   Card,
   CardActionArea,
@@ -22,7 +23,7 @@ import BuildIcon from "@mui/icons-material/Build";
 
 import { WizardState } from "../types";
 import { WizardAction } from "../wizardReducer";
-import { TEMPLATES } from "../templates";
+import { ACTIVE_TEMPLATES, DEFAULT_TEMPLATE } from "../templates";
 import StepInstruction from "../components/StepInstruction";
 
 interface TemplateStepProps {
@@ -50,8 +51,16 @@ const TemplateStep: React.FC<TemplateStepProps> = ({ state, dispatch }) => {
         the later steps or after the project is created.
       </StepInstruction>
 
+      {ACTIVE_TEMPLATES.length === 0 && (
+        <Alert severity="warning" sx={{ mb: 3 }}>
+          No project templates are currently available. Every template has been
+          set to <code>active: false</code>, so there is nothing to choose from
+          and the wizard cannot continue.
+        </Alert>
+      )}
+
       <Grid container spacing={2} sx={{ mb: 3 }}>
-        {TEMPLATES.map((template) => {
+        {ACTIVE_TEMPLATES.map((template) => {
           const isSelected = state.templateKey === template.key;
           return (
             <Grid key={template.key} size={{ xs: 12, sm: 6 }}>
@@ -106,14 +115,20 @@ const TemplateStep: React.FC<TemplateStepProps> = ({ state, dispatch }) => {
         })}
       </Grid>
 
-      {state.templateKey === null && (
+      {state.templateKey === null && ACTIVE_TEMPLATES.length > 0 && (
         <Typography
           variant="body2"
           color="text.secondary"
           sx={{ textAlign: "center", mt: 1 }}
         >
-          Choose a template to continue. Every setting can be changed later —
-          pick <strong>Standard</strong> if you are not sure.
+          Choose a template to continue. Every setting can be changed later
+          {DEFAULT_TEMPLATE && (
+            <>
+              {" "}
+              — pick <strong>{DEFAULT_TEMPLATE.name}</strong> if you are not sure
+            </>
+          )}
+          .
         </Typography>
       )}
     </Box>

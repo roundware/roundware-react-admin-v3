@@ -177,6 +177,19 @@ export interface TemplateConfig {
 
 export interface WizardTemplate {
   key: string;
+  /**
+   * Whether this template is offered in the wizard.
+   *
+   * Set `false` to retire or park a template without deleting it — useful when
+   * narrowing the choices for a round of user testing. Required rather than
+   * optional so adding a template is a conscious decision either way.
+   *
+   * Hiding is always safe: `getTemplate()` searches every template regardless,
+   * so nothing that references an inactive key breaks. Templates are applied
+   * once at creation and never looked up again, so existing projects are
+   * unaffected.
+   */
+  active: boolean;
   name: string;
   description: string;
   icon: string; // MUI icon name hint (rendered in TemplateStep)

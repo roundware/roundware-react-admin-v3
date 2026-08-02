@@ -2,6 +2,7 @@ import { WizardTemplate } from "../types";
 
 const artinstallation: WizardTemplate = {
   key: "artinstallation",
+  active: true,
   name: "Art Installation",
   description:
     "Gallery or museum-based project with shorter recordings. Ideal for interactive sound art pieces where visitors contribute audio around specific themes.",

@@ -2,6 +2,7 @@ import { WizardTemplate } from "../types";
 
 const storycollection: WizardTemplate = {
   key: "storycollection",
+  active: true,
   name: "Story Collection",
   description:
     "Interview-style project for collecting oral histories and personal narratives. Longer recordings with topic and emotion tagging.",
