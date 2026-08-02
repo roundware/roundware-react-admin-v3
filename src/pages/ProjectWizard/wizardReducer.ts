@@ -82,7 +82,6 @@ export type WizardAction =
   | { type: "NEXT_STEP" }
   | { type: "PREV_STEP" }
   | { type: "APPLY_TEMPLATE"; template: WizardTemplate }
-  | { type: "CLEAR_TEMPLATE" }
   | { type: "UPDATE_PROJECT"; patch: Partial<WizardProject> }
   | { type: "UPDATE_AUDIOTRACK"; patch: Partial<WizardAudiotrack> }
   // Categories
@@ -163,12 +162,6 @@ export function wizardReducer(state: WizardState, action: WizardAction): WizardS
         skipSpeakers: speakers.length === 0,
       };
     }
-    case "CLEAR_TEMPLATE":
-      return {
-        ...INITIAL_STATE,
-        activeStep: 0,
-      };
-
     // -- Project --
     case "UPDATE_PROJECT":
       return { ...state, project: { ...state.project, ...action.patch } };

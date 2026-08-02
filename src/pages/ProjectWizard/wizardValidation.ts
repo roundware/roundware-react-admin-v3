@@ -16,8 +16,14 @@ function fail(...errors: string[]): ValidationResult {
 
 // ---- Per-step validators --------------------------------------------------
 
-function validateTemplate(_state: WizardState): ValidationResult {
-  // Template step is always valid — user can proceed with "Start from Scratch"
+function validateTemplate(state: WizardState): ValidationResult {
+  // A template is required. The old "Start from Scratch" option was the
+  // wizard's initial state, so it rendered pre-selected before the user had
+  // decided anything, and it produced a project with no tag categories, tags
+  // or UI groups. The "Standard" template replaces it with a coherent minimum.
+  if (state.templateKey === null) {
+    return fail("Choose a template to continue.");
+  }
   return ok;
 }
 

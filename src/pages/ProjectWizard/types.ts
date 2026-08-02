@@ -127,7 +127,8 @@ export interface WizardSpeaker {
 export interface WizardState {
   /** Currently active step index (0-based) */
   activeStep: number;
-  /** Selected template key, or null for "Start from Scratch" */
+  /** Selected template key. Null only before a choice is made — the template
+   *  step requires one before the wizard can proceed. */
   templateKey: string | null;
 
   project: WizardProject;

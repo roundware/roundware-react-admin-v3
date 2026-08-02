@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------
 import { apiFetcher } from "../../roundwareDataProvider/tokenAuthProvider";
 import { CreationStep, TempId, WizardState } from "./types";
-import { getTemplate, SCRATCH_CONFIG } from "./templates";
+import { getTemplate, FALLBACK_CONFIG } from "./templates";
 
 type ProgressCallback = (steps: CreationStep[]) => void;
 
@@ -85,7 +85,7 @@ export async function executeCreation(
     // document is applied once at creation and edited afterwards in the
     // project's Advanced configuration panel.
     const template = state.templateKey ? getTemplate(state.templateKey) : undefined;
-    const seed = template?.config ?? SCRATCH_CONFIG;
+    const seed = template?.config ?? FALLBACK_CONFIG;
     if (Object.keys(seed).length > 0) {
       projectBody.ui_config_json = seed;
     }

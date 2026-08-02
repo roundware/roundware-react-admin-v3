@@ -1,10 +1,9 @@
 // ---------------------------------------------------------------------------
-// Step 1 — Choose a starting template or start from scratch
+// Step 1 — Choose a starting template
 // ---------------------------------------------------------------------------
 import React from "react";
 import {
   Box,
-  Button,
   Card,
   CardActionArea,
   CardContent,
@@ -16,6 +15,7 @@ import DirectionsWalkIcon from "@mui/icons-material/DirectionsWalk";
 import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
 import MapIcon from "@mui/icons-material/Map";
 import PaletteIcon from "@mui/icons-material/Palette";
+import TuneIcon from "@mui/icons-material/Tune";
 import PodcastsIcon from "@mui/icons-material/Podcasts";
 import GraphicEqIcon from "@mui/icons-material/GraphicEq";
 import BuildIcon from "@mui/icons-material/Build";
@@ -35,6 +35,7 @@ const iconMap: Record<string, React.ReactElement> = {
   RecordVoiceOver: <RecordVoiceOverIcon sx={{ fontSize: 48 }} />,
   Map: <MapIcon sx={{ fontSize: 48 }} />,
   Palette: <PaletteIcon sx={{ fontSize: 48 }} />,
+  Tune: <TuneIcon sx={{ fontSize: 48 }} />,
   Podcasts: <PodcastsIcon sx={{ fontSize: 48 }} />,
   GraphicEq: <GraphicEqIcon sx={{ fontSize: 48 }} />,
 };
@@ -43,9 +44,10 @@ const TemplateStep: React.FC<TemplateStepProps> = ({ state, dispatch }) => {
   return (
     <Box>
       <StepInstruction title="Choose a Starting Point">
-        Pick a template to pre-fill your project with sensible defaults, or
-        start from scratch to configure everything yourself. You can always
-        change any setting in later steps.
+        Every template pre-fills your project with working defaults — tags,
+        recording settings and app behaviour — so you have something coherent
+        from the start. Nothing here is permanent; you can change any setting in
+        the later steps or after the project is created.
       </StepInstruction>
 
       <Grid container spacing={2} sx={{ mb: 3 }}>
@@ -104,22 +106,16 @@ const TemplateStep: React.FC<TemplateStepProps> = ({ state, dispatch }) => {
         })}
       </Grid>
 
-      {/* Start from Scratch */}
-      <Box sx={{ textAlign: "center" }}>
-        <Button
-          variant={state.templateKey === null ? "contained" : "outlined"}
-          size="large"
-          startIcon={<BuildIcon />}
-          onClick={() => dispatch({ type: "CLEAR_TEMPLATE" })}
+      {state.templateKey === null && (
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ textAlign: "center", mt: 1 }}
         >
-          Start from Scratch
-        </Button>
-        {state.templateKey === null && (
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            Click &quot;Next&quot; to begin configuring your project manually.
-          </Typography>
-        )}
-      </Box>
+          Choose a template to continue. Every setting can be changed later —
+          pick <strong>Standard</strong> if you are not sure.
+        </Typography>
+      )}
     </Box>
   );
 };
