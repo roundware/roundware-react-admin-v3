@@ -26,3 +26,25 @@ export const TEMPLATES: WizardTemplate[] = [
 export function getTemplate(key: string): WizardTemplate | undefined {
   return TEMPLATES.find((t) => t.key === key);
 }
+
+/**
+ * Seed for "Start from Scratch", where no template is chosen.
+ *
+ * This is not merely an empty document, because the web app's own defaults are
+ * Choir-flavoured: `config.ts` ships `uploadAsSpeaker: true` and
+ * `recordingMethod: "looping"`, presumably inherited from the Invisible Choir
+ * project it grew out of. The server's `recording_method` column, meanwhile,
+ * defaults to `"standard"` — and the column wins.
+ *
+ * So a project created with an empty config lands in an incoherent hybrid:
+ * contributions become speakers (`uploadAsSpeaker: true`, no column to
+ * override it) while recording behaves as standard. Pinning the paradigm here
+ * makes a from-scratch project coherent without changing the app-wide default,
+ * which would affect every already-deployed project.
+ *
+ * The underlying mismatch is tracked in
+ * roundware-server-v3/docs/010-backlog.md.
+ */
+export const SCRATCH_CONFIG = {
+  speak: { uploadAsSpeaker: false },
+};

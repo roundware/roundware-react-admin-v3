@@ -18,6 +18,7 @@ import {
 } from "react-admin";
 import { useNavigate } from "react-router-dom";
 import { buildLocalizationsPayload } from "../../utils";
+import AdvancedConfigInput from "./AdvancedConfigInput";
 
 const PROJECT_LOC_FIELD_MAP: Record<string, string> = {
   description_loc_admin: "description",
@@ -139,6 +140,16 @@ const ProjectEdit = (): JSX.Element => {
             fullWidth
             helperText="Max time users can speak"
           />
+          <SelectInput
+            source="recording_method"
+            validate={required()}
+            fullWidth
+            choices={[
+              { id: "standard", name: "Standard — one recording per contribution" },
+              { id: "looping", name: "Looping — record over a shared base loop" },
+            ]}
+            helperText="Looping pairs with the Collective Loops paradigm; set speak.uploadAsSpeaker in Advanced configuration to match"
+          />
           <NumberInput
             source="speaker_attenuation_distance"
             fullWidth
@@ -219,6 +230,8 @@ const ProjectEdit = (): JSX.Element => {
             label="Demo Stream Message"
           />
         </CardBox>
+
+        <AdvancedConfigInput />
       </SimpleForm>
     </Edit>
   );

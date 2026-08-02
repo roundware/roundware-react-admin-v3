@@ -36,6 +36,10 @@ export interface IProject {
   legal_agreement: string;
   demo_stream_message: string;
   language_ids: number[];
+  /** "standard" | "looping" */
+  recording_method?: string;
+  /** Per-project config overrides; see roundware-server-v3/docs/009-configuration.md */
+  ui_config_json?: Record<string, any>;
 }
 export interface IProjectsContext {
   selectedProject: IProject | null;

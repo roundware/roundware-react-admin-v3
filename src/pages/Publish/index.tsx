@@ -5,6 +5,7 @@ import { useProjects } from "../../context/ProjectsContext";
 import DeployCard from "./DeployCard";
 import BrandingPanel from "./BrandingPanel";
 import PreviewPanel from "./PreviewPanel";
+import ParadigmWarning from "./ParadigmWarning";
 
 const PublishPage: React.FC = () => {
   const { selectedProject } = useProjects();
@@ -35,6 +36,8 @@ const PublishPage: React.FC = () => {
         Choose your public web address, customize the look, and preview exactly
         what participants will see.
       </Typography>
+
+      <ParadigmWarning project={selectedProject} />
 
       <DeployCard projectId={projectId} />
 
