@@ -148,7 +148,7 @@ const ProjectEdit = (): JSX.Element => {
               { id: "standard", name: "Standard — one recording per contribution" },
               { id: "looping", name: "Looping — record over a shared base loop" },
             ]}
-            helperText="Looping pairs with the Collective Loops paradigm; set speak.uploadAsSpeaker in Advanced configuration to match"
+            helperText="Looping is the Collective Loops paradigm: contributions become speakers in a synced mix, rather than assets on the map"
           />
           <NumberInput
             source="speaker_attenuation_distance"

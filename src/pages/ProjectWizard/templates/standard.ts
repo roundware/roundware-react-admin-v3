@@ -16,9 +16,8 @@ import { WizardTemplate } from "../types";
  * app defaults. It is the base the other five templates are opinionated
  * departures from.
  *
- * Being explicit rather than empty also means the paradigm is pinned here
- * (`uploadAsSpeaker: false`) instead of relying on the web app's defaults,
- * which are Choir-flavoured — see roundware-server-v3/docs/010-backlog.md.
+ * Its config is empty, and correctly so: the paradigm comes from
+ * `recording_method`, and everything else here is already the app default.
  */
 const standard: WizardTemplate = {
   key: "standard",
@@ -39,11 +38,10 @@ const standard: WizardTemplate = {
     out_of_range_distance: 1000,
     recording_method: "standard",
   },
-  // Minimal on purpose: pin the paradigm, leave everything else to the app
-  // defaults so this template does not quietly become opinionated over time.
-  config: {
-    speak: { uploadAsSpeaker: false },
-  },
+  // Minimal on purpose: everything stays at the app defaults so this template
+  // does not quietly become opinionated over time. The paradigm is not set
+  // here — it is derived from recording_method above.
+  config: {},
   audiotrack: {
     min_volume: 0.7,
     max_volume: 1.0,

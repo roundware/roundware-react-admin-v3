@@ -3,15 +3,17 @@ import { WizardTemplate } from "../types";
 /**
  * Collective Loops — the "Invisible Choir" paradigm.
  *
- * The only template where `uploadAsSpeaker` is true: a contribution does not
- * become an asset pinned to the map, it becomes a *speaker* that joins the
- * continuous mix. Everyone hears the accumulating result, synced to a shared
+ * The only template with `recording_method: "looping"`, which is what makes a
+ * contribution become a *speaker* joining the continuous mix rather than an
+ * asset pinned to the map. Everyone hears the accumulating result, synced to a shared
  * loop, rather than browsing individual recordings.
  *
  * Two things follow from that and are easy to miss:
  *
  *  - `recording_method: "looping"` is a project *column*, not config, so it
- *    lives in the `project` block below (docs/009 §7 decision 4).
+ *    lives in the `project` block below (docs/009 §7 decision 4). It carries
+ *    the whole paradigm: `speak.uploadAsSpeaker` is derived from it, since
+ *    synchronised looping only works through speakers.
  *  - The project needs at least one active speaker carrying audio before it is
  *    published — the base loop the first participant sings against. One is
  *    seeded here; the wizard's Speakers step is where its audio is uploaded.
@@ -43,9 +45,10 @@ const collectiveloops: WizardTemplate = {
     recording_method: "looping",
   },
   config: {
-    // This single flag is the paradigm (docs/009 §7 decision 8).
     speak: {
-      uploadAsSpeaker: true,
+      // The paradigm itself comes from recording_method: "looping" above —
+      // uploads become speakers because that is the only way synchronised
+      // looping works. Nothing to declare here.
       // A contributor should hear their own take enter the mix.
       baseRecordingLoopSelectionMethod: "all",
     },

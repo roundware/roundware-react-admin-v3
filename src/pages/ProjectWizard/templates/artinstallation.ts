@@ -21,7 +21,6 @@ const artinstallation: WizardTemplate = {
   // A single fixed site, usually one room. Continuous playback, no map at all,
   // and a short auto-reset so the piece is ready for the next visitor.
   config: {
-    speak: { uploadAsSpeaker: false },
     listen: {
       availableListenModes: ["map"],
       geoListenMode: ["map"],

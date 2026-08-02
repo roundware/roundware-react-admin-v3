@@ -22,7 +22,6 @@ const soundmap: WizardTemplate = {
   // The map *is* the experience: browse a whole region from anywhere, so map
   // listen mode rather than walking, and the sidebar open by default.
   config: {
-    speak: { uploadAsSpeaker: false },
     listen: {
       availableListenModes: ["map", "walking"],
       geoListenMode: ["map"],

@@ -37,7 +37,6 @@ const podcast: WizardTemplate = {
   // marker, no bounds markers, no map overlay on the listen page. The sidebar
   // carries browsing instead, since the map cannot.
   config: {
-    speak: { uploadAsSpeaker: false },
     listen: {
       availableListenModes: ["map"],
       geoListenMode: ["map"],

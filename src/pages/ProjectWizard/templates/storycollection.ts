@@ -21,7 +21,6 @@ const storycollection: WizardTemplate = {
   // Not a geographic project — long-form stories collected from anywhere. The
   // map is still available to browse the archive, but location is incidental.
   config: {
-    speak: { uploadAsSpeaker: false },
     listen: {
       availableListenModes: ["map"],
       geoListenMode: ["map"],

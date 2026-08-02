@@ -22,7 +22,6 @@ const soundwalk: WizardTemplate = {
   // Walking is the point: default to the walking listen mode, tight zoom, and
   // bounds that follow the route rather than a fixed frame.
   config: {
-    speak: { uploadAsSpeaker: false },
     listen: {
       availableListenModes: ["map", "walking"],
       geoListenMode: ["walking"],
