@@ -95,11 +95,16 @@ function validateTags(state: WizardState): ValidationResult {
 function validateUIBuilder(state: WizardState): ValidationResult {
   const errors: string[] = [];
 
-  // Each category should have a corresponding UI group
+  // A category must appear in at least one mode — but which one is the
+  // author's call. Speak-only and listen-only projects are both legitimate
+  // (a radio show capturing submissions exposes no filters; an archive may
+  // only be browsed), so this deliberately does not require both.
   for (const cat of state.categories) {
     const group = state.uiGroups.find((g) => g.categoryTempId === cat.tempId);
     if (!group) {
-      errors.push(`Category "${cat.name}" needs a UI group configuration.`);
+      errors.push(
+        `Category "${cat.name}" is not used in either tab. Add it to Listen or Speak.`
+      );
     }
   }
 
@@ -109,7 +114,8 @@ function validateUIBuilder(state: WizardState): ValidationResult {
       break;
     }
     if (group.tagTempIds.length === 0) {
-      errors.push(`UI group "${group.name}" has no tags assigned.`);
+      const where = group.ui_mode === "listen" ? "Listen" : "Speak";
+      errors.push(`"${group.name}" in the ${where} tab has no tags assigned.`);
     }
   }
 

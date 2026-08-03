@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------------
 // Step 5 — UI Group configuration per tag category
 // ---------------------------------------------------------------------------
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -11,6 +11,10 @@ import {
   FormControlLabel,
   Grid,
   MenuItem,
+  Button,
+  Stack,
+  Tab,
+  Tabs,
   TextField,
   Typography,
 } from "@mui/material";
@@ -27,7 +31,6 @@ interface UIBuilderStepProps {
 const UI_MODES = [
   { value: "listen", label: "Listen" },
   { value: "speak", label: "Speak" },
-  { value: "browse", label: "Browse" },
 ];
 
 const SELECT_TYPES = [
@@ -38,22 +41,33 @@ const SELECT_TYPES = [
 
 const UIBuilderStep: React.FC<UIBuilderStepProps> = ({ state, dispatch }) => {
   const { categories, tags, uiGroups } = state;
+  const [mode, setMode] = useState<"listen" | "speak">("speak");
 
-  // Auto-create UI groups for categories that don't have one yet
+  // Auto-create groups for a category the author added themselves — one for
+  // each mode, since a new category is usually worth both tagging and
+  // filtering by.
+  //
+  // Deliberately keyed on "has no group in *any* mode" rather than "has no
+  // group in this mode". Templates declare their own groups per mode, and some
+  // are speak-only on purpose (Podcast captures metadata but exposes no
+  // filters; Collective Loops has no assets to filter). Creating the missing
+  // counterpart would silently undo that intent.
   useEffect(() => {
     for (const cat of categories) {
-      const existing = uiGroups.find((g) => g.categoryTempId === cat.tempId);
-      if (!existing) {
-        const categoryTags = tags.filter(
-          (t) => t.categoryTempId === cat.tempId
-        );
+      const anyGroup = uiGroups.some((g) => g.categoryTempId === cat.tempId);
+      if (anyGroup) continue;
+
+      const categoryTags = tags.filter((t) => t.categoryTempId === cat.tempId);
+      for (const mode of ["speak", "listen"]) {
         dispatch({
           type: "ADD_UI_GROUP",
           group: {
             name: cat.name,
             header_text: "",
-            ui_mode: "speak",
-            select_type: "single",
+            ui_mode: mode,
+            // Tagging an upload is usually one value; filtering playback is
+            // usually several.
+            select_type: mode === "listen" ? "multi" : "single",
             is_active: true,
             categoryTempId: cat.tempId,
             tagTempIds: categoryTags.map((t) => t.tempId),
@@ -95,17 +109,94 @@ const UIBuilderStep: React.FC<UIBuilderStepProps> = ({ state, dispatch }) => {
   return (
     <Box>
       <StepInstruction title="UI Builder">
-        Each tag category gets a UI group that controls how tags are
-        presented to participants. Configure the display mode, selection
-        type, and choose which tags to include.
+        <strong>Speak</strong> groups let contributors tag their uploads with
+        metadata. <strong>Listen</strong> groups let people filter what they
+        hear by that same metadata. Usually you want both, but not always — a
+        project might collect more about a contribution than is worth exposing
+        as a filter, and some projects only ever do one or the other.
       </StepInstruction>
 
+      <Tabs
+        value={mode}
+        onChange={(_e, v) => setMode(v)}
+        sx={{ mb: 2, borderBottom: 1, borderColor: "divider" }}
+      >
+        {UI_MODES.map((m) => {
+          const count = uiGroups.filter(
+            (g) => g.ui_mode === m.value && g.is_active
+          ).length;
+          return (
+            <Tab
+              key={m.value}
+              value={m.value}
+              label={
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <span>{m.label}</span>
+                  <Chip size="small" label={count} />
+                </Stack>
+              }
+            />
+          );
+        })}
+      </Tabs>
+
       {categories.map((cat) => {
-        const group = uiGroups.find((g) => g.categoryTempId === cat.tempId);
+        const group = uiGroups.find(
+          (g) => g.categoryTempId === cat.tempId && g.ui_mode === mode
+        );
         const categoryTags = tags.filter(
           (t) => t.categoryTempId === cat.tempId
         );
-        if (!group) return null;
+
+        // A category with no group in this mode is a deliberate state, not a
+        // gap — offer to add one rather than creating it behind the author's
+        // back.
+        if (!group) {
+          return (
+            <Card key={cat.tempId} variant="outlined" sx={{ mb: 2 }}>
+              <CardContent>
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  alignItems="center"
+                  justifyContent="space-between"
+                  flexWrap="wrap"
+                >
+                  <Box>
+                    <Typography variant="h6">
+                      {cat.name || "Unnamed Category"}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {mode === "listen"
+                        ? "Not offered as a listening filter."
+                        : "Contributors are not asked to tag with this."}
+                    </Typography>
+                  </Box>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    onClick={() =>
+                      dispatch({
+                        type: "ADD_UI_GROUP",
+                        group: {
+                          name: cat.name,
+                          header_text: "",
+                          ui_mode: mode,
+                          select_type: mode === "listen" ? "multi" : "single",
+                          is_active: true,
+                          categoryTempId: cat.tempId,
+                          tagTempIds: categoryTags.map((t) => t.tempId),
+                        },
+                      })
+                    }
+                  >
+                    Add to {mode === "listen" ? "Listen" : "Speak"}
+                  </Button>
+                </Stack>
+              </CardContent>
+            </Card>
+          );
+        }
 
         return (
           <Card key={cat.tempId} variant="outlined" sx={{ mb: 2 }}>
@@ -147,36 +238,17 @@ const UIBuilderStep: React.FC<UIBuilderStepProps> = ({ state, dispatch }) => {
                     }
                     fullWidth
                     size="small"
-                    helperText="Question shown to participants (e.g. 'What kind of sound?')"
+                    helperText={
+                      mode === "listen"
+                        ? "Filter label shown to listeners (e.g. 'Filter by mood')"
+                        : "Question asked when tagging an upload (e.g. 'What kind of sound?')"
+                    }
                   />
                 </Grid>
 
-                {/* UI Mode */}
-                <Grid size={{ xs: 6, sm: 4 }}>
-                  <TextField
-                    label="Mode"
-                    select
-                    value={group.ui_mode}
-                    onChange={(e) =>
-                      dispatch({
-                        type: "UPDATE_UI_GROUP",
-                        tempId: group.tempId,
-                        patch: { ui_mode: e.target.value },
-                      })
-                    }
-                    fullWidth
-                    size="small"
-                  >
-                    {UI_MODES.map((m) => (
-                      <MenuItem key={m.value} value={m.value}>
-                        {m.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
 
                 {/* Select Type */}
-                <Grid size={{ xs: 6, sm: 4 }}>
+                <Grid size={{ xs: 6, sm: 6 }}>
                   <TextField
                     label="Selection Type"
                     select
@@ -200,7 +272,7 @@ const UIBuilderStep: React.FC<UIBuilderStepProps> = ({ state, dispatch }) => {
                 </Grid>
 
                 {/* Active */}
-                <Grid size={{ xs: 6, sm: 4 }}>
+                <Grid size={{ xs: 6, sm: 6 }}>
                   <FormControlLabel
                     control={
                       <Checkbox

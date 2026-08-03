@@ -67,6 +67,15 @@ const standard: WizardTemplate = {
       categoryIndex: 0,
       tagIndices: [0, 1, 2],
     },
+    {
+      name: "Topic",
+      header_text: "Filter by topic",
+      ui_mode: "listen",
+      select_type: "multi",
+      is_active: true,
+      categoryIndex: 0,
+      tagIndices: [0, 1, 2],
+    },
   ],
   speakers: [],
 };
