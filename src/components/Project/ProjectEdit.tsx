@@ -99,7 +99,7 @@ const ProjectEdit = (): JSX.Element => {
         <CardBox title="Modes">
           <BooleanInput
             source="allow_speak_tags"
-            helperText="Ask contributors to tag their recording using the Speak UI groups. With this off the tag step is skipped entirely."
+            helperText="Whether contributors are ASKED to tag their upload. Default speak tags are applied either way, and a project with no Speak groups skips the step automatically — so turn this off only to tag silently without asking."
           />
           <BooleanInput source="allow_photos" />
           <BooleanInput source="allow_text" />
