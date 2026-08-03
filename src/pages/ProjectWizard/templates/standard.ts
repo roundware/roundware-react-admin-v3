@@ -16,12 +16,8 @@ import { WizardTemplate } from "../types";
  * app defaults. It is the base the other five templates are opinionated
  * departures from.
  *
- * Its config is nearly empty — the paradigm comes from `recording_method` —
- * but it must still set the listen modes. The app's default is
- * `geoListenMode: "device"`, meaning playback follows the device's GPS, so a
- * project inheriting it only works for someone physically standing in it.
- * That is the Invisible Choir installation pattern the app grew out of, not a
- * sane default for a general-purpose template. Map mode works from anywhere.
+ * Its config is empty, and correctly so: the paradigm comes from
+ * `recording_method`, and everything else here is already the app default.
  */
 const standard: WizardTemplate = {
   key: "standard",
@@ -43,15 +39,10 @@ const standard: WizardTemplate = {
     out_of_range_distance: 1000,
     recording_method: "standard",
   },
-  // Minimal on purpose, with one necessary exception: the listen modes. See
-  // the note above — inheriting the app default makes the project unusable
-  // unless you are physically inside it.
-  config: {
-    listen: {
-      availableListenModes: ["map", "walking"],
-      geoListenMode: ["map"],
-    },
-  },
+  // Minimal on purpose: everything stays at the app defaults so this template
+  // does not quietly become opinionated over time. The paradigm is not set
+  // here — it is derived from recording_method above.
+  config: {},
   audiotrack: {
     min_volume: 0.7,
     max_volume: 1.0,
