@@ -29,6 +29,11 @@ export const DEFAULT_PROJECT: WizardProject = {
   geo_listen_enabled: false,
   speak_enabled: true,
   geo_speak_enabled: false,
+  // True so the UI Builder's Speak groups are actually shown; the server
+  // column defaults to false, which silently skipped the whole tag step.
+  allow_speak_tags: true,
+  allow_photos: true,
+  allow_text: true,
   recording_radius: 30,
   out_of_range_distance: 1000,
   repeat_mode: "stop",

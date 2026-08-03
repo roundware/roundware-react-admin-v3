@@ -48,6 +48,16 @@ export interface WizardProject {
   geo_listen_enabled: boolean;
   speak_enabled: boolean;
   geo_speak_enabled: boolean;
+  /**
+   * Whether contributors are asked to tag their recording.
+   *
+   * Defaults true here, unlike the server column which defaults false. With it
+   * off, TagSelectForm skips straight past the tag step, so every Speak group
+   * configured in the UI Builder is silently never shown.
+   */
+  allow_speak_tags: boolean;
+  allow_photos: boolean;
+  allow_text: boolean;
   recording_radius: number | null;
   out_of_range_distance: number;
   repeat_mode: string;
