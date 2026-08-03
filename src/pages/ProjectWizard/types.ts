@@ -1,6 +1,7 @@
 // ---------------------------------------------------------------------------
 // Project Setup Wizard — Type Definitions
 // ---------------------------------------------------------------------------
+import type { MultiPolygon } from "@turf/helpers";
 
 /** Temporary IDs used for local state before API creation */
 export type TempId = string;
@@ -113,6 +114,16 @@ export interface WizardUIGroup {
 
 export interface WizardSpeaker {
   tempId: TempId;
+  /**
+   * Coverage area as a GeoJSON MultiPolygon.
+   *
+   * Required, not optional: the web app crashes on a speaker with no shape
+   * (Turf throws "polygon or multi-polygon is required" during location
+   * updates, before the app finishes booting). The wizard used to omit this
+   * entirely and tell users to draw shapes later, which made every project it
+   * created unusable.
+   */
+  shape: MultiPolygon | null;
   code: string;
   is_active: boolean;
   attenuation_distance: number;

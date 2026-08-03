@@ -20,6 +20,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { WizardState } from "../types";
 import { WizardAction } from "../wizardReducer";
 import StepInstruction from "../components/StepInstruction";
+import WizardSpeakerShape from "../components/WizardSpeakerShape";
 
 interface SpeakersStepProps {
   state: WizardState;
@@ -33,6 +34,7 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
     dispatch({
       type: "ADD_SPEAKER",
       speaker: {
+        shape: null,
         code: "",
         is_active: true,
         attenuation_distance: 0,
@@ -47,9 +49,9 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
   return (
     <Box>
       <StepInstruction title="Speakers">
-        Speakers define audio sources for background/ambient playback. They
-        are optional and can also be added later from the Speakers page.
-        Speaker shapes (map regions) can be drawn after creation.
+        Speakers are audio sources that play continuously across an area of the
+        map — ambience, a base loop, a soundbed. Each one needs a coverage area
+        drawn on the map below; a speaker without one cannot be played.
       </StepInstruction>
 
       <FormControlLabel
@@ -235,6 +237,23 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
                       fullWidth
                       size="small"
                       helperText="Hex color (e.g. #0000FF)"
+                    />
+                  </Grid>
+
+                  <Grid size={{ xs: 12 }}>
+                    <WizardSpeakerShape
+                      value={spk.shape}
+                      onChange={(shape) =>
+                        dispatch({
+                          type: "UPDATE_SPEAKER",
+                          tempId: spk.tempId,
+                          patch: { shape },
+                        })
+                      }
+                      center={{
+                        lat: state.project.latitude,
+                        lng: state.project.longitude,
+                      }}
                     />
                   </Grid>
                 </Grid>

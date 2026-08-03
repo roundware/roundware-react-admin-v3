@@ -104,6 +104,9 @@ const collectiveloops: WizardTemplate = {
   ],
   speakers: [
     {
+      // No shape: a template cannot know where the project is. The Speakers
+      // step requires the author to draw one before the wizard will continue.
+      shape: null,
       code: "base-loop",
       is_active: true,
       attenuation_distance: 100,

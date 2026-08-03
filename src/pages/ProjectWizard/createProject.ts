@@ -234,6 +234,9 @@ export async function executeCreation(
           max_volume: spk.max_volume,
           fill_color: spk.fill_color,
           border_color: spk.border_color,
+          // Required — the web app throws on a shapeless speaker. The server
+          // derives boundary and attenuation_border from this.
+          shape: spk.shape,
         });
       }
       update(stepIdx, { status: "completed" });

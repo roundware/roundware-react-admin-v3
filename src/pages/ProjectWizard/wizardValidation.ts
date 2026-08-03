@@ -134,6 +134,23 @@ function validateSpeakers(state: WizardState): ValidationResult {
     }
   }
 
+  // A shapeless speaker is not merely incomplete — it crashes the published
+  // app. Turf throws "polygon or multi-polygon is required" as soon as the
+  // listener's location is set, which happens during boot, so the project never
+  // becomes usable. Block it here rather than let someone discover it after
+  // deploying.
+  const unshaped = state.speakers.filter((spk) => !spk.shape);
+  if (unshaped.length > 0) {
+    const which = unshaped
+      .map((spk) => spk.code.trim() || "(unnamed)")
+      .join(", ");
+    errors.push(
+      unshaped.length === 1
+        ? `Draw a coverage area on the map for speaker "${which}".`
+        : `Draw a coverage area on the map for these speakers: ${which}.`
+    );
+  }
+
   return errors.length ? fail(...errors) : ok;
 }
 
