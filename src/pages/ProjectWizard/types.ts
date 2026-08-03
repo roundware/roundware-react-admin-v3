@@ -134,6 +134,15 @@ export interface WizardSpeaker {
    * created unusable.
    */
   shape: MultiPolygon | null;
+  /**
+   * Audio to upload once the speaker exists.
+   *
+   * Held as a File because the wizard's state is in-memory only — nothing is
+   * persisted until the final step, and the upload endpoint needs the speaker's
+   * id. Optional on purpose: a speaker with no audio is useless but a
+   * legitimate work-in-progress, so the step warns rather than blocks.
+   */
+  audioFile: File | null;
   code: string;
   is_active: boolean;
   attenuation_distance: number;

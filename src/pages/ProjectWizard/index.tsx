@@ -78,6 +78,10 @@ const ProjectWizardPage: React.FC = () => {
 
   const handleCreationClose = useCallback(() => {
     setShowCreation(false);
+    // Clear the wizard. Both exits from the success dialog navigate away, but
+    // without this the wizard keeps the finished project's answers, so landing
+    // back on /wizard shows a form that looks half-submitted.
+    dispatch({ type: "RESET" });
   }, []);
 
   const handleCreationDone = useCallback(() => {

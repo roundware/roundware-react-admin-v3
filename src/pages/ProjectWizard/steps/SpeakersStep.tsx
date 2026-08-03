@@ -12,6 +12,7 @@ import {
   IconButton,
   Switch,
   TextField,
+  Stack,
   Typography,
 } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -19,6 +20,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import { WizardState } from "../types";
 import { WizardAction } from "../wizardReducer";
+import AudiotrackIcon from "@mui/icons-material/Audiotrack";
 import StepInstruction from "../components/StepInstruction";
 import WizardSpeakerShape from "../components/WizardSpeakerShape";
 
@@ -35,6 +37,7 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
       type: "ADD_SPEAKER",
       speaker: {
         shape: null,
+        audioFile: null,
         code: "",
         is_active: true,
         attenuation_distance: 0,
@@ -241,6 +244,61 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
                   </Grid>
 
                   <Grid size={{ xs: 12 }}>
+                    <Stack
+                      direction="row"
+                      spacing={2}
+                      alignItems="center"
+                      flexWrap="wrap"
+                      sx={{ mb: 1 }}
+                    >
+                      <Button
+                        component="label"
+                        variant={spk.audioFile ? "outlined" : "contained"}
+                        size="small"
+                        startIcon={<AudiotrackIcon />}
+                      >
+                        {spk.audioFile ? "Replace audio" : "Add audio"}
+                        <input
+                          type="file"
+                          accept="audio/*"
+                          hidden
+                          onChange={(e) =>
+                            dispatch({
+                              type: "UPDATE_SPEAKER",
+                              tempId: spk.tempId,
+                              patch: { audioFile: e.target.files?.[0] ?? null },
+                            })
+                          }
+                        />
+                      </Button>
+                      {spk.audioFile ? (
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Typography variant="body2">
+                            {spk.audioFile.name}
+                          </Typography>
+                          <Button
+                            size="small"
+                            onClick={() =>
+                              dispatch({
+                                type: "UPDATE_SPEAKER",
+                                tempId: spk.tempId,
+                                patch: { audioFile: null },
+                              })
+                            }
+                          >
+                            Remove
+                          </Button>
+                        </Stack>
+                      ) : (
+                        // Deliberately a warning, not a blocker: a speaker with
+                        // no audio is silent and pointless, but it is a
+                        // reasonable work-in-progress if the audio is not ready.
+                        <Typography variant="body2" color="warning.main">
+                          No audio yet — this speaker will be silent. You can add
+                          it later from the Speakers page.
+                        </Typography>
+                      )}
+                    </Stack>
                     <WizardSpeakerShape
                       value={spk.shape}
                       onChange={(shape) =>

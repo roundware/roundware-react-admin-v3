@@ -113,12 +113,14 @@ const ProjectEdit = (): JSX.Element => {
           <BooleanInput source="auto_submit" />
           <SelectInput
             source="ordering"
+            label="Playback Ordering"
             validate={required()}
             choices={[
               { id: "by_like", name: "By Likes" },
               { id: "by_weight", name: "By Weight" },
               { id: "random", name: "Random" },
             ]}
+            helperText="Order of content playback when multiple pieces are available"
           />
           <SelectInput
             source="repeat_mode"
@@ -128,9 +130,9 @@ const ProjectEdit = (): JSX.Element => {
               { id: "continuous", name: "continuous" },
             ]}
             fullWidth
+            helperText="Behavior after all content in location already played"
           />
           <BooleanInput source="reset_tag_defaults_on_startup" />
-          <BooleanInput source="timed_asset_priority" />
         </CardBox>
 
         <CardBox title="Recording Settings">
@@ -211,7 +213,7 @@ const ProjectEdit = (): JSX.Element => {
                 source="out_of_range_distance"
                 required
                 fullWidth
-                helperText="Distance in meters outside of Project Speaker ranges beyond which listener is considered out of range"
+                helperText="Distance from nearest speaker threshold to trigger Out Of Range warning"
               />
               <TextInput
                 source="out_of_range_url"

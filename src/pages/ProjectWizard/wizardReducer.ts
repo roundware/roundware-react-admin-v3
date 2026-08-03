@@ -59,8 +59,9 @@ export const DEFAULT_AUDIOTRACK: WizardAudiotrack = {
   max_fade_out_time: 2.0,
   min_pan_pos: -1.0,
   max_pan_pos: 1.0,
-  min_pan_duration: 5.0,
-  max_pan_duration: 10.0,
+  // Longer pans read as movement rather than wobble.
+  min_pan_duration: 15.0,
+  max_pan_duration: 30.0,
   repeat_recordings: false,
   start_with_silence: false,
   banned_duration: 0,

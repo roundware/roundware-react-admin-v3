@@ -141,12 +141,15 @@ const CreationProgress: React.FC<CreationProgressProps> = ({
     })();
   };
 
-  const handleGoToProject = () => {
+  const goTo = (suffix: string) => () => {
     if (projectId) {
-      navigate(`/project/${projectId}`);
+      navigate(`/project/${projectId}${suffix}`);
     }
     onClose();
   };
+
+  const handleGoToProject = goTo("");
+  const handleGoToPublish = goTo("/publish");
 
   return (
     <Dialog open={open} onClose={error ? onClose : undefined} maxWidth="sm" fullWidth>
@@ -204,9 +207,12 @@ const CreationProgress: React.FC<CreationProgressProps> = ({
           </>
         )}
         {done && (
-          <Button onClick={handleGoToProject} variant="contained">
-            Go to Project
-          </Button>
+          <>
+            <Button onClick={handleGoToPublish}>Publish it</Button>
+            <Button onClick={handleGoToProject} variant="contained">
+              Go to Project
+            </Button>
+          </>
         )}
         {!done && !error && (
           <Typography variant="body2" color="text.secondary" sx={{ p: 1 }}>

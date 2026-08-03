@@ -46,6 +46,7 @@ export async function executeCreation(
     onProgress([...steps]);
   };
 
+  const audioFailures: string[] = [];
   const catIdMap: IdMap = {};
   const tagIdMap: IdMap = {};
   const groupIdMap: IdMap = {};
@@ -228,7 +229,7 @@ export async function executeCreation(
     update(stepIdx, { status: "in_progress" });
     try {
       for (const spk of state.speakers) {
-        await post("/speakers/", {
+        const { json: createdSpeaker } = await post("/speakers/", {
           project_id: projectId,
           code: spk.code,
           is_active: spk.is_active,
@@ -241,8 +242,35 @@ export async function executeCreation(
           // derives boundary and attenuation_border from this.
           shape: spk.shape,
         });
+
+        // Audio is a second request: the upload endpoint is keyed on the
+        // speaker's id, which only exists now. A failure here is reported but
+        // does not abort creation — the project and speaker are already valid,
+        // and the audio can be added later from the Speakers page.
+        if (spk.audioFile && createdSpeaker?.id) {
+          const formData = new FormData();
+          formData.append("file", spk.audioFile);
+          formData.append("set_as", "uri");
+          try {
+            await apiFetcher(`/speakers/${createdSpeaker.id}/upload-audio/`, {
+              method: "POST",
+              body: formData,
+            });
+          } catch (e) {
+            console.error(`Audio upload failed for speaker "${spk.code}"`, e);
+            audioFailures.push(spk.code || "(unnamed)");
+          }
+        }
       }
-      update(stepIdx, { status: "completed" });
+      // The project and speakers are valid either way, so a failed audio upload
+      // is reported rather than thrown — but it is reported, not swallowed.
+      update(stepIdx, {
+        status: "completed",
+        error: audioFailures.length
+          ? `Audio upload failed for: ${audioFailures.join(", ")}. ` +
+            `Add it from the Speakers page.`
+          : undefined,
+      });
     } catch (e) {
       update(stepIdx, { status: "error", error: String(e) });
       throw e;

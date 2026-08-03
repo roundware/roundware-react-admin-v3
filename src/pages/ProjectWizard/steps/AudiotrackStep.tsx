@@ -83,23 +83,10 @@ const AudiotrackStep: React.FC<AudiotrackStepProps> = ({ state, dispatch }) => {
           />
         </Grid>
 
-        {/* Timed Asset Priority */}
-        <Grid size={{ xs: 12, sm: 6 }}>
-          <TextField
-            label="Timed Asset Priority"
-            select
-            value={audiotrack.timed_asset_priority}
-            onChange={(e) =>
-              update({ timed_asset_priority: e.target.value })
-            }
-            fullWidth
-            helperText="How timed assets are prioritized in playback."
-          >
-            <MenuItem value="normal">Normal</MenuItem>
-            <MenuItem value="highest">Highest</MenuItem>
-            <MenuItem value="lowest">Lowest</MenuItem>
-          </TextField>
-        </Grid>
+        {/* Timed Asset Priority is deliberately not shown here. It only means
+            anything once timed assets exist, and it belongs on the form where
+            those are added — which is still to be built. The default "normal"
+            travels with the audiotrack either way. */}
 
         {/* Advanced Toggle */}
         <Grid size={{ xs: 12 }}>
@@ -202,7 +189,7 @@ const AudiotrackStep: React.FC<AudiotrackStepProps> = ({ state, dispatch }) => {
                 Playback Options
               </Typography>
               <Grid container spacing={1}>
-                <Grid size={{ xs: 6, sm: 3 }}>
+                <Grid size={{ xs: 12, sm: 4 }}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -214,9 +201,10 @@ const AudiotrackStep: React.FC<AudiotrackStepProps> = ({ state, dispatch }) => {
                       />
                     }
                     label="Repeat"
+                    title="Can an asset play more than once in this audiotrack?"
                   />
                 </Grid>
-                <Grid size={{ xs: 6, sm: 3 }}>
+                <Grid size={{ xs: 12, sm: 4 }}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -228,9 +216,10 @@ const AudiotrackStep: React.FC<AudiotrackStepProps> = ({ state, dispatch }) => {
                       />
                     }
                     label="Start Silent"
+                    title="Should this audiotrack begin with silence for the dead air duration or play an asset immediately?"
                   />
                 </Grid>
-                <Grid size={{ xs: 6, sm: 3 }}>
+                <Grid size={{ xs: 12, sm: 4 }}>
                   <FormControlLabel
                     control={
                       <Switch
@@ -244,20 +233,7 @@ const AudiotrackStep: React.FC<AudiotrackStepProps> = ({ state, dispatch }) => {
                       />
                     }
                     label="Fadeout When Filtered"
-                  />
-                </Grid>
-                <Grid size={{ xs: 6, sm: 3 }}>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={audiotrack.is_active}
-                        onChange={(e) =>
-                          update({ is_active: e.target.checked })
-                        }
-                        size="small"
-                      />
-                    }
-                    label="Active"
+                    title="Should an asset playing in this audiotrack fadeout if it becomes unavailable while playing e.g. listener leaving active range."
                   />
                 </Grid>
               </Grid>
