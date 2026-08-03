@@ -140,12 +140,7 @@ const ProjectCreate = (): JSX.Element => {
             defaultValue={3}
             helperText="Default attenuation distance (meters) for new speakers created via the web app; can be overridden per-speaker"
           />
-          {/* audio_format and audio_stream_bitrate hidden — managed server-side */}
-          <TextInput
-            source="audio_format"
-            defaultValue="mp3"
-            sx={{ visibility: "hidden", position: "absolute" }}
-          />
+          {/* audio_stream_bitrate hidden — managed server-side */}
           <SelectInput
             source="audio_stream_bitrate"
             defaultValue={"128"}

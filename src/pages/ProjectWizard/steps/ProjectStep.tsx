@@ -305,20 +305,6 @@ const ProjectStep: React.FC<ProjectStepProps> = ({ state, dispatch }) => {
           <>
             <Grid size={{ xs: 6, sm: 3 }}>
               <TextField
-                label="Audio Format"
-                select
-                value={project.audio_format}
-                onChange={(e) => update({ audio_format: e.target.value })}
-                fullWidth
-                size="small"
-              >
-                <MenuItem value="mp3">MP3</MenuItem>
-                <MenuItem value="wav">WAV</MenuItem>
-                <MenuItem value="ogg">OGG</MenuItem>
-              </TextField>
-            </Grid>
-            <Grid size={{ xs: 6, sm: 3 }}>
-              <TextField
                 label="Ordering"
                 select
                 value={project.ordering}

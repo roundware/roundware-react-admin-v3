@@ -41,7 +41,6 @@ export interface WizardProject {
   latitude: number;
   longitude: number;
   language_ids: number[];
-  audio_format: string;
   max_recording_length_sec: number;
   auto_submit: boolean;
   listen_enabled: boolean;

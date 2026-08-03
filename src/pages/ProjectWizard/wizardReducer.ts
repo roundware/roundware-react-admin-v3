@@ -22,7 +22,6 @@ export const DEFAULT_PROJECT: WizardProject = {
   latitude: 42.3601,
   longitude: -71.0589,
   language_ids: [],
-  audio_format: "mp3",
   max_recording_length_sec: 120,
   auto_submit: true,
   listen_enabled: true,

@@ -63,7 +63,6 @@ export async function executeCreation(
       latitude: state.project.latitude,
       longitude: state.project.longitude,
       language_ids: state.project.language_ids,
-      audio_format: state.project.audio_format,
       max_recording_length_sec: state.project.max_recording_length_sec,
       auto_submit: state.project.auto_submit,
       listen_enabled: state.project.listen_enabled,

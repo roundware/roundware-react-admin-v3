@@ -9,7 +9,6 @@ export interface IProject {
   latitude: number;
   longitude: number;
   created_at: string;
-  audio_format: string;
   auto_submit: boolean;
   max_recording_length_sec: number;
   listen_questions_dynamic: boolean;
