@@ -150,6 +150,13 @@ const CreationProgress: React.FC<CreationProgressProps> = ({
 
   const handleGoToProject = goTo("");
   const handleGoToPublish = goTo("/publish");
+  const handleGoToAssets = goTo("/assets");
+
+  // Only asset-paradigm projects are pointed at the assets page. In a looping
+  // project a contribution becomes a *speaker*, not an asset, so there is
+  // nothing to add there — its equivalent prompt is the base-loop warning on
+  // the Publish page.
+  const collectsAssets = state.project.recording_method !== "looping";
 
   return (
     <Dialog open={open} onClose={error ? onClose : undefined} maxWidth="sm" fullWidth>
@@ -191,10 +198,19 @@ const CreationProgress: React.FC<CreationProgressProps> = ({
         )}
 
         {done && (
-          <Typography color="success.main" variant="body2" sx={{ mt: 2 }}>
-            All resources have been created successfully. You can now manage
-            your project from the admin interface.
-          </Typography>
+          <>
+            <Typography color="success.main" variant="body2" sx={{ mt: 2 }}>
+              All resources have been created successfully. You can now manage
+              your project from the admin interface.
+            </Typography>
+            {collectsAssets && (
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                Your project has no audio in it yet. Participants can contribute
+                their own, but most projects start with something to listen to —
+                <strong> Add audio</strong> takes you there.
+              </Typography>
+            )}
+          </>
         )}
       </DialogContent>
       <DialogActions>
@@ -208,6 +224,9 @@ const CreationProgress: React.FC<CreationProgressProps> = ({
         )}
         {done && (
           <>
+            {collectsAssets && (
+              <Button onClick={handleGoToAssets}>Add audio</Button>
+            )}
             <Button onClick={handleGoToPublish}>Publish it</Button>
             <Button onClick={handleGoToProject} variant="contained">
               Go to Project
