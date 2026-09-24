@@ -9,10 +9,10 @@ import { multiPolygon, MultiPolygon } from "@turf/helpers";
 import { useDrawingManager } from "hooks/useDrawingManager";
 import React, { useCallback, useMemo, useState } from "react";
 import { googleMapPathToGeoJSONPath, polygonToGoogleMapPaths } from "utilities";
-import { mapLibraries, mapsApiVersion } from "../../../utils";
+import { mapLibraries, mapsApiVersion } from "../../utils";
 
 /**
- * Draw a speaker's coverage area during project creation.
+ * Draw a speaker's coverage area.
  *
  * This exists because a speaker without a shape **crashes the web app**: Turf
  * throws "polygon or multi-polygon is required" the moment the listener's
@@ -22,11 +22,11 @@ import { mapLibraries, mapsApiVersion } from "../../../utils";
  * created dead on arrival.
  *
  * Unlike `SpeakerShapesControl` and `AssetShape`, this is a plain controlled
- * input: the wizard's speakers are unsaved temp objects with no record context
- * and no id, so it takes a value and an onChange rather than talking to the
- * data provider. It intentionally offers draw-and-clear only — the rotate,
- * scale and vertex editing in the full speaker form belong to refinement after
- * the project exists.
+ * input: it takes a value and an onChange rather than talking to the data
+ * provider, so it works for a speaker that does not exist yet — the wizard's
+ * unsaved temp objects, and the Create form, both of which have no record and
+ * no id. It offers draw-and-clear only; the rotate, scale and vertex editing on
+ * the Speakers map is for refining a shape once the speaker exists.
  */
 
 interface Props {
@@ -42,7 +42,7 @@ const containerStyle = { width: "100%", height: "320px" };
  *  at any zoom a speaker is drawn at, and keeps the stored GeoJSON small. */
 const CIRCLE_POINTS = 32;
 
-const WizardSpeakerShape: React.FC<Props> = ({ value, onChange, center }) => {
+const ShapeDrawInput: React.FC<Props> = ({ value, onChange, center }) => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     version: mapsApiVersion,
@@ -216,4 +216,4 @@ const DrawingTools: React.FC<{
   return null;
 };
 
-export default WizardSpeakerShape;
+export default ShapeDrawInput;

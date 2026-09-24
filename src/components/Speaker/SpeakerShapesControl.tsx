@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import PlacesAutoComplete from 'components/common/LocationSelector/PlacesAutoComplete';
+import { useProjects } from 'context/ProjectsContext';
 import { useSpeakers } from 'context/SpeakersContext';
 import React, { useEffect, useState } from 'react';
 import { ISpeaker } from '../../types/speaker';
@@ -35,7 +36,19 @@ interface SpeakerShapesControlProps {
  */
 const SpeakerShapesControl = ({ speakers: propSpeakers }: SpeakerShapesControlProps): JSX.Element => {
   const { selectedSpeaker, speakers: contextSpeakers } = useSpeakers();
+  const { selectedProject } = useProjects();
   const speakers = propSpeakers || contextSpeakers;
+
+  // Where to look when there is nothing drawn yet. The map used to fall back
+  // to (0, 0) — open ocean south of Ghana at zoom 15 — which on a project with
+  // no speakers yet reads as "the map is broken" rather than "you are lost".
+  const projectCenter = React.useMemo(
+    () => ({
+      lat: selectedProject?.latitude ?? 0,
+      lng: selectedProject?.longitude ?? 0,
+    }),
+    [selectedProject?.latitude, selectedProject?.longitude]
+  );
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     version: mapsApiVersion,
@@ -81,15 +94,15 @@ const SpeakerShapesControl = ({ speakers: propSpeakers }: SpeakerShapesControlPr
         if (!bounds.isEmpty()) {
           map.fitBounds(bounds);
         } else {
-          map.panTo(new google.maps.LatLng(0, 0));
+          map.panTo(new google.maps.LatLng(projectCenter.lat, projectCenter.lng));
           map.setZoom(15);
         }
       } else {
-        map.panTo(new google.maps.LatLng(0, 0));
+        map.panTo(new google.maps.LatLng(projectCenter.lat, projectCenter.lng));
         map.setZoom(15);
       }
     },
-    [speakers]
+    [speakers, projectCenter]
   );
 
   const onUnmount = React.useCallback(function callback() {
@@ -105,7 +118,14 @@ const SpeakerShapesControl = ({ speakers: propSpeakers }: SpeakerShapesControlPr
     }, 200);
   }, [selectedSpeaker]);
 
-  const [center, setCenter] = useState({ lat: 0, lng: 0 });
+  const [center, setCenter] = useState(projectCenter);
+
+  // The project can arrive after the first render (it is fetched on mount), so
+  // adopt its location once, while the user has not searched for anywhere else.
+  const hasSearched = React.useRef(false);
+  useEffect(() => {
+    if (!hasSearched.current) setCenter(projectCenter);
+  }, [projectCenter]);
 
   return (
     <div
@@ -142,12 +162,11 @@ const SpeakerShapesControl = ({ speakers: propSpeakers }: SpeakerShapesControlPr
             {/* locatoin seelctor */}
             <Grid size="auto">
               <PlacesAutoComplete
-                onSelect={(lat, lng) =>
-                  setCenter({
-                    lat,
-                    lng,
-                  })
-                }
+                locationBias={projectCenter}
+                onSelect={(lat, lng) => {
+                  hasSearched.current = true;
+                  setCenter({ lat, lng });
+                }}
               />
             </Grid>
 

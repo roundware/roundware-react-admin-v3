@@ -30,7 +30,7 @@ const PublishPage: React.FC = () => {
     <Container maxWidth="xl" sx={{ py: 3 }}>
       <Title title="Publish" />
       <Typography variant="h4" gutterBottom>
-        Publish &amp; Customize
+        Customize &amp; Publish
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
         Choose your public web address, customize the look, and preview exactly

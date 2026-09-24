@@ -22,7 +22,7 @@ import { WizardState } from "../types";
 import { WizardAction } from "../wizardReducer";
 import AudiotrackIcon from "@mui/icons-material/Audiotrack";
 import StepInstruction from "../components/StepInstruction";
-import WizardSpeakerShape from "../components/WizardSpeakerShape";
+import ShapeDrawInput from "../../../components/common/ShapeDrawInput";
 
 interface SpeakersStepProps {
   state: WizardState;
@@ -299,7 +299,7 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
                         </Typography>
                       )}
                     </Stack>
-                    <WizardSpeakerShape
+                    <ShapeDrawInput
                       value={spk.shape}
                       onChange={(shape) =>
                         dispatch({

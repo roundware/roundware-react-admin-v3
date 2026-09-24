@@ -68,6 +68,22 @@ export const DEFAULT_AUDIOTRACK: WizardAudiotrack = {
   timed_asset_priority: "normal",
 };
 
+/** A speaker row for a template that ships none, so the step opens ready to
+ *  draw. Speakers are what make a project audible, so the wizard defaults to
+ *  creating one rather than to skipping — adding them later was the common
+ *  path to a published project that plays nothing. */
+export const BLANK_SPEAKER: Omit<WizardSpeaker, "tempId"> = {
+  shape: null,
+  audioFile: null,
+  code: "",
+  is_active: true,
+  attenuation_distance: 0,
+  min_volume: 0.0,
+  max_volume: 1.0,
+  fill_color: "#0000FF80",
+  border_color: "#0000FF",
+};
+
 export const INITIAL_STATE: WizardState = {
   activeStep: 0,
   templateKey: null,
@@ -149,8 +165,11 @@ export function wizardReducer(state: WizardState, action: WizardAction): WizardS
         tagTempIds: g.tagIndices.map((i) => tags[i].tempId),
         tempId: makeTempId("uig"),
       }));
-      // Build speakers
-      const speakers: WizardSpeaker[] = t.speakers.map((s) => ({
+      // Build speakers. A template with none still gets one blank row: the
+      // step defaults to adding a speaker, not to skipping it.
+      const templateSpeakers =
+        t.speakers.length > 0 ? t.speakers : [BLANK_SPEAKER];
+      const speakers: WizardSpeaker[] = templateSpeakers.map((s) => ({
         ...s,
         tempId: makeTempId("spk"),
       }));
@@ -164,7 +183,7 @@ export function wizardReducer(state: WizardState, action: WizardAction): WizardS
         tags,
         uiGroups,
         speakers,
-        skipSpeakers: speakers.length === 0,
+        skipSpeakers: false,
       };
     }
     // -- Project --

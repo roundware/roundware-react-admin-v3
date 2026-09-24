@@ -19,7 +19,6 @@ import {
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
-import { useNavigate } from "react-router-dom";
 
 import { CreationStep, WizardState } from "../types";
 import { executeCreation } from "../createProject";
@@ -43,7 +42,6 @@ const CreationProgress: React.FC<CreationProgressProps> = ({
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [projectId, setProjectId] = useState<number | null>(null);
-  const navigate = useNavigate();
   const pc = useProjects();
 
   // Refs to break the dependency cycle: we read context values from refs
@@ -141,9 +139,16 @@ const CreationProgress: React.FC<CreationProgressProps> = ({
     })();
   };
 
+  // A full page load, not `navigate()`. Creating the project selects it, which
+  // makes ProjectRoute re-render the whole admin under `basename="/project/:id"`;
+  // a router navigation to an absolute `/project/:id/...` path then gets the
+  // basename prepended again and matches nothing, dumping the user back on the
+  // wizard. Reloading also guarantees the new project's data is fetched fresh
+  // rather than assembled from whatever the wizard left in context.
   const goTo = (suffix: string) => () => {
     if (projectId) {
-      navigate(`/project/${projectId}${suffix}`);
+      window.location.assign(`/project/${projectId}${suffix}`);
+      return;
     }
     onClose();
   };
@@ -227,9 +232,9 @@ const CreationProgress: React.FC<CreationProgressProps> = ({
             {collectsAssets && (
               <Button onClick={handleGoToAssets}>Add audio</Button>
             )}
-            <Button onClick={handleGoToPublish}>Publish it</Button>
-            <Button onClick={handleGoToProject} variant="contained">
-              Go to Project
+            <Button onClick={handleGoToProject}>Go to Project</Button>
+            <Button onClick={handleGoToPublish} variant="contained">
+              Customize &amp; Publish
             </Button>
           </>
         )}

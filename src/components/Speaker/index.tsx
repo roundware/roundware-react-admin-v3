@@ -29,6 +29,7 @@ import {
 import { Navigate, useParams } from 'react-router-dom';
 import { apiFetcher } from 'roundwareDataProvider/tokenAuthProvider';
 import SpeakerAudioControls from './SpeakerAudioControls';
+import SpeakerShapeInput from './SpeakerShapeInput';
 import VariantAudioControls from './VariantAudioControls';
 
 // Validation function for hex colors
@@ -43,6 +44,7 @@ const validateHexColor = (value: string) => {
 
 export const SpeakerEdit = (): JSX.Element => {
   const { selectedProject } = useProjects();
+  const isLooping = selectedProject?.recording_method === 'looping';
   const { fetchData } = useSpeakers();
   const { id: speakerId } = useParams<{ id: string }>();
 
@@ -197,22 +199,27 @@ export const SpeakerEdit = (): JSX.Element => {
           <SelectInput optionText='name' fullWidth />
         </ReferenceInput>
 
-        <DualListReferenceInput
-          reference='speakers'
-          source='parents'
-          label='Parents'
-          optionText='code'
-          filter={{ project_id: selectedProject?.id }}
-        />
+        {/* See SpeakerCreate — hierarchy is a looping-paradigm concept. */}
+        {isLooping && (
+          <>
+            <DualListReferenceInput
+              reference='speakers'
+              source='parents'
+              label='Parents'
+              optionText='code'
+              filter={{ project_id: selectedProject?.id }}
+            />
 
-        {/* children */}
-        <DualListReferenceInput
-          reference='speakers'
-          source='children'
-          label='Children'
-          optionText='code'
-          filter={{ project_id: selectedProject?.id }}
-        />
+            {/* children */}
+            <DualListReferenceInput
+              reference='speakers'
+              source='children'
+              label='Children'
+              optionText='code'
+              filter={{ project_id: selectedProject?.id }}
+            />
+          </>
+        )}
 
         <Stack spacing={2} sx={{ mt: 2 }}>
           <DateTimeInput source='created_at' fullWidth InputProps={{ readOnly: true }} />
@@ -238,6 +245,7 @@ export const SpeakerEdit = (): JSX.Element => {
 
 export const SpeakerCreate = (): JSX.Element => {
   const { selectedProject } = useProjects();
+  const isLooping = selectedProject?.recording_method === 'looping';
   const { fetchData, setSelectedSpeaker, addToNewlyCreatedSpeakers } =
     useSpeakers();
   // Capture the raw file and set_as before transform strips them
@@ -332,6 +340,8 @@ export const SpeakerCreate = (): JSX.Element => {
         <BooleanInput source='is_active' fullWidth defaultChecked />
         <TextInput source='code' validate={maxLength(10)} fullWidth required />
 
+        <SpeakerShapeInput />
+
         <SpeakerAudioControls />
         <VariantAudioControls />
         <NumberInput
@@ -358,21 +368,28 @@ export const SpeakerCreate = (): JSX.Element => {
           validate={validateHexColor}
         />
 
-        <DualListReferenceInput
-          reference='speakers'
-          source='parents'
-          label='Parents'
-          optionText='code'
-          filter={{ project_id: selectedProject?.id }}
-        />
+        {/* Speaker hierarchy only means anything in the looping paradigm, where
+            a contribution becomes a child speaker layered over a base loop. In
+            a standard project these two pickers are noise. */}
+        {isLooping && (
+          <>
+            <DualListReferenceInput
+              reference='speakers'
+              source='parents'
+              label='Parents'
+              optionText='code'
+              filter={{ project_id: selectedProject?.id }}
+            />
 
-        <DualListReferenceInput
-          reference='speakers'
-          source='children'
-          label='Children'
-          optionText='code'
-          filter={{ project_id: selectedProject?.id }}
-        />
+            <DualListReferenceInput
+              reference='speakers'
+              source='children'
+              label='Children'
+              optionText='code'
+              filter={{ project_id: selectedProject?.id }}
+            />
+          </>
+        )}
 
         {progress > 0 && (
           <Stack sx={{ width: '100%' }}>

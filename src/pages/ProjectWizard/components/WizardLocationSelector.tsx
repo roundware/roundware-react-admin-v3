@@ -2,19 +2,17 @@
 // Standalone location selector for the wizard (no react-admin form context)
 // Includes Google Places autocomplete + interactive map when Maps API is loaded
 // ---------------------------------------------------------------------------
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef } from "react";
 import { Box, Grid, TextField, Typography } from "@mui/material";
+import { useJsApiLoader } from "@react-google-maps/api";
 import PlacesAutoComplete from "../../../components/common/LocationSelector/PlacesAutoComplete";
+import { mapLibraries, mapsApiVersion } from "../../../utils";
 
 interface WizardLocationSelectorProps {
   latitude: number;
   longitude: number;
   onChange: (lat: number, lng: number) => void;
 }
-
-// Dynamically check if Google Maps API is available
-const isGoogleMapsAvailable = () =>
-  typeof google !== "undefined" && typeof google.maps !== "undefined";
 
 const WizardLocationSelector: React.FC<WizardLocationSelectorProps> = ({
   latitude,
@@ -23,19 +21,18 @@ const WizardLocationSelector: React.FC<WizardLocationSelectorProps> = ({
 }) => {
   const mapInstanceRef = useRef<google.maps.Map | null>(null);
   const markerRef = useRef<google.maps.Marker | null>(null);
-  const [mapsLoaded, setMapsLoaded] = useState(isGoogleMapsAvailable());
 
-  // Check periodically if maps loaded (for late-loading scripts)
-  useEffect(() => {
-    if (mapsLoaded) return;
-    const interval = setInterval(() => {
-      if (isGoogleMapsAvailable()) {
-        setMapsLoaded(true);
-        clearInterval(interval);
-      }
-    }, 200);
-    return () => clearInterval(interval);
-  }, [mapsLoaded]);
+  // Load the Maps script rather than waiting for someone else to. Nothing on
+  // the wizard's project step draws a map, so the old "poll until `google` is
+  // defined" check never resolved and the step silently degraded to two number
+  // fields. The id/version/libraries match every other map in the admin, so
+  // the loader dedupes instead of pulling in a second copy.
+  const { isLoaded: mapsLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    version: mapsApiVersion,
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY!,
+    libraries: mapLibraries,
+  });
 
   // Handle Places autocomplete selection — update coords + pan map
   const handlePlaceSelect = useCallback(
@@ -93,7 +90,11 @@ const WizardLocationSelector: React.FC<WizardLocationSelectorProps> = ({
       {/* Places autocomplete search */}
       {mapsLoaded && (
         <Box sx={{ mb: 2 }}>
-          <PlacesAutoComplete onSelect={handlePlaceSelect} />
+          <PlacesAutoComplete
+            onSelect={handlePlaceSelect}
+            label="Search for the project location"
+            fullWidth
+          />
         </Box>
       )}
 

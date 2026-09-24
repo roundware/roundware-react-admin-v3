@@ -73,7 +73,10 @@ const getSanitizedList = (events: RaRecord[]): SanitizedListenEvent[] => [
     .sort((a, b) => (a.start_time > b.start_time ? 1 : -1)),
 ];
 
-const PAGE_SIZE = 500;
+// The server caps page_size at 200 (`Query(50, ge=1, le=200)` in core/pagination.py).
+// Asking for 500 made every chart fetch fail with a 422, which surfaced on the
+// admin home page as an unhandled HttpError.
+const PAGE_SIZE = 200;
 async function fetchListenEvents({
   pageParam = 1,
   startDate,
