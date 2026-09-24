@@ -3,6 +3,7 @@ import ColorPicker from 'components/common/ColorPicker';
 import DualListReferenceInput from 'components/common/DualListReferenceInput';
 import FileDownloadButton from 'components/common/FileDownloadButton';
 import FormToolbar from 'components/common/FormToolbar';
+import { showsSpeakerHierarchy } from 'config/fieldVisibility';
 import { useProjects } from 'context/ProjectsContext';
 import { useSpeakers } from 'context/SpeakersContext';
 import useBoolean from 'hooks/useBoolean';
@@ -44,7 +45,7 @@ const validateHexColor = (value: string) => {
 
 export const SpeakerEdit = (): JSX.Element => {
   const { selectedProject } = useProjects();
-  const isLooping = selectedProject?.recording_method === 'looping';
+  const showHierarchy = showsSpeakerHierarchy(selectedProject);
   const { fetchData } = useSpeakers();
   const { id: speakerId } = useParams<{ id: string }>();
 
@@ -199,8 +200,7 @@ export const SpeakerEdit = (): JSX.Element => {
           <SelectInput optionText='name' fullWidth />
         </ReferenceInput>
 
-        {/* See SpeakerCreate — hierarchy is a looping-paradigm concept. */}
-        {isLooping && (
+        {showHierarchy && (
           <>
             <DualListReferenceInput
               reference='speakers'
@@ -245,7 +245,7 @@ export const SpeakerEdit = (): JSX.Element => {
 
 export const SpeakerCreate = (): JSX.Element => {
   const { selectedProject } = useProjects();
-  const isLooping = selectedProject?.recording_method === 'looping';
+  const showHierarchy = showsSpeakerHierarchy(selectedProject);
   const { fetchData, setSelectedSpeaker, addToNewlyCreatedSpeakers } =
     useSpeakers();
   // Capture the raw file and set_as before transform strips them
@@ -368,10 +368,8 @@ export const SpeakerCreate = (): JSX.Element => {
           validate={validateHexColor}
         />
 
-        {/* Speaker hierarchy only means anything in the looping paradigm, where
-            a contribution becomes a child speaker layered over a base loop. In
-            a standard project these two pickers are noise. */}
-        {isLooping && (
+        {/* Gated in config/fieldVisibility.ts, not here. */}
+        {showHierarchy && (
           <>
             <DualListReferenceInput
               reference='speakers'
