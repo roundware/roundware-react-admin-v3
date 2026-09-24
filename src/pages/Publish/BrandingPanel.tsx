@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Avatar,
   Box,
   Button,
   CircularProgress,
@@ -8,8 +7,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import UploadIcon from "@mui/icons-material/Upload";
-import { Branding, errMessage, getBranding, patchBranding, uploadLogo } from "./api";
+import { Branding, errMessage, getBranding, patchBranding } from "./api";
+import BrandingFilesPanel from "./BrandingFilesPanel";
 
 interface Props {
   projectId: number;
@@ -25,7 +24,6 @@ const BrandingPanel: React.FC<Props> = ({ projectId, onSaved }) => {
   const [primary, setPrimary] = useState(DEFAULTS.primary);
   const [secondary, setSecondary] = useState(DEFAULTS.secondary);
   const [background, setBackground] = useState(DEFAULTS.background);
-  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const debounce = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -42,7 +40,6 @@ const BrandingPanel: React.FC<Props> = ({ projectId, onSaved }) => {
       setPrimary(p.primary || DEFAULTS.primary);
       setSecondary(p.secondary || DEFAULTS.secondary);
       setBackground(p.background || DEFAULTS.background);
-      setLogoUrl(b.logo_url);
       loaded.current = true;
     });
     return () => {
@@ -75,22 +72,6 @@ const BrandingPanel: React.FC<Props> = ({ projectId, onSaved }) => {
     };
   }, [projectId, title, subtitle, primary, secondary, background, onSaved]);
 
-  const handleLogo = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setSaving(true);
-    setError(null);
-    try {
-      const res = await uploadLogo(projectId, file);
-      setLogoUrl(res.logo_url);
-      onSaved?.();
-    } catch (err) {
-      setError(errMessage(err));
-    } finally {
-      setSaving(false);
-    }
-  };
-
   if (!branding) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
@@ -107,22 +88,6 @@ const BrandingPanel: React.FC<Props> = ({ projectId, onSaved }) => {
       </Stack>
 
       {error && <Typography color="error" variant="body2">{error}</Typography>}
-
-      {/* Logo */}
-      <Stack direction="row" spacing={2} alignItems="center">
-        <Avatar src={logoUrl ?? undefined} variant="rounded" sx={{ width: 56, height: 56 }}>
-          ?
-        </Avatar>
-        <Button component="label" variant="outlined" startIcon={<UploadIcon />} size="small">
-          Upload logo
-          <input
-            hidden
-            type="file"
-            accept="image/png,image/jpeg,image/svg+xml,image/webp,image/gif"
-            onChange={handleLogo}
-          />
-        </Button>
-      </Stack>
 
       <TextField
         label="App title"
@@ -145,6 +110,8 @@ const BrandingPanel: React.FC<Props> = ({ projectId, onSaved }) => {
         <ColorField label="Accent" value={secondary} onChange={setSecondary} />
         <ColorField label="Background" value={background} onChange={setBackground} />
       </Stack>
+
+      <BrandingFilesPanel projectId={projectId} onSaved={onSaved} />
     </Stack>
   );
 };
