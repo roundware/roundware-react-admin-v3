@@ -7,7 +7,7 @@ import {
 } from "@react-google-maps/api";
 import { multiPolygon, MultiPolygon } from "@turf/helpers";
 import { useDrawingManager } from "hooks/useDrawingManager";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo } from "react";
 import { googleMapPathToGeoJSONPath, polygonToGoogleMapPaths } from "utilities";
 import { mapLibraries, mapsApiVersion } from "../../utils";
 
@@ -49,10 +49,6 @@ const ShapeDrawInput: React.FC<Props> = ({ value, onChange, center }) => {
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY!,
     libraries: mapLibraries,
   });
-
-  const [drawingModes, setDrawingModes] = useState<
-    google.maps.drawing.OverlayType[]
-  >([]);
 
   // Only offer the toolbar while there is nothing drawn; clearing brings it back.
   const hasShape = Boolean(value);
@@ -154,8 +150,6 @@ const ShapeDrawInput: React.FC<Props> = ({ value, onChange, center }) => {
       >
         <DrawingTools
           enabled={!hasShape}
-          modes={drawingModes}
-          setModes={setDrawingModes}
           onCircle={handleCircle}
           onPolygon={handlePolygon}
           onRectangle={handleRectangle}
@@ -181,23 +175,25 @@ const ShapeDrawInput: React.FC<Props> = ({ value, onChange, center }) => {
  *  useGoogleMap() can reach the map instance. */
 const DrawingTools: React.FC<{
   enabled: boolean;
-  modes: google.maps.drawing.OverlayType[];
-  setModes: (m: google.maps.drawing.OverlayType[]) => void;
   onCircle: (c: google.maps.Circle) => void;
   onPolygon: (p: google.maps.Polygon) => void;
   onRectangle: (r: google.maps.Rectangle) => void;
-}> = ({ enabled, modes, setModes, onCircle, onPolygon, onRectangle }) => {
-  // The OverlayType enum only exists once the maps script has loaded, so it
-  // cannot be a module-level constant.
-  React.useEffect(() => {
-    if (modes.length === 0 && typeof google !== "undefined") {
-      setModes([
-        google.maps.drawing.OverlayType.CIRCLE,
-        google.maps.drawing.OverlayType.POLYGON,
-        google.maps.drawing.OverlayType.RECTANGLE,
-      ]);
-    }
-  }, [modes.length, setModes]);
+}> = ({ enabled, onCircle, onPolygon, onRectangle }) => {
+  // Built inline, at render. The OverlayType enum only exists once the maps
+  // script has loaded, which is why this cannot be a module constant — but
+  // deferring it through state and an effect is worse: useDrawingManager
+  // builds its DrawingManager on first run, so the toolbar was created from
+  // the empty initial array and stayed empty. This component only renders
+  // inside <GoogleMap>, which only mounts once the script has loaded, so the
+  // enum is already there.
+  const modes = React.useMemo(
+    () => [
+      google.maps.drawing.OverlayType.CIRCLE,
+      google.maps.drawing.OverlayType.POLYGON,
+      google.maps.drawing.OverlayType.RECTANGLE,
+    ],
+    []
+  );
 
   useDrawingManager({
     enabled,

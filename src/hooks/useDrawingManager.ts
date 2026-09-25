@@ -92,5 +92,24 @@ export function useDrawingManager({
     };
   }, [map, enabled]); // re-run when map changes or enabled toggles
 
+  // Apply mode changes to the existing manager rather than rebuilding it.
+  //
+  // The effect above deliberately does not depend on `drawingModes` — callers
+  // pass a fresh array literal each render, and depending on it would tear
+  // down and recreate the DrawingManager on every render. The cost of leaving
+  // it out was that a caller who supplied its modes *after* first render (via
+  // state, to defer touching the OverlayType enum) got a toolbar built from
+  // the empty initial array, with no buttons and no error. Keying on the
+  // contents rather than the array identity gets both.
+  const modeKey = (drawingModes ?? []).join(",");
+  useEffect(() => {
+    const dm = dmRef.current;
+    if (!dm) return;
+    dm.setOptions({
+      drawingControlOptions: { drawingModes: drawingModes ?? [] },
+    });
+    // drawingModes is intentionally tracked by content, not identity.
+  }, [modeKey]);
+
   return dmRef;
 }
