@@ -15,7 +15,13 @@ interface Props {
   onSaved?: () => void;
 }
 
-const DEFAULTS = { primary: "#1976d2", secondary: "#9c27b0", background: "#ffffff" };
+// The web app's own dark palette, from its styles/index.ts darkColorTheme.
+// These were MUI's stock demo colours (#1976d2 / #9c27b0 / #ffffff), which
+// belong to no Roundware theme at all — and because this panel auto-saves,
+// every project had them written in whether or not its author touched a
+// swatch. That is where the purple Delete button and the white-on-white
+// Add Media menu came from.
+const DEFAULTS = { primary: "#A3E635", secondary: "#042F2E", background: "#14532D" };
 
 const BrandingPanel: React.FC<Props> = ({ projectId, onSaved }) => {
   const [branding, setBranding] = useState<Branding | null>(null);
