@@ -2,7 +2,6 @@ import AudiotrackIcon from "@mui/icons-material/Audiotrack";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Box, Button, Stack, Tab, Tabs, Typography } from "@mui/material";
 import AudioRecorder from "components/common/AudioRecorder";
-import SpeakerAudioPlayer from "components/Speaker/SpeakerAudioPlayer";
 import React, { useEffect, useState } from "react";
 
 /**
@@ -16,6 +15,13 @@ import React, { useEffect, useState } from "react";
  * The recording arrives as a WebM `Blob` from `AudioRecorder`; the server runs
  * every upload through FFmpeg and stores MP3 + M4A, so the container it was
  * captured in does not matter.
+ *
+ * Preview is a bare `<audio>` element rather than `SpeakerAudioPlayer`. That
+ * component reads `min_volume`, `start_time` and friends through
+ * `useFieldValue`, which is `useFormContext()` — null outside a react-admin
+ * form. Rendering it here threw "Cannot read properties of null (reading
+ * 'watch')" the instant a file was chosen, taking the whole wizard down with
+ * it. Its extra controls edit fields the wizard does not have anyway.
  */
 
 interface Props {
@@ -99,7 +105,9 @@ const WizardSpeakerAudio: React.FC<Props> = ({ value, onChange }) => {
               Remove
             </Button>
           </Stack>
-          <SpeakerAudioPlayer src={previewUrl} />
+          {previewUrl && (
+            <audio src={previewUrl} controls style={{ width: "100%" }} />
+          )}
         </Stack>
       ) : (
         // Deliberately a warning, not a blocker: a speaker with no audio is

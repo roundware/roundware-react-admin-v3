@@ -33,7 +33,9 @@ const standard: WizardTemplate = {
     geo_speak_enabled: false,
     max_recording_length_sec: 120,
     recording_radius: 30,
-    auto_submit: false,
+    // Contributions go live as they arrive. Only the Podcast / Radio Show
+    // template holds them back, because that one is edited before it airs.
+    auto_submit: true,
     ordering: "random",
     repeat_mode: "stop",
     out_of_range_distance: 1000,

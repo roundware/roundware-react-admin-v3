@@ -1,15 +1,10 @@
 import {
-    FormControl,
-    InputLabel,
     Link,
-    ListSubheader,
-    MenuItem,
     AppBar as MuiAppBar,
-    Select,
-    SelectChangeEvent,
     Stack,
     Theme,
     Toolbar,
+    Typography,
     useMediaQuery,
 } from "@mui/material";
 import { useProjects } from "context/ProjectsContext";
@@ -33,24 +28,6 @@ const AppBar = ({ container = HideOnScroll }: AppBarProps): JSX.Element => {
   const { projectsList, selectedProject, selectProject } = useProjects();
 
   const navigate = useNavigate();
-  const handleOnChange = (event: SelectChangeEvent<string | number>) => {
-    const { value } = event.target;
-
-    if (value == "none") {
-      selectProject(null);
-      return navigate(`/projects`);
-    }
-    if (value === "create") {
-      return navigate(`/wizard`);
-    }
-    selectProject(projectsList?.find((p) => p?.id === value) || null);
-    if ([`none`, `create`].includes(value.toString())) return;
-    navigate(`/project/${value}`);
-  };
-
-  const possibleProjects = (
-    import.meta.env.VITE_INCLUDE_PROJECT_IDS || "all"
-  ).split(`,`);
 
   // User's allowed project IDs from auth (null = unrestricted)
   const allowedProjectIds: number[] | null = permissions?.project_ids ?? null;
@@ -80,41 +57,17 @@ const AppBar = ({ container = HideOnScroll }: AppBarProps): JSX.Element => {
             >
               Roundware Admin
             </Link>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <InputLabel variant="standard">Project: </InputLabel>
-              <FormControl>
-                <Select
-                  defaultValue={selectedProject?.id || "none"}
-                  id="grouped-select"
-                  value={selectedProject?.id || "none"}
-                  onChange={handleOnChange}
-                  size="small"
-                >
-                  <MenuItem value="none">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={"create"}>Create New Project</MenuItem>
-                  {Array.isArray(projectsList) && projectsList.length > 0 && (
-                    <ListSubheader>Recent</ListSubheader>
-                  )}
-                  {projectsList
-                    ?.filter((p) => {
-                      // Always show the currently selected project in the dropdown
-                      if (selectedProject && p.id === selectedProject.id) return true;
-                      // Env-based filter (VITE_INCLUDE_PROJECT_IDS)
-                      if (!possibleProjects.includes("all") && !possibleProjects.includes(p.id.toString())) return false;
-                      // User-level project access filter
-                      if (allowedProjectIds !== null && !allowedProjectIds.includes(p.id)) return false;
-                      return true;
-                    })
-                    .map((p) => (
-                      <MenuItem key={p?.id} value={p?.id}>
-                        {p?.name}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-            </Stack>
+            {/* The project switcher used to be a Select here. Changing it
+                swapped the whole admin's context mid-page — including the
+                router basename — which read as the app behaving oddly rather
+                than as a deliberate switch. The name is kept for orientation;
+                switching happens on the Projects list, reached from the title
+                link, where the choice is the point of the page. */}
+            {selectedProject && (
+              <Typography variant="subtitle1" sx={{ color: "#fff", opacity: 0.9 }}>
+                {selectedProject.name}
+              </Typography>
+            )}
           </Stack>
           <Stack spacing={1} direction="row" alignItems="center">
             <TenantSelector />

@@ -108,12 +108,14 @@ const UIBuilderStep: React.FC<UIBuilderStepProps> = ({ state, dispatch }) => {
 
   return (
     <Box>
-      <StepInstruction title="UI Builder">
-        <strong>Speak</strong> groups let contributors tag their uploads with
-        metadata. <strong>Listen</strong> groups let people filter what they
-        hear by that same metadata. Usually you want both, but not always — a
-        project might collect more about a contribution than is worth exposing
-        as a filter, and some projects only ever do one or the other.
+      <StepInstruction title="Set up Tag UI">
+        Choose which categories and tags to present to your participants, both
+        when they submit a recording (<strong>Speak</strong>) and when they
+        listen to the audio stream (<strong>Listen</strong>).
+        <br />
+        Usually you want both, but not always — a project might collect more
+        about a contribution than is worth exposing as a filter, and some
+        projects only ever do one or the other.
       </StepInstruction>
 
       <Tabs

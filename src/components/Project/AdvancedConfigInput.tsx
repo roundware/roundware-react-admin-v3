@@ -68,8 +68,9 @@ const AdvancedConfigInput = (): JSX.Element => {
   // Re-seed the box when the record loads or is replaced, but never while the
   // author is mid-edit — that would fight their cursor.
   useEffect(() => {
+    // Deliberately keyed on the record id alone: re-seeding on field.value
+    // would overwrite the author's text on every keystroke.
     setText(JSON.stringify(field.value ?? {}, null, 2));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [record?.id]);
 
   const parsed = useMemo(() => {

@@ -16,7 +16,9 @@ const storycollection: WizardTemplate = {
     recording_radius: 30,
     ordering: "random",
     repeat_mode: "stop",
-    auto_submit: false,
+    // Contributions go live as they arrive. Only the Podcast / Radio Show
+    // template holds them back, because that one is edited before it airs.
+    auto_submit: true,
     recording_method: "standard",
   },
   // Not a geographic project — long-form stories collected from anywhere. The

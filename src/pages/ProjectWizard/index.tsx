@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------------
 // Project Setup Wizard — Main Page
 // ---------------------------------------------------------------------------
-import React, { useCallback, useEffect, useReducer, useState } from "react";
+import React, { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -34,11 +34,39 @@ import ContentTagsStep from "./steps/ContentTagsStep";
 import UIBuilderStep from "./steps/UIBuilderStep";
 import SpeakersStep from "./steps/SpeakersStep";
 import CreationProgress from "./components/CreationProgress";
+import WizardErrorBoundary from "./components/WizardErrorBoundary";
+import {
+  clearWizardState,
+  loadWizardState,
+  saveWizardState,
+} from "./wizardPersistence";
 
 const ProjectWizardPage: React.FC = () => {
-  const [state, dispatch] = useReducer(wizardReducer, INITIAL_STATE);
+  // Lazy init so a draft from a crash or a stray navigation is picked back up.
+  const [state, dispatch] = useReducer(
+    wizardReducer,
+    undefined,
+    loadWizardState
+  );
+
   const [showCreation, setShowCreation] = useState(false);
   const [creationDone, setCreationDone] = useState(false);
+
+  // Once the project exists the draft is stale, and re-offering it would
+  // invite creating the same project twice.
+  const creationDoneRef = useRef(false);
+  useEffect(() => {
+    creationDoneRef.current = creationDone;
+    if (creationDone) clearWizardState();
+  }, [creationDone]);
+
+  // Persist on every change. The wizard's answers otherwise live only in
+  // component memory, so any unmount — a crash, a mis-click, a reload — took
+  // the lot. See wizardPersistence.ts.
+  useEffect(() => {
+    if (creationDoneRef.current) return;
+    saveWizardState(state);
+  }, [state]);
 
   // Determine if the wizard has unsaved work (user has moved past template step)
   const hasUnsavedWork = state.activeStep > 0 && !creationDone;
@@ -81,6 +109,7 @@ const ProjectWizardPage: React.FC = () => {
     // Clear the wizard. Both exits from the success dialog navigate away, but
     // without this the wizard keeps the finished project's answers, so landing
     // back on /wizard shows a form that looks half-submitted.
+    clearWizardState();
     dispatch({ type: "RESET" });
   }, []);
 
@@ -221,7 +250,15 @@ const ProjectWizardPage: React.FC = () => {
   );
 };
 
-export default ProjectWizardPage;
+/** The page as routed. The boundary is outside the wizard rather than inside
+ *  it, so a crash in any step — or in the wizard's own render — is caught. */
+const ProjectWizardRoute: React.FC = () => (
+  <WizardErrorBoundary onReset={clearWizardState}>
+    <ProjectWizardPage />
+  </WizardErrorBoundary>
+);
+
+export default ProjectWizardRoute;
 
 // ---- Step router ----------------------------------------------------------
 

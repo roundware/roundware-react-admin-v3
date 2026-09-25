@@ -54,10 +54,15 @@ const ContentTagsStep: React.FC<ContentTagsStepProps> = ({ state, dispatch }) =>
 
   return (
     <Box>
-      <StepInstruction title="Content Tags">
-        Tags let participants categorize their recordings. Organize tags into
-        categories (e.g. &quot;Sound Type&quot;, &quot;Mood&quot;). Each category becomes a
-        question or filter group in the participant UI.
+      <StepInstruction title="Set up Tags and Categories">
+        <strong>Tags</strong> are metadata about recordings in your project.
+        <strong> Tag Categories</strong> are groups of tags. For example, you
+        could have a Tag Category of &quot;Age&quot; whose tags are
+        &quot;Child&quot; and &quot;Adult&quot;.
+        <br />
+        Tags are typically self-selected by participants when they make
+        recordings, and can be used to filter what participants hear — for
+        example, &quot;I only want to hear recordings made by children&quot;.
         <br />
         <strong>Note:</strong> Tag categories are shared across all projects in
         your tenant. Tags themselves are project-scoped.
