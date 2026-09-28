@@ -1,4 +1,11 @@
-import { AccountTree, AddCircleOutline, Business, Groups, Settings } from "@mui/icons-material";
+import {
+  AccountTree,
+  AddCircleOutline,
+  Business,
+  Groups,
+  Settings,
+  Speed,
+} from "@mui/icons-material";
 import DefaultIcon from "@mui/icons-material/ViewList";
 import { useMediaQuery } from "@mui/material";
 import * as React from "react";
@@ -152,6 +159,12 @@ export const Menu = (props: MenuProps) => {
             to={{ pathname: "/settings" }}
             primaryText="Settings"
             leftIcon={<Settings />}
+          />
+          <MenuItemLink
+            key="plan"
+            to={{ pathname: "/plan" }}
+            primaryText="Plan"
+            leftIcon={<Speed />}
           />
         </SubMenu>
 

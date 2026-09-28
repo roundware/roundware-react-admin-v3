@@ -7,6 +7,7 @@ import {
   Button,
   Card,
   CardContent,
+  CircularProgress,
   Container,
   Dialog,
   DialogActions,
@@ -22,6 +23,8 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import { Title } from "react-admin";
+import { Link as RouterLink } from "react-router-dom";
+import { fetchUsage, UNLIMITED, Usage } from "../../utilities/plans";
 
 import { WIZARD_STEPS, STEP_LABELS, WizardStepId } from "./types";
 import { wizardReducer, INITIAL_STATE, WizardAction } from "./wizardReducer";
@@ -250,11 +253,62 @@ const ProjectWizardPage: React.FC = () => {
   );
 };
 
+/**
+ * Says so up front when the plan has no room for another project, rather
+ * than letting someone fill in every step and be refused at the end. The
+ * server enforces the limit either way (docs/013); if usage cannot be
+ * loaded, the wizard opens as normal. A draft in progress is kept.
+ */
+const ProjectLimitGate: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [usage, setUsage] = useState<Usage | null | "unknown">(null);
+  useEffect(() => {
+    fetchUsage()
+      .then(setUsage)
+      .catch(() => setUsage("unknown"));
+  }, []);
+
+  if (usage === null) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 8 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+  const full =
+    usage !== "unknown" &&
+    usage.projects.limit !== UNLIMITED &&
+    usage.projects.used >= usage.projects.limit;
+  if (!full) return <>{children}</>;
+
+  const { used, limit } = usage.projects;
+  return (
+    <Container maxWidth="sm" sx={{ py: 6 }}>
+      <Title title="New Project Wizard" />
+      <Card>
+        <CardContent sx={{ p: 4 }}>
+          <Typography variant="h5" gutterBottom>
+            No room for another project
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+            Your {usage.plan?.name} plan allows {limit} project{limit === 1 ? "" : "s"}, and
+            you have {used}. Choose a larger plan to create another.
+          </Typography>
+          <Button variant="contained" component={RouterLink} to="/plan">
+            See plans
+          </Button>
+        </CardContent>
+      </Card>
+    </Container>
+  );
+};
+
 /** The page as routed. The boundary is outside the wizard rather than inside
  *  it, so a crash in any step — or in the wizard's own render — is caught. */
 const ProjectWizardRoute: React.FC = () => (
   <WizardErrorBoundary onReset={clearWizardState}>
-    <ProjectWizardPage />
+    <ProjectLimitGate>
+      <ProjectWizardPage />
+    </ProjectLimitGate>
   </WizardErrorBoundary>
 );
 

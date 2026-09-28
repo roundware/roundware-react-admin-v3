@@ -11,63 +11,18 @@ import {
   Chip,
   CircularProgress,
   Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Grid,
   Stack,
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || "";
-
-interface PlanData {
-  id: number;
-  name: string;
-  max_projects: number;
-  max_assets_per_project: number;
-  max_speakers_per_project: number;
-  max_storage_mb: number;
-  max_recording_length_sec: number;
-  max_members: number;
-  price_cents_monthly: number;
-}
-
-/** Human-readable feature list for a plan */
-function planFeatures(p: PlanData): string[] {
-  const features: string[] = [];
-  features.push(
-    p.max_projects === -1
-      ? "Unlimited projects"
-      : `${p.max_projects} project${p.max_projects !== 1 ? "s" : ""}`
-  );
-  features.push(
-    `${p.max_assets_per_project.toLocaleString()} assets per project`
-  );
-  features.push(formatStorage(p.max_storage_mb));
-  features.push(
-    `${p.max_members} team member${p.max_members !== 1 ? "s" : ""}`
-  );
-  features.push(formatDuration(p.max_recording_length_sec));
-  return features;
-}
-
-function formatStorage(mb: number): string {
-  if (mb >= 1000) return `${Math.round(mb / 1000)} GB storage`;
-  return `${mb} MB storage`;
-}
-
-function formatDuration(sec: number): string {
-  if (sec >= 60) return `${Math.round(sec / 60)} min max recording`;
-  return `${sec}s max recording`;
-}
-
-function formatPrice(cents: number): { amount: string; period: string } {
-  if (cents === 0) return { amount: "$0", period: "forever" };
-  return { amount: `$${Math.round(cents / 100)}`, period: "/month" };
-}
+import {
+  fetchPlans,
+  formatPrice,
+  PlanData,
+  planFeatures,
+  switchPlan,
+} from "../utilities/plans";
 
 // ---------------------------------------------------------------------------
 // Component
@@ -78,8 +33,7 @@ const OnboardingPlanPage: React.FC = () => {
   const [plans, setPlans] = useState<PlanData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [comingSoonOpen, setComingSoonOpen] = useState(false);
-  const [selectedPlanName, setSelectedPlanName] = useState<string>("");
+  const [choosing, setChoosing] = useState<number | null>(null);
 
   // Redirect to register if no auth token
   useEffect(() => {
@@ -91,11 +45,7 @@ const OnboardingPlanPage: React.FC = () => {
   // Fetch available plans
   useEffect(() => {
     let cancelled = false;
-    fetch(`${SERVER_URL}/api/3/billing/plans/`)
-      .then((resp) => {
-        if (!resp.ok) throw new Error(`Failed to load plans (${resp.status})`);
-        return resp.json();
-      })
+    fetchPlans()
       .then((data) => {
         if (!cancelled) {
           setPlans(data);
@@ -113,21 +63,23 @@ const OnboardingPlanPage: React.FC = () => {
     };
   }, []);
 
-  const handleSelectPlan = (plan: PlanData) => {
+  // Registration puts every new organisation on Free. Any other choice is a
+  // real switch: while billing is off, every plan is free to choose
+  // (roundware-server-v3 docs/013).
+  const handleSelectPlan = async (plan: PlanData) => {
     if (plan.price_cents_monthly === 0) {
-      // Free plan — go straight to wizard
       navigate("/wizard");
-    } else {
-      // Paid plan — show "coming soon" dialog
-      setSelectedPlanName(plan.name);
-      setComingSoonOpen(true);
+      return;
     }
-  };
-
-  const handleComingSoonClose = () => {
-    setComingSoonOpen(false);
-    // Proceed with Free plan to wizard
-    navigate("/wizard");
+    setChoosing(plan.id);
+    setError(null);
+    try {
+      await switchPlan(plan.id);
+      navigate("/wizard");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not choose that plan.");
+      setChoosing(null);
+    }
   };
 
   if (loading) {
@@ -173,8 +125,8 @@ const OnboardingPlanPage: React.FC = () => {
             variant="body1"
             sx={{ color: "rgba(255,255,255,0.85)", maxWidth: 500, mx: "auto" }}
           >
-            Select a plan to get started. You can always upgrade later as your
-            projects grow.
+            Select a plan to get started. You can change it any time from the
+            Plan page.
           </Typography>
         </Box>
 
@@ -253,6 +205,7 @@ const OnboardingPlanPage: React.FC = () => {
                       variant={isHighlighted ? "contained" : "outlined"}
                       fullWidth
                       size="large"
+                      disabled={choosing !== null}
                       onClick={() => handleSelectPlan(plan)}
                     >
                       {isFree ? "Get Started Free" : `Choose ${plan.name}`}
@@ -275,25 +228,6 @@ const OnboardingPlanPage: React.FC = () => {
         </Box>
       </Container>
 
-      {/* Coming Soon Dialog */}
-      <Dialog open={comingSoonOpen} onClose={() => setComingSoonOpen(false)}>
-        <DialogTitle>
-          {selectedPlanName} Plan — Coming Soon
-        </DialogTitle>
-        <DialogContent>
-          <Typography>
-            Paid plans with Stripe payment integration are coming soon.
-            For now, you&apos;ll start on the Free plan. You can upgrade
-            at any time once billing is available.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setComingSoonOpen(false)}>Cancel</Button>
-          <Button variant="contained" onClick={handleComingSoonClose}>
-            Continue with Free Plan
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 };

@@ -87,6 +87,7 @@ import CustomLoginPage from "./pages/CustomLoginPage";
 import ProjectWizardPage from "./pages/ProjectWizard";
 import TeamMembersPage from "./pages/TeamMembersPage";
 import TenantSettingsPage from "./pages/TenantSettingsPage";
+import PlanPage from "./pages/PlanPage";
 import adminTheme from "./styles";
 
 const history = createBrowserHistory();
@@ -161,6 +162,7 @@ function App({ basename }: { basename: string }): JSX.Element {
           <Route path="/publish" element={<PublishPage />} />
           <Route path="/team" element={<TeamMembersPage />} />
           <Route path="/settings" element={<TenantSettingsPage />} />
+          <Route path="/plan" element={<PlanPage />} />
         </CustomRoutes>,
       ]}
     />

@@ -7,6 +7,7 @@ import BrandingPanel from "./BrandingPanel";
 import PreviewPanel from "./PreviewPanel";
 import ParadigmWarning from "./ParadigmWarning";
 import MapAppearanceEditor from "./MapAppearanceEditor";
+import UsageMeter from "../../components/common/UsageMeter";
 
 const PublishPage: React.FC = () => {
   const { selectedProject } = useProjects();
@@ -39,6 +40,10 @@ const PublishPage: React.FC = () => {
       </Typography>
 
       <ParadigmWarning project={selectedProject} />
+
+      <Box sx={{ maxWidth: 480, mb: 3 }}>
+        <UsageMeter />
+      </Box>
 
       <DeployCard projectId={projectId} />
 

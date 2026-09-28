@@ -1,5 +1,6 @@
 import { Box, CircularProgress } from "@mui/material";
 import React from "react";
+import UsageMeter from "../../common/UsageMeter";
 import DashboardContent from "./DashboardContent";
 import ProjectDetails from "./ProjectDetails";
 
@@ -13,6 +14,9 @@ const Dashboard = (): JSX.Element => {
   return (
     <Box sx={{ marginTop: 4 }}>
       <ProjectDetails />
+      <Box sx={{ maxWidth: 480, px: 1.25, mb: 3 }}>
+        <UsageMeter />
+      </Box>
       <DashboardContent />
     </Box>
   );
