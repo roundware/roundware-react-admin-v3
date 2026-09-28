@@ -256,9 +256,9 @@
 			"mapOverlay": {
 				"latitude": null,
 				"longitude": null,
-				"size": 0.0005,
+				"widthMeters": 50,
 				"rotation": 0,
-				"opacity": 0.5
+				"opacity": 0.6
 			},
 			"googleMapsStyle": null
 		},

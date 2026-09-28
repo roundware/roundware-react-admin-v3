@@ -6,6 +6,7 @@ import DeployCard from "./DeployCard";
 import BrandingPanel from "./BrandingPanel";
 import PreviewPanel from "./PreviewPanel";
 import ParadigmWarning from "./ParadigmWarning";
+import MapAppearanceEditor from "./MapAppearanceEditor";
 
 const PublishPage: React.FC = () => {
   const { selectedProject } = useProjects();
@@ -55,6 +56,15 @@ const PublishPage: React.FC = () => {
               <Box>
                 <PreviewPanel projectId={projectId} refreshKey={refreshKey} />
               </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+        {/* Full width: placing an overlay needs a map large enough to see
+            what it lines up with. */}
+        <Grid size={{ xs: 12 }}>
+          <Card>
+            <CardContent>
+              <MapAppearanceEditor projectId={projectId} onSaved={handleSaved} />
             </CardContent>
           </Card>
         </Grid>
