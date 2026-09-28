@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { Branding, errMessage, getBranding, patchBranding } from "./api";
 import BrandingFilesPanel from "./BrandingFilesPanel";
+import InfoPanelEditor from "./InfoPanelEditor";
 
 interface Props {
   projectId: number;
@@ -118,6 +119,8 @@ const BrandingPanel: React.FC<Props> = ({ projectId, onSaved }) => {
       </Stack>
 
       <BrandingFilesPanel projectId={projectId} onSaved={onSaved} />
+
+      <InfoPanelEditor projectId={projectId} onSaved={onSaved} />
     </Stack>
   );
 };
