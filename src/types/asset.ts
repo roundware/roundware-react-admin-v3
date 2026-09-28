@@ -20,7 +20,6 @@ export interface IAsset
     | "filename"
     | "file"
     | "user"
-    | "envelope_ids"
     | "description_loc_ids"
     | "alt_text_loc_ids"
   > {
@@ -42,8 +41,9 @@ export interface IAsset
   media_type: string;
   audio_length_in_seconds: number;
   tag_ids: number[];
-  session_id: 1;
-  envelope_ids: number[] | number;
+  session_id: number;
+  /** The main asset of this asset's bundle; null for a main asset (docs/014). */
+  parent_asset_id: number | null;
   user_id?: number;
   user?: {
     id: number;

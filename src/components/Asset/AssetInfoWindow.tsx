@@ -37,25 +37,16 @@ export const AssetInfoWindowInner = ({ asset }: AssetInfoWindowInnerProps) => {
   const [showDialog, setShowDialog] = useState(false);
 
   const { data } = useListController();
+  // The contribution this asset belongs to: its main asset plus attachments
+  // (roundware-server-v3 docs/014). This read `envelope_ids`, the v2 field,
+  // which v3 never returns — so related photos and text never showed here.
   useEffect(() => {
-    if (!data) return;
-    if (Array.isArray(asset?.envelope_ids) && asset?.envelope_ids?.length > 0) {
-      setImageAssets(
-        data.filter(
-          (a) =>
-            a.media_type == "photo" &&
-            a.envelope_ids.includes(parseInt(asset.envelope_ids.toString()))
-        )
-      );
-      setTextAssets(
-        data.filter(
-          (a) =>
-            a.media_type == "text" &&
-            a.envelope_ids.includes(parseInt(asset.envelope_ids.toString()))
-        )
-      );
-    }
-  }, [asset]);
+    if (!data || asset?.id == null) return;
+    const mainId = asset.parent_asset_id ?? asset.id;
+    const inBundle = (a: IAsset) => a.id == mainId || a.parent_asset_id == mainId;
+    setImageAssets(data.filter((a) => a.media_type == "photo" && inBundle(a)));
+    setTextAssets(data.filter((a) => a.media_type == "text" && inBundle(a)));
+  }, [asset, data]);
 
   const primaryImageUrl = imageAssets && imageAssets[0]?.file;
   const primaryTextUrl = textAssets && textAssets[0]?.file;

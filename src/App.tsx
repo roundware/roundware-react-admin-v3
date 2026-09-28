@@ -29,11 +29,6 @@ import {
     AudioTrackEdit,
     AudioTrackList,
 } from "./components/AudioTrack";
-import {
-    EnvelopeCreate,
-    EnvelopeEdit,
-    EnvelopeList,
-} from "./components/Envelope";
 import { EventsCreate, EventsEdit, EventsList } from "./components/Event";
 import {
     LanguageCreate,
@@ -177,7 +172,7 @@ export default App;
 
 const resourceKeys = [
   "assets", "timedassets", "uigroups", "audiotracks", "speakers",
-  "envelopes", "events", "listenevents", "sessions", "tags",
+  "events", "listenevents", "sessions", "tags",
   "tagcategories", "languages", "localizedstrings", "users", "notifications",
 ];
 
@@ -208,11 +203,6 @@ function buildResourceLookup(canEdit: boolean): { [index: string]: React.ReactNo
       <Resource name="speakers" key="speakers" list={SpeakerList}
         edit={e ? SpeakerEdit : undefined} create={e ? SpeakerCreate : undefined}
         icon={Speaker} />
-    ),
-    envelopes: (
-      <Resource name="envelopes" key="envelopes" list={EnvelopeList}
-        edit={e ? EnvelopeEdit : undefined} create={e ? EnvelopeCreate : undefined}
-        icon={Email} />
     ),
     events: (
       <Resource name="events" key="events" list={EventsList}

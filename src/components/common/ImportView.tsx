@@ -45,7 +45,6 @@ import {
 import { csvToJSON } from "utils";
 import { IAsset } from "../../types/asset";
 import AudioOptions from "./AudioOptions";
-import EnvelopeIdSelector from "./EnvelopeIdSelector";
 import FileDownloadButton from "./FileDownloadButton";
 import LocationSelector from "./LocationSelector";
 import TagIdSelector from "./TagIdSelector";
@@ -139,18 +138,10 @@ const ImportView = ({ handleClose }: { handleClose: () => void }) => {
       });
       const promises = postData.map(async (d, index) => {
         const file = await fetch(d.file as string).then((r) => r.blob());
-        if (!d.envelope_ids) {
-          d.envelope_ids = Number(
-            (
-              await dataProvider.create(`envelopes`, {
-                data: {
-                  session_id: 1,
-                },
-              })
-            ).data.id
-          );
-        }
-        d.session_id = 1;
+        // Each imported file is a contribution of its own; bundle them
+        // afterwards on the asset page if they belong together. This used to
+        // create an envelope per file and stamp session_id 1 on every asset —
+        // a v2 habit that, in v3, pointed at whichever tenant owns session 1.
         await dataProvider.create(`assets`, {
           data: {
             ...d,
@@ -416,7 +407,6 @@ const EditForm = ({
 
         <TranslatableField source="loc_alt_text_admin" label="Alt Text" />
 
-        <EnvelopeIdSelector />
       </SimpleForm>
     </RecordContextProvider>
   );

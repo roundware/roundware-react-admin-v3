@@ -21,7 +21,7 @@ import SubMenu from "./SubMenu";
 
 const uiOrder: { [key: string]: string[] } = {
   primary: ["assets", "audiotracks", "speakers", "tags", "uigroups", "timedassets"],
-  secondary: ["envelopes", "listenevents", "sessions", "tagcategories"],
+  secondary: ["listenevents", "sessions", "tagcategories"],
   global: ["languages", "localizedstrings", "users", "notifications"],
 };
 

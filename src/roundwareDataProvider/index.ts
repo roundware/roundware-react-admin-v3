@@ -556,7 +556,9 @@ export class RoundwareDataProvider implements DataProvider {
     ).then((responses) => {
       let list = this.getResource(resource);
       if (Array.isArray(list)) {
-        list = list?.filter((r) => params.ids.includes(r.id));
+        // Drop the deleted records. This filter used to lack the `!`, so a
+        // bulk delete left the cache holding *only* the records just deleted.
+        list = list?.filter((r) => !params.ids.includes(r.id));
         this.setResourse(resource, list || [], this.currentProjectId);
       }
       return { data: responses.map(({ json }) => json?.id) };

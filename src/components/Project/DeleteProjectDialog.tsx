@@ -161,7 +161,7 @@ const DeleteProjectDialog: React.FC<DeleteProjectDialogProps> = ({
                   <li>Speakers and speaker shapes</li>
                   <li>Audiotracks</li>
                   <li>UI groups and UI items</li>
-                  <li>Sessions, events, and envelopes</li>
+                  <li>Sessions and events</li>
                   <li>Timed assets and notifications</li>
                   <li>Project localizations and branding</li>
                 </ul>

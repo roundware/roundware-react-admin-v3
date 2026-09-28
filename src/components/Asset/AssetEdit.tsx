@@ -16,8 +16,10 @@ import {
     NumberInput,
     ReferenceInput,
     SelectInput,
+    SaveButton,
     SimpleForm,
     TextField,
+    Toolbar,
     TextInput,
     useRecordContext,
     useRedirect,
@@ -25,6 +27,8 @@ import {
 import { apiFetcher } from 'roundwareDataProvider/tokenAuthProvider';
 import { IAsset } from '../../types/asset';
 import { buildLocalizationsPayload } from '../../utils';
+import DeleteWithBinary from 'components/common/DeleteWithBinary';
+import AssetBundleField from './AssetBundleField';
 import AssetShape, { shapeCache } from './AssetShape';
 
 const AssetEdit = (): JSX.Element => {
@@ -86,7 +90,17 @@ const AssetEdit = (): JSX.Element => {
         },
       }}
     >
-      <SimpleForm warnWhenUnsavedChanges>
+      <SimpleForm
+        warnWhenUnsavedChanges
+        // The stock toolbar's delete cannot offer to delete attachments, so
+        // this uses the same dialog as the asset list.
+        toolbar={
+          <Toolbar sx={{ justifyContent: 'space-between' }}>
+            <SaveButton />
+            <DeleteWithBinary onDeleted={() => redirect('list', '/assets')} />
+          </Toolbar>
+        }
+      >
         <Labeled label='ID'>
           <TextField source='id' />
         </Labeled>
@@ -131,6 +145,8 @@ const AssetEdit = (): JSX.Element => {
             filterToQuery={(s) => ({ search_str: s })}
           />
         </ReferenceInput>
+
+        <AssetBundleField />
 
         <TextInput multiline source='description' fullWidth />
         <TranslatableField source='description_loc_admin' label='Localized Description' />
