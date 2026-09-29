@@ -69,7 +69,11 @@ const PublishPage: React.FC = () => {
         <Grid size={{ xs: 12 }}>
           <Card>
             <CardContent>
-              <MapAppearanceEditor projectId={projectId} onSaved={handleSaved} />
+              <MapAppearanceEditor
+                projectId={projectId}
+                onSaved={handleSaved}
+                brandingVersion={refreshKey}
+              />
             </CardContent>
           </Card>
         </Grid>

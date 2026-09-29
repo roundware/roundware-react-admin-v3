@@ -44,6 +44,13 @@ import { errMessage, getBranding } from "./api";
 interface Props {
   projectId: number;
   onSaved?: () => void;
+  /**
+   * Bumped by the page whenever branding is saved, uploads included. The
+   * overlay image is uploaded in another panel; without this the editor only
+   * learned of it on a page reload, so its overlay controls stayed hidden
+   * after the first upload.
+   */
+  brandingVersion?: number;
 }
 
 interface OverlayConfig {
@@ -77,7 +84,7 @@ const parseStyle = (
   }
 };
 
-const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved }) => {
+const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVersion }) => {
   const { selectedProject } = useProjects();
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -157,6 +164,22 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved }) => {
       cancelled = true;
     };
   }, [projectId, applySaved]);
+
+  // Re-read just the image after a branding save — not the placement, which
+  // may hold unsaved edits. The first load above already has it.
+  const firstBrandingVersion = useRef(brandingVersion);
+  useEffect(() => {
+    if (brandingVersion === firstBrandingVersion.current) return;
+    let cancelled = false;
+    getBranding(projectId)
+      .then((branding) => {
+        if (!cancelled) setOverlayUrl(branding.files?.map_overlay?.urls?.[0] ?? null);
+      })
+      .catch(() => undefined); // Keeps the image it had; a reload will catch up.
+    return () => {
+      cancelled = true;
+    };
+  }, [projectId, brandingVersion]);
 
   // ---- The overlay, drawn with the web app's geometry ----------------------
   const [map, setMap] = useState<google.maps.Map | null>(null);
