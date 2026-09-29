@@ -1,6 +1,7 @@
 import {
   AccountTree,
   AddCircleOutline,
+  GraphicEq,
   Business,
   Groups,
   Settings,
@@ -85,6 +86,14 @@ export const Menu = (props: MenuProps) => {
             primaryText="Publish"
             leftIcon={<PublicIcon />}
             to={{ pathname: `/project/${selectedProject.id}/publish` }}
+          />
+        )}
+        {selectedProject && (
+          <MenuItemLink
+            key="audio-lab"
+            primaryText="Audio lab"
+            leftIcon={<GraphicEq />}
+            to={{ pathname: `/project/${selectedProject.id}/audio-lab` }}
           />
         )}
         {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}

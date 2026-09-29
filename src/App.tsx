@@ -87,6 +87,7 @@ import CustomLoginPage from "./pages/CustomLoginPage";
 import ProjectWizardPage from "./pages/ProjectWizard";
 import TeamMembersPage from "./pages/TeamMembersPage";
 import TenantSettingsPage from "./pages/TenantSettingsPage";
+import AudioLabPage from "./pages/AudioLab";
 import PlanPage from "./pages/PlanPage";
 import adminTheme from "./styles";
 
@@ -160,6 +161,7 @@ function App({ basename }: { basename: string }): JSX.Element {
           <Route path={`/session_map/:sessionId`} element={<SessionMap />} />
           <Route path="/wizard" element={<ProjectWizardPage />} />
           <Route path="/publish" element={<PublishPage />} />
+          <Route path="/audio-lab" element={<AudioLabPage />} />
           <Route path="/team" element={<TeamMembersPage />} />
           <Route path="/settings" element={<TenantSettingsPage />} />
           <Route path="/plan" element={<PlanPage />} />
