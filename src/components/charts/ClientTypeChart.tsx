@@ -10,6 +10,7 @@ import {
   Tooltip,
 } from "recharts";
 import { CenteredLoading } from "../Layout/Dashboard";
+import { ChartMessage } from "./chartUtils";
 import { COLORS } from "./BrowsersChart";
 
 const getKeyName = (clientType: string) => {
@@ -25,14 +26,18 @@ const getKeyName = (clientType: string) => {
   if (clientType.indexOf(`pixel`) !== -1) return `Android`;
   if (clientType.indexOf(`lge`) !== -1) return `Android`;
   if (clientType.indexOf(`zte`) !== -1) return `Android`;
+  // A desktop browser's user-agent. After the phones above, since Android
+  // user-agents also say "Linux"; before `web`, since every WebKit or Blink
+  // user-agent contains "AppleWebKit".
+  if (/macintosh|windows|x11|cros|linux/.test(clientType)) return `Desktop`;
   if (clientType.indexOf(`web`) !== -1) return `Web`;
   return `Other`;
 };
 
-const getClientTypeData = (sessions: { client_type: string }[]) => {
+const getClientTypeData = (sessions: { client_type: string; client_system?: string }[]) => {
   const clientTypeMap = new Map<string, number>();
   sessions.forEach((s) => {
-    const keyName = getKeyName(s?.client_type || "Other");
+    const keyName = getKeyName(s?.client_type || s?.client_system || "Other");
     let total = clientTypeMap.get(keyName);
     if (total === undefined) total = 1;
     else total += 1;
@@ -83,7 +88,7 @@ const renderCustomizedLabel = ({
 };
 
 const ClientTypeChart = () => {
-  const { sessions } = useChartsData();
+  const { sessions, sessionsLoaded } = useChartsData();
 
   return (
     <Card style={{ width: "100%" }}>
@@ -129,8 +134,10 @@ const ClientTypeChart = () => {
               </PieChart>
             </ResponsiveContainer>
           </div>
-        ) : (
+        ) : !sessionsLoaded ? (
           <CenteredLoading />
+        ) : (
+          <ChartMessage>No sessions in this period yet.</ChartMessage>
         )}
       </CardContent>
     </Card>

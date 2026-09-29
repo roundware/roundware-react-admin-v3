@@ -27,6 +27,7 @@ import { ISession } from "../../types/session";
 import { DateRange, isWithinRange } from "../../utils";
 import { CenteredLoading } from "../Layout/Dashboard";
 import { useChartsData } from "./ChartsData";
+import { ChartMessage, LOAD_FAILED, mergeById } from "./chartUtils";
 import DateRangeSlider from "./DateRangeSlider";
 
 type SanitizedSession = {
@@ -59,10 +60,11 @@ const getSessionsPerDay = (sessions: RaRecord[]) => {
   return chartData.sort((s1, s2) => (s1.date > s2.date ? 1 : -1));
 };
 
+// v3 names the start `started_at` (v2: `starttime`), and has no reserved
+// session ids — v2 skipped ids 1 and 2, which in v3 are ordinary sessions.
 const getSanitizedList = (sessions: RaRecord[]): SanitizedSession[] => [
   ...sessions
-    .filter((s) => ![1, 2].includes(+s.id))
-    .map((s) => ({ starttime: new Date(s?.starttime), id: +s?.id }))
+    .map((s) => ({ starttime: new Date(s?.started_at ?? s?.starttime), id: +s?.id }))
     .sort((a, b) => (a.starttime > b.starttime ? 1 : -1)),
 ];
 
@@ -88,6 +90,7 @@ const SessionsChart = () => {
     // setSessionsAllFetchedRange,
     sessions,
     setSessions,
+    setSessionsLoaded,
   } = useChartsData();
 
   const [viewRange, setViewRange] = useState<DateRange>(
@@ -110,18 +113,24 @@ const SessionsChart = () => {
       projectId,
     });
 
-    setSessions((prev) => [...prev, ...res]);
+    // The list is a plain array unless paginated; accept either.
+    const rows = Array.isArray(res) ? res : (res as { results?: ISession[] })?.results ?? [];
+    setSessions((prev) => mergeById(prev, rows));
   }
 
   const loading = useBoolean(false);
+  const [failed, setFailed] = useState(false);
 
   // const [fetchingMoreValue, setFetchingMoreValue] = useState("");
 
   useEffect(() => {
     loading.setTrue();
-    fetchForRange(viewRange).then(() => {
-      loading.setFalse();
-    });
+    fetchForRange(viewRange)
+      .catch(() => setFailed(true))
+      .finally(() => {
+        loading.setFalse();
+        setSessionsLoaded(true);
+      });
   }, []);
 
   const perDateData = useMemo(() => {
@@ -191,6 +200,10 @@ const SessionsChart = () => {
       <CardContent>
         {loading.value ? (
           <CenteredLoading />
+        ) : failed ? (
+          <ChartMessage>{LOAD_FAILED}</ChartMessage>
+        ) : !viewData.length ? (
+          <ChartMessage>No sessions in this period yet.</ChartMessage>
         ) : (
           <div style={{ width: "100%", height: 300 }}>
             <ResponsiveContainer>

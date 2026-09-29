@@ -17,7 +17,7 @@ import {
 } from "recharts";
 import { IListenEvent } from "types/listenEvents";
 import { isWithinRange } from "../../utils";
-import { CenteredLoading } from "../Layout/Dashboard";
+import { ChartMessage } from "./chartUtils";
 
 interface Props {
   listenEvents: IListenEvent[];
@@ -32,7 +32,8 @@ const AssetListensChart = ({ listenEvents, viewRange }: Props): JSX.Element => {
   const perAssetListens = useMemo(() => {
     const listensPerAsset = listenEvents
       .filter((r) => {
-        const date = new Date(r.start_time);
+        // v3 names it `started_at` (v2: `start_time`).
+        const date = new Date(r.started_at ?? r.start_time);
         return isWithinRange(date, viewRange);
       })
       .reduce((acc, listen) => {
@@ -63,8 +64,8 @@ const AssetListensChart = ({ listenEvents, viewRange }: Props): JSX.Element => {
           Listens by Asset
         </Typography>
       </Toolbar>
-      {!listenEvents.length ? (
-        <CenteredLoading />
+      {!perAssetListens.length ? (
+        <ChartMessage>No listens in this period yet.</ChartMessage>
       ) : (
         <div style={{ width: "100%", height: 300 }}>
           <ResponsiveContainer>
@@ -110,6 +111,7 @@ const AssetListensChart = ({ listenEvents, viewRange }: Props): JSX.Element => {
           </ResponsiveContainer>
         </div>
       )}
+      {!!perAssetListens.length && (
       <Box px={8} pr={3} py={4}>
         <Slider
           value={viewIndexRange}
@@ -120,6 +122,7 @@ const AssetListensChart = ({ listenEvents, viewRange }: Props): JSX.Element => {
           step={1}
         />
       </Box>
+      )}
     </>
   );
 };

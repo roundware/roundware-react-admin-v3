@@ -33,6 +33,7 @@ import { IListenEvent } from "../../types/listenEvents";
 import { DateRange, isWithinRange } from "../../utils";
 import { CenteredLoading } from "../Layout/Dashboard";
 import AssetListensChart from "./AssetListensChart";
+import { ChartMessage, LOAD_FAILED, mergeById } from "./chartUtils";
 import DateRangeSlider from "./DateRangeSlider";
 
 const getListensPerDay = (events: RaRecord[], range?: Date[]) => {
@@ -69,7 +70,8 @@ type SanitizedListenEvent = {
 
 const getSanitizedList = (events: RaRecord[]): SanitizedListenEvent[] => [
   ...events
-    .map((s) => ({ start_time: new Date(s?.start_time), id: +s?.id }))
+    // v3 names it `started_at` (v2: `start_time`).
+    .map((s) => ({ start_time: new Date(s?.started_at ?? s?.start_time), id: +s?.id }))
     .sort((a, b) => (a.start_time > b.start_time ? 1 : -1)),
 ];
 
@@ -131,7 +133,7 @@ const ListenEventsChart = () => {
       projectId,
     });
 
-    setAllFetchedData((prev) => [...prev, ...res.results]);
+    setAllFetchedData((prev) => mergeById(prev, res.results));
 
     const total = res.count;
 
@@ -158,7 +160,7 @@ const ListenEventsChart = () => {
         })
           .then((res) => {
             if (res?.results?.length) {
-              setAllFetchedData((prev) => [...prev, ...res.results]);
+              setAllFetchedData((prev) => mergeById(prev, res.results));
             }
           })
           .catch(() => ({
@@ -177,15 +179,15 @@ const ListenEventsChart = () => {
   }
 
   const loading = useBoolean(false);
+  const [failed, setFailed] = useState(false);
 
   const [fetchingMoreValue, setFetchingMoreValue] = useState("");
 
   useEffect(() => {
     loading.setTrue();
-    fetchForRange(INITIAL_RANGE).then(() => {
-      // setAllFetchedData(data);
-      loading.setFalse();
-    });
+    fetchForRange(INITIAL_RANGE)
+      .catch(() => setFailed(true))
+      .finally(() => loading.setFalse());
   }, []);
 
   const perDateData = useMemo(() => {
@@ -300,6 +302,10 @@ const ListenEventsChart = () => {
         )} */}
         {loading.value ? (
           <CenteredLoading />
+        ) : failed ? (
+          <ChartMessage>{LOAD_FAILED}</ChartMessage>
+        ) : !viewData.length ? (
+          <ChartMessage>No listens in this period yet.</ChartMessage>
         ) : (
           <div style={{ width: "100%", height: 300 }}>
             <ResponsiveContainer>
@@ -377,10 +383,12 @@ const ListenEventsChart = () => {
           </div>
         )}
 
-        <AssetListensChart
-          listenEvents={allFetchedData}
-          viewRange={viewRange}
-        />
+        {!loading.value && !failed && (
+          <AssetListensChart
+            listenEvents={allFetchedData}
+            viewRange={viewRange}
+          />
+        )}
 
         <Stack spacing={2} justifyContent="center">
           <Stack mt={4}>
@@ -414,10 +422,10 @@ const ListenEventsChart = () => {
                     fetchForRange([
                       subDays(range[0], valueDays),
                       range[0],
-                    ]).then(() => {
-                      setRange([subDays(range[0], valueDays), range[1]]);
-                      setFetchingMoreValue("");
-                    });
+                    ])
+                      .then(() => setRange([subDays(range[0], valueDays), range[1]]))
+                      .catch(() => setFailed(true))
+                      .finally(() => setFetchingMoreValue(""));
                   }}
                   loading={fetchingMoreValue === label}
                 >

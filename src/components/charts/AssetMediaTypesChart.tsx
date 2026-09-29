@@ -14,6 +14,7 @@ import {
 import { IAsset } from "types/asset";
 import { ResourceList } from "../../App";
 import { CenteredLoading } from "../Layout/Dashboard";
+import { ChartMessage } from "./chartUtils";
 
 const getMediaTypes = (assets: IAsset[]) => {
   const chartDataMap = new Map<string, number>();
@@ -70,7 +71,7 @@ const renderCustomizedLabel = ({
 };
 
 const AssetMediaTypesChart = (): JSX.Element => {
-  const { assets, assetsAllFetchedRange } = useChartsData();
+  const { assets, assetsAllFetchedRange, assetsLoaded } = useChartsData();
   const redirect = useRedirect();
 
    
@@ -88,8 +89,10 @@ const AssetMediaTypesChart = (): JSX.Element => {
       <CardHeader title="Media Types" />
 
       <CardContent>
-        {!assets ? (
+        {!assetsLoaded ? (
           <CenteredLoading />
+        ) : !assets.length ? (
+          <ChartMessage>No assets in this period yet.</ChartMessage>
         ) : (
           <div style={{ width: "100%", height: 300 }}>
             <ResponsiveContainer width="100%" height="100%">

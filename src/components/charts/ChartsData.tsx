@@ -35,6 +35,14 @@ export const ChartsDataContext = createContext({
    
   setSessionsAllFetchedRange: ((_sessionsAllFetchedRange: DateRange) =>
     undefined) as unknown as React.Dispatch<React.SetStateAction<DateRange>>,
+
+  // Whether the first fetch of each has finished (success or not). The pie
+  // charts draw data the Assets and Sessions charts fetch, so without these
+  // they could not tell "still loading" from "nothing there".
+  assetsLoaded: false,
+  setAssetsLoaded: (() => undefined) as React.Dispatch<React.SetStateAction<boolean>>,
+  sessionsLoaded: false,
+  setSessionsLoaded: (() => undefined) as React.Dispatch<React.SetStateAction<boolean>>,
 });
 
 export const useChartsData = () => useContext(ChartsDataContext);
@@ -53,6 +61,8 @@ export const ChartsDataProvider = ({
 
   const [sessionsAllFetchedRange, setSessionsAllFetchedRange] =
     useState<DateRange>(INITIAL_RANGE);
+  const [assetsLoaded, setAssetsLoaded] = useState(false);
+  const [sessionsLoaded, setSessionsLoaded] = useState(false);
 
   const value = useMemo(
     () => ({
@@ -66,6 +76,10 @@ export const ChartsDataProvider = ({
       setSessions,
       sessionsAllFetchedRange,
       setSessionsAllFetchedRange,
+      assetsLoaded,
+      setAssetsLoaded,
+      sessionsLoaded,
+      setSessionsLoaded,
     }),
     [
       assets,
@@ -73,6 +87,8 @@ export const ChartsDataProvider = ({
       assetsAllFetchedRange,
       sessions,
       sessionsAllFetchedRange,
+      assetsLoaded,
+      sessionsLoaded,
     ]
   );
   return (

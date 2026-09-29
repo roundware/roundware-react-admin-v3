@@ -12,15 +12,18 @@ import {
   Tooltip,
 } from "recharts";
 import { CenteredLoading } from "../Layout/Dashboard";
+import { ChartMessage } from "./chartUtils";
 
 const getKeyName = (system: string) => {
   system = system?.toLowerCase();
-  if (system.indexOf(`linux`) !== -1) return `Linux`;
-  if (system.indexOf(`mac`) !== -1) return `Mac OS`;
-  if (system.indexOf(`window`) !== -1) return `Windows`;
-  if (system.indexOf(`ios`) !== -1) return `iOS`;
+  // Most specific first: Android user-agents also say "Linux", and iPhone
+  // and iPad ones say "like Mac OS X".
   if (system.indexOf(`android`) !== -1) return `Android`;
-  if (system.indexOf(`iphone os`) !== -1) return `iOS`;
+  if (/iphone|ipad|ipod/.test(system)) return `iOS`;
+  if (system.indexOf(`window`) !== -1) return `Windows`;
+  if (system.indexOf(`mac`) !== -1) return `Mac OS`;
+  if (system.indexOf(`linux`) !== -1) return `Linux`;
+  if (system.indexOf(`ios`) !== -1) return `iOS`;
   return `Other`;
 };
 const getclientSystemData = (sessions: { client_system: string }[]) => {
@@ -83,7 +86,7 @@ const renderCustomizedLabel = ({
 };
 
 const BrowsersChart = (): JSX.Element => {
-  const { sessions } = useChartsData();
+  const { sessions, sessionsLoaded } = useChartsData();
 
   return (
     <Card style={{ width: "100%" }}>
@@ -129,8 +132,10 @@ const BrowsersChart = (): JSX.Element => {
               </PieChart>
             </ResponsiveContainer>
           </div>
-        ) : (
+        ) : !sessionsLoaded ? (
           <CenteredLoading />
+        ) : (
+          <ChartMessage>No sessions in this period yet.</ChartMessage>
         )}
       </CardContent>
     </Card>

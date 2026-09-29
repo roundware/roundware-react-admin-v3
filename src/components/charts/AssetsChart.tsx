@@ -35,6 +35,7 @@ import { IAsset } from "../../types/asset";
 import { DateRange } from "../../utils";
 import { CenteredLoading } from "../Layout/Dashboard";
 import { useChartsData } from "./ChartsData";
+import { ChartMessage, LOAD_FAILED, mergeById } from "./chartUtils";
 import DateRangeSlider from "./DateRangeSlider";
 
 const mediaTypes: [`audio`, "photo", "text"] = [`audio`, `photo`, `text`];
@@ -76,6 +77,8 @@ const getAssetsPerDate = (assets: RaRecord[]) => {
   };
   assetsWithDate.forEach((s) => {
     const keyName = (s.created as unknown as Date).toDateString();
+    // Only the three types the chart draws; anything else would add NaN.
+    if (!mediaTypes.includes(s?.media_type as "audio")) return;
     let data = chartDataMap.get(keyName);
 
     if (data === undefined) {
@@ -103,15 +106,16 @@ const getAssetsPerDate = (assets: RaRecord[]) => {
   );
 };
 
+// v3 names the timestamp `created_at` (v2: `created`). Reading the old name
+// made every date Invalid, so nothing could be plotted.
 const getSanitizedList = (assets: RaRecord[]): IAsset[] => [
   ...assets
-    .filter((a) => ![1].includes(+a.id))
     .map(
       (s) =>
         ({
           ...s,
           media_type: s?.media_type,
-          created: new Date(s?.created),
+          created: new Date(s?.created_at ?? s?.created),
           id: +s?.id,
         } as unknown as IAsset)
     )
@@ -150,8 +154,13 @@ async function fetchAssets({
 }
 
 const AssetsChart = (): JSX.Element => {
-  const { assets, setAssets, assetsAllFetchedRange, setAssetsAllFetchedRange } =
-    useChartsData();
+  const {
+    assets,
+    setAssets,
+    assetsAllFetchedRange,
+    setAssetsAllFetchedRange,
+    setAssetsLoaded,
+  } = useChartsData();
   const [viewRange, setViewRange] = useState<DateRange>(assetsAllFetchedRange);
   const project = useProjects();
   const projectId = project?.selectedProject?.id;
@@ -173,7 +182,7 @@ const AssetsChart = (): JSX.Element => {
       projectId,
     });
 
-    setAssets((prev) => [...prev, ...res.results]);
+    setAssets((prev) => mergeById(prev, res.results));
 
     const total = res.count;
 
@@ -200,7 +209,7 @@ const AssetsChart = (): JSX.Element => {
         })
           .then((res) => {
             if (res?.results?.length) {
-              setAssets((prev) => [...prev, ...res.results]);
+              setAssets((prev) => mergeById(prev, res.results));
             }
           })
           .catch(() => ({
@@ -219,15 +228,18 @@ const AssetsChart = (): JSX.Element => {
   }
 
   const loading = useBoolean(false);
+  const [failed, setFailed] = useState(false);
 
   const [fetchingMoreValue, setFetchingMoreValue] = useState("");
 
   useEffect(() => {
     loading.setTrue();
-    fetchForRange(assetsAllFetchedRange).then(() => {
-      // setAllFetchedData(data);
-      loading.setFalse();
-    });
+    fetchForRange(assetsAllFetchedRange)
+      .catch(() => setFailed(true))
+      .finally(() => {
+        loading.setFalse();
+        setAssetsLoaded(true);
+      });
   }, []);
 
   const perDateData = useMemo(() => {
@@ -298,8 +310,12 @@ const AssetsChart = (): JSX.Element => {
       />
 
       <CardContent>
-        {!assets.length ? (
+        {loading.value ? (
           <CenteredLoading />
+        ) : failed ? (
+          <ChartMessage>{LOAD_FAILED}</ChartMessage>
+        ) : !viewData.length ? (
+          <ChartMessage>No assets in this period yet.</ChartMessage>
         ) : (
           <div style={{ width: "100%", height: 300 }}>
             <ResponsiveContainer>
@@ -408,13 +424,15 @@ const AssetsChart = (): JSX.Element => {
                     fetchForRange([
                       subDays(assetsAllFetchedRange[0], valueDays),
                       assetsAllFetchedRange[0],
-                    ]).then(() => {
-                      setAssetsAllFetchedRange([
-                        subDays(assetsAllFetchedRange[0], valueDays),
-                        assetsAllFetchedRange[1],
-                      ]);
-                      setFetchingMoreValue("");
-                    });
+                    ])
+                      .then(() => {
+                        setAssetsAllFetchedRange([
+                          subDays(assetsAllFetchedRange[0], valueDays),
+                          assetsAllFetchedRange[1],
+                        ]);
+                      })
+                      .catch(() => setFailed(true))
+                      .finally(() => setFetchingMoreValue(""));
                   }}
                   loading={fetchingMoreValue === label}
                 >
