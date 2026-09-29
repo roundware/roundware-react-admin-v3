@@ -1,72 +1,56 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
-  Button,
   CircularProgress,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import { Branding, errMessage, getBranding, patchBranding } from "./api";
+import { errMessage, getBranding, patchBranding } from "./api";
 import BrandingFilesPanel from "./BrandingFilesPanel";
 import InfoPanelEditor from "./InfoPanelEditor";
+import LookAndFeelPanel from "./LookAndFeelPanel";
 
 interface Props {
   projectId: number;
   onSaved?: () => void;
 }
 
-// The web app's own dark palette, from its styles/index.ts darkColorTheme.
-// These were MUI's stock demo colours (#1976d2 / #9c27b0 / #ffffff), which
-// belong to no Roundware theme at all — and because this panel auto-saves,
-// every project had them written in whether or not its author touched a
-// swatch. That is where the purple Delete button and the white-on-white
-// Add Media menu came from.
-const DEFAULTS = { primary: "#A3E635", secondary: "#042F2E", background: "#14532D" };
-
 const BrandingPanel: React.FC<Props> = ({ projectId, onSaved }) => {
-  const [branding, setBranding] = useState<Branding | null>(null);
+  const [loaded, setLoaded] = useState(false);
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
-  const [primary, setPrimary] = useState(DEFAULTS.primary);
-  const [secondary, setSecondary] = useState(DEFAULTS.secondary);
-  const [background, setBackground] = useState(DEFAULTS.background);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const debounce = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const loaded = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
     getBranding(projectId).then((b) => {
       if (cancelled) return;
-      setBranding(b);
       setTitle(b.app_title || "");
       setSubtitle(b.app_subtitle || "");
-      const p = b.theme_json?.palette || {};
-      setPrimary(p.primary || DEFAULTS.primary);
-      setSecondary(p.secondary || DEFAULTS.secondary);
-      setBackground(p.background || DEFAULTS.background);
-      loaded.current = true;
+      setLoaded(true);
     });
     return () => {
       cancelled = true;
     };
   }, [projectId]);
 
-  // Debounced auto-save when any field changes (after initial load)
-  useEffect(() => {
-    if (!loaded.current) return;
+  useEffect(() => () => {
+    if (debounce.current) clearTimeout(debounce.current);
+  }, []);
+
+  // Saved from edits only. This used to be an effect on the fields, which
+  // also fired when they were filled in on load — so opening this page saved
+  // every field, colours included, whether or not anything was touched.
+  const save = (fields: { app_title: string; app_subtitle: string }) => {
     if (debounce.current) clearTimeout(debounce.current);
     debounce.current = setTimeout(async () => {
       setSaving(true);
       setError(null);
       try {
-        await patchBranding(projectId, {
-          app_title: title,
-          app_subtitle: subtitle,
-          theme_json: { palette: { primary, secondary, background } },
-        });
+        await patchBranding(projectId, fields);
         onSaved?.();
       } catch (e) {
         setError(errMessage(e));
@@ -74,12 +58,9 @@ const BrandingPanel: React.FC<Props> = ({ projectId, onSaved }) => {
         setSaving(false);
       }
     }, 600);
-    return () => {
-      if (debounce.current) clearTimeout(debounce.current);
-    };
-  }, [projectId, title, subtitle, primary, secondary, background, onSaved]);
+  };
 
-  if (!branding) {
+  if (!loaded) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
         <CircularProgress />
@@ -99,24 +80,25 @@ const BrandingPanel: React.FC<Props> = ({ projectId, onSaved }) => {
       <TextField
         label="App title"
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={(e) => {
+          setTitle(e.target.value);
+          save({ app_title: e.target.value, app_subtitle: subtitle });
+        }}
         fullWidth
         size="small"
       />
       <TextField
         label="App subtitle"
         value={subtitle}
-        onChange={(e) => setSubtitle(e.target.value)}
+        onChange={(e) => {
+          setSubtitle(e.target.value);
+          save({ app_title: title, app_subtitle: e.target.value });
+        }}
         fullWidth
         size="small"
       />
 
-      <Typography variant="subtitle2">Colors</Typography>
-      <Stack direction="row" spacing={2}>
-        <ColorField label="Primary" value={primary} onChange={setPrimary} />
-        <ColorField label="Accent" value={secondary} onChange={setSecondary} />
-        <ColorField label="Background" value={background} onChange={setBackground} />
-      </Stack>
+      <LookAndFeelPanel projectId={projectId} onSaved={onSaved} />
 
       <BrandingFilesPanel projectId={projectId} onSaved={onSaved} />
 
@@ -124,23 +106,5 @@ const BrandingPanel: React.FC<Props> = ({ projectId, onSaved }) => {
     </Stack>
   );
 };
-
-const ColorField: React.FC<{
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-}> = ({ label, value, onChange }) => (
-  <Box sx={{ textAlign: "center" }}>
-    <Typography variant="caption" display="block" color="text.secondary">
-      {label}
-    </Typography>
-    <input
-      type="color"
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      style={{ width: 44, height: 36, border: "none", background: "none", cursor: "pointer" }}
-    />
-  </Box>
-);
 
 export default BrandingPanel;

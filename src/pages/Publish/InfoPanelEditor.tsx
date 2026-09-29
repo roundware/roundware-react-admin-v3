@@ -58,7 +58,10 @@ const InfoPanelEditor: React.FC<Props> = ({ projectId, onSaved }) => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const debounce = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const loaded = useRef(false);
+  // The values as loaded. Saving is for edits: without this check the save
+  // effect fired on load too, re-saving what had just been read and
+  // reloading the preview every time the page opened.
+  const asLoaded = useRef<Record<string, string> | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -67,8 +70,8 @@ const InfoPanelEditor: React.FC<Props> = ({ projectId, onSaved }) => {
         if (cancelled) return;
         const next: Record<string, string> = {};
         for (const f of FIELDS) next[f.key as string] = (b[f.key] as string) || "";
+        asLoaded.current = next;
         setValues(next);
-        loaded.current = true;
       })
       .catch((e) => !cancelled && setError(errMessage(e)));
     return () => {
@@ -78,7 +81,7 @@ const InfoPanelEditor: React.FC<Props> = ({ projectId, onSaved }) => {
 
   // Debounced auto-save, matching the rest of this page.
   useEffect(() => {
-    if (!loaded.current || !values) return;
+    if (!values || values === asLoaded.current) return;
     if (debounce.current) clearTimeout(debounce.current);
     debounce.current = setTimeout(async () => {
       setSaving(true);

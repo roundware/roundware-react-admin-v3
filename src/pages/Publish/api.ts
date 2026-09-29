@@ -36,6 +36,7 @@ export interface Branding {
   app_title: string;
   app_subtitle: string;
   theme_json: { palette?: { primary?: string; secondary?: string; background?: string } };
+  google_font_family?: string;
   files: Record<string, SlotFiles>;
   [key: string]: unknown;
 }
@@ -96,6 +97,27 @@ export async function mintPreviewToken(projectId: number): Promise<string> {
 export async function getBrandingSchema(): Promise<FileSlot[]> {
   const { json } = await apiFetcher(`/branding/schema/`);
   return (json as { slots: FileSlot[] }).slots;
+}
+
+/** One of the theme's three colours, as the server describes it (docs/015). */
+export interface ColourRole {
+  key: "primary" | "secondary" | "background";
+  label: string;
+  description: string;
+  default: string;
+}
+
+export interface ThemeSchema {
+  colours: ColourRole[];
+  default_font: string;
+  fonts: string[];
+}
+
+/** The theme's colours, defaults and fonts — from the server, like the file
+ *  slots, so the admin and the web app share one set of defaults. */
+export async function getThemeSchema(): Promise<ThemeSchema> {
+  const { json } = await apiFetcher(`/branding/schema/`);
+  return (json as { theme: ThemeSchema }).theme;
 }
 
 export async function uploadBrandingFile(
