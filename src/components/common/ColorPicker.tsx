@@ -21,6 +21,12 @@ interface ColorPickerProps {
   helperText?: string;
   defaultValue?: string;
   validate?: (value: any) => string | undefined;
+  /**
+   * Allows the field to be empty, meaning "no colour of its own" — shown as
+   * this colour, with a button to return to it. Used for speakers, whose
+   * empty colour follows the project's Brand colour (server docs/015).
+   */
+  emptyColor?: string;
 }
 
 const ColorPicker = ({
@@ -30,6 +36,7 @@ const ColorPicker = ({
   helperText,
   defaultValue = '#000000',
   validate,
+  emptyColor,
 }: ColorPickerProps) => {
   const {
     field,
@@ -100,14 +107,15 @@ const ColorPicker = ({
 
   // Initialize HSV values from field value only when field value changes externally
   useEffect(() => {
-    const fieldValue = field.value || defaultValue;
+    const fieldValue = field.value || emptyColor || defaultValue;
     const hsv = hexToHsv(fieldValue);
     setHue(hsv.h);
     setSaturation(hsv.s);
     setValue(hsv.v);
     setAlpha(hsv.a);
-    setHexInput(fieldValue);
-  }, [field.value, defaultValue]);
+    // An empty field stays visibly empty; its swatch shows what empty means.
+    setHexInput(emptyColor !== undefined ? field.value || '' : fieldValue);
+  }, [field.value, defaultValue, emptyColor]);
 
   const currentHex = hsvToHex(hue, saturation, value, alpha);
 
@@ -153,6 +161,10 @@ const ColorPicker = ({
   const handleHexChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setHexInput(value);
+    if (value === '' && emptyColor !== undefined) {
+      field.onChange('');
+      return;
+    }
     
     const formatted = formatHex(value);
     if (isValidHex(formatted)) {
@@ -186,6 +198,8 @@ const ColorPicker = ({
         error={!!error}
         value={hexInput}
         onChange={handleHexChange}
+        placeholder={emptyColor !== undefined ? 'Project default' : undefined}
+        InputLabelProps={emptyColor !== undefined ? { shrink: true } : undefined}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -202,6 +216,17 @@ const ColorPicker = ({
           ),
           endAdornment: (
             <InputAdornment position="end">
+              {emptyColor !== undefined && field.value && (
+                <IconButton
+                  onClick={() => field.onChange('')}
+                  edge="end"
+                  size="small"
+                  title="Use the project default"
+                  aria-label="Use the project default"
+                >
+                  <Close />
+                </IconButton>
+              )}
               <IconButton
                 onClick={() => setOpen(true)}
                 edge="end"

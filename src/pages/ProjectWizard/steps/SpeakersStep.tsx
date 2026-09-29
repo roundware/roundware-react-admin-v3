@@ -42,8 +42,8 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
         attenuation_distance: 0,
         min_volume: 0.0,
         max_volume: 1.0,
-        fill_color: "#0000FF80",
-        border_color: "#0000FF",
+        fill_color: "", // "" = the project's Brand colour
+        border_color: "",
       },
     });
   };
@@ -221,7 +221,7 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
                       }
                       fullWidth
                       size="small"
-                      helperText="Hex color (e.g. #0000FF80)"
+                      helperText="Empty = the Brand colour; or a hex colour, e.g. #0000FF80"
                     />
                   </Grid>
 
@@ -238,7 +238,7 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
                       }
                       fullWidth
                       size="small"
-                      helperText="Hex color (e.g. #0000FF)"
+                      helperText="Empty = match the fill; or a hex colour, e.g. #0000FF"
                     />
                   </Grid>
 

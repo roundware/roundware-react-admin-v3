@@ -1,3 +1,4 @@
+import { useProjectPalette } from "hooks/useProjectPalette";
 import BlurCircularIcon from "@mui/icons-material/BlurCircular";
 import DeleteIcon from "@mui/icons-material/Delete";
 import HistoryIcon from "@mui/icons-material/History";
@@ -76,12 +77,16 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
   }, [speaker?.id, distance]);
 
   const dataProvider = useRoundwareDataProvider();
+  const palette = useProjectPalette(speaker.project_id);
 
   // the editable shape — use the speaker's actual colors
+  // A speaker with no colour of its own is drawn in the project's Brand
+  // colour, as the web app draws it (it was a fixed blue here).
+  const brand = palette?.primary ?? "#5B8ED6";
   const shapePolygonOptions: PolygonProps[`options`] = {
-    fillColor: speaker.fill_color || "#0000FF80",
+    fillColor: (speaker.fill_color || brand).slice(0, 7),
     fillOpacity: isSelected ? 0.5 : 0.3,
-    strokeColor: speaker.border_color || "#0000FF",
+    strokeColor: (speaker.border_color || speaker.fill_color || brand).slice(0, 7),
     strokeOpacity: 1,
     strokeWeight: 2,
     clickable: true,

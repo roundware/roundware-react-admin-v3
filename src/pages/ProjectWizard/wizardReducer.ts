@@ -80,8 +80,8 @@ export const BLANK_SPEAKER: Omit<WizardSpeaker, "tempId"> = {
   attenuation_distance: 0,
   min_volume: 0.0,
   max_volume: 1.0,
-  fill_color: "#0000FF80",
-  border_color: "#0000FF",
+  fill_color: "", // "" = the project's Brand colour
+  border_color: "",
 };
 
 export const INITIAL_STATE: WizardState = {
