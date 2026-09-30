@@ -6,7 +6,7 @@
  * the same maths, so what an author places is exactly what appears in the app.
  * Change one, change both — the admin cannot import across repos.
  *
- * The overlay is described by a centre, a width in metres, a rotation and an
+ * The overlay is described by a center, a width in meters, a rotation and an
  * opacity. Height comes from the image's own aspect ratio, so the image fills
  * its box exactly and is never letterboxed.
  *
@@ -17,15 +17,15 @@
  * describe what they saw.
  */
 
-/** Metres per degree of latitude — close enough everywhere at overlay scale. */
+/** Meters per degree of latitude — close enough everywhere at overlay scale. */
 const METRES_PER_DEGREE_LAT = 111_320;
 
 export interface MapOverlayPlacement {
-	/** Centre of the image. */
+	/** Center of the image. */
 	center: { lat: number; lng: number };
 	/** Width of the image on the ground, before rotation. */
 	widthMeters: number;
-	/** Clockwise, in degrees, about the centre. */
+	/** Clockwise, in degrees, about the center. */
 	rotation: number;
 	/** 0–1. */
 	opacity: number;

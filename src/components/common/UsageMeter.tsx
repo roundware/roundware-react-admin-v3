@@ -22,7 +22,7 @@ export function useUsage(): { usage: Usage | null; reload: () => void } {
   return { usage, reload };
 }
 
-/** One labelled bar: "Contributions  412 / 2,000". Unlimited shows no bar. */
+/** One labeled bar: "Contributions  412 / 2,000". Unlimited shows no bar. */
 export const LimitBar = ({ label, value }: { label: string; value: LimitUsage }) => {
   const pct = percentUsed(value);
   return (

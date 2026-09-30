@@ -46,7 +46,7 @@ const TemplateStep: React.FC<TemplateStepProps> = ({ state, dispatch }) => {
     <Box>
       <StepInstruction title="Choose a Starting Point">
         Every template pre-fills your project with working defaults — tags,
-        recording settings and app behaviour — so you have something coherent
+        recording settings and app behavior — so you have something coherent
         from the start. Nothing here is permanent; you can change any setting in
         the later steps or after the project is created.
       </StepInstruction>

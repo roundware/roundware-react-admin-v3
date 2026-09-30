@@ -63,7 +63,7 @@ const OnboardingPlanPage: React.FC = () => {
     };
   }, []);
 
-  // Registration puts every new organisation on Free. Any other choice is a
+  // Registration puts every new organization on Free. Any other choice is a
   // real switch: while billing is off, every plan is free to choose
   // (roundware-server-v3 docs/013).
   const handleSelectPlan = async (plan: PlanData) => {

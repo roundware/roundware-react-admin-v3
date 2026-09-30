@@ -14,35 +14,53 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { useInput } from 'react-admin';
 
-interface ColorPickerProps {
-  source: string;
+interface ColorFieldProps {
+  value: string;
+  onChange: (value: string) => void;
   label: string;
+  error?: boolean;
   fullWidth?: boolean;
   helperText?: string;
+  size?: 'small' | 'medium';
   defaultValue?: string;
-  validate?: (value: any) => string | undefined;
   /**
-   * Allows the field to be empty, meaning "no colour of its own" — shown as
-   * this colour, with a button to return to it. Used for speakers, whose
-   * empty colour follows the project's Brand colour (server docs/015).
+   * Allows the field to be empty, meaning "no color of its own" — shown as
+   * this color, with a button to return to it. Used for speakers, whose
+   * empty color follows the project's Brand color (server docs/015).
    */
   emptyColor?: string;
 }
 
-const ColorPicker = ({
-  source,
-  label,
-  fullWidth = false,
-  helperText,
-  defaultValue = '#000000',
-  validate,
-  emptyColor,
-}: ColorPickerProps) => {
+interface ColorPickerProps extends Omit<ColorFieldProps, 'value' | 'onChange' | 'error'> {
+  source: string;
+  validate?: (value: any) => string | undefined;
+}
+
+/** The picker inside a react-admin form, bound to `source`. */
+const ColorPicker = ({ source, validate, defaultValue = '#000000', ...rest }: ColorPickerProps) => {
   const {
     field,
     fieldState: { error },
   } = useInput({ source, defaultValue, validate });
-  
+  return (
+    <ColorField {...rest} defaultValue={defaultValue} value={field.value} onChange={field.onChange} error={!!error} />
+  );
+};
+
+/** The picker on its own, for state kept outside a react-admin form (the wizard). */
+export const ColorField = ({
+  value: fieldValue,
+  onChange,
+  label,
+  error,
+  fullWidth = false,
+  helperText,
+  size,
+  defaultValue = '#000000',
+  emptyColor,
+}: ColorFieldProps) => {
+  const field = { value: fieldValue, onChange };
+
   const [open, setOpen] = useState(false);
   const [hue, setHue] = useState(0);
   const [saturation, setSaturation] = useState(100);
@@ -195,6 +213,7 @@ const ColorPicker = ({
         label={label}
         fullWidth={fullWidth}
         helperText={helperText}
+        size={size}
         error={!!error}
         value={hexInput}
         onChange={handleHexChange}

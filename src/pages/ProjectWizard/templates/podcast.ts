@@ -34,14 +34,14 @@ const podcast: WizardTemplate = {
     out_of_range_distance: 1000,
     recording_method: "standard",
   },
-  // Geography is off, not merely de-emphasised: no range circle, no listener
+  // Geography is off, not merely de-emphasized: no range circle, no listener
   // marker, no bounds markers, no map overlay on the listen page. The sidebar
   // carries browsing instead, since the map cannot.
   config: {
     listen: {
       availableListenModes: ["map"],
       geoListenMode: ["map"],
-      autoplay: true,
+      autoplay: false,
     },
     map: {
       bounds: "auto",

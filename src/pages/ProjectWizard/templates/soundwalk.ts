@@ -26,7 +26,7 @@ const soundwalk: WizardTemplate = {
     listen: {
       availableListenModes: ["map", "walking"],
       geoListenMode: ["walking"],
-      autoplay: true,
+      autoplay: false,
     },
     map: {
       bounds: "auto",

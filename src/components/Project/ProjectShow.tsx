@@ -28,7 +28,7 @@ import { useProjects } from "../../context/ProjectsContext";
 import LocalizedShowField from "../common/LocalizedShowField";
 import DeleteProjectDialog from "./DeleteProjectDialog";
 
-/** Thin wrapper that renders a labelled field inside a fixed-width grid cell. */
+/** Thin wrapper that renders a labeled field inside a fixed-width grid cell. */
 const Field = ({
   children,
   xs = 12,

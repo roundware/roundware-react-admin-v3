@@ -2,7 +2,8 @@
 // Standalone range slider for the wizard (no react-admin form context)
 // ---------------------------------------------------------------------------
 import React from "react";
-import { Box, Slider, TextField, Typography } from "@mui/material";
+import { Box, Slider, Typography } from "@mui/material";
+import WizardNumberField from "./WizardNumberField";
 
 interface WizardRangeSliderProps {
   label: string;
@@ -44,26 +45,18 @@ const WizardRangeSlider: React.FC<WizardRangeSliderProps> = ({
         sx={{ mx: 1 }}
       />
       <Box sx={{ display: "flex", gap: 1 }}>
-        <TextField
+        <WizardNumberField
           label="Min"
-          type="number"
           value={minValue}
-          onChange={(e) => {
-            const v = parseFloat(e.target.value);
-            if (!isNaN(v)) onChange(v, maxValue);
-          }}
+          onChange={(v) => onChange(v, maxValue)}
           size="small"
           inputProps={{ min, max, step }}
           sx={{ flex: 1 }}
         />
-        <TextField
+        <WizardNumberField
           label="Max"
-          type="number"
           value={maxValue}
-          onChange={(e) => {
-            const v = parseFloat(e.target.value);
-            if (!isNaN(v)) onChange(minValue, v);
-          }}
+          onChange={(v) => onChange(minValue, v)}
           size="small"
           inputProps={{ min, max, step }}
           sx={{ flex: 1 }}

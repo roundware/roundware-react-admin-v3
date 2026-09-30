@@ -1,4 +1,5 @@
-import { Grid } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Box, Button, Divider, Grid, Typography } from "@mui/material";
 import CardBox from "components/common/CardBox";
 import LocationSelector from "components/common/LocationSelector";
 import TranslatableField from "components/common/TranslatableField";
@@ -11,14 +12,19 @@ import {
     RaRecord,
     ReferenceArrayInput,
     required,
+    SaveButton,
     SelectArrayInput,
     SelectInput,
     SimpleForm,
     TextInput,
+    Toolbar,
+    usePermissions,
+    useRecordContext,
 } from "react-admin";
 import { useNavigate } from "react-router-dom";
 import { buildLocalizationsPayload } from "../../utils";
 import AdvancedConfigInput from "./AdvancedConfigInput";
+import DeleteProjectDialog from "./DeleteProjectDialog";
 
 const PROJECT_LOC_FIELD_MAP: Record<string, string> = {
   description_loc_admin: "description",
@@ -26,6 +32,45 @@ const PROJECT_LOC_FIELD_MAP: Record<string, string> = {
   out_of_range_message_loc_admin: "out_of_range_message",
   legal_agreement_loc_admin: "legal_agreement",
   demo_stream_message_loc_admin: "demo_stream_message",
+};
+
+/**
+ * Deleting the project, at the foot of its settings. It lived on the
+ * project's Show page, reached by a "Show" button here; that page repeated
+ * these settings read-only and is no longer linked (the projects list, the
+ * other place to delete from, is for superusers only).
+ */
+const DeleteProjectSection = () => {
+  const record = useRecordContext();
+  const { permissions } = usePermissions();
+  const [open, setOpen] = useState(false);
+  const canDelete = ["superuser", "owner", "admin"].includes(permissions?.role);
+  if (!record || !canDelete) return null;
+  return (
+    <Box sx={{ px: 2, pb: 3 }}>
+      <Divider sx={{ mb: 2 }} />
+      <Typography variant="subtitle1" fontWeight={600}>
+        Delete this project
+      </Typography>
+      <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+        Permanently deletes the project and everything in it. You'll see what
+        will be removed, and confirm, before anything is deleted.
+      </Typography>
+      <Button variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => setOpen(true)}>
+        Delete Project
+      </Button>
+      {open && (
+        <DeleteProjectDialog
+          open
+          projects={[{ id: record.id as number, name: record.name as string }]}
+          onClose={() => setOpen(false)}
+          // The project is gone, and it was the selected one: start over on
+          // the admin's home page, where another is chosen.
+          onDeleted={() => window.location.assign("/")}
+        />
+      )}
+    </Box>
+  );
 };
 
 const ProjectEdit = (): JSX.Element => {
@@ -46,6 +91,8 @@ const ProjectEdit = (): JSX.Element => {
   return (
     <Edit
       title="Edit a project"
+      // No Show button: the Show page only repeated these settings read-only.
+      actions={false}
       mutationMode="pessimistic"
       transform={transform}
       mutationOptions={{
@@ -58,7 +105,16 @@ const ProjectEdit = (): JSX.Element => {
       }}
       queryOptions={{}}
     >
-      <SimpleForm warnWhenUnsavedChanges={warn}>
+      <SimpleForm
+        warnWhenUnsavedChanges={warn}
+        // Save only: deleting is the section below, whose dialog says what
+        // goes with the project. The stock toolbar's Delete skipped that.
+        toolbar={
+          <Toolbar>
+            <SaveButton />
+          </Toolbar>
+        }
+      >
         <CardBox title="Project Config">
           <TextInput
             source="name"
@@ -236,6 +292,7 @@ const ProjectEdit = (): JSX.Element => {
 
         <AdvancedConfigInput />
       </SimpleForm>
+      <DeleteProjectSection />
     </Edit>
   );
 };

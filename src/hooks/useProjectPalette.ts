@@ -18,7 +18,7 @@ function load(projectId: number): Promise<ProjectPalette> {
       Promise.all([getThemeSchema(), getBranding(projectId)]).then(([schema, branding]) => {
         const saved = branding.theme_json?.palette ?? {};
         const out = {} as ProjectPalette;
-        for (const role of schema.colours) out[role.key] = saved[role.key] || role.default;
+        for (const role of schema.colors) out[role.key] = saved[role.key] || role.default;
         return out;
       })
     );
@@ -27,9 +27,9 @@ function load(projectId: number): Promise<ProjectPalette> {
 }
 
 /**
- * The web app's effective colours for a project — what it saved over the
+ * The web app's effective colors for a project — what it saved over the
  * Roundware defaults (server docs/015) — so the admin can draw things as
- * the app will, e.g. a speaker with no colour of its own in the Brand colour.
+ * the app will, e.g. a speaker with no color of its own in the Brand color.
  * Null until loaded.
  */
 export function useProjectPalette(projectId: number | undefined): ProjectPalette | null {

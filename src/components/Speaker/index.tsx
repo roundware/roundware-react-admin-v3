@@ -46,7 +46,7 @@ const validateHexColor = (value: string) => {
 
 export const SpeakerEdit = (): JSX.Element => {
   const { selectedProject } = useProjects();
-  // Empty colours follow the project's Brand colour (server docs/015).
+  // Empty colors follow the project's Brand color (server docs/015).
   const palette = useProjectPalette(selectedProject?.id);
   const showHierarchy = showsSpeakerHierarchy(selectedProject);
   const { fetchData } = useSpeakers();
@@ -181,7 +181,7 @@ export const SpeakerEdit = (): JSX.Element => {
           source='fill_color'
           label='Fill Color'
           fullWidth
-          helperText="Leave empty to use the project's Brand colour, or a 6/8-character hex (e.g. #0000FF80)"
+          helperText="Leave empty to use the project's Brand color, or a 6/8-character hex (e.g. #0000FF80)"
           defaultValue=''
           emptyColor={palette?.primary ?? '#5B8ED6'}
           validate={validateHexColor}
@@ -250,7 +250,7 @@ export const SpeakerEdit = (): JSX.Element => {
 
 export const SpeakerCreate = (): JSX.Element => {
   const { selectedProject } = useProjects();
-  // Empty colours follow the project's Brand colour (server docs/015).
+  // Empty colors follow the project's Brand color (server docs/015).
   const palette = useProjectPalette(selectedProject?.id);
   const showHierarchy = showsSpeakerHierarchy(selectedProject);
   const { fetchData, setSelectedSpeaker, addToNewlyCreatedSpeakers } =
@@ -361,7 +361,7 @@ export const SpeakerCreate = (): JSX.Element => {
           source='fill_color'
           label='Fill Color'
           fullWidth
-          helperText="Leave empty to use the project's Brand colour, or a 6/8-character hex (e.g. #0000FF80)"
+          helperText="Leave empty to use the project's Brand color, or a 6/8-character hex (e.g. #0000FF80)"
           defaultValue=''
           emptyColor={palette?.primary ?? '#5B8ED6'}
           validate={validateHexColor}

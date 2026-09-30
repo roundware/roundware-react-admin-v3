@@ -9,7 +9,7 @@
 // There is only one real rule so far, so there is no point designing a
 // declarative system around it — the shape would be a guess. The rule lives
 // here instead so the next few land together, and once there are enough of
-// them to see the pattern, this becomes the thing that gets generalised.
+// them to see the pattern, this becomes the thing that gets generalized.
 // See docs/010-backlog.md, "A general mechanism for conditional admin fields".
 
 import { IProject } from "context/ProjectsContext";

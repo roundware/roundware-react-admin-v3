@@ -21,6 +21,7 @@ import StepInstruction from "../components/StepInstruction";
 import WizardLocationSelector from "../components/WizardLocationSelector";
 import WizardTranslatableField from "../components/WizardTranslatableField";
 import { apiFetcher } from "../../../roundwareDataProvider/tokenAuthProvider";
+import WizardNumberField from "../components/WizardNumberField";
 
 interface ProjectStepProps {
   state: WizardState;
@@ -166,15 +167,11 @@ const ProjectStep: React.FC<ProjectStepProps> = ({ state, dispatch }) => {
           </Typography>
           <Grid container spacing={1}>
             <Grid size={{ xs: 6, sm: 3 }}>
-              <TextField
+              <WizardNumberField
                 label="Max Recording (sec)"
-                type="number"
+                integer
                 value={project.max_recording_length_sec}
-                onChange={(e) =>
-                  update({
-                    max_recording_length_sec: parseInt(e.target.value) || 0,
-                  })
-                }
+                onChange={(n) => update({ max_recording_length_sec: n })}
                 fullWidth
                 size="small"
               />
@@ -331,15 +328,10 @@ const ProjectStep: React.FC<ProjectStepProps> = ({ state, dispatch }) => {
               </TextField>
             </Grid>
             <Grid size={{ xs: 6, sm: 3 }}>
-              <TextField
+              <WizardNumberField
                 label="Out of Range Distance"
-                type="number"
                 value={project.out_of_range_distance}
-                onChange={(e) =>
-                  update({
-                    out_of_range_distance: parseFloat(e.target.value) || 0,
-                  })
-                }
+                onChange={(n) => update({ out_of_range_distance: n })}
                 fullWidth
                 size="small"
               />

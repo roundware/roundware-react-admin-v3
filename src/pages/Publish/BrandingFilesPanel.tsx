@@ -1,4 +1,5 @@
 import DeleteIcon from "@mui/icons-material/Delete";
+import MicIcon from "@mui/icons-material/Mic";
 import UploadIcon from "@mui/icons-material/Upload";
 import {
   Avatar,
@@ -9,6 +10,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import AudioRecorder from "components/common/AudioRecorder";
 import React, { useEffect, useState } from "react";
 import {
   deleteBrandingFile,
@@ -38,6 +40,15 @@ const BrandingFilesPanel: React.FC<Props> = ({ projectId, onSaved }) => {
   const [slots, setSlots] = useState<FileSlot[] | null>(null);
   const [files, setFiles] = useState<Record<string, SlotFiles>>({});
   const [busy, setBusy] = useState<string | null>(null);
+  // Recording into an audio slot: which slot the recorder is open for, and
+  // the take waiting to be kept or discarded. A take is heard before it is
+  // uploaded, because an upload goes straight to the live site.
+  const [recordingSlot, setRecordingSlot] = useState<string | null>(null);
+  const [take, setTake] = useState<{ slot: string; file: File; url: string } | null>(null);
+  useEffect(() => {
+    if (!take) return;
+    return () => URL.revokeObjectURL(take.url);
+  }, [take]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -213,7 +224,62 @@ const BrandingFilesPanel: React.FC<Props> = ({ projectId, onSaved }) => {
                   />
                 </Button>
               )}
+
+              {/* Only where the server converts: a recording is WebM. */}
+              {slot.convert_to_mp3 && !slot.multiple && (
+                <Button
+                  size="small"
+                  variant={recordingSlot === slot.key ? "contained" : "text"}
+                  startIcon={<MicIcon />}
+                  disabled={isBusy}
+                  onClick={() => {
+                    setTake(null);
+                    setRecordingSlot(recordingSlot === slot.key ? null : slot.key);
+                  }}
+                >
+                  {recordingSlot === slot.key ? "Close recorder" : "Record"}
+                </Button>
+              )}
             </Stack>
+
+            {recordingSlot === slot.key && (
+              <Box sx={{ mt: 1.5, p: 1.5, border: 1, borderColor: "divider", borderRadius: 1 }}>
+                {take?.slot === slot.key ? (
+                  <Stack spacing={1}>
+                    <audio src={take.url} controls style={{ width: "100%" }} />
+                    <Stack direction="row" spacing={1}>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        disabled={isBusy}
+                        onClick={() => {
+                          const file = take.file;
+                          setTake(null);
+                          setRecordingSlot(null);
+                          run(slot.key, () => uploadBrandingFile(projectId, slot.key, file));
+                        }}
+                      >
+                        Use this recording
+                      </Button>
+                      <Button size="small" onClick={() => setTake(null)}>
+                        Discard and record again
+                      </Button>
+                    </Stack>
+                  </Stack>
+                ) : (
+                  <AudioRecorder
+                    onFinish={(blob) => {
+                      // Recorded as WebM; the server converts it to MP3.
+                      // The name needs its extension: the server checks it.
+                      const file = new File([blob], `${slot.key}.webm`, {
+                        type: blob.type || "audio/webm",
+                      });
+                      setTake({ slot: slot.key, file, url: URL.createObjectURL(file) });
+                    }}
+                  />
+                )}
+              </Box>
+            )}
           </Box>
         );
       })}

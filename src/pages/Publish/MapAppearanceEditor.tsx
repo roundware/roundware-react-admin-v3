@@ -397,7 +397,7 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
                       if (c) touch(setCenter)({ lat: c.lat(), lng: c.lng() });
                     }}
                   >
-                    Move to map centre
+                    Move to map center
                   </Button>
                   <Button size="small" onClick={() => touch(setCenter)(projectCenter)}>
                     Project location

@@ -32,7 +32,7 @@ import { mapLibraries, mapsApiVersion } from "../../utils";
 interface Props {
   value: MultiPolygon | null;
   onChange: (shape: MultiPolygon | null) => void;
-  /** Map centre when nothing is drawn yet — the project location. */
+  /** Map center when nothing is drawn yet — the project location. */
   center: { lat: number; lng: number };
 }
 

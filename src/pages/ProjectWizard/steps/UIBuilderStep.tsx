@@ -41,7 +41,7 @@ const SELECT_TYPES = [
 
 const UIBuilderStep: React.FC<UIBuilderStepProps> = ({ state, dispatch }) => {
   const { categories, tags, uiGroups } = state;
-  const [mode, setMode] = useState<"listen" | "speak">("speak");
+  const [mode, setMode] = useState<"listen" | "speak">("listen");
 
   // Auto-create groups for a category the author added themselves — one for
   // each mode, since a new category is usually worth both tagging and

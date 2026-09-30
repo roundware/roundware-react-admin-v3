@@ -27,7 +27,7 @@ const store = (): Storage | null => {
   }
 };
 
-/** `File` cannot be serialised, so a chosen audio file does not survive.
+/** `File` cannot be serialized, so a chosen audio file does not survive.
  *  Everything else does; the speaker keeps its name, shape and settings and
  *  only the file needs picking again. */
 const strip = (state: WizardState): WizardState => ({
@@ -41,7 +41,7 @@ export function saveWizardState(state: WizardState): void {
   try {
     s.setItem(KEY, JSON.stringify(strip(state)));
   } catch {
-    // Quota, or a value that will not serialise. Losing the draft is bad;
+    // Quota, or a value that will not serialize. Losing the draft is bad;
     // breaking the wizard to complain about it is worse.
   }
 }

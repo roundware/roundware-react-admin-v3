@@ -80,8 +80,8 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
   const palette = useProjectPalette(speaker.project_id);
 
   // the editable shape — use the speaker's actual colors
-  // A speaker with no colour of its own is drawn in the project's Brand
-  // colour, as the web app draws it (it was a fixed blue here).
+  // A speaker with no color of its own is drawn in the project's Brand
+  // color, as the web app draws it (it was a fixed blue here).
   const brand = palette?.primary ?? "#5B8ED6";
   const shapePolygonOptions: PolygonProps[`options`] = {
     fillColor: (speaker.fill_color || brand).slice(0, 7),

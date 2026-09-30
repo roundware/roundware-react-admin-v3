@@ -18,6 +18,12 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { WizardState } from "../types";
+import { ColorField } from "../../../components/common/ColorPicker";
+import WizardNumberField from "../components/WizardNumberField";
+
+// The web app's default Brand color (server core/theme.py), which a new
+// project has until it is customized.
+const DEFAULT_BRAND = "#5B8ED6";
 import { WizardAction } from "../wizardReducer";
 import StepInstruction from "../components/StepInstruction";
 import ShapeDrawInput from "../../../components/common/ShapeDrawInput";
@@ -42,7 +48,7 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
         attenuation_distance: 0,
         min_volume: 0.0,
         max_volume: 1.0,
-        fill_color: "", // "" = the project's Brand colour
+        fill_color: "", // "" = the project's Brand color
         border_color: "",
       },
     });
@@ -130,18 +136,15 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
                   </Grid>
 
                   <Grid size={{ xs: 6, sm: 4 }}>
-                    <TextField
+                    <WizardNumberField
                       label="Attenuation Distance"
-                      type="number"
+                      integer
                       value={spk.attenuation_distance}
-                      onChange={(e) =>
+                      onChange={(n) =>
                         dispatch({
                           type: "UPDATE_SPEAKER",
                           tempId: spk.tempId,
-                          patch: {
-                            attenuation_distance:
-                              parseInt(e.target.value) || 0,
-                          },
+                          patch: { attenuation_distance: n },
                         })
                       }
                       fullWidth
@@ -168,18 +171,15 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
                     />
                   </Grid>
 
-                  <Grid size={{ xs: 6, sm: 3 }}>
-                    <TextField
+                  <Grid size={{ xs: 6, sm: 2 }}>
+                    <WizardNumberField
                       label="Min Volume"
-                      type="number"
                       value={spk.min_volume}
-                      onChange={(e) =>
+                      onChange={(n) =>
                         dispatch({
                           type: "UPDATE_SPEAKER",
                           tempId: spk.tempId,
-                          patch: {
-                            min_volume: parseFloat(e.target.value) || 0,
-                          },
+                          patch: { min_volume: n },
                         })
                       }
                       fullWidth
@@ -188,18 +188,15 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
                     />
                   </Grid>
 
-                  <Grid size={{ xs: 6, sm: 3 }}>
-                    <TextField
+                  <Grid size={{ xs: 6, sm: 2 }}>
+                    <WizardNumberField
                       label="Max Volume"
-                      type="number"
                       value={spk.max_volume}
-                      onChange={(e) =>
+                      onChange={(n) =>
                         dispatch({
                           type: "UPDATE_SPEAKER",
                           tempId: spk.tempId,
-                          patch: {
-                            max_volume: parseFloat(e.target.value) || 0,
-                          },
+                          patch: { max_volume: n },
                         })
                       }
                       fullWidth
@@ -208,37 +205,43 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
                     />
                   </Grid>
 
-                  <Grid size={{ xs: 6, sm: 3 }}>
-                    <TextField
+                  <Grid size={{ xs: 6, sm: 4 }}>
+                    <ColorField
                       label="Fill Color"
                       value={spk.fill_color}
-                      onChange={(e) =>
+                      onChange={(v) =>
                         dispatch({
                           type: "UPDATE_SPEAKER",
                           tempId: spk.tempId,
-                          patch: { fill_color: e.target.value },
+                          patch: { fill_color: v },
                         })
                       }
                       fullWidth
                       size="small"
-                      helperText="Empty = the Brand colour; or a hex colour, e.g. #0000FF80"
+                      defaultValue=""
+                      // A new project starts on the default palette.
+                      emptyColor={DEFAULT_BRAND}
+                      helperText="Empty = the Brand color, or pick one"
                     />
                   </Grid>
 
-                  <Grid size={{ xs: 6, sm: 3 }}>
-                    <TextField
+                  <Grid size={{ xs: 6, sm: 4 }}>
+                    <ColorField
                       label="Border Color"
                       value={spk.border_color}
-                      onChange={(e) =>
+                      onChange={(v) =>
                         dispatch({
                           type: "UPDATE_SPEAKER",
                           tempId: spk.tempId,
-                          patch: { border_color: e.target.value },
+                          patch: { border_color: v },
                         })
                       }
                       fullWidth
                       size="small"
-                      helperText="Empty = match the fill; or a hex colour, e.g. #0000FF"
+                      defaultValue=""
+                      // Empty matches the fill.
+                      emptyColor={spk.fill_color || DEFAULT_BRAND}
+                      helperText="Empty = match the fill, or pick one"
                     />
                   </Grid>
 

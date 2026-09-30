@@ -23,6 +23,8 @@ export interface FileSlot {
   description: string;
   recommended: string;
   extensions: string[];
+  /** Stored as MP3 whatever is uploaded — so a browser recording (WebM) is fine. */
+  convert_to_mp3?: boolean;
 }
 
 /** What a project has stored for a slot. Always lists, even for single slots —
@@ -99,8 +101,8 @@ export async function getBrandingSchema(): Promise<FileSlot[]> {
   return (json as { slots: FileSlot[] }).slots;
 }
 
-/** One of the theme's three colours, as the server describes it (docs/015). */
-export interface ColourRole {
+/** One of the theme's three colors, as the server describes it (docs/015). */
+export interface ColorRole {
   key: "primary" | "secondary" | "background";
   label: string;
   description: string;
@@ -108,12 +110,12 @@ export interface ColourRole {
 }
 
 export interface ThemeSchema {
-  colours: ColourRole[];
+  colors: ColorRole[];
   default_font: string;
   fonts: string[];
 }
 
-/** The theme's colours, defaults and fonts — from the server, like the file
+/** The theme's colors, defaults and fonts — from the server, like the file
  *  slots, so the admin and the web app share one set of defaults. */
 export async function getThemeSchema(): Promise<ThemeSchema> {
   const { json } = await apiFetcher(`/branding/schema/`);

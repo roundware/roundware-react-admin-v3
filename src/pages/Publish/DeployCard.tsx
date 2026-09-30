@@ -8,6 +8,7 @@ import {
   Chip,
   CircularProgress,
   InputAdornment,
+  Link,
   Stack,
   TextField,
   Typography,
@@ -122,7 +123,7 @@ const DeployCard: React.FC<Props> = ({ projectId, onChange }) => {
       <CardContent>
         <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
           <PublicIcon color="primary" />
-          <Typography variant="h6">Deploy</Typography>
+          <Typography variant="h6">Web address</Typography>
           {state?.deployed ? (
             <Chip label="Published" color="success" size="small" />
           ) : (
@@ -130,15 +131,25 @@ const DeployCard: React.FC<Props> = ({ projectId, onChange }) => {
           )}
         </Stack>
 
-        {state?.deployed && (
+        {/* Publishing connects an address to the project; the site reads the
+            project live, so there is nothing to re-publish after a change
+            (server docs/007). A separate test site is backlogged (010). */}
+        {state?.deployed ? (
           <Alert severity="success" sx={{ mb: 2 }}>
             <Typography variant="body2">
-              Published to <strong>{state.hostname}</strong>
+              Live at{" "}
+              <Link href={state.url ?? `https://${state.hostname}`} target="_blank" rel="noopener">
+                <strong>{state.hostname}</strong>
+              </Link>
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              Becomes publicly reachable once the platform domain &amp; hosting
-              are configured (deployment phase).
+              Changes you save go live right away; there's no need to publish
+              again. Colors, fonts and images can take up to 5 minutes to appear.
             </Typography>
+          </Alert>
+        ) : (
+          <Alert severity="info" sx={{ mb: 2 }}>
+            Once published, changes you save to this project go live right away.
           </Alert>
         )}
 
@@ -176,18 +187,17 @@ const DeployCard: React.FC<Props> = ({ projectId, onChange }) => {
         />
 
         <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
-          <Button
-            variant="contained"
-            disabled={!canDeploy || busy}
-            onClick={handleDeploy}
-            startIcon={busy ? <CircularProgress size={16} /> : undefined}
-          >
-            {state?.deployed
-              ? isCurrent
-                ? "Re-deploy"
-                : "Change address"
-              : "Deploy"}
-          </Button>
+          {/* No "Re-deploy": publishing again changes nothing. */}
+          {!isCurrent && (
+            <Button
+              variant="contained"
+              disabled={!canDeploy || busy}
+              onClick={handleDeploy}
+              startIcon={busy ? <CircularProgress size={16} /> : undefined}
+            >
+              {state?.deployed ? "Change address" : "Publish"}
+            </Button>
+          )}
           {state?.deployed && (
             <Button color="error" variant="outlined" disabled={busy} onClick={handleUnpublish}>
               Unpublish

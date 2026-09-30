@@ -1,13 +1,13 @@
 // ---------------------------------------------------------------------------
-// Look & feel: the web app's three colours and its font
+// Look & feel: the web app's three colors and its font
 // (roundware-server-v3 docs/015-theming.md).
 //
 // Roles, labels, descriptions, defaults and the font list all come from
 // GET /branding/schema/, the same definitions /config/ uses to fill in the
-// live app — so what this panel shows for an unset colour is what
+// live app — so what this panel shows for an unset color is what
 // participants see.
 //
-// Only colours the author actually picks are saved. Anything left alone stays
+// Only colors the author actually picks are saved. Anything left alone stays
 // "use the default", so a later change to the defaults reaches it. (The old
 // panel saved whatever its pickers showed as soon as it loaded, which is how
 // MUI's stock purple ended up stored in projects no one had styled.)
@@ -24,7 +24,7 @@ import {
   Typography,
 } from "@mui/material";
 import {
-  ColourRole,
+  ColorRole,
   errMessage,
   getBranding,
   getThemeSchema,
@@ -32,7 +32,7 @@ import {
   ThemeSchema,
 } from "./api";
 
-type RoleKey = ColourRole["key"];
+type RoleKey = ColorRole["key"];
 type Palette = Partial<Record<RoleKey, string>>;
 
 interface Props {
@@ -58,21 +58,29 @@ const contrast = (a: string, b: string): number => {
   return (hi + 0.05) / (lo + 0.05);
 };
 
-/** The better of black or white text on this colour — what the app uses. */
-const textContrast = (hex: string) => Math.max(contrast(hex, "#000000"), contrast(hex, "#ffffff"));
-
-/** Plain-language warnings for a palette that may be hard to use. */
-function warnings(p: Record<RoleKey, string>, roles: ColourRole[]): string[] {
+/**
+ * Plain-language warnings for a palette that may be hard to use: the Brand
+ * color is drawn on the other two (buttons everywhere; the intro's title on
+ * the backdrop), so it needs to stand apart from each. 3:1 is WCAG's minimum
+ * for large text and controls.
+ *
+ * Text *on* each color needs no check: the app picks black or white for it,
+ * and one of the two always reaches 4.5:1. (There was a check for that; it
+ * could never fire.)
+ */
+function warnings(p: Record<RoleKey, string>, roles: ColorRole[]): string[] {
   const label = (k: RoleKey) => roles.find((r) => r.key === k)?.label ?? k;
   const out: string[] = [];
-  roles.forEach((r) => {
-    if (textContrast(p[r.key]) < 4.5)
-      out.push(`${r.label}: neither black nor white text reads well on it.`);
-  });
-  if (contrast(p.primary, p.background) < 3)
-    out.push(`Buttons may not stand out on cards: ${label("primary")} and ${label("background")} are too alike.`);
-  if (contrast(p.primary, p.secondary) < 3)
-    out.push(`Buttons may not stand out on the backdrop: ${label("primary")} and ${label("secondary")} are too alike.`);
+  const pair = (other: RoleKey, where: string) => {
+    const ratio = contrast(p.primary, p[other]);
+    if (ratio < 3)
+      out.push(
+        `${label("primary")} is hard to see on the ${label(other)} (contrast ${ratio.toFixed(1)}:1; aim for at least 3:1). ` +
+          `This affects ${where}. Make one of the two lighter or darker.`
+      );
+  };
+  pair("secondary", "the intro's title and buttons");
+  pair("background", "buttons and links on cards and panels");
   return out;
 }
 
@@ -136,7 +144,7 @@ const LookAndFeelPanel: React.FC<Props> = ({ projectId, onSaved }) => {
   }
 
   const effective = Object.fromEntries(
-    schema.colours.map((r) => [r.key, chosen[r.key] || r.default])
+    schema.colors.map((r) => [r.key, chosen[r.key] || r.default])
   ) as Record<RoleKey, string>;
   const pick = (key: RoleKey, value: string) => {
     const next = { ...chosen, [key]: value };
@@ -153,7 +161,7 @@ const LookAndFeelPanel: React.FC<Props> = ({ projectId, onSaved }) => {
     save({}, "");
   };
   const isDefault = !Object.keys(chosen).length && !font;
-  const problems = warnings(effective, schema.colours);
+  const problems = warnings(effective, schema.colors);
 
   return (
     <Stack spacing={2}>
@@ -162,7 +170,7 @@ const LookAndFeelPanel: React.FC<Props> = ({ projectId, onSaved }) => {
         {saving && <CircularProgress size={16} />}
       </Stack>
 
-      {schema.colours.map((role) => (
+      {schema.colors.map((role) => (
         <Stack key={role.key} direction="row" spacing={1.5} alignItems="center">
           <input
             type="color"

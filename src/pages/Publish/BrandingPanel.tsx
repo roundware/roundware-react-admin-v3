@@ -43,7 +43,7 @@ const BrandingPanel: React.FC<Props> = ({ projectId, onSaved }) => {
 
   // Saved from edits only. This used to be an effect on the fields, which
   // also fired when they were filled in on load — so opening this page saved
-  // every field, colours included, whether or not anything was touched.
+  // every field, colors included, whether or not anything was touched.
   const save = (fields: { app_title: string; app_subtitle: string }) => {
     if (debounce.current) clearTimeout(debounce.current);
     debounce.current = setTimeout(async () => {

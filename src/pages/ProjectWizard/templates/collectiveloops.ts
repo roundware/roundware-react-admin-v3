@@ -13,7 +13,7 @@ import { WizardTemplate } from "../types";
  *  - `recording_method: "looping"` is a project *column*, not config, so it
  *    lives in the `project` block below (docs/009 §7 decision 4). It carries
  *    the whole paradigm: `speak.uploadAsSpeaker` is derived from it, since
- *    synchronised looping only works through speakers.
+ *    synchronized looping only works through speakers.
  *  - The project needs at least one active speaker carrying audio before it is
  *    published — the base loop the first participant sings against. One is
  *    seeded here; the wizard's Speakers step is where its audio is uploaded.
@@ -48,7 +48,7 @@ const collectiveloops: WizardTemplate = {
   config: {
     speak: {
       // The paradigm itself comes from recording_method: "looping" above —
-      // uploads become speakers because that is the only way synchronised
+      // uploads become speakers because that is the only way synchronized
       // looping works. Nothing to declare here.
       // A contributor should hear their own take enter the mix.
       baseRecordingLoopSelectionMethod: "all",
@@ -56,7 +56,7 @@ const collectiveloops: WizardTemplate = {
     listen: {
       availableListenModes: ["map"],
       geoListenMode: ["map"],
-      autoplay: true,
+      autoplay: false,
       speaker: {
         // Newly submitted loops get picked up sooner, so contributors hear
         // themselves join rather than waiting for a random rotation.

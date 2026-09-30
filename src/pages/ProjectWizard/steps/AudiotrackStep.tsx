@@ -8,7 +8,6 @@ import {
   Grid,
   MenuItem,
   Switch,
-  TextField,
   Typography,
 } from "@mui/material";
 
@@ -16,6 +15,7 @@ import { WizardState } from "../types";
 import { WizardAction } from "../wizardReducer";
 import StepInstruction from "../components/StepInstruction";
 import WizardRangeSlider from "../components/WizardRangeSlider";
+import WizardNumberField from "../components/WizardNumberField";
 
 interface AudiotrackStepProps {
   state: WizardState;
@@ -171,13 +171,11 @@ const AudiotrackStep: React.FC<AudiotrackStepProps> = ({ state, dispatch }) => {
 
             {/* Banned Duration */}
             <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
+              <WizardNumberField
                 label="Banned Duration (sec)"
-                type="number"
+                integer
                 value={audiotrack.banned_duration}
-                onChange={(e) =>
-                  update({ banned_duration: parseInt(e.target.value) || 0 })
-                }
+                onChange={(n) => update({ banned_duration: n })}
                 fullWidth
                 helperText="Time after playing before an asset can play again."
               />

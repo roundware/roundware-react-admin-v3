@@ -3,10 +3,11 @@
 // Includes Google Places autocomplete + interactive map when Maps API is loaded
 // ---------------------------------------------------------------------------
 import React, { useCallback, useRef } from "react";
-import { Box, Grid, TextField, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { useJsApiLoader } from "@react-google-maps/api";
 import PlacesAutoComplete from "../../../components/common/LocationSelector/PlacesAutoComplete";
 import { mapLibraries, mapsApiVersion } from "../../../utils";
+import WizardNumberField from "./WizardNumberField";
 
 interface WizardLocationSelectorProps {
   latitude: number;
@@ -100,26 +101,20 @@ const WizardLocationSelector: React.FC<WizardLocationSelectorProps> = ({
 
       <Grid container spacing={2}>
         <Grid size={{ xs: 6 }}>
-          <TextField
+          <WizardNumberField
             label="Latitude"
-            type="number"
             value={latitude}
-            onChange={(e) =>
-              onChange(parseFloat(e.target.value) || 0, longitude)
-            }
+            onChange={(n) => onChange(n, longitude)}
             fullWidth
             size="small"
             inputProps={{ step: 0.0001 }}
           />
         </Grid>
         <Grid size={{ xs: 6 }}>
-          <TextField
+          <WizardNumberField
             label="Longitude"
-            type="number"
             value={longitude}
-            onChange={(e) =>
-              onChange(latitude, parseFloat(e.target.value) || 0)
-            }
+            onChange={(n) => onChange(latitude, n)}
             fullWidth
             size="small"
             inputProps={{ step: 0.0001 }}

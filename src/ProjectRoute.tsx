@@ -31,8 +31,15 @@ const ProjectRoute = () => {
   }, [projectsList]);
 
   if (loading) return <SplashScreen />;
+  // The selected project's own settings stay inside the project, with its
+  // menu and header: the menu's "Project" item opens them. Other `projects`
+  // paths — the list of all of them — are tenant-wide, so they move out to
+  // `/projects/...` below. (Settings used to move out too, and lost the menu.)
+  const isOwnSettings =
+    !!selectedProject &&
+    new RegExp(`^/project/${selectedProject.id}/projects/${selectedProject.id}/?$`).test(location.pathname);
   const isCurrentProjectRoute =
-    selectedProject && location.pathname.includes(`projects`);
+    selectedProject && location.pathname.includes(`projects`) && !isOwnSettings;
 
   if (isCurrentProjectRoute && location.pathname.includes(`project/`)) {
     return (

@@ -12,7 +12,7 @@ interface Props {
 
 /**
  * Read-only display of localized strings from `_loc_admin` arrays.
- * Shows each language's translation as a labelled row.
+ * Shows each language's translation as a labeled row.
  * Falls back to the plain field value when no localizations exist.
  */
 const LocalizedShowField = ({ source, fallbackSource }: Props) => {

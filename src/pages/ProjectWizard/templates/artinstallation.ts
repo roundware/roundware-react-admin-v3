@@ -25,7 +25,7 @@ const artinstallation: WizardTemplate = {
     listen: {
       availableListenModes: ["map"],
       geoListenMode: ["map"],
-      autoplay: true,
+      autoplay: false,
     },
     map: {
       bounds: "auto",

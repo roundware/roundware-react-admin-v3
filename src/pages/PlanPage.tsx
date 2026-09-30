@@ -104,7 +104,7 @@ const PlanPage = () => {
             subheader={
               current
                 ? "Contributions are every asset and every speaker, pooled across all your projects."
-                : "This organisation has no plan, so nothing is limited."
+                : "This organization has no plan, so nothing is limited."
             }
           />
           {current && (
@@ -176,7 +176,7 @@ const PlanPage = () => {
 
         {!canSwitch && (
           <Typography variant="body2" color="text.secondary">
-            Only the organisation&apos;s owner can change its plan.
+            Only the organization&apos;s owner can change its plan.
           </Typography>
         )}
       </Stack>
