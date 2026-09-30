@@ -1,5 +1,6 @@
 import { Box, CircularProgress } from "@mui/material";
 import React from "react";
+import { useProjects } from "../../../context/ProjectsContext";
 import UsageMeter from "../../common/UsageMeter";
 import DashboardContent from "./DashboardContent";
 import ProjectDetails from "./ProjectDetails";
@@ -10,14 +11,16 @@ export const intervals = [
 ];
 
 const Dashboard = (): JSX.Element => {
+  const { selectedProject } = useProjects();
 
+  // Before a project is chosen the charts have nothing to be about.
   return (
     <Box sx={{ marginTop: 4 }}>
       <ProjectDetails />
       <Box sx={{ maxWidth: 480, px: 1.25, mb: 3 }}>
         <UsageMeter />
       </Box>
-      <DashboardContent />
+      {selectedProject && <DashboardContent />}
     </Box>
   );
 };

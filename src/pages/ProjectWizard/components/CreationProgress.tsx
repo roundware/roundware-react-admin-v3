@@ -154,7 +154,7 @@ const CreationProgress: React.FC<CreationProgressProps> = ({
   };
 
   const handleGoToProject = goTo("");
-  const handleGoToPublish = goTo("/publish");
+  const handleGoToCustomize = goTo("/customize");
   const handleGoToAssets = goTo("/assets");
 
   // Only asset-paradigm projects are pointed at the assets page. In a looping
@@ -233,8 +233,8 @@ const CreationProgress: React.FC<CreationProgressProps> = ({
               <Button onClick={handleGoToAssets}>Add audio</Button>
             )}
             <Button onClick={handleGoToProject}>Go to Project</Button>
-            <Button onClick={handleGoToPublish} variant="contained">
-              Customize &amp; Publish
+            <Button onClick={handleGoToCustomize} variant="contained">
+              Customize
             </Button>
           </>
         )}

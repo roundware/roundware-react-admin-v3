@@ -9,9 +9,8 @@ import {
 } from "@mui/material";
 import { useProjects } from "context/ProjectsContext";
 import React, { memo } from "react";
-import { HideOnScroll, usePermissions, useRedirect, UserMenu } from "react-admin";
+import { HideOnScroll, usePermissions, UserMenu } from "react-admin";
 import { useNavigate } from "react-router-dom";
-import RefreshButton from "./RefreshButton";
 import { SidebarToggleButton } from "./SidebarToggleButton";
 import TenantSelector from "./TenantSelector";
 interface AppBarProps {
@@ -23,9 +22,8 @@ const AppBar = ({ container = HideOnScroll }: AppBarProps): JSX.Element => {
     theme.breakpoints.down("sm")
   );
 
-  const redirect = useRedirect();
   const { permissions } = usePermissions();
-  const { projectsList, selectedProject, selectProject } = useProjects();
+  const { selectedProject } = useProjects();
 
   const navigate = useNavigate();
 
@@ -42,12 +40,14 @@ const AppBar = ({ container = HideOnScroll }: AppBarProps): JSX.Element => {
         >
           <Stack spacing={2} direction="row" alignItems="center">
             {selectedProject && <SidebarToggleButton />}
+            {/* Home: the current project's dashboard. (It went to the
+                all-projects list, which is now for superusers only.) */}
             <Link
               onClick={(e) => {
                 e.preventDefault();
-                return redirect(`list`, `/projects`);
+                navigate(selectedProject ? `/project/${selectedProject.id}` : "/");
               }}
-              href={`/#/projects`}
+              href={selectedProject ? `/project/${selectedProject.id}` : "/"}
               style={{
                 cursor: "pointer",
                 color: "#fff",
@@ -61,8 +61,7 @@ const AppBar = ({ container = HideOnScroll }: AppBarProps): JSX.Element => {
                 swapped the whole admin's context mid-page — including the
                 router basename — which read as the app behaving oddly rather
                 than as a deliberate switch. The name is kept for orientation;
-                switching happens on the Projects list, reached from the title
-                link, where the choice is the point of the page. */}
+                switching happens deliberately, on the Dashboard. */}
             {selectedProject && (
               <Typography variant="subtitle1" sx={{ color: "#fff", opacity: 0.9 }}>
                 {selectedProject.name}
@@ -71,7 +70,6 @@ const AppBar = ({ container = HideOnScroll }: AppBarProps): JSX.Element => {
           </Stack>
           <Stack spacing={1} direction="row" alignItems="center">
             <TenantSelector />
-            <RefreshButton />
             <UserMenu />
           </Stack>
         </Toolbar>

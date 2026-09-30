@@ -7,45 +7,39 @@ import BrandingPanel from "./BrandingPanel";
 import PreviewPanel from "./PreviewPanel";
 import ParadigmWarning from "./ParadigmWarning";
 import MapAppearanceEditor from "./MapAppearanceEditor";
-import UsageMeter from "../../components/common/UsageMeter";
 
-const PublishPage: React.FC = () => {
+// Customize and Publish were one page, "Customize & Publish". They are two
+// now: how the app looks and reads, and where it lives. Both show the live
+// preview — one component, so it costs nothing to have it twice.
+
+const NoProject = ({ title, what }: { title: string; what: string }) => (
+  <Container sx={{ py: 4 }}>
+    <Title title={title} />
+    <Typography variant="body1" color="text.secondary">
+      Select a project to {what}.
+    </Typography>
+  </Container>
+);
+
+/** How the app looks and reads: branding, look & feel, files, info panel, map. */
+export const CustomizePage: React.FC = () => {
   const { selectedProject } = useProjects();
   // Bumped whenever branding is saved → reloads the preview iframe.
   const [refreshKey, setRefreshKey] = useState(0);
   const handleSaved = useCallback(() => setRefreshKey((k) => k + 1), []);
 
-  if (!selectedProject) {
-    return (
-      <Container sx={{ py: 4 }}>
-        <Title title="Publish" />
-        <Typography variant="body1" color="text.secondary">
-          Select a project to publish it to the web.
-        </Typography>
-      </Container>
-    );
-  }
-
+  if (!selectedProject) return <NoProject title="Customize" what="customize it" />;
   const projectId = selectedProject.id;
 
   return (
     <Container maxWidth="xl" sx={{ py: 3 }}>
-      <Title title="Publish" />
+      <Title title="Customize" />
       <Typography variant="h4" gutterBottom>
-        Customize &amp; Publish
+        Customize
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        Choose your public web address, customize the look, and preview exactly
-        what participants will see.
+        How the app looks and reads. The preview shows exactly what participants will see.
       </Typography>
-
-      <ParadigmWarning project={selectedProject} />
-
-      <Box sx={{ maxWidth: 480, mb: 3 }}>
-        <UsageMeter />
-      </Box>
-
-      <DeployCard projectId={projectId} />
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 5 }}>
@@ -56,7 +50,7 @@ const PublishPage: React.FC = () => {
           </Card>
         </Grid>
         <Grid size={{ xs: 12, md: 7 }}>
-          <Card>
+          <Card sx={{ position: { md: "sticky" }, top: { md: 80 } }}>
             <CardContent>
               <Box>
                 <PreviewPanel projectId={projectId} refreshKey={refreshKey} />
@@ -74,6 +68,40 @@ const PublishPage: React.FC = () => {
                 onSaved={handleSaved}
                 brandingVersion={refreshKey}
               />
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </Container>
+  );
+};
+
+/** Where the app lives: its web address, deploying and unpublishing. */
+const PublishPage: React.FC = () => {
+  const { selectedProject } = useProjects();
+
+  if (!selectedProject) return <NoProject title="Publish" what="publish it to the web" />;
+  const projectId = selectedProject.id;
+
+  return (
+    <Container maxWidth="xl" sx={{ py: 3 }}>
+      <Title title="Publish" />
+      <Typography variant="h4" gutterBottom>
+        Publish
+      </Typography>
+      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+        Choose your public web address and put the app online.
+      </Typography>
+
+      <ParadigmWarning project={selectedProject} />
+
+      <DeployCard projectId={projectId} />
+
+      <Grid container spacing={3}>
+        <Grid size={{ xs: 12, md: 7 }}>
+          <Card>
+            <CardContent>
+              <PreviewPanel projectId={projectId} refreshKey={0} />
             </CardContent>
           </Card>
         </Grid>

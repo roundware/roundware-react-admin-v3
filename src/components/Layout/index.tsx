@@ -2,6 +2,7 @@ import React from "react";
 import { Layout, LayoutProps, Sidebar, SidebarProps } from "react-admin";
 import { useProjects } from "../../context/ProjectsContext";
 import Appbar from "./Appbar";
+import AutoRefresh from "./AutoRefresh";
 import { Menu } from "./Menu";
 
 const CustomSidebar = (props: SidebarProps) => {
@@ -12,6 +13,8 @@ const CustomSidebar = (props: SidebarProps) => {
 
 const CustomLayout = (props: LayoutProps): JSX.Element => {
   return (
+    <>
+    <AutoRefresh />
     <Layout
       {...props}
       // @ts-expect-error React.memo wrapping
@@ -21,6 +24,7 @@ const CustomLayout = (props: LayoutProps): JSX.Element => {
       sidebar={CustomSidebar}
       menu={Menu}
     />
+    </>
   );
 };
 

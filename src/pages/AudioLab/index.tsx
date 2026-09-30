@@ -63,6 +63,13 @@ const EFFECTS: SliderDef[] = [
   { key: "reverbDamping", label: "Reverb damping", min: 0, max: 1, step: 0.05, help: "Higher is a darker, shorter tail." },
 ];
 
+const effect = (key: string) => EFFECTS.find((e) => e.key === key)!;
+// Laid out as two columns, echo beside reverb; the mix sets the level of
+// both, so it sits full width beneath them.
+const ECHO = [effect("delayTimeInMs"), effect("feedback")];
+const REVERB = [effect("reverbRoomSize"), effect("reverbDamping")];
+const MIX = effect("wetDryRatio");
+
 const LOOPING: SliderDef[] = [
   { key: "loopPointUpdateProbability", label: "New loop length", min: 0, max: 1, step: 0.05, help: "Chance of picking a new loop length at each loop point." },
   { key: "speakerRotationProbability", label: "Swap voices", min: 0, max: 1, step: 0.05, appOnly: true, help: "Chance a playing voice is swapped for another in range at a loop point." },
@@ -321,73 +328,87 @@ const AudioLabPage: React.FC = () => {
 
       {labError && <Alert severity="error" sx={{ mb: 2 }}>{labError}</Alert>}
 
-      <Grid container spacing={3}>
-        {/* Player */}
-        <Grid size={{ xs: 12, md: 5 }}>
-          <Card sx={{ position: { md: "sticky" }, top: { md: 80 } }}>
-            <CardContent>
-              <Stack spacing={2}>
-                <TextField
-                  select
-                  size="small"
-                  label="Speaker to hear"
-                  value={speakerId}
-                  onChange={(e) => setSpeakerId(e.target.value === "" ? "" : Number(e.target.value))}
-                  helperText={speakers.length ? undefined : "This project has no speakers with audio yet."}
-                  disabled={!speakers.length}
-                >
-                  {speakers.map((s) => (
-                    <MenuItem key={s.id} value={s.id}>
-                      {s.name}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                {labSrc && (
-                  <Box
-                    component="iframe"
-                    ref={iframe}
-                    src={labSrc}
-                    title="Audio lab player"
-                    sx={{ width: "100%", height: 260, border: 0, borderRadius: 1, bgcolor: "action.hover" }}
-                  />
-                )}
-                {!labReady && !labError && (
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    <CircularProgress size={16} />
-                    <Typography variant="caption" color="text.secondary">
-                      Loading the project's audio settings from the web app…
-                    </Typography>
-                  </Stack>
-                )}
+      <Stack spacing={3}>
+        {/* Player: one short row, kept in view while the settings below scroll
+            (the app bar hides on scroll, so it pins to the very top). */}
+        <Card sx={{ position: "sticky", top: 0, zIndex: 2 }}>
+          <CardContent sx={{ py: 1.5, "&:last-child": { pb: 1.5 } }}>
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems={{ sm: "center" }}>
+              <TextField
+                select
+                size="small"
+                label="Speaker to hear"
+                value={speakerId}
+                onChange={(e) => setSpeakerId(e.target.value === "" ? "" : Number(e.target.value))}
+                helperText={speakers.length ? undefined : "This project has no speakers with audio yet."}
+                disabled={!speakers.length}
+                sx={{ minWidth: 240 }}
+              >
+                {speakers.map((s) => (
+                  <MenuItem key={s.id} value={s.id}>
+                    {s.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+              {labSrc && (
+                <Box
+                  component="iframe"
+                  ref={iframe}
+                  src={labSrc}
+                  title="Audio lab player"
+                  // The lab page is transparent; the card shows through.
+                  sx={{ flex: 1, minWidth: 0, height: 56, border: 0 }}
+                />
+              )}
+            </Stack>
+            {!labReady && !labError && (
+              <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1 }}>
+                <CircularProgress size={16} />
+                <Typography variant="caption" color="text.secondary">
+                  Loading the project's audio settings from the web app…
+                </Typography>
               </Stack>
-            </CardContent>
-          </Card>
-        </Grid>
+            )}
+          </CardContent>
+        </Card>
 
-        {/* Settings */}
-        <Grid size={{ xs: 12, md: 7 }}>
-          {labReady && speakerDraft && recordingDraft && (
-            <Stack spacing={3}>
+        {labReady && speakerDraft && recordingDraft && (
+          <>
               <Card>
                 <CardHeader title="Speaker effects" subheader="Echo and reverb on every speaker, and where each voice sits left to right." />
                 <CardContent>
-                  <Stack spacing={2.5}>
-                    {EFFECTS.map((def) =>
-                      slider(def, speakerDraft.effects?.[def.key], (v) => setEffect(def.key, v))
-                    )}
-                    <TextField
-                      size="small"
-                      label="Pan positions"
-                      value={pansText}
-                      onChange={(e) => setPansText(e.target.value)}
-                      error={"error" in pans}
-                      helperText={
-                        "error" in pans
-                          ? pans.error
-                          : "One per voice slot, from −1 (left) to 1 (right), e.g. -0.8, -0.4, 0.4, 0.8. The lab plays slot 1."
-                      }
-                    />
-                  </Stack>
+                  <Grid container columnSpacing={4} rowSpacing={2.5}>
+                    <Grid size={{ xs: 12, md: 6 }}>
+                      <Typography variant="overline" color="text.secondary">Echo</Typography>
+                      <Stack spacing={2.5}>
+                        {ECHO.map((def) => slider(def, speakerDraft.effects?.[def.key], (v) => setEffect(def.key, v)))}
+                      </Stack>
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 6 }}>
+                      <Typography variant="overline" color="text.secondary">Reverb</Typography>
+                      <Stack spacing={2.5}>
+                        {REVERB.map((def) => slider(def, speakerDraft.effects?.[def.key], (v) => setEffect(def.key, v)))}
+                      </Stack>
+                    </Grid>
+                    <Grid size={{ xs: 12 }}>
+                      {slider(MIX, speakerDraft.effects?.[MIX.key], (v) => setEffect(MIX.key, v))}
+                    </Grid>
+                    <Grid size={{ xs: 12 }}>
+                      <TextField
+                        size="small"
+                        fullWidth
+                        label="Pan positions"
+                        value={pansText}
+                        onChange={(e) => setPansText(e.target.value)}
+                        error={"error" in pans}
+                        helperText={
+                          "error" in pans
+                            ? pans.error
+                            : "One per voice slot, from −1 (left) to 1 (right), e.g. -0.8, -0.4, 0.4, 0.8. The lab plays slot 1."
+                        }
+                      />
+                    </Grid>
+                  </Grid>
                 </CardContent>
               </Card>
 
@@ -486,10 +507,9 @@ const AudioLabPage: React.FC = () => {
               </Stack>
 
               <UploadProcessingCard projectId={selectedProject.id} />
-            </Stack>
-          )}
-        </Grid>
-      </Grid>
+          </>
+        )}
+      </Stack>
     </Container>
   );
 };

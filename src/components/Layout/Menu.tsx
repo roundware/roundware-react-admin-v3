@@ -2,6 +2,7 @@ import {
   AccountTree,
   AddCircleOutline,
   GraphicEq,
+  Palette,
   Business,
   Groups,
   Settings,
@@ -30,7 +31,9 @@ import SubMenu from "./SubMenu";
 const uiOrder: { [key: string]: string[] } = {
   primary: ["assets", "audiotracks", "speakers", "tags", "uigroups", "timedassets"],
   secondary: ["listenevents", "sessions", "tagcategories"],
-  global: ["languages", "localizedstrings", "users", "notifications"],
+  // Users left out: Team (Tenant section) covers them, with invitations
+  // and roles. The resource stays registered; asset forms look users up.
+  global: ["languages", "localizedstrings", "notifications"],
 };
 
 const icons: { [index: string]: JSX.Element } = {
@@ -82,6 +85,14 @@ export const Menu = (props: MenuProps) => {
         )}
         {selectedProject && (
           <MenuItemLink
+            key="customize"
+            primaryText="Customize"
+            leftIcon={<Palette />}
+            to={{ pathname: `/project/${selectedProject.id}/customize` }}
+          />
+        )}
+        {selectedProject && (
+          <MenuItemLink
             key="publish"
             primaryText="Publish"
             leftIcon={<PublicIcon />}
@@ -96,20 +107,17 @@ export const Menu = (props: MenuProps) => {
             to={{ pathname: `/project/${selectedProject.id}/audio-lab` }}
           />
         )}
-        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-        {/* @ts-ignore */}
-        <MenuItemLink
-          key="projects"
-          to={{
-            pathname: `/${
-              selectedProject
-                ? `project/${selectedProject.id}/projects/${selectedProject.id}/show`
-                : `projects`
-            }`,
-          }}
-          primaryText={selectedProject ? "Project" : "All Projects"}
-          leftIcon={<AccountTree />}
-        />
+        {/* The project's settings. (This went to a read-only details view,
+            and without a project to the all-projects tiles, which are now
+            linked for superusers only, under Platform.) */}
+        {selectedProject && (
+          <MenuItemLink
+            key="project"
+            to={{ pathname: `/project/${selectedProject.id}/projects/${selectedProject.id}` }}
+            primaryText="Project"
+            leftIcon={<AccountTree />}
+          />
+        )}
         <MenuItemLink
           key="wizard"
           to={{ pathname: "/wizard" }}
@@ -192,6 +200,16 @@ export const Menu = (props: MenuProps) => {
               to={{ pathname: "/tenants" }}
               primaryText="Tenants"
               leftIcon={<Business />}
+            />
+            {/* Every project in the current tenant, as tiles. Across all
+                tenants is backlogged (010). */}
+            <MenuItemLink
+              key="all-projects"
+              to={{
+                pathname: selectedProject ? `/project/${selectedProject.id}/projects` : "/projects",
+              }}
+              primaryText="All projects"
+              leftIcon={<AccountTree />}
             />
           </SubMenu>
         )}

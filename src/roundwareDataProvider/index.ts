@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash';
 import { stringify } from 'query-string';
 import {
     CreateParams,
@@ -68,6 +69,47 @@ export class RoundwareDataProvider implements DataProvider {
   currentProjectId = 0;
 
   revalidatingResources: string[] = [];
+
+  // Lists are served from the cache above, which used to be refetched only
+  // by a full page reload (or the header's refresh button): a contribution
+  // made in the web app never appeared in the admin's lists. Now a cached
+  // list older than FRESH_MS is refetched in the background whenever it is
+  // shown, and listeners (AutoRefresh in the layout) re-render when it
+  // changed. The window keeps that re-render from fetching yet again.
+  static FRESH_MS = 10_000;
+  private fetchedAt = new Map<string, number>();
+  private changeListeners = new Set<() => void>();
+
+  private freshKey(resource: string, projectId?: number) {
+    return `${projectId ?? this.currentProjectId}:${resource}`;
+  }
+
+  /** Called whenever a background refetch finds a list has changed. */
+  onChange(listener: () => void): () => void {
+    this.changeListeners.add(listener);
+    return () => this.changeListeners.delete(listener);
+  }
+
+  /** Treat every cached list as stale, e.g. when the tab regains focus. */
+  markAllStale() {
+    this.fetchedAt.clear();
+  }
+
+  private revalidateInBackground(resource: string, params: GetListParams) {
+    const key = this.freshKey(resource, params.filter?.project_id);
+    const last = this.fetchedAt.get(key) ?? 0;
+    if (Date.now() - last < RoundwareDataProvider.FRESH_MS) return;
+    if (this.revalidatingResources.includes(resource)) return;
+    const before = this.getResource(resource, params.filter?.project_id);
+    // The whole list for the project, as the cache holds it.
+    const { project_id, session_id } = params.filter ?? {};
+    this.getList(resource, { ...params, filter: { project_id, session_id } }, true)
+      .then(() => {
+        const after = this.getResource(resource, params.filter?.project_id);
+        if (!isEqual(before, after)) this.changeListeners.forEach((l) => l());
+      })
+      .catch(() => undefined); // the cached copy stays; the next visit retries
+  }
 
   checkProjectAccess = (project_id: number | undefined) => {
     const ids = import.meta.env.VITE_INCLUDE_PROJECT_IDS;
@@ -173,6 +215,7 @@ export class RoundwareDataProvider implements DataProvider {
 
       /** save in cache */
       this.setResourse(resource, json, params.filter.project_id);
+      this.fetchedAt.set(this.freshKey(resource, params.filter.project_id), Date.now());
 
       /** remove frmo revalidating resources */
       this.revalidatingResources = this.revalidatingResources.filter(
@@ -216,6 +259,8 @@ export class RoundwareDataProvider implements DataProvider {
       this.getResource(resource, params.filter.project_id)?.length
     ) {
       getFromCache();
+      // Shown at once from the cache; brought up to date behind it.
+      this.revalidateInBackground(resource, params);
       /** cache not available get from network */
     } else {
       await getFromNetwork();

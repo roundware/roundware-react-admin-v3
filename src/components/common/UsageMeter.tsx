@@ -71,7 +71,7 @@ export function contributionNotice(usage: Usage): { severity: "warning" | "error
 
 /**
  * Compact contributions meter with a link to the Plan page, for the
- * dashboard and Customize & Publish. Renders nothing for a tenant without
+ * dashboard. Renders nothing for a tenant without
  * limits, or until usage has loaded.
  */
 const UsageMeter = () => {
