@@ -34,7 +34,6 @@ const storycollection: WizardTemplate = {
       assetDisplay: "pin",
       rangeCircleOverlayVisible: false,
       showListenerLocationMarker: false,
-      speakerDisplay: "none",
     },
     ui: {
       listenSidebar: { active: true, defaultOpen: true },

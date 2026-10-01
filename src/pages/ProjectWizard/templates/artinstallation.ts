@@ -33,7 +33,6 @@ const artinstallation: WizardTemplate = {
       rangeCircleOverlayVisible: false,
       showListenerLocationMarker: false,
       showBoundsMarkers: false,
-      speakerDisplay: "none",
       listenMapOverlayDisplay: false,
     },
     ui: {

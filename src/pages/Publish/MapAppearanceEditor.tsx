@@ -10,6 +10,8 @@ import {
   Stack,
   Switch,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
 } from "@mui/material";
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
@@ -26,13 +28,14 @@ import { mapLibraries, mapsApiVersion } from "../../utils";
 import { errMessage, getBranding } from "./api";
 
 /**
- * One map for everything about how the listen map looks: the Google Maps
- * style, and the placement of the project's overlay image.
+ * One map for everything about how the listen map looks: whether speakers
+ * are drawn, the Google Maps style, and the placement of the project's
+ * overlay image.
  *
  * It draws with the web app's own geometry (utilities/mapOverlayGeometry.ts,
  * a twin of the app's copy) and the web app's built-in style (vendored as
  * webAppMapStyle.json), so what an author arranges here is what participants
- * see. Both settings are ordinary project config — `map.mapOverlay`,
+ * see. All are ordinary project config — `map.speakerDisplay`, `map.mapOverlay`,
  * `map.listenMapOverlayDisplay` and `map.googleMapsStyle` in ui_config_json —
  * so the Advanced configuration panel shows the same values.
  *
@@ -67,6 +70,14 @@ const DEFAULT_OVERLAY: OverlayConfig = DEFAULT_MAP.mapOverlay;
 const BUILT_IN_STYLE = (webAppMapStyle as { style: google.maps.MapTypeStyle[] }).style;
 
 const containerStyle = { width: "100%", height: "480px" };
+
+type SpeakerDisplay = "polygons" | "images" | "none";
+const SPEAKER_DISPLAYS: { value: SpeakerDisplay; label: string; help: string }[] = [
+  { value: "polygons", label: "Shapes", help: "Each speaker's area, in its colors." },
+  { value: "images", label: "Icons", help: "A speaker icon at each speaker." },
+  { value: "none", label: "Hidden", help: "Speakers play, but aren't drawn." },
+];
+const DEFAULT_SPEAKER_DISPLAY: SpeakerDisplay = DEFAULT_MAP.speakerDisplay ?? "polygons";
 
 /** Parse the style box. Empty means "use the built-in". */
 const parseStyle = (
@@ -104,6 +115,7 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
   const [loaded, setLoaded] = useState(false);
   const [overlayUrl, setOverlayUrl] = useState<string | null>(null);
   const [enabled, setEnabled] = useState(false);
+  const [speakerDisplay, setSpeakerDisplay] = useState<SpeakerDisplay>(DEFAULT_SPEAKER_DISPLAY);
   const [center, setCenter] = useState(projectCenter);
   const [widthMeters, setWidthMeters] = useState(DEFAULT_OVERLAY.widthMeters);
   const [rotation, setRotation] = useState(DEFAULT_OVERLAY.rotation);
@@ -118,6 +130,7 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
 
   // What is on disk, so "Revert" has something to go back to.
   const savedRef = useRef<{
+    speakerDisplay: SpeakerDisplay;
     enabled: boolean;
     overlay: OverlayConfig;
     styleText: string;
@@ -125,6 +138,7 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
 
   const applySaved = useCallback(
     (s: NonNullable<typeof savedRef.current>) => {
+      setSpeakerDisplay(s.speakerDisplay);
       setEnabled(s.enabled);
       setCenter(
         typeof s.overlay.latitude === "number" && typeof s.overlay.longitude === "number"
@@ -148,6 +162,7 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
         const map = (project?.ui_config_json?.map ?? {}) as Record<string, any>;
         const overlay: OverlayConfig = { ...DEFAULT_OVERLAY, ...(map.mapOverlay ?? {}) };
         const saved = {
+          speakerDisplay: (map.speakerDisplay ?? DEFAULT_SPEAKER_DISPLAY) as SpeakerDisplay,
           enabled: Boolean(map.listenMapOverlayDisplay ?? DEFAULT_MAP.listenMapOverlayDisplay),
           overlay,
           styleText: Array.isArray(map.googleMapsStyle)
@@ -219,6 +234,9 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
       const { json: project } = await apiFetcher(`/projects/${projectId}/`);
       const doc = { ...(project?.ui_config_json ?? {}) } as Record<string, any>;
       const mapSection = { ...(doc.map ?? {}) };
+      // Stored only when it differs from the app's default.
+      if (speakerDisplay === DEFAULT_SPEAKER_DISPLAY) delete mapSection.speakerDisplay;
+      else mapSection.speakerDisplay = speakerDisplay;
       mapSection.listenMapOverlayDisplay = enabled;
       mapSection.mapOverlay = {
         latitude: center.lat,
@@ -237,6 +255,7 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
       });
 
       savedRef.current = {
+        speakerDisplay,
         enabled,
         overlay: mapSection.mapOverlay,
         styleText,
@@ -268,8 +287,9 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
         <Box>
           <Typography variant="h6">Map appearance</Typography>
           <Typography variant="body2" color="text.secondary">
-            The map style and overlay image participants see on the listen map.
-            The style also applies to the location picker when recording.
+            How speakers are shown, and the map style and overlay image
+            participants see on the listen map. The style also applies to the
+            location picker when recording.
           </Typography>
         </Box>
         <Stack direction="row" spacing={1} alignItems="center">
@@ -326,6 +346,27 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
 
         <Grid size={{ xs: 12, md: 4 }}>
           <Stack spacing={2.5}>
+            <Box>
+              <Typography variant="subtitle2" gutterBottom>
+                Speakers on the map
+              </Typography>
+              <ToggleButtonGroup
+                exclusive
+                size="small"
+                value={speakerDisplay}
+                onChange={(_e, v: SpeakerDisplay | null) => v && touch(setSpeakerDisplay)(v)}
+              >
+                {SPEAKER_DISPLAYS.map((d) => (
+                  <ToggleButton key={d.value} value={d.value} sx={{ px: 2 }}>
+                    {d.label}
+                  </ToggleButton>
+                ))}
+              </ToggleButtonGroup>
+              <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}>
+                {SPEAKER_DISPLAYS.find((d) => d.value === speakerDisplay)?.help}
+              </Typography>
+            </Box>
+
             <Box>
               <Typography variant="subtitle2" gutterBottom>
                 Overlay image

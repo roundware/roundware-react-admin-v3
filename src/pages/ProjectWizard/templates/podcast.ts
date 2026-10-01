@@ -50,7 +50,6 @@ const podcast: WizardTemplate = {
       showListenerLocationMarker: false,
       showBoundsMarkers: false,
       listenMapOverlayDisplay: false,
-      speakerDisplay: "none",
       assetTypeDisplay: ["audio"],
     },
     ui: {

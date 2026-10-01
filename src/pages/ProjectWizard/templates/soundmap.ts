@@ -33,7 +33,6 @@ const soundmap: WizardTemplate = {
       assetDisplay: "pin",
       rangeCircleOverlayVisible: true,
       showListenerLocationMarker: true,
-      speakerDisplay: "none",
       assetTypeDisplay: ["audio", "photo", "text"],
     },
     ui: {

@@ -33,7 +33,6 @@ const soundwalk: WizardTemplate = {
       assetDisplay: "pin",
       rangeCircleOverlayVisible: true,
       showListenerLocationMarker: true,
-      speakerDisplay: "none",
     },
   },
   audiotrack: {
