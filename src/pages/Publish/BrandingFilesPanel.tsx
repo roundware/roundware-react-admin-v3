@@ -34,9 +34,15 @@ import {
 interface Props {
   projectId: number;
   onSaved?: () => void;
+  /**
+   * Just these slots, with no heading — for a file offered beside the setting
+   * it belongs to (Map appearance's speaker image). Without it, the panel
+   * lists every slot the server places in Images & audio (`panel: "files"`).
+   */
+  only?: string[];
 }
 
-const BrandingFilesPanel: React.FC<Props> = ({ projectId, onSaved }) => {
+const BrandingFilesPanel: React.FC<Props> = ({ projectId, onSaved, only }) => {
   const [slots, setSlots] = useState<FileSlot[] | null>(null);
   const [files, setFiles] = useState<Record<string, SlotFiles>>({});
   const [busy, setBusy] = useState<string | null>(null);
@@ -97,16 +103,18 @@ const BrandingFilesPanel: React.FC<Props> = ({ projectId, onSaved }) => {
     );
   }
 
+  const shown = slots.filter((s) => (only ? only.includes(s.key) : (s.panel ?? "files") === "files"));
+
   return (
     <Stack spacing={2.5}>
-      <Typography variant="h6">Images &amp; audio</Typography>
+      {!only && <Typography variant="h6">Images &amp; audio</Typography>}
       {error && (
         <Typography color="error" variant="body2">
           {error}
         </Typography>
       )}
 
-      {slots.map((slot) => {
+      {shown.map((slot) => {
         const stored = files[slot.key] ?? { keys: [], urls: [] };
         const isBusy = busy === slot.key;
         return (

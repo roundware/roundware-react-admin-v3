@@ -26,6 +26,7 @@ import {
 } from "../../utilities/mapOverlayGeometry";
 import { mapLibraries, mapsApiVersion } from "../../utils";
 import { errMessage, getBranding } from "./api";
+import BrandingFilesPanel from "./BrandingFilesPanel";
 
 /**
  * One map for everything about how the listen map looks: whether speakers
@@ -74,7 +75,11 @@ const containerStyle = { width: "100%", height: "480px" };
 type SpeakerDisplay = "polygons" | "images" | "none";
 const SPEAKER_DISPLAYS: { value: SpeakerDisplay; label: string; help: string }[] = [
   { value: "polygons", label: "Shapes", help: "Each speaker's area, in its colors." },
-  { value: "images", label: "Icons", help: "A speaker icon at each speaker." },
+  {
+    value: "images",
+    label: "Image",
+    help: "An image centered on each speaker and sized to its shape — a speaker icon, or your own.",
+  },
   { value: "none", label: "Hidden", help: "Speakers play, but aren't drawn." },
 ];
 const DEFAULT_SPEAKER_DISPLAY: SpeakerDisplay = DEFAULT_MAP.speakerDisplay ?? "polygons";
@@ -365,6 +370,13 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
               <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}>
                 {SPEAKER_DISPLAYS.find((d) => d.value === speakerDisplay)?.help}
               </Typography>
+              {/* The image is a branding file: uploading saves it at once,
+                  like every upload; the choice above waits for Save map. */}
+              {speakerDisplay === "images" && (
+                <Box sx={{ mt: 1.5 }}>
+                  <BrandingFilesPanel projectId={projectId} only={["speaker_image"]} onSaved={onSaved} />
+                </Box>
+              )}
             </Box>
 
             <Box>

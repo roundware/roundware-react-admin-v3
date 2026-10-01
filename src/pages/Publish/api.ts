@@ -25,6 +25,8 @@ export interface FileSlot {
   extensions: string[];
   /** Stored as MP3 whatever is uploaded — so a browser recording (WebM) is fine. */
   convert_to_mp3?: boolean;
+  /** Where the admin offers it: "files" (Images & audio) or "map" (Map appearance). */
+  panel?: "files" | "map";
 }
 
 /** What a project has stored for a slot. Always lists, even for single slots —
