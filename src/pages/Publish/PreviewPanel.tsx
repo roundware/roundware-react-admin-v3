@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import SmartphoneIcon from "@mui/icons-material/Smartphone";
 import ComputerIcon from "@mui/icons-material/Computer";
+import TabletIcon from "@mui/icons-material/TabletMac";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import CloseIcon from "@mui/icons-material/Close";
@@ -26,7 +27,15 @@ interface Props {
   title?: string;
 }
 
-type Device = "mobile" | "desktop";
+type Device = "mobile" | "tablet" | "desktop";
+
+// Phone and tablet are fixed sizes (an iPhone; an iPad in portrait), limited
+// to the space there is — the app reflows, as it would on a smaller device.
+// Desktop fills the space.
+const SIZES: Record<Exclude<Device, "desktop">, { width: number; height: number }> = {
+  mobile: { width: 390, height: 720 },
+  tablet: { width: 768, height: 1024 },
+};
 
 const PreviewPanel: React.FC<Props> = ({ projectId, refreshKey, height = 720, title = "Preview" }) => {
   const [token, setToken] = useState<string | null>(null);
@@ -55,12 +64,12 @@ const PreviewPanel: React.FC<Props> = ({ projectId, refreshKey, height = 720, ti
       )}&_=${reloadKey}`
     : "";
 
-  const iframe = (mobile: boolean) => (
+  const iframe = (d: Device) => (
     <Box
       sx={{
-        width: mobile ? 390 : "100%",
+        width: d === "desktop" ? "100%" : SIZES[d].width,
         maxWidth: "100%",
-        height: mobile ? 720 : "100%",
+        height: d === "desktop" ? "100%" : SIZES[d].height,
         maxHeight: "100%",
         mx: "auto",
         border: "1px solid",
@@ -103,10 +112,13 @@ const PreviewPanel: React.FC<Props> = ({ projectId, refreshKey, height = 720, ti
             value={device}
             onChange={(_, v) => v && setDevice(v)}
           >
-            <ToggleButton value="mobile">
+            <ToggleButton value="mobile" title="Phone">
               <SmartphoneIcon fontSize="small" />
             </ToggleButton>
-            <ToggleButton value="desktop">
+            <ToggleButton value="tablet" title="Tablet">
+              <TabletIcon fontSize="small" />
+            </ToggleButton>
+            <ToggleButton value="desktop" title="Desktop">
               <ComputerIcon fontSize="small" />
             </ToggleButton>
           </ToggleButtonGroup>
@@ -124,7 +136,7 @@ const PreviewPanel: React.FC<Props> = ({ projectId, refreshKey, height = 720, ti
       </Stack>
 
       <Box sx={{ height, display: "flex", alignItems: "flex-start" }}>
-        {iframe(device === "mobile")}
+        {iframe(device)}
       </Box>
 
       {fullscreen && (
@@ -147,10 +159,13 @@ const PreviewPanel: React.FC<Props> = ({ projectId, refreshKey, height = 720, ti
               onChange={(_, v) => v && setDevice(v)}
               sx={{ bgcolor: "background.paper" }}
             >
-              <ToggleButton value="mobile">
+              <ToggleButton value="mobile" title="Phone">
                 <SmartphoneIcon fontSize="small" />
               </ToggleButton>
-              <ToggleButton value="desktop">
+              <ToggleButton value="tablet" title="Tablet">
+                <TabletIcon fontSize="small" />
+              </ToggleButton>
+              <ToggleButton value="desktop" title="Desktop">
                 <ComputerIcon fontSize="small" />
               </ToggleButton>
             </ToggleButtonGroup>
@@ -158,7 +173,7 @@ const PreviewPanel: React.FC<Props> = ({ projectId, refreshKey, height = 720, ti
               <CloseIcon />
             </IconButton>
           </Stack>
-          <Box sx={{ flex: 1, minHeight: 0 }}>{iframe(device === "mobile")}</Box>
+          <Box sx={{ flex: 1, minHeight: 0 }}>{iframe(device)}</Box>
         </Box>
       )}
     </>
