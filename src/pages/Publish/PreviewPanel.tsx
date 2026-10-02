@@ -20,11 +20,15 @@ interface Props {
   projectId: number;
   /** Bumped by the parent when branding is saved, to reload the iframe. */
   refreshKey: number;
+  /** The preview area's height (the Test app page fills the window). */
+  height?: number | string;
+  /** Heading above the controls. */
+  title?: string;
 }
 
 type Device = "mobile" | "desktop";
 
-const PreviewPanel: React.FC<Props> = ({ projectId, refreshKey }) => {
+const PreviewPanel: React.FC<Props> = ({ projectId, refreshKey, height = 720, title = "Preview" }) => {
   const [token, setToken] = useState<string | null>(null);
   const [device, setDevice] = useState<Device>("mobile");
   const [fullscreen, setFullscreen] = useState(false);
@@ -33,6 +37,8 @@ const PreviewPanel: React.FC<Props> = ({ projectId, refreshKey }) => {
 
   const reloadKey = `${refreshKey}-${localBump}`;
 
+  // A fresh token on every load, reloads included: tokens last 30 minutes,
+  // and a long test session would otherwise reload into an error.
   useEffect(() => {
     let cancelled = false;
     mintPreviewToken(projectId)
@@ -41,7 +47,7 @@ const PreviewPanel: React.FC<Props> = ({ projectId, refreshKey }) => {
     return () => {
       cancelled = true;
     };
-  }, [projectId]);
+  }, [projectId, refreshKey, localBump]);
 
   const src = token
     ? `${webappUrl()}/?preview=1&project_id=${projectId}&token=${encodeURIComponent(
@@ -55,6 +61,7 @@ const PreviewPanel: React.FC<Props> = ({ projectId, refreshKey }) => {
         width: mobile ? 390 : "100%",
         maxWidth: "100%",
         height: mobile ? 720 : "100%",
+        maxHeight: "100%",
         mx: "auto",
         border: "1px solid",
         borderColor: "divider",
@@ -88,7 +95,7 @@ const PreviewPanel: React.FC<Props> = ({ projectId, refreshKey }) => {
   return (
     <>
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1.5 }}>
-        <Typography variant="h6">Preview</Typography>
+        <Typography variant="h6">{title}</Typography>
         <Stack direction="row" spacing={1} alignItems="center">
           <ToggleButtonGroup
             size="small"
@@ -116,7 +123,7 @@ const PreviewPanel: React.FC<Props> = ({ projectId, refreshKey }) => {
         </Stack>
       </Stack>
 
-      <Box sx={{ height: 720, display: "flex", alignItems: "flex-start" }}>
+      <Box sx={{ height, display: "flex", alignItems: "flex-start" }}>
         {iframe(device === "mobile")}
       </Box>
 

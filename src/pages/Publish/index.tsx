@@ -76,6 +76,32 @@ export const CustomizePage: React.FC = () => {
   );
 };
 
+/**
+ * The web app itself, full size, to try out as a participant would: the same
+ * live preview as Customize and Publish, with the page to itself. Anything
+ * recorded here is a real contribution to the project.
+ */
+export const TestAppPage: React.FC = () => {
+  const { selectedProject } = useProjects();
+  if (!selectedProject) return <NoProject title="Test app" what="try it" />;
+  return (
+    <Container maxWidth="xl" sx={{ py: 3 }}>
+      <Title title="Test app" />
+      <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+        The app as participants will use it, whether or not it's published
+        yet. Anything you record here is added to the project like any other
+        contribution.
+      </Typography>
+      <PreviewPanel
+        projectId={selectedProject.id}
+        refreshKey={0}
+        title="Test app"
+        height="calc(100vh - 230px)"
+      />
+    </Container>
+  );
+};
+
 /** Where the app lives: its web address, deploying and unpublishing. */
 const PublishPage: React.FC = () => {
   const { selectedProject } = useProjects();

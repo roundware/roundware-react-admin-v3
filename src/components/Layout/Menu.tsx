@@ -3,6 +3,7 @@ import {
   AddCircleOutline,
   GraphicEq,
   Palette,
+  PlayCircleOutline,
   Business,
   Groups,
   Settings,
@@ -89,6 +90,14 @@ export const Menu = (props: MenuProps) => {
             primaryText="Customize"
             leftIcon={<Palette />}
             to={{ pathname: `/project/${selectedProject.id}/customize` }}
+          />
+        )}
+        {selectedProject && (
+          <MenuItemLink
+            key="test-app"
+            primaryText="Test app"
+            leftIcon={<PlayCircleOutline />}
+            to={{ pathname: `/project/${selectedProject.id}/test-app` }}
           />
         )}
         {selectedProject && (

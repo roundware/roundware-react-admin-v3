@@ -37,7 +37,7 @@ import {
 } from "./components/Language";
 import CustomLayout from "./components/Layout";
 import Dashboard from "./components/Layout/Dashboard";
-import PublishPage, { CustomizePage } from "./pages/Publish";
+import PublishPage, { CustomizePage, TestAppPage } from "./pages/Publish";
 import {
     ListenEventsCreate,
     ListenEventsEdit,
@@ -163,6 +163,7 @@ function App({ basename }: { basename: string }): JSX.Element {
           <Route path="/customize" element={<CustomizePage />} />
           <Route path="/publish" element={<PublishPage />} />
           <Route path="/audio-lab" element={<AudioLabPage />} />
+          <Route path="/test-app" element={<TestAppPage />} />
           <Route path="/team" element={<TeamMembersPage />} />
           <Route path="/settings" element={<TenantSettingsPage />} />
           <Route path="/plan" element={<PlanPage />} />
