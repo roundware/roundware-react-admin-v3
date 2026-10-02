@@ -16,7 +16,11 @@ import {
 } from "@mui/material";
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import { useProjects } from "context/ProjectsContext";
+import { merge } from "lodash";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useProjectPalette } from "../../hooks/useProjectPalette";
+import { ISpeaker } from "../../types/speaker";
+import { polygonToGoogleMapPaths } from "../../utilities";
 import webAppDefaults from "../../config/webAppDefaults.json";
 import webAppMapStyle from "../../config/webAppMapStyle.json";
 import { apiFetcher } from "../../roundwareDataProvider/tokenAuthProvider";
@@ -27,6 +31,7 @@ import {
 import { mapLibraries, mapsApiVersion } from "../../utils";
 import { errMessage, getBranding } from "./api";
 import BrandingFilesPanel from "./BrandingFilesPanel";
+import SpeakerMapLayer from "./SpeakerMapLayer";
 
 /**
  * One map for everything about how the listen map looks: whether speakers
@@ -119,6 +124,12 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
 
   const [loaded, setLoaded] = useState(false);
   const [overlayUrl, setOverlayUrl] = useState<string | null>(null);
+  // Drawn on the map as the app will draw them, with the project's speaker
+  // image and its map config (defaults merged with its overrides).
+  const [speakers, setSpeakers] = useState<ISpeaker[]>([]);
+  const [speakerImageUrl, setSpeakerImageUrl] = useState<string | null>(null);
+  const [mapConfig, setMapConfig] = useState<Record<string, any>>(DEFAULT_MAP);
+  const palette = useProjectPalette(projectId);
   const [enabled, setEnabled] = useState(false);
   const [speakerDisplay, setSpeakerDisplay] = useState<SpeakerDisplay>(DEFAULT_SPEAKER_DISPLAY);
   const [center, setCenter] = useState(projectCenter);
@@ -161,10 +172,19 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([apiFetcher(`/projects/${projectId}/`), getBranding(projectId)])
-      .then(([{ json: project }, branding]) => {
+    Promise.all([
+      apiFetcher(`/projects/${projectId}/`),
+      getBranding(projectId),
+      apiFetcher(`/speakers/?project_id=${projectId}`).catch(() => ({ json: [] })),
+    ])
+      .then(([{ json: project }, branding, { json: speakerRows }]) => {
         if (cancelled) return;
         const map = (project?.ui_config_json?.map ?? {}) as Record<string, any>;
+        setMapConfig(merge({}, DEFAULT_MAP, map));
+        const rows = (Array.isArray(speakerRows) ? speakerRows : speakerRows?.results ?? []) as ISpeaker[];
+        // The app plays and draws active speakers only.
+        setSpeakers(rows.filter((s) => s.is_active !== false));
+        setSpeakerImageUrl(branding.files?.speaker_image?.urls?.[0] ?? null);
         const overlay: OverlayConfig = { ...DEFAULT_OVERLAY, ...(map.mapOverlay ?? {}) };
         const saved = {
           speakerDisplay: (map.speakerDisplay ?? DEFAULT_SPEAKER_DISPLAY) as SpeakerDisplay,
@@ -185,15 +205,17 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
     };
   }, [projectId, applySaved]);
 
-  // Re-read just the image after a branding save — not the placement, which
-  // may hold unsaved edits. The first load above already has it.
+  // Re-read just the images after a branding save — not the placement, which
+  // may hold unsaved edits. The first load above already has them.
   const firstBrandingVersion = useRef(brandingVersion);
   useEffect(() => {
     if (brandingVersion === firstBrandingVersion.current) return;
     let cancelled = false;
     getBranding(projectId)
       .then((branding) => {
-        if (!cancelled) setOverlayUrl(branding.files?.map_overlay?.urls?.[0] ?? null);
+        if (cancelled) return;
+        setOverlayUrl(branding.files?.map_overlay?.urls?.[0] ?? null);
+        setSpeakerImageUrl(branding.files?.speaker_image?.urls?.[0] ?? null);
       })
       .catch(() => undefined); // Keeps the image it had; a reload will catch up.
     return () => {
@@ -221,6 +243,19 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
   useEffect(() => {
     overlayRef.current?.setPlacement(placement);
   }, [center.lat, center.lng, widthMeters, rotation, opacity]);
+
+  // Open on the speakers when there are any: a speaker is often far larger
+  // than the zoom-18 view around the project location, which then showed
+  // only a tint. Once, so it doesn't move while the overlay is placed.
+  const fitted = useRef(false);
+  useEffect(() => {
+    if (!map || fitted.current || !speakers.length) return;
+    const bounds = new google.maps.LatLngBounds();
+    speakers.forEach((s) => s.shape && polygonToGoogleMapPaths(s.shape as any).forEach((p) => bounds.extend(p)));
+    if (overlayUrl) bounds.extend(center);
+    if (!bounds.isEmpty()) map.fitBounds(bounds, 24);
+    fitted.current = true;
+  }, [map, speakers]);
 
   const touch = <T,>(setter: (v: T) => void) => (v: T) => {
     setter(v);
@@ -266,7 +301,8 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
         styleText,
       };
       setDirty(false);
-      setSavedNote("Saved. The preview above now shows it.");
+      setMapConfig(merge({}, DEFAULT_MAP, mapSection));
+      setSavedNote("Saved. Participants see it the next time they open the map.");
       onSaved?.();
     } catch (e) {
       setError(errMessage(e));
@@ -335,6 +371,15 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
               fullscreenControl: true,
             }}
           >
+            {palette && (
+              <SpeakerMapLayer
+                speakers={speakers}
+                display={speakerDisplay}
+                mapConfig={mapConfig}
+                palette={palette}
+                imageUrl={speakerImageUrl}
+              />
+            )}
             {overlayUrl && (
               <MarkerF
                 position={center}

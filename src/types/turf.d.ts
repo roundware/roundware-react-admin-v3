@@ -137,3 +137,31 @@ declare module "@turf/polygon-to-line" {
     polygon: Feature<Polygon> | Polygon
   ): Feature<Geometry>;
 }
+
+// For Map appearance's speaker images (utilities/speakerImageBounds.ts).
+declare module "@turf/destination" {
+  import { Feature, Point, Position, Units } from "@turf/helpers";
+  export default function destination(
+    origin: Feature<Point> | Point | Position,
+    distance: number,
+    bearing: number,
+    options?: { units?: Units }
+  ): Feature<Point>;
+}
+
+declare module "@turf/distance" {
+  import { Feature, Point, Position, Units } from "@turf/helpers";
+  export default function distance(
+    from: Feature<Point> | Point | Position,
+    to: Feature<Point> | Point | Position,
+    options?: { units?: Units }
+  ): number;
+}
+
+declare module "@turf/midpoint" {
+  import { Feature, Point, Position } from "@turf/helpers";
+  export default function midpoint(
+    point1: Feature<Point> | Point | Position,
+    point2: Feature<Point> | Point | Position
+  ): Feature<Point>;
+}
