@@ -97,8 +97,11 @@ const GROUPS: Group[] = [
     icon: <DesignServices />,
     openByDefault: () => true,
     items: [
-      page("customize", "Customize", "customize", "admin", <Palette />),
+      page("customize", "Look & Feel", "customize", "admin", <Palette />),
       page("audio-lab", "Audio lab", "audio-lab", "admin", <GraphicEq />),
+      // Audio tracks: how contributions are played — which, when, how they
+      // fade. Beside Audio lab, which shapes how speakers sound.
+      resource("audiotracks", "Playback", "editor"),
       resource("tags", "Tags", "editor"),
       resource("uigroups", "Filters & menus", "editor"),
       // The selected project's own settings (projects/:id is its edit page).
@@ -129,19 +132,20 @@ const GROUPS: Group[] = [
     // Superusers work in here; for everyone else it stays out of the way.
     openByDefault: (role) => role === "superuser",
     items: [
-      resource("audiotracks", "Audio tracks", "editor"),
       resource("timedassets", "Timed assets", "editor"),
       resource("tagcategories", "Tag categories", "editor"),
       { ...resource("languages", "Languages", "admin"), icon: <Translate /> },
       resource("localizedstrings", "Translations", "editor"),
-      resource("notifications", "Notifications", "editor"),
+      // Notifications are hidden until they are reworked (backlog 010): the
+      // rules can be created, but nothing sends them.
     ],
   },
   {
     key: "organization",
     label: "Organization",
     icon: <Groups />,
-    openByDefault: () => true,
+    // Visited now and then, not daily.
+    openByDefault: () => false,
     items: [
       { key: "team", label: "Team", path: "/team", inProject: false, min: "viewer", icon: <Groups /> },
       { key: "settings", label: "Settings", path: "/settings", inProject: false, min: "owner", icon: <Settings /> },
@@ -209,9 +213,11 @@ export const Menu = (props: MenuProps) => {
 
   const href = (item: Item): string => {
     const pid = selectedProject?.id;
-    // All projects is tenant-wide, but reached from inside a project too.
-    if (item.key === "all-projects" && pid) return `/project/${pid}/projects`;
-    if (!item.inProject) return item.path;
+    if (!item.inProject) {
+      // Tenant-wide pages, but opened within the selected project when there
+      // is one: a bare /team left the project, and the sidebar with it.
+      return pid ? `/project/${pid}${item.path}` : item.path;
+    }
     return `/project/${pid}/${item.path.replace(":id", String(pid))}`.replace(/\/$/, "");
   };
 

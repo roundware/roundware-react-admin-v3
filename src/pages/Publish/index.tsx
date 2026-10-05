@@ -28,14 +28,14 @@ export const CustomizePage: React.FC = () => {
   const [refreshKey, setRefreshKey] = useState(0);
   const handleSaved = useCallback(() => setRefreshKey((k) => k + 1), []);
 
-  if (!selectedProject) return <NoProject title="Customize" what="customize it" />;
+  if (!selectedProject) return <NoProject title="Look & Feel" what="change how it looks" />;
   const projectId = selectedProject.id;
 
   return (
     <Container maxWidth="xl" sx={{ py: 3 }}>
-      <Title title="Customize" />
+      <Title title="Look & Feel" />
       <Typography variant="h4" gutterBottom>
-        Customize
+        Look &amp; Feel
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
         How the app looks and reads. The preview shows exactly what participants will see.
@@ -78,7 +78,7 @@ export const CustomizePage: React.FC = () => {
 
 /**
  * The web app itself, full size, to try out as a participant would: the same
- * live preview as Customize and Publish, with the page to itself. Anything
+ * live preview as Look & Feel and Publish, with the page to itself. Anything
  * recorded here is a real contribution to the project.
  */
 export const TestAppPage: React.FC = () => {

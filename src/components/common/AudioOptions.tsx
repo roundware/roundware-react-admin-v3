@@ -4,11 +4,9 @@ import {
     Grid,
     Stack,
     TextField,
-    Theme,
     Typography,
 } from "@mui/material";
 import Card from "@mui/material/Card";
-import makeStyles from "@mui/styles/makeStyles";
 import { useEffect } from "react";
 import useFieldValue from "../../hooks/useFieldValue";
 import CustomSlider from "./CustomSlider";
@@ -22,7 +20,6 @@ const AudioOptions = (): JSX.Element => {
   const [file] = useFieldValue(`file`);
   const [, setVolume] = useFieldValue(`volume`);
   const [durationInSec] = useFieldValue(`audio_length_sec`);
-  const styles = useStyles();
 
   useEffect(() => {
     if (typeof file !== "string") setVolume(1);
@@ -51,14 +48,14 @@ const AudioOptions = (): JSX.Element => {
               </Stack>
             </Grid>
           </Grid>
-          <Grid container className={styles.timesContainer} spacing={0}>
+          <Grid container sx={timesContainerSx} spacing={0}>
             <Grid size={{ xs: 4 }}>
               <TextField
                 value={typeof startTime === 'number' ? startTime.toFixed(2) : '0.00'}
                 variant="filled"
                 label="Start"
                 fullWidth
-                InputProps={{ readOnly: true, className: styles.inputLeft }}
+                InputProps={{ readOnly: true, sx: inputLeftSx }}
               />
             </Grid>
             <Grid size={{ xs: 4 }}>
@@ -67,7 +64,7 @@ const AudioOptions = (): JSX.Element => {
                 variant="filled"
                 label="End"
                 fullWidth
-                InputProps={{ readOnly: true, className: styles.inputRight }}
+                InputProps={{ readOnly: true, sx: inputRightSx }}
               />
             </Grid>
             <Grid size={{ xs: 4 }}>
@@ -76,7 +73,7 @@ const AudioOptions = (): JSX.Element => {
                 variant="filled"
                 label="Audio Length (s)"
                 fullWidth
-                InputProps={{ className: styles.inputBottom, readOnly: true }}
+                InputProps={{ sx: inputBottomSx, readOnly: true }}
                 inputProps={{ style: { color: 'rgba(0,0,0,0.6)' } }}
               />
             </Grid>
@@ -89,43 +86,16 @@ const AudioOptions = (): JSX.Element => {
 
 export default AudioOptions;
 
-const useStyles = makeStyles((theme: Theme) => ({
-  inputLeft: {
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
-    border: "none",
-    "& .MuiFilledInput-root": {
-      borderRadius: 0,
-    },
-  },
-  inputRight: {
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0,
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
-    border: "none",
-    "& .MuiFilledInput-root": {
-      borderRadius: 0,
-    },
-  },
-  inputBottom: {
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0,
-    "& .MuiFilledInput-root": {
-      borderRadius: 0,
-    },
-  },
-  timesContainer: {
-    borderRadius: theme.shape?.borderRadius || 4,
-    border: "1px solid",
-    borderColor: "rgba(0, 0, 0, 0.47)",
-    margin: 0,
-    padding: 0,
-    "& .MuiGrid-item": {
-      padding: 0,
-    },
-  },
-  labelStyle: {
-    fontSize: 16,
-  },
-}));
+// Three read-only fields joined into one box. (Were makeStyles classes, from
+// @mui/styles, which gets no theme under MUI v7 and crashed the form.)
+const square = { "& .MuiFilledInput-root": { borderRadius: 0 } };
+const inputLeftSx = { borderTopRightRadius: 0, borderBottomRightRadius: 0, border: "none", ...square };
+const inputRightSx = { borderRadius: 0, border: "none", ...square };
+const inputBottomSx = { borderTopLeftRadius: 0, borderBottomLeftRadius: 0, ...square };
+const timesContainerSx = {
+  borderRadius: 1,
+  border: "1px solid",
+  borderColor: "rgba(0, 0, 0, 0.47)",
+  m: 0,
+  p: 0,
+};

@@ -9,9 +9,7 @@ import {
     Typography,
     Button,
     LinearProgress,
-    Theme,
 } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
     RaRecord,
@@ -75,12 +73,11 @@ const DeleteUiGroupButton = (): JSX.Element => {
             setLoading(false);
         }
     };
-    const classes = useStyles();
     return (
         <>
             <IconButton
                 size="small"
-                className={classes.root}
+                sx={{ color: "error.main" }}
                 onClick={() => setShowConfirm(true)}
             >
                 <DeleteIcon />
@@ -109,9 +106,4 @@ const DeleteUiGroupButton = (): JSX.Element => {
     );
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        color: theme.palette.error.main,
-    },
-}));
 export default DeleteUiGroupButton;

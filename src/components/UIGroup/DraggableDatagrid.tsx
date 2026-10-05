@@ -5,13 +5,10 @@ import {
     type OnDragEndResponder,
 } from "@hello-pangea/dnd";
 import ReorderIcon from "@mui/icons-material/DragHandle";
-import { CircularProgress, Fade } from "@mui/material";
-import { Theme } from "@mui/material/styles";
+import { Box, CircularProgress, Fade } from "@mui/material";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import createStyles from "@mui/styles/createStyles";
-import makeStyles from "@mui/styles/makeStyles";
 import { useBuildUI } from "context/BuildUIContext";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
 import React, { useMemo, useState } from "react";
@@ -26,6 +23,7 @@ import {
     FieldProps,
     RaRecord,
     RecordContextProvider,
+    useRecordContext,
     UpdateResult,
     useListContext,
     useNotify,
@@ -40,30 +38,9 @@ export const DraggableDatagrid = (props: DatagridProps): JSX.Element => (
 );
 
  
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    wrapper: {
-      position: "absolute",
-
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-    },
-    overlay: {
-      height: "100%",
-      width: "100%",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "rgba(0,0,0,0.1)",
-    },
-  })
-);
 
 const DraggableDatagridBody = (props: DatagridBodyProps) => {
   const [loading, setLoading] = useState(false);
-  const classes = useStyles();
   const notify = useNotify();
   const { refetch, data } = useListContext();
   const dataProvider = useRoundwareDataProvider();
@@ -188,13 +165,22 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
   return (
     <>
       {loading && (
-        <div className={classes.wrapper}>
+        <Box sx={{ position: "absolute", inset: 0 }}>
           <Fade in>
-            <div className={classes.overlay}>
+            <Box
+              sx={{
+                height: "100%",
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(0,0,0,0.1)",
+              }}
+            >
               <CircularProgress />
-            </div>
+            </Box>
           </Fade>
-        </div>
+        </Box>
       )}
 
       <DragDropContext onDragEnd={handleDragEnd}>
@@ -218,10 +204,15 @@ const DraggableDatagridBody = (props: DatagridBodyProps) => {
 
 const DraggableDatagridRow = ({
   children,
-  record,
-  id,
+  record: recordProp,
+  id: idProp,
   resource,
 }: DatagridRowProps) => {
+  // react-admin v5 gives a row its record through context, not props; read
+  // only from props, every cell rendered empty.
+  const contextRecord = useRecordContext();
+  const record = recordProp ?? contextRecord;
+  const id = idProp ?? record?.id;
   return (
     <>
       <Draggable

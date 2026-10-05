@@ -203,7 +203,7 @@ function buildResourceLookup(canEdit: boolean): { [index: string]: React.ReactNo
     audiotracks: (
       <Resource name="audiotracks" key="audiotracks" list={AudioTrackList}
         edit={e ? AudioTrackEdit : undefined} create={e ? AudioTrackCreate : undefined}
-        icon={Audiotrack} options={{ label: "Audio tracks" }} />
+        icon={Audiotrack} options={{ label: "Playback" }} />
     ),
     speakers: (
       <Resource name="speakers" key="speakers" list={SpeakerList}

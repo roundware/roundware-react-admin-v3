@@ -22,7 +22,6 @@ import {
     Typography,
 } from "@mui/material";
 import { alpha, Theme } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
 import { useBuildUI } from "context/BuildUIContext";
 import { useRoundwareDataProvider } from "context/DataProviderContext";
 import { useCallback, useState } from "react";
@@ -55,7 +54,6 @@ const UIItemsTreeView = (): JSX.Element => {
     });
   };
 
-  const classes = useStyles();
 
   const renderTreeItems = useCallback(
     (items: UiItemNode[]) => {
@@ -103,10 +101,7 @@ const UIItemsTreeView = (): JSX.Element => {
                             {...provided.draggableProps}
                             ref={provided.innerRef}
                             nodeId={i.id?.toString()}
-                            className={classes.treeItem}
-                            classes={{
-                              group: classes.treeItemGroup,
-                            }}
+                            sx={treeItemSx}
                             label={
                               <TreeItemLabel
                                 uiItem={i}
@@ -297,13 +292,15 @@ const UIItemsTreeView = (): JSX.Element => {
   );
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
-  treeItem: {},
-  treeItemGroup: {
-    marginLeft: 7,
-    paddingLeft: 18,
-    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
+
+// Nested items hang off a dashed guide line. (Was makeStyles, from
+// @mui/styles, which gets no theme under MUI v7 and crashed the page.)
+const treeItemSx = {
+  "& .MuiTreeItem-group": {
+    marginLeft: "7px",
+    paddingLeft: "18px",
+    borderLeft: (theme: Theme) => `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
   },
-}));
+};
 
 export default UIItemsTreeView;

@@ -24,6 +24,7 @@ import {
   Container,
   FormControlLabel,
   Grid,
+  Link,
   MenuItem,
   Slider,
   Stack,
@@ -34,6 +35,7 @@ import {
 import { isEqual } from "lodash";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Title, useNotify } from "react-admin";
+import { Link as RouterLink } from "react-router-dom";
 import { useProjects } from "../../context/ProjectsContext";
 import { apiFetcher } from "../../roundwareDataProvider/tokenAuthProvider";
 import { errMessage, mintPreviewToken, webappUrl } from "../Publish/api";
@@ -323,7 +325,12 @@ const AudioLabPage: React.FC = () => {
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
         How this project sounds and records. Pick a speaker and press play to hear effects changes
-        as you make them.
+        as you make them. Which contributions play, when, and how they fade in and out is set
+        under{" "}
+        <Link component={RouterLink} to={`/project/${selectedProject.id}/audiotracks`}>
+          Playback
+        </Link>
+        .
       </Typography>
 
       {labError && <Alert severity="error" sx={{ mb: 2 }}>{labError}</Alert>}
