@@ -1,6 +1,7 @@
 import React from "react";
 import { CircularProgress, Stack, Typography } from "@mui/material";
 import BrandingFilesPanel from "./BrandingFilesPanel";
+import DialogWordingEditor from "./DialogWordingEditor";
 import InfoPanelEditor from "./InfoPanelEditor";
 import LookAndFeelPanel from "./LookAndFeelPanel";
 import { BrandingTextField, BrandingTextProvider, LanguageSwitch, useBrandingText } from "./brandingText";
@@ -32,7 +33,7 @@ const BrandingPanel: React.FC<Props> = ({ projectId, onSaved }) => (
       <BrandingTextField
         field="intro_button_text"
         label="Intro button"
-        helperText="The button that starts the experience, e.g. ENTER or TAKE PART."
+        helperText="The button that starts the experience. Leave empty for the app's own (ENTER in English), in each language."
       />
 
       <LookAndFeelPanel projectId={projectId} onSaved={onSaved} />
@@ -40,6 +41,8 @@ const BrandingPanel: React.FC<Props> = ({ projectId, onSaved }) => (
       <BrandingFilesPanel projectId={projectId} onSaved={onSaved} />
 
       <InfoPanelEditor />
+
+      <DialogWordingEditor />
     </Stack>
   </BrandingTextProvider>
 );
