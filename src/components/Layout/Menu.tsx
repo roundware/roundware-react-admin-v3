@@ -99,16 +99,16 @@ const GROUPS: Group[] = [
     openByDefault: () => true,
     items: [
       page("customize", "Look & Feel", "customize", "admin", <Palette />),
-      // The app's built-in wording, and the project's own, per language.
-      page("app-wording", "App wording", "app-wording", "admin", <TextFields />),
-      page("audio-lab", "Audio lab", "audio-lab", "admin", <GraphicEq />),
+      // The app's built-in copy, and the project's own, per language.
+      page("app-copy", "App Copy", "app-copy", "admin", <TextFields />),
+      page("audio-lab", "Audio Lab", "audio-lab", "admin", <GraphicEq />),
       // Audio tracks: how contributions are played — which, when, how they
-      // fade. Beside Audio lab, which shapes how speakers sound.
-      resource("audiotracks", "Playback", "editor"),
+      // fade. Beside Audio Lab, which shapes how speakers sound.
+      resource("audiotracks", "Playback Settings", "editor"),
       resource("tags", "Tags", "editor"),
-      resource("uigroups", "Filters & menus", "editor"),
+      resource("uigroups", "Filters & Menus", "editor"),
       // The selected project's own settings (projects/:id is its edit page).
-      page("project", "Project settings", "projects/:id", "admin", <AccountTree />),
+      page("project", "Project Settings", "projects/:id", "admin", <AccountTree />),
     ],
   },
   {
@@ -117,7 +117,7 @@ const GROUPS: Group[] = [
     icon: <Campaign />,
     openByDefault: () => true,
     items: [
-      page("test-app", "Test app", "test-app", "viewer", <PlayCircleOutline />),
+      page("test-app", "Test App", "test-app", "viewer", <PlayCircleOutline />),
       page("publish", "Publish", "publish", "admin", <PublicIcon />),
     ],
   },
@@ -126,7 +126,7 @@ const GROUPS: Group[] = [
     label: "Activity",
     icon: <Insights />,
     openByDefault: () => false,
-    items: [resource("sessions", "Sessions", "admin"), resource("listenevents", "Listen events", "admin")],
+    items: [resource("sessions", "Sessions", "admin"), resource("listenevents", "Listen Events", "admin")],
   },
   {
     key: "advanced",
@@ -135,12 +135,12 @@ const GROUPS: Group[] = [
     // Superusers work in here; for everyone else it stays out of the way.
     openByDefault: (role) => role === "superuser",
     items: [
-      resource("timedassets", "Timed assets", "editor"),
-      resource("tagcategories", "Tag categories", "editor"),
+      resource("timedassets", "Timed Assets", "editor"),
+      resource("tagcategories", "Tag Categories", "editor"),
       { ...resource("languages", "Languages", "admin"), icon: <Translate /> },
       // "Translations" (raw localization rows) is gone: every text is
-      // translated where it's edited, and the app's own wording on App
-      // wording. The resource stays registered for direct links.
+      // translated where it's edited, and the app's own copy on App
+      // Copy. The resource stays registered for direct links.
       // Notifications are hidden until they are reworked (backlog 010): the
       // rules can be created, but nothing sends them.
     ],
@@ -166,7 +166,7 @@ const GROUPS: Group[] = [
       { key: "tenants", label: "Tenants", path: "/tenants", inProject: false, min: "superuser", icon: <Business /> },
       // Every project in the current tenant, as tiles. Across all tenants is
       // backlogged (010).
-      { key: "all-projects", label: "All projects", path: "/projects", inProject: false, min: "superuser", icon: <CategoryOutlined /> },
+      { key: "all-projects", label: "All Projects", path: "/projects", inProject: false, min: "superuser", icon: <CategoryOutlined /> },
     ],
   },
 ];

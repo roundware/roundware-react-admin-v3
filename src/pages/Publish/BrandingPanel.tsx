@@ -1,7 +1,7 @@
 import React from "react";
 import { CircularProgress, Stack, Typography } from "@mui/material";
 import BrandingFilesPanel from "./BrandingFilesPanel";
-import DialogWordingEditor from "./DialogWordingEditor";
+import DialogCopyEditor from "./DialogCopyEditor";
 import InfoPanelEditor from "./InfoPanelEditor";
 import LookAndFeelPanel from "./LookAndFeelPanel";
 import { BrandingTextField, BrandingTextProvider, LanguageSwitch, useBrandingText } from "./brandingText";
@@ -42,7 +42,7 @@ const BrandingPanel: React.FC<Props> = ({ projectId, onSaved }) => (
 
       <InfoPanelEditor />
 
-      <DialogWordingEditor />
+      <DialogCopyEditor />
     </Stack>
   </BrandingTextProvider>
 );

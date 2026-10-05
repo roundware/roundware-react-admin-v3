@@ -87,7 +87,7 @@ import CustomLoginPage from "./pages/CustomLoginPage";
 import ProjectWizardPage from "./pages/ProjectWizard";
 import TeamMembersPage from "./pages/TeamMembersPage";
 import TenantSettingsPage from "./pages/TenantSettingsPage";
-import AppWordingPage from "./pages/AppWording";
+import AppCopyPage from "./pages/AppCopy";
 import AudioLabPage from "./pages/AudioLab";
 import PlanPage from "./pages/PlanPage";
 import adminTheme from "./styles";
@@ -165,7 +165,7 @@ function App({ basename }: { basename: string }): JSX.Element {
           <Route path="/publish" element={<PublishPage />} />
           <Route path="/audio-lab" element={<AudioLabPage />} />
           <Route path="/test-app" element={<TestAppPage />} />
-          <Route path="/app-wording" element={<AppWordingPage />} />
+          <Route path="/app-copy" element={<AppCopyPage />} />
           <Route path="/team" element={<TeamMembersPage />} />
           <Route path="/settings" element={<TenantSettingsPage />} />
           <Route path="/plan" element={<PlanPage />} />
@@ -195,17 +195,17 @@ function buildResourceLookup(canEdit: boolean): { [index: string]: React.ReactNo
     timedassets: (
       <Resource name="timedassets" key="timedassets" list={TimedAssetList}
         edit={e ? TimedAssetEdit : undefined} create={e ? TimedAssetCreate : undefined}
-        icon={WebAsset} options={{ label: "Timed assets" }} />
+        icon={WebAsset} options={{ label: "Timed Assets" }} />
     ),
     uigroups: (
       <Resource name="uigroups" key="uigroups" list={UiGroupList}
         edit={e ? UiGroupEdit : undefined} create={e ? UiGroupCreate : undefined}
-        icon={Build} options={{ label: "Filters & menus" }} />
+        icon={Build} options={{ label: "Filters & Menus" }} />
     ),
     audiotracks: (
       <Resource name="audiotracks" key="audiotracks" list={AudioTrackList}
         edit={e ? AudioTrackEdit : undefined} create={e ? AudioTrackCreate : undefined}
-        icon={Audiotrack} options={{ label: "Playback" }} />
+        icon={Audiotrack} options={{ label: "Playback Settings" }} />
     ),
     speakers: (
       <Resource name="speakers" key="speakers" list={SpeakerList}
@@ -220,7 +220,7 @@ function buildResourceLookup(canEdit: boolean): { [index: string]: React.ReactNo
     listenevents: (
       <Resource name="listenevents" key="listenevents" list={ListenEventsList}
         edit={e ? ListenEventsEdit : undefined} create={e ? ListenEventsCreate : undefined}
-        icon={Hearing} options={{ label: "Listen events" }} />
+        icon={Hearing} options={{ label: "Listen Events" }} />
     ),
     sessions: (
       <Resource name="sessions" key="sessions" list={SessionList}
@@ -234,7 +234,7 @@ function buildResourceLookup(canEdit: boolean): { [index: string]: React.ReactNo
     ),
     tagcategories: (
       <Resource name="tagcategories" key="tagcategories"
-        options={{ label: "Tag categories" }} list={TagCategoryList}
+        options={{ label: "Tag Categories" }} list={TagCategoryList}
         edit={e ? TagCategoryEdit : undefined} create={e ? TagCategoryCreate : undefined}
         icon={Label} />
     ),

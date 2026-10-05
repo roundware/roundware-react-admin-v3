@@ -83,10 +83,10 @@ export const CustomizePage: React.FC = () => {
  */
 export const TestAppPage: React.FC = () => {
   const { selectedProject } = useProjects();
-  if (!selectedProject) return <NoProject title="Test app" what="try it" />;
+  if (!selectedProject) return <NoProject title="Test App" what="try it" />;
   return (
     <Container maxWidth="xl" sx={{ py: 3 }}>
-      <Title title="Test app" />
+      <Title title="Test App" />
       <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
         The app as participants will use it, whether or not it's published
         yet. Anything you record here is added to the project like any other
@@ -95,7 +95,7 @@ export const TestAppPage: React.FC = () => {
       <PreviewPanel
         projectId={selectedProject.id}
         refreshKey={0}
-        title="Test app"
+        title="Test App"
         height="calc(100vh - 230px)"
       />
     </Container>

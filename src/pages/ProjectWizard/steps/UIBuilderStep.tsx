@@ -95,7 +95,7 @@ const UIBuilderStep: React.FC<UIBuilderStepProps> = ({ state, dispatch }) => {
   if (categories.length === 0) {
     return (
       <Box>
-        <StepInstruction title="Filters & menus">
+        <StepInstruction title="Filters & Menus">
           You need to create tag categories in the previous step before
           configuring the UI.
         </StepInstruction>

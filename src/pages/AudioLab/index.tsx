@@ -278,7 +278,7 @@ const AudioLabPage: React.FC = () => {
   if (!selectedProject) {
     return (
       <Container sx={{ py: 4 }}>
-        <Title title="Audio lab" />
+        <Title title="Audio Lab" />
         <Typography color="text.secondary">Select a project first.</Typography>
       </Container>
     );
@@ -319,9 +319,9 @@ const AudioLabPage: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ py: 3 }}>
-      <Title title="Audio lab" />
+      <Title title="Audio Lab" />
       <Typography variant="h4" gutterBottom>
-        Audio lab
+        Audio Lab
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
         How this project sounds and records. Pick a speaker and press play to hear effects changes
@@ -362,7 +362,7 @@ const AudioLabPage: React.FC = () => {
                   component="iframe"
                   ref={iframe}
                   src={labSrc}
-                  title="Audio lab player"
+                  title="Audio Lab player"
                   // The lab page is transparent; the card shows through.
                   sx={{ flex: 1, minWidth: 0, height: 56, border: 0 }}
                 />

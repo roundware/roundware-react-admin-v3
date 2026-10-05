@@ -105,7 +105,7 @@ const CreationProgress: React.FC<CreationProgressProps> = ({
       : []),
     {
       label: "Look & Feel",
-      text: "Set your project's colors, font, logo, images and wording. The preview shows exactly what participants will see.",
+      text: "Set your project's colors, font, logo, images and copy. The preview shows exactly what participants will see.",
       onClick: goTo("/customize"),
     },
     {

@@ -24,7 +24,7 @@ const FIELDS: Array<{ key: string; label: string; multiline?: boolean }> = [
   },
 ];
 
-const DialogWordingEditor: React.FC = () => {
+const DialogCopyEditor: React.FC = () => {
   const ctx = useBrandingText();
   if (!ctx) return null;
   const custom = FIELDS.filter((f) => ctx.get(f.key, ctx.defaultCode).trim()).length;
@@ -33,9 +33,9 @@ const DialogWordingEditor: React.FC = () => {
     <Accordion disableGutters elevation={0} sx={{ "&:before": { display: "none" } }}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ px: 0 }}>
         <Stack direction="row" spacing={1} alignItems="center">
-          <Typography variant="h6">Dialog wording</Typography>
+          <Typography variant="h6">Dialog copy</Typography>
           <Typography variant="caption" color="text.secondary">
-            {custom === 0 ? "Roundware's wording" : `${custom} of your own`}
+            {custom === 0 ? "Roundware's copy" : `${custom} of your own`}
           </Typography>
         </Stack>
       </AccordionSummary>
@@ -43,7 +43,7 @@ const DialogWordingEditor: React.FC = () => {
         <Stack spacing={2}>
           <Typography variant="body2" color="text.secondary">
             The app asks for the microphone and location, and says when sound is needed, in
-            Roundware&apos;s own wording, in each language it supports. Write your own here to
+            Roundware&apos;s own copy, in each language it supports. Write your own here to
             replace it; leave a box empty to keep Roundware&apos;s.
           </Typography>
           {FIELDS.map((f) => (
@@ -61,4 +61,4 @@ const DialogWordingEditor: React.FC = () => {
   );
 };
 
-export default DialogWordingEditor;
+export default DialogCopyEditor;

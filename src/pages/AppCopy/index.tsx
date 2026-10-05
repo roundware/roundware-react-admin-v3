@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// App wording — the web app's built-in wording, and the project's own
+// App Copy — the web app's built-in copy, and the project's own
 // versions of it, per language (roundware-server-v3 docs/017, phase 3).
 //
 // The app ships its wording in a few languages (the catalogues vendored in
@@ -77,7 +77,7 @@ interface Lang {
   name: string;
 }
 
-const AppWordingPage: React.FC = () => {
+const AppCopyPage: React.FC = () => {
   const { selectedProject } = useProjects();
   const projectId = selectedProject?.id;
   const [languages, setLanguages] = useState<Lang[]>([]);
@@ -161,7 +161,7 @@ const AppWordingPage: React.FC = () => {
   if (!selectedProject) {
     return (
       <Container sx={{ py: 4 }}>
-        <Title title="App wording" />
+        <Title title="App Copy" />
         <Typography color="text.secondary">Select a project first.</Typography>
       </Container>
     );
@@ -181,9 +181,9 @@ const AppWordingPage: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ py: 3 }}>
-      <Title title="App wording" />
+      <Title title="App Copy" />
       <Stack direction="row" alignItems="center" spacing={2}>
-        <Typography variant="h4">App wording</Typography>
+        <Typography variant="h4">App Copy</Typography>
         {saving && <CircularProgress size={18} />}
       </Stack>
       <Typography variant="body1" color="text.secondary" sx={{ mt: 1, mb: 2 }}>
@@ -223,7 +223,7 @@ const AppWordingPage: React.FC = () => {
 
       {!shipped && (
         <Alert severity="info" sx={{ mb: 2 }}>
-          Roundware doesn&apos;t come in {langName} yet, so participants see the English wording
+          Roundware doesn&apos;t come in {langName} yet, so participants see the English copy
           (shown in grey) for anything you don&apos;t write here.
         </Alert>
       )}
@@ -282,4 +282,4 @@ const AppWordingPage: React.FC = () => {
   );
 };
 
-export default AppWordingPage;
+export default AppCopyPage;
