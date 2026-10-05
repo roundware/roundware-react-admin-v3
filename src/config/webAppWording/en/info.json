@@ -1,0 +1,9 @@
+{
+	"tabs": {
+		"about": "About",
+		"credits": "Credits",
+		"exhibition": "Exhibition",
+		"artists": "Artists"
+	},
+	"tabsLabel": "Information sections"
+}

@@ -1,0 +1,144 @@
+{
+	"launchButton": "LANCER",
+	"playButton": "LECTURE",
+	"launchTooltip": "TOUCHE {{button}} POUR ÉCOUTER",
+	"loadingAudio": "Chargement de l’audio...",
+	"mixerControls": "Commandes du mixeur",
+	"replay": "Réécouter",
+	"speakButton": "Parler",
+	"assetPlayer": {
+		"unsupported": "Ton navigateur ne prend pas en charge l’audio !"
+	},
+	"history": {
+		"clear": "Effacer l’historique d’écoute",
+		"showOnMap": "Voir sur la carte",
+		"empty": "Tu n’as pas encore d’historique d’écoute. Au fur et à mesure que tu écoutes des enregistrements sur la carte, ils s’afficheront ici pour que tu puisses les redécouvrir."
+	},
+	"drawer": {
+		"filters": "Filtres",
+		"history": "Historique"
+	},
+	"filters": {
+		"title": "Filtrer les enregistrements",
+		"byTags": "Filtrer par tags",
+		"description": "Filtre par description",
+		"descriptionPlaceholder": "Écris quelque chose...",
+		"byUser": "filtrer par utilisateur",
+		"selectTagsPlaceholder": "Choisis-en un ou plusieurs...",
+		"updated": "C’est fait ! Filtres mis à jour."
+	},
+	"dateFilter": {
+		"selectRange": "Choisis une période",
+		"last7Days": "7 derniers jours",
+		"last30Days": "30 derniers jours",
+		"lastYear": "Dernière année",
+		"customRange": "Période personnalisée",
+		"allDates": "Toutes les dates",
+		"startDate": "Date de début",
+		"endDate": "Date de fin"
+	},
+	"speakerToggle": {
+		"title": "Haut-parleurs"
+	},
+	"mixer": {
+		"soundOn": "Son activé",
+		"soundOff": "Son coupé",
+		"skipping": "Remixage de l’audio : on avance !"
+	},
+	"share": {
+		"includeGeo": "Inclure ma position actuelle"
+	},
+	"timeMachine": {
+		"timeBased": "Par date",
+		"orderBased": "Par ordre",
+		"speakerCount_one": "{{count}} haut-parleur",
+		"speakerCount_many": "{{count}} haut-parleurs",
+		"speakerCount_other": "{{count}} haut-parleurs",
+		"automate": "Automatiser",
+		"stop": "Arrêter",
+		"hidePlayButton": "Masquer le bouton Lecture",
+		"hint": "Déplace le curseur pour filtrer les haut-parleurs par date de création"
+	},
+	"addVoice": {
+		"tapToRecord": "TOUCHE POUR ENREGISTRER",
+		"moveCloser": "Rapproche-toi d’un haut-parleur pour enregistrer",
+		"paused": "Les contributions sont en pause",
+		"pausedBadge": "EN PAUSE",
+		"outOfRangeBadge": "HORS DE\nPORTÉE"
+	},
+	"outOfRange": {
+		"title": "Hors de portée",
+		"message": "Tu es hors de la zone de ce projet. Rends-toi dans la zone et réessaie. Merci."
+	},
+	"assetActions": {
+		"download": "télécharger ce fichier audio",
+		"flag": "signale-nous que celui-ci te pose problème !",
+		"like": "dis-nous que tu aimes celui-ci !",
+		"show": "aller à la page de la contribution"
+	},
+	"assetCard": {
+		"descriptionLabel": "Description :",
+		"readMore": "Lire la suite",
+		"description": "Description",
+		"additionalInfo": "Informations complémentaires"
+	},
+	"downloading": {
+		"title": "Téléchargement de l’audio... Patiente un instant",
+		"progress_one": "{{completed}} sur {{count}} fichier",
+		"progress_many": "{{completed}} sur {{count}} fichiers",
+		"progress_other": "{{completed}} sur {{count}} fichiers",
+		"remaining_one": "{{count}} fichier restant",
+		"remaining_many": "{{count}} fichiers restants",
+		"remaining_other": "{{count}} fichiers restants"
+	},
+	"locationRequired": {
+		"title": "Accès à ta position requis",
+		"body": "Activer la position est nécessaire pour participer pleinement à l’expérience de l’œuvre. Tes données de position ne seront ni conservées ni partagées."
+	},
+	"modeToggle": {
+		"walking": "Mode marche",
+		"map": "Mode carte",
+		"switchToWalking": "Passer en mode marche",
+		"switchToMap": "Passer en mode carte",
+		"current": "{{label}} (actuel)"
+	},
+	"walkingErrors": {
+		"outOfRange": {
+			"title": "Hors de portée !",
+			"message": "Le mode marche n’est pas disponible là où tu te trouves ! Tu peux continuer en mode carte."
+		},
+		"permissionDenied": {
+			"title": "Autorisation refusée !",
+			"message": "L’accès à ta position a été refusé ! Réessaie et autorise-le pour utiliser le mode marche."
+		},
+		"failedToDetermineLocation": {
+			"title": "Impossible de déterminer ta position !",
+			"message": "Une erreur s’est produite en déterminant ta position ! Réessaie."
+		},
+		"geolocationTimeout": {
+			"title": "Délai de localisation dépassé !",
+			"message": "Ta position a mis trop de temps à arriver. Approche-toi d’une fenêtre ou sors dehors, puis touche Réessayer."
+		},
+		"insecureContext": {
+			"title": "Connexion non sécurisée",
+			"message": "La géolocalisation nécessite HTTPS. Ouvre le site via une connexion sécurisée (https://)."
+		},
+		"offline": {
+			"title": "Pas de connexion Internet",
+			"message": "Tu es hors ligne. Connecte-toi à Internet et réessaie."
+		},
+		"positionUnavailable": {
+			"title": "Position indisponible",
+			"message": "Le service de localisation est peut-être désactivé ou indisponible. Active le service de localisation et la position exacte / haute précision, puis réessaie."
+		},
+		"locationServicesOff": {
+			"title": "Le service de localisation est désactivé !",
+			"message": "Active le service de localisation dans les réglages de ton appareil et réessaie. Sur iOS : Réglages → Confidentialité et sécurité → Service de localisation. Sur Android : Paramètres → Position. Vérifie aussi que la position exacte / haute précision est activée pour ton navigateur."
+		},
+		"walkingModeNotSupported": {
+			"title": "Mode marche non pris en charge !",
+			"message": "Ton navigateur ne prend pas en charge le mode marche."
+		}
+	},
+	"youAreHere": "Tu es ici"
+}

@@ -1,0 +1,94 @@
+{
+	"consent": {
+		"fallback": "我同意我的录音被用于本项目的艺术创作",
+		"checkingPermission": "正在检查权限……",
+		"requestingPermission": "正在请求权限……",
+		"httpsRequired": "使用麦克风需要 HTTPS。请通过 https:// 或 localhost 访问。",
+		"errors": {
+			"denied": "麦克风权限被拒绝。请在浏览器设置中允许访问麦克风，然后重试。",
+			"notFound": "未找到麦克风。请连接麦克风后重试。",
+			"notSupported": "此浏览器不支持使用麦克风。请换一个浏览器试试。",
+			"failed": "无法访问麦克风。请检查浏览器设置后重试。"
+		}
+	},
+	"steps": {
+		"title": "录音",
+		"rehearse": "跟着循环\n练习演唱",
+		"record": "录下\n你的演唱",
+		"review": "试听并提交\n你的录音"
+	},
+	"stepIndicator": {
+		"rehearse": "练习",
+		"recording": "录音中",
+		"review": "试听"
+	},
+	"controls": {
+		"generating": "正在生成伴唱循环……",
+		"getReady": "准备好录下你想录的任何声音：跟着你听到的唱、即兴发挥、发出声响、哼唱、吹口哨，都可以。请不要说话或唱词。",
+		"haveFun": "玩得开心！",
+		"status": {
+			"idle": "点击播放开始练习",
+			"playing": "准备好演唱时点击录音",
+			"preparing": "正在准备录音……",
+			"countdown": "准备录音……",
+			"recording": "录音中……",
+			"processing": "正在处理录音……"
+		}
+	},
+	"controlButton": {
+		"play": "播放",
+		"playLabel": "播放",
+		"record": "录音",
+		"recordLabel": "录音",
+		"recording": "录音中",
+		"rerecord": "重录",
+		"loadingPreview": "正在加载试听"
+	},
+	"rerecordDialog": {
+		"title": "重录",
+		"description": "确定吗？\n你的录音将会丢失。",
+		"confirm": "是，重录"
+	},
+	"exitDialog": {
+		"title": "退出录音",
+		"description": "确定要停止吗？\n你的录音将会丢失。",
+		"confirm": "是，退出"
+	},
+	"leaveDialog": {
+		"message": "确定不提交录音就离开吗？离开后，你的录音将被删除。",
+		"stay": "保留录音",
+		"leave": "删除录音"
+	},
+	"thankYouDialog": {
+		"title": "谢谢你！",
+		"description": "你的声音正在加入这个项目。可能需要几轮循环，但很快你就能在这个地点听到自己和其他人的声音融合在一起。"
+	},
+	"levelMeter": {
+		"tooQuiet": "再大声一点！",
+		"gettingThere": "快好了……",
+		"good": "音量不错！",
+		"perfect": "完美！",
+		"gettingLoud": "有点大声了……",
+		"tooLoud": "离麦克风远一点！"
+	},
+	"submission": {
+		"submit": "提交录音",
+		"uploading": "正在上传你的投稿！上传完成前请不要关闭此页面。",
+		"genericError": "上传你的投稿时出错了。请稍后再试。"
+	},
+	"errors": {
+		"server": "服务器出现问题。请稍后再试。",
+		"submissionIssue": "提交录音时出现问题。",
+		"invalid": "你的录音数据似乎无效。请重新录音。",
+		"unauthorized": "你没有创建声源的权限。请刷新页面后重试。",
+		"forbidden": "你没有在此位置创建声源的权限。",
+		"timeout": "上传用时太久。请在网络稳定时重试。",
+		"tooLarge": "录音文件太大。请录一段短一些的。",
+		"unprocessable": "无法处理你的录音。请重新录音。",
+		"tooManyRequests": "请求过于频繁。请稍等片刻再试。",
+		"uploadFailed": "上传失败（错误 {{status}}）。请重试。",
+		"network": "无法连接到服务器。请检查网络连接后重试。",
+		"unexpected": "发生意外错误：{{message}}",
+		"unknownError": "未知错误"
+	}
+}

@@ -1,0 +1,141 @@
+{
+	"launchButton": "LAUNCH",
+	"playButton": "PLAY",
+	"launchTooltip": "TAP {{button}} TO LISTEN",
+	"loadingAudio": "Loading audio...",
+	"mixerControls": "Mixer controls",
+	"replay": "Replay",
+	"speakButton": "Speak",
+	"assetPlayer": {
+		"unsupported": "Your browser does not support audio!"
+	},
+	"history": {
+		"clear": "Clear Listening History",
+		"showOnMap": "Show on Map",
+		"empty": "You currently have no listening history. As you listen to recordings on the map, they will be displayed here for further discovery."
+	},
+	"drawer": {
+		"filters": "Filters",
+		"history": "History"
+	},
+	"filters": {
+		"title": "Filter Recordings",
+		"byTags": "Filter by Tags",
+		"description": "Description Filter",
+		"descriptionPlaceholder": "Type something...",
+		"byUser": "filter by user",
+		"selectTagsPlaceholder": "Select one or more...",
+		"updated": "Success! Filters updated."
+	},
+	"dateFilter": {
+		"selectRange": "Select Date Range",
+		"last7Days": "Last 7 days",
+		"last30Days": "Last 30 days",
+		"lastYear": "Last Year",
+		"customRange": "Custom Range",
+		"allDates": "All Dates",
+		"startDate": "Start Date",
+		"endDate": "End Date"
+	},
+	"speakerToggle": {
+		"title": "Speakers"
+	},
+	"mixer": {
+		"soundOn": "Sound on",
+		"soundOff": "Sound off",
+		"skipping": "Remixing audio: skipping ahead!"
+	},
+	"share": {
+		"includeGeo": "Include Current Geo Information"
+	},
+	"timeMachine": {
+		"timeBased": "Time-based",
+		"orderBased": "Order-based",
+		"speakerCount_one": "{{count}} speaker",
+		"speakerCount_other": "{{count}} speakers",
+		"automate": "Automate",
+		"stop": "Stop",
+		"hidePlayButton": "Hide Play Button",
+		"hint": "Move slider to filter speakers by creation time"
+	},
+	"addVoice": {
+		"tapToRecord": "TAP TO RECORD",
+		"moveCloser": "Move closer to a speaker location to record",
+		"paused": "Contributions are paused",
+		"pausedBadge": "PAUSED",
+		"outOfRangeBadge": "OUT OF\nRANGE"
+	},
+	"outOfRange": {
+		"title": "Out of Range",
+		"message": "You are out of range of this project. Please go somewhere within range and try again. Thank you."
+	},
+	"assetActions": {
+		"download": "download this audio file",
+		"flag": "tell us you are concerned about this one!",
+		"like": "tell us you like this one!",
+		"show": "go to contribution page"
+	},
+	"assetCard": {
+		"descriptionLabel": "Description:",
+		"readMore": "Read more",
+		"description": "Description",
+		"additionalInfo": "Additional Info"
+	},
+	"downloading": {
+		"title": "Downloading audio... Please wait",
+		"progress_one": "{{completed}} of {{count}} file",
+		"progress_other": "{{completed}} of {{count}} files",
+		"remaining_one": "{{count}} file remaining",
+		"remaining_other": "{{count}} files remaining"
+	},
+	"locationRequired": {
+		"title": "Location Access Required",
+		"body": "Enabling location is necessary to participate fully in the artwork experience. Your location data won't be saved or shared."
+	},
+	"modeToggle": {
+		"walking": "Walking mode",
+		"map": "Map mode",
+		"switchToWalking": "Switch to walking mode",
+		"switchToMap": "Switch to map mode",
+		"current": "{{label}} (current)"
+	},
+	"walkingErrors": {
+		"outOfRange": {
+			"title": "Out of Range!",
+			"message": "Walking Mode is currently unavailable at your location! You can still continue with Map mode."
+		},
+		"permissionDenied": {
+			"title": "Permission Denied!",
+			"message": "Permission to access your location was denied! Please try again and allow to use walking mode."
+		},
+		"failedToDetermineLocation": {
+			"title": "Failed to determine location!",
+			"message": "There was an error determining your location! Please try again."
+		},
+		"geolocationTimeout": {
+			"title": "Location request timed out!",
+			"message": "It took too long to get your location. Go near a window/outdoors and tap Try Again."
+		},
+		"insecureContext": {
+			"title": "Insecure connection",
+			"message": "Geolocation requires HTTPS. Please open the site over a secure (https://) connection."
+		},
+		"offline": {
+			"title": "No internet connection",
+			"message": "You're offline. Connect to the internet and try again."
+		},
+		"positionUnavailable": {
+			"title": "Position unavailable",
+			"message": "Location services may be off or unavailable. Enable Location Services and Precise/High accuracy, then try again."
+		},
+		"locationServicesOff": {
+			"title": "Location services are off!",
+			"message": "Please enable Location Services in your device settings and try again. On iOS: Settings → Privacy & Security → Location Services. On Android: Settings → Location. Also ensure your browser has Precise/High accuracy enabled."
+		},
+		"walkingModeNotSupported": {
+			"title": "Walking Mode not supported!",
+			"message": "Your browser doesn't support Walking Mode."
+		}
+	},
+	"youAreHere": "You Are Here"
+}

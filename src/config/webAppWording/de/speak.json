@@ -1,0 +1,62 @@
+{
+	"contributionsPaused": {
+		"title": "Beiträge sind pausiert",
+		"notTaking": "Dieses Projekt nimmt gerade keine neuen Aufnahmen an.",
+		"stillListen": "Alles, was schon da ist, kannst du dir weiterhin anhören."
+	},
+	"legalAgreement": {
+		"title": "Einverständniserklärung",
+		"agree": "ICH STIMME ZU",
+		"goBack": "Zurück"
+	},
+	"tagSelect": {
+		"selectAnOption": "Bitte wähle eine Option aus!"
+	},
+	"location": {
+		"header": "Wo nimmst du heute auf?",
+		"useMyLocation": "Meinen Standort verwenden",
+		"streetMap": "Straßenkarte",
+		"searchLabel": "Gib einen Ort ein und wähle ihn aus",
+		"noResults": "Keine Ergebnisse gefunden",
+		"geocoderFailed": "Geocoder fehlgeschlagen: {{status}}"
+	},
+	"createRecording": {
+		"leavePrompt": {
+			"message": "Willst du wirklich gehen, ohne deine Aufnahme abzusenden? Dann wird deine Aufnahme gelöscht.",
+			"stay": "Aufnahme behalten",
+			"leave": "Aufnahme löschen"
+		},
+		"noSelectedTags": "Keine Schlagwörter ausgewählt",
+		"tapToRecord": "Zum Aufnehmen tippen",
+		"tapToUpload": "Zum Hochladen von Audio tippen",
+		"tapToStop": "Zum Stoppen tippen",
+		"deleteDialog": {
+			"question": "Deinen aktuellen Aufnahmeentwurf löschen?",
+			"keep": "Nein, behalten!",
+			"delete": "Ja, löschen!"
+		},
+		"noLocation": "Breiten- und Längengrad konnten nicht ermittelt werden!",
+		"uploading": "Dein Beitrag wird jetzt hochgeladen! Bitte lass diese Seite geöffnet, bis der Upload abgeschlossen ist.",
+		"uploadComplete": "Upload abgeschlossen! Danke fürs Mitmachen!",
+		"createNew": "Neue Aufnahme erstellen",
+		"resettingIn_one": "Zurücksetzen in {{count}} Sekunde...",
+		"resettingIn_other": "Zurücksetzen in {{count}} Sekunden..."
+	},
+	"micNotAccessible": {
+		"title": "Mikrofon nicht verfügbar",
+		"message": "Wir können gerade nicht auf dein Mikrofon zugreifen"
+	},
+	"additionalMedia": {
+		"add": "Hinzufügen",
+		"addMedia": "Medien hinzufügen",
+		"addPhoto": "Foto hinzufügen",
+		"addText": "Text hinzufügen",
+		"textPlaceholder": "Zum Schreiben tippen/klicken!"
+	},
+	"contactInfo": {
+		"title": "Kontaktdaten",
+		"firstName": "Vorname",
+		"lastName": "Nachname",
+		"email": "E-Mail"
+	}
+}

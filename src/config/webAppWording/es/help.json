@@ -1,0 +1,42 @@
+{
+	"listen": {
+		"title": "Escuchar",
+		"description": "<div class=\"content\">  <h2>Escuchar</h2>  <p>Toca <strong>Reproducir</strong> para empezar. Lo que escuchas es una mezcla de las grabaciones que la gente ha hecho aquí, combinadas en vivo mientras escuchas, así que nunca suena exactamente igual dos veces.</p>  <p>Usa el selector en la parte inferior de la pantalla para elegir cómo escuchar. En el <strong>modo mapa</strong>, arrastra el mapa para escuchar en cualquier lugar. En el <strong>modo caminata</strong>, el mapa sigue la ubicación de tu teléfono y el sonido cambia mientras te mueves.</p>  <p>Cada marcador o figura en el mapa es la contribución de alguien. Toca uno para verlo y escucharlo por separado.</p>  <p>Para agregar la tuya, toca el botón de grabar en el mapa.</p></div>"
+	},
+	"tags": {
+		"title": "Describe tu grabación",
+		"description": "<div class=\"content\">  <h2>Describe tu grabación</h2>  <p>Elige las opciones que mejor describan lo que vas a grabar. Ayudan a que otras personas la encuentren, y algunos proyectos las usan para decidir qué se escucha y dónde.</p>  <p>Toca <strong>Siguiente</strong> cuando termines. Puedes volver y cambiar tus opciones antes de enviar.</p></div>"
+	},
+	"location": {
+		"title": "Elige una ubicación",
+		"description": "<div class=\"content\">  <h2>Elige una ubicación</h2>  <p>Tu grabación se colocará aquí en el mapa y la escucharán las personas que estén cerca.</p>  <p>Toca <strong>Usar mi ubicación</strong> para colocarla donde estás, o busca un lugar y mueve el mapa para elegir un punto. Luego toca <strong>Siguiente</strong>.</p></div>"
+	},
+	"record": {
+		"title": "Haz una grabación",
+		"description": "<div class=\"content\">  <h2>Hacer una grabación</h2>  <p>Toca el micrófono para empezar a grabar y tócalo de nuevo para detenerte. La primera vez, tu navegador te pedirá permiso para usar el micrófono.</p>  <p>Escúchala antes de decidir si la conservas. ¿No te convence? Toca <strong>Eliminar</strong> e inténtalo de nuevo.</p>  <p>Si el proyecto lo permite, <strong>Agregar contenido</strong> adjunta una foto o un texto a tu grabación.</p>  <p>Cuando estés listo, toca <strong>Enviar</strong>. Después de aceptar los términos del proyecto, tu grabación se agrega al mapa.</p></div>"
+	},
+	"loop-start": {
+		"title": "Agrega tu parte",
+		"description": "<div class=\"content\">  <h2>Agregar tu parte</h2>  <p>En este proyecto, las grabaciones suenan juntas como una sola pieza que se repite sin parar. Escucharás el loop, grabarás encima de él y oirás cómo suena tu parte en la mezcla antes de decidir si la conservas.</p>  <p>Los audífonos ayudan: sin ellos, tu micrófono puede captar el loop además de tu voz.</p>  <p>La primera vez, tu navegador te pedirá permiso para usar el micrófono.</p></div>"
+	},
+	"rehearse": {
+		"title": "Conoce el loop",
+		"description": "<div class=\"content\">  <h2>Conoce el loop</h2>  <p>Toca <strong>Reproducir</strong> para escuchar el loop con el que vas a grabar. Escúchalo todas las veces que quieras.</p>  <p>Cuando estés listo, toca <strong>Grabar</strong>.</p></div>"
+	},
+	"recording": {
+		"title": "Grabando",
+		"description": "<div class=\"content\">  <h2>Grabando</h2>  <p>La grabación empieza después de una breve cuenta regresiva, al ritmo del loop, y se detiene sola cuando el loop llega al final. El círculo muestra cuánto has avanzado.</p>  <p>El medidor de nivel te indica si estás muy bajo o muy alto.</p></div>"
+	},
+	"review": {
+		"title": "Revisar",
+		"description": "<div class=\"content\">  <h2>Escucha tu grabación</h2>  <p>Estás escuchando tu parte mezclada con el loop.</p>  <p>¿Quieres otro intento? Graba de nuevo. ¿Te gusta? Toca <strong>Enviar</strong> para agregarla al proyecto; puede tardar una o dos vueltas del loop antes de que la escuches con todos los demás.</p></div>"
+	},
+	"welcome": {
+		"title": "Bienvenida",
+		"description": "<div class=\"content\">  <h2>Bienvenida</h2>  <p>Este es un lugar para escuchar grabaciones hechas aquí y para agregar las tuyas.</p>  <p>Toca el <strong>?</strong> en cualquier pantalla para obtener ayuda con esa pantalla.</p></div>"
+	},
+	"help": {
+		"title": "Ayuda",
+		"description": "<div class=\"content\">  <h2>Ayuda</h2>  <p>Escucha las grabaciones que la gente ha hecho aquí y agrega las tuyas.</p>  <p>Toca el <strong>?</strong> en cualquier pantalla para obtener ayuda con esa pantalla.</p></div>"
+	}
+}

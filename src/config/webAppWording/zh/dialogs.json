@@ -1,0 +1,128 @@
+{
+	"buttons": {
+		"gotIt": "知道了！",
+		"tryAgain": "重试"
+	},
+	"micPermission": {
+		"title": "麦克风权限",
+		"body": "{{name}} 想要使用你的麦克风",
+		"bodyNoName": "此网站想要使用你的麦克风"
+	},
+	"micBlocked": {
+		"title": "麦克风已被屏蔽",
+		"body": "要录下你的声音，我们需要使用你的麦克风。如果你不想录音，也可以随意走走、听听！",
+		"help": "麦克风权限帮助",
+		"listenMore": "继续收听"
+	},
+	"audioRequired": {
+		"title": "需要音频",
+		"body": "我们发现你的设备不支持音频体验。这是一个需要音频的音乐项目，请接上扬声器和麦克风，或换一台设备试试。谢谢！"
+	},
+	"locationNotFound": {
+		"title": "找不到位置！",
+		"body": "抱歉，我们没能找到你的位置。请刷新浏览器后重试。"
+	},
+	"permissionDenied": {
+		"title": "没有位置权限！",
+		"body": "要完整参与这件艺术作品的体验，我们需要获取你的位置。请在浏览器中开启位置权限。",
+		"help": "开启定位帮助",
+		"videoTitle": "帮助视频"
+	},
+	"instructions": {
+		"locationTitle": "位置权限帮助",
+		"microphoneTitle": "麦克风权限帮助",
+		"permission": {
+			"location": "位置",
+			"microphone": "麦克风"
+		},
+		"siteControls": "网站控件",
+		"pageMenuIcon": "左下角图标",
+		"android": {
+			"step1": "1. 点击浏览器右上角的三点菜单（⋮）",
+			"step2": "2. 选择“设置”",
+			"step3": "3. 向下滚动，找到“网站设置”（通常在最下面）",
+			"step4": "4. 点击“权限”下的“{{permission}}”",
+			"step5": "5. 将其从“屏蔽”改为“允许”",
+			"step6": "6. 返回并刷新页面"
+		},
+		"iosAa": {
+			"step1": "1. 点击底部的 <icon/> 按钮",
+			"step2": "2. 选择“网站设置”",
+			"step3": "3. 点击“{{permission}}”",
+			"step4": "4. 将其改为“允许”",
+			"step5": "5. 点击“完成”并刷新页面"
+		},
+		"iosPageMenu": {
+			"step1": "1. 点击左下角的 <icon/> 图标",
+			"step2": "2. 点击三点（⋮）菜单",
+			"step3": "3. 滚动到最下面",
+			"step4": "4. 在“网站设置”下找到“{{permission}}”",
+			"step5": "5. 将其改为“允许”",
+			"step6": "6. 点击顶部的“完成”并刷新页面"
+		},
+		"iosSettings": {
+			"step1": "1. 打开 iPhone/iPad 上的“设置”App",
+			"step2": "2. 向下滚动并点击“Safari 浏览器”",
+			"step3": "3. 滚动到最下面，找到“网站设置”部分",
+			"step4": "4. 点击“{{permission}}”",
+			"step5": "5. 将其从“拒绝”改为“允许”",
+			"step6": "6. 返回浏览器并刷新页面"
+		},
+		"chrome": {
+			"step1": "1. 点击网址旁边的网站控件图标 <icon/>。",
+			"step2": "2. 选择“网站设置”。",
+			"step3": "3. 在“权限”下找到“{{permission}}”。",
+			"step4": "4. 将其改为“允许”（或“仅限这一次允许”）。",
+			"step5": "5. 刷新页面。"
+		},
+		"edge": {
+			"step1": "1. 点击顶部网址旁边的网站控件 <icon/> 锁形图标。",
+			"step2": "2. 点击“此站点的权限”。",
+			"step3": "3. 找到“{{permission}}”。",
+			"step4": "4. 将其改为“允许”。",
+			"step5": "5. 刷新页面。"
+		},
+		"firefox": {
+			"step1": "1. 点击右上角的三横线菜单（☰）",
+			"step2": "2. 前往 设置 > 隐私与安全 > 权限 > {{permission}}",
+			"step3": "3. 点击“设置”并找到本网站",
+			"step4": "4. 将其从“阻止”改为“允许”",
+			"step5": "5. 刷新页面后重试"
+		},
+		"safari": {
+			"step1": "1. 前往 Safari 浏览器 > 设置 > 网站 > {{permission}}",
+			"step2": "2. 在列表中找到本网站",
+			"step3": "3. 将其从“拒绝”改为“允许”",
+			"step4": "4. 刷新页面后重试"
+		},
+		"other": {
+			"step1": "1. 打开浏览器设置",
+			"step2": "2. 找到“隐私”“权限”或“网站设置”",
+			"step3": "3. 找到“{{permission}}”设置",
+			"step4": "4. 找到本网站，将其从“阻止”改为“允许”",
+			"step5": "5. 刷新页面后重试"
+		}
+	},
+	"error": {
+		"generic": "出错了！请重试。",
+		"connection": "抱歉，我们无法连接到 Roundware。请重试。"
+	},
+	"errorBoundary": {
+		"title": "出错了。"
+	},
+	"copyable": {
+		"label": "链接",
+		"copied": "已复制",
+		"copy": "复制到剪贴板"
+	},
+	"platformMessage": {
+		"continueAnyway": "仍然继续"
+	},
+	"welcomeAudio": {
+		"title": "准备好了吗！",
+		"body": "请戴上耳机！",
+		"play": "播放",
+		"pause": "暂停",
+		"replay": "重播"
+	}
+}

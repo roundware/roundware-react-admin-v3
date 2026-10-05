@@ -1,0 +1,42 @@
+{
+	"listen": {
+		"title": "Zuhören",
+		"description": "<div class=\"content\">  <h2>Zuhören</h2>  <p>Tippe auf <strong>Abspielen</strong>, um zu starten. Was du hörst, ist eine Mischung aus den Aufnahmen, die Menschen hier gemacht haben – live gemischt, während du zuhörst, sodass es nie zweimal genau gleich klingt.</p>  <p>Mit dem Schalter unten auf dem Bildschirm wählst du, wie du zuhörst. Im <strong>Kartenmodus</strong> ziehst du die Karte, um überall zuzuhören. Im <strong>Gehmodus</strong> folgt die Karte dem Standort deines Handys, und der Klang verändert sich, während du dich bewegst.</p>  <p>Jede Markierung und jede Fläche auf der Karte ist ein Beitrag von jemandem. Tippe darauf, um ihn anzusehen und einzeln anzuhören.</p>  <p>Um selbst etwas beizutragen, tippe auf der Karte auf die Aufnahmetaste.</p></div>"
+	},
+	"tags": {
+		"title": "Beschreib deine Aufnahme",
+		"description": "<div class=\"content\">  <h2>Beschreib deine Aufnahme</h2>  <p>Wähle die Optionen, die am besten beschreiben, was du gleich aufnehmen wirst. Sie helfen anderen, deine Aufnahme zu finden, und manche Projekte entscheiden damit, was wo zu hören ist.</p>  <p>Tippe auf <strong>Weiter</strong>, wenn du fertig bist. Vor dem Absenden kannst du zurückgehen und deine Auswahl ändern.</p></div>"
+	},
+	"location": {
+		"title": "Wähle einen Ort",
+		"description": "<div class=\"content\">  <h2>Wähle einen Ort</h2>  <p>Deine Aufnahme wird hier auf der Karte platziert und ist für alle zu hören, die in der Nähe zuhören.</p>  <p>Tippe auf <strong>Meinen Standort verwenden</strong>, um sie dort zu platzieren, wo du gerade bist, oder suche nach einem Ort und verschiebe die Karte, um eine Stelle auszuwählen. Tippe dann auf <strong>Weiter</strong>.</p></div>"
+	},
+	"record": {
+		"title": "Nimm etwas auf",
+		"description": "<div class=\"content\">  <h2>Eine Aufnahme machen</h2>  <p>Tippe auf das Mikrofon, um die Aufnahme zu starten, und tippe noch einmal, um sie zu beenden. Beim ersten Mal fragt dein Browser nach der Erlaubnis, das Mikrofon zu verwenden.</p>  <p>Hör dir die Aufnahme an, bevor du entscheidest, ob du sie behältst. Nicht zufrieden? Tippe auf <strong>Löschen</strong> und versuch es noch einmal.</p>  <p>Wenn das Projekt es erlaubt, kannst du mit <strong>Medien hinzufügen</strong> ein Foto oder einen Text an deine Aufnahme anhängen.</p>  <p>Wenn du so weit bist, tippe auf <strong>Absenden</strong>. Sobald du den Bedingungen des Projekts zugestimmt hast, wird deine Aufnahme zur Karte hinzugefügt.</p></div>"
+	},
+	"loop-start": {
+		"title": "Steuere deinen Teil bei",
+		"description": "<div class=\"content\">  <h2>Deinen Teil beisteuern</h2>  <p>In diesem Projekt erklingen die Aufnahmen gemeinsam als ein Stück, das ununterbrochen im Loop läuft. Du hörst den Loop, nimmst dich dazu auf und hörst, wie dein Teil im Mix klingt, bevor du entscheidest, ob du ihn behältst.</p>  <p>Kopfhörer helfen: Ohne sie nimmt dein Mikrofon womöglich nicht nur dich, sondern auch den Loop auf.</p>  <p>Beim ersten Mal fragt dein Browser nach der Erlaubnis, das Mikrofon zu verwenden.</p></div>"
+	},
+	"rehearse": {
+		"title": "Lerne den Loop kennen",
+		"description": "<div class=\"content\">  <h2>Lerne den Loop kennen</h2>  <p>Tippe auf <strong>Abspielen</strong>, um den Loop zu hören, zu dem du aufnehmen wirst. Hör ihn dir so oft an, wie du möchtest.</p>  <p>Wenn du so weit bist, tippe auf <strong>Aufnehmen</strong>.</p></div>"
+	},
+	"recording": {
+		"title": "Aufnahme",
+		"description": "<div class=\"content\">  <h2>Aufnahme</h2>  <p>Die Aufnahme beginnt nach einem kurzen Countdown im Takt des Loops und endet von selbst, wenn der Loop am Ende angekommen ist. Der Kreis zeigt dir, wie weit du schon bist.</p>  <p>Die Pegelanzeige verrät dir, ob du zu leise oder zu laut bist.</p></div>"
+	},
+	"review": {
+		"title": "Anhören",
+		"description": "<div class=\"content\">  <h2>Hör es dir an</h2>  <p>Du hörst deinen Teil zusammen mit dem Loop.</p>  <p>Noch ein Versuch? Nimm einfach noch einmal auf. Zufrieden? Tippe auf <strong>Absenden</strong>, um ihn zum Projekt hinzuzufügen; es kann ein oder zwei Loop-Durchläufe dauern, bis du ihn zusammen mit allen anderen hörst.</p></div>"
+	},
+	"welcome": {
+		"title": "Willkommen",
+		"description": "<div class=\"content\">  <h2>Willkommen</h2>  <p>Hier kannst du Aufnahmen anhören, die an diesem Ort entstanden sind, und eigene hinzufügen.</p>  <p>Tippe auf jedem Bildschirm auf das <strong>?</strong>, um Hilfe zu diesem Bildschirm zu bekommen.</p></div>"
+	},
+	"help": {
+		"title": "Hilfe",
+		"description": "<div class=\"content\">  <h2>Hilfe</h2>  <p>Hör dir die Aufnahmen an, die Menschen hier gemacht haben, und füge eigene hinzu.</p>  <p>Tippe auf jedem Bildschirm auf das <strong>?</strong>, um Hilfe zu diesem Bildschirm zu bekommen.</p></div>"
+	}
+}

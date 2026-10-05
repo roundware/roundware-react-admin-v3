@@ -1,0 +1,62 @@
+{
+	"contributionsPaused": {
+		"title": "Contributions are paused",
+		"notTaking": "This project isn't taking new recordings right now.",
+		"stillListen": "Everything already here is still yours to listen to."
+	},
+	"legalAgreement": {
+		"title": "Consent Agreement",
+		"agree": "I AGREE",
+		"goBack": "Go Back"
+	},
+	"tagSelect": {
+		"selectAnOption": "Please select an option!"
+	},
+	"location": {
+		"header": "Where are you recording today?",
+		"useMyLocation": "Use My Location",
+		"streetMap": "Street Map",
+		"searchLabel": "Type to select a location",
+		"noResults": "No results found",
+		"geocoderFailed": "Geocoder failed due to: {{status}}"
+	},
+	"createRecording": {
+		"leavePrompt": {
+			"message": "Are you sure you want to leave without submitting your recording? If you do, your recording will be deleted.",
+			"stay": "Keep Recording",
+			"leave": "Delete Recording"
+		},
+		"noSelectedTags": "No selected tags",
+		"tapToRecord": "Tap to Record",
+		"tapToUpload": "Tap to Upload Audio",
+		"tapToStop": "Tap to Stop",
+		"deleteDialog": {
+			"question": "Delete your current draft recording?",
+			"keep": "No, keep it!",
+			"delete": "Yes, delete it!"
+		},
+		"noLocation": "Failed to get latitude & longitude!",
+		"uploading": "Uploading your contribution now! Please keep this page open until we finish uploading.",
+		"uploadComplete": "Upload Complete! Thank you for participating!",
+		"createNew": "Create New Recording",
+		"resettingIn_one": "Resetting in {{count}} second...",
+		"resettingIn_other": "Resetting in {{count}} seconds..."
+	},
+	"micNotAccessible": {
+		"title": "Microphone not accessible",
+		"message": "We can't get access to your microphone at this time"
+	},
+	"additionalMedia": {
+		"add": "Add",
+		"addMedia": "Add Media",
+		"addPhoto": "Add Photo",
+		"addText": "Add Text",
+		"textPlaceholder": "Tap/Click to Type!"
+	},
+	"contactInfo": {
+		"title": "Contact Info",
+		"firstName": "First Name",
+		"lastName": "Last Name",
+		"email": "Email"
+	}
+}

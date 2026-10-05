@@ -1,0 +1,42 @@
+{
+	"listen": {
+		"title": "Listen",
+		"description": "<div class=\"content\">  <h2>Listening</h2>  <p>Tap <strong>Play</strong> to start. What you hear is a mix of the recordings people have made here, blended live as you listen, so it is never quite the same twice.</p>  <p>Use the toggle at the bottom of the screen to choose how you listen. In <strong>map mode</strong>, drag the map to listen anywhere. In <strong>walk mode</strong>, the map follows your phone's location and the sound changes as you move.</p>  <p>Each marker or shape on the map is someone's contribution. Tap one to see it, and to hear it on its own.</p>  <p>To add your own, tap the record button on the map.</p></div>"
+	},
+	"tags": {
+		"title": "Describe your recording",
+		"description": "<div class=\"content\">  <h2>Describe your recording</h2>  <p>Choose the options that best describe what you're about to record. They help listeners find it, and some projects use them to decide what plays where.</p>  <p>Tap <strong>Next</strong> when you're done. You can go back and change your choices before you submit.</p></div>"
+	},
+	"location": {
+		"title": "Choose a location",
+		"description": "<div class=\"content\">  <h2>Choose a location</h2>  <p>Your recording will be placed on the map here, and heard by people listening nearby.</p>  <p>Tap <strong>Use my location</strong> to place it where you are, or search for a place and move the map to pick a spot. Then tap <strong>Next</strong>.</p></div>"
+	},
+	"record": {
+		"title": "Make a recording",
+		"description": "<div class=\"content\">  <h2>Making a recording</h2>  <p>Tap the microphone to start recording, and tap again to stop. The first time, your browser will ask for permission to use the microphone.</p>  <p>Listen back before you decide to keep it. Not happy? Tap <strong>Delete</strong> and try again.</p>  <p>If the project allows it, <strong>Add Media</strong> attaches a photo or some text to your recording.</p>  <p>When you're ready, tap <strong>Submit</strong>. After you agree to the project's terms, your recording is added to the map.</p></div>"
+	},
+	"loop-start": {
+		"title": "Add your part",
+		"description": "<div class=\"content\">  <h2>Adding your part</h2>  <p>In this project, recordings play together as one piece that loops continuously. You'll hear the loop, record along with it, and hear how your part sounds in the mix before you decide to keep it.</p>  <p>Headphones help: without them, your microphone may pick up the loop as well as you.</p>  <p>The first time, your browser will ask for permission to use the microphone.</p></div>"
+	},
+	"rehearse": {
+		"title": "Get to know the loop",
+		"description": "<div class=\"content\">  <h2>Get to know the loop</h2>  <p>Tap <strong>Play</strong> to hear the loop you'll be recording with. Listen as many times as you like.</p>  <p>When you're ready, tap <strong>Record</strong>.</p></div>"
+	},
+	"recording": {
+		"title": "Recording",
+		"description": "<div class=\"content\">  <h2>Recording</h2>  <p>Recording starts after a short countdown, in time with the loop, and stops by itself when the loop comes round to the end. The circle shows how far along you are.</p>  <p>The level meter tells you if you're too quiet or too loud.</p></div>"
+	},
+	"review": {
+		"title": "Review",
+		"description": "<div class=\"content\">  <h2>Listen back</h2>  <p>You're hearing your part mixed with the loop.</p>  <p>Want another go? Record again. Happy with it? Tap <strong>Submit</strong> to add it to the project; it may take a loop or two before you hear it with everyone else.</p></div>"
+	},
+	"welcome": {
+		"title": "Welcome",
+		"description": "<div class=\"content\">  <h2>Welcome</h2>  <p>This is a place to listen to recordings made here, and to add your own.</p>  <p>Tap the <strong>?</strong> on any screen for help with that screen.</p></div>"
+	},
+	"help": {
+		"title": "Help",
+		"description": "<div class=\"content\">  <h2>Help</h2>  <p>Listen to the recordings people have made here, and add your own.</p>  <p>Tap the <strong>?</strong> on any screen for help with that screen.</p></div>"
+	}
+}

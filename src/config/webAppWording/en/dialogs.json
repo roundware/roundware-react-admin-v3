@@ -1,0 +1,128 @@
+{
+	"buttons": {
+		"gotIt": "GOT IT!",
+		"tryAgain": "TRY AGAIN"
+	},
+	"micPermission": {
+		"title": "Microphone Access",
+		"body": "{{name}} wants to use your microphone",
+		"bodyNoName": "This site wants to use your microphone"
+	},
+	"micBlocked": {
+		"title": "MICROPHONE BLOCKED",
+		"body": "To record your voice, we need access to your microphone. If you do not wish to record, feel free to wander and listen!",
+		"help": "MIC ACCESS HELP",
+		"listenMore": "LISTEN MORE"
+	},
+	"audioRequired": {
+		"title": "AUDIO REQUIRED",
+		"body": "We notice that your device doesn't allow for audio experiences. This is a music project that requires audio, so please plug in speakers and a mic or try on a different device. Thanks!"
+	},
+	"locationNotFound": {
+		"title": "LOCATION NOT FOUND!",
+		"body": "Sorry we couldn't find your location. Please refresh your browser and try again."
+	},
+	"permissionDenied": {
+		"title": "NO LOCATION ACCESS!",
+		"body": "To participate fully in the artwork experience we need access to your location. Please enable location access in your browser.",
+		"help": "LOCATION ENABLE HELP",
+		"videoTitle": "Help Video"
+	},
+	"instructions": {
+		"locationTitle": "Location Access Help",
+		"microphoneTitle": "Microphone Access Help",
+		"permission": {
+			"location": "Location",
+			"microphone": "Microphone"
+		},
+		"siteControls": "Site controls",
+		"pageMenuIcon": "left bottom icon",
+		"android": {
+			"step1": "1. Tap the three dots menu (⋮) in the top right corner of your browser",
+			"step2": "2. Select \"Settings\"",
+			"step3": "3. Scroll down and find \"Site settings\" (usually at the bottom)",
+			"step4": "4. Tap on \"{{permission}}\" under \"Permissions\"",
+			"step5": "5. Change it from \"Block\" to \"Allow\"",
+			"step6": "6. Go back and refresh the page"
+		},
+		"iosAa": {
+			"step1": "1. Tap the <icon/> button on the bottom",
+			"step2": "2. Select \"Website Settings\"",
+			"step3": "3. Tap on \"{{permission}}\"",
+			"step4": "4. Change it to \"Allow\"",
+			"step5": "5. Tap \"Done\" & refresh the page"
+		},
+		"iosPageMenu": {
+			"step1": "1. Click on the <icon/> icon at bottom left",
+			"step2": "2. Click on the Three dots (⋮) menu",
+			"step3": "3. Scroll to the bottom",
+			"step4": "4. Under \"Website Settings\", find \"{{permission}}\"",
+			"step5": "5. Change it to \"Allow\"",
+			"step6": "6. Click on \"Done\" at the top & refresh the page"
+		},
+		"iosSettings": {
+			"step1": "1. Open the Settings app on your iPhone/iPad",
+			"step2": "2. Scroll down and tap \"Safari\"",
+			"step3": "3. Scroll to the bottom and find the \"Settings for Websites\" section",
+			"step4": "4. Tap on \"{{permission}}\"",
+			"step5": "5. Change it from \"Deny\" to \"Allow\"",
+			"step6": "6. Return to your browser and refresh the page"
+		},
+		"chrome": {
+			"step1": "1. Click the site controls icon <icon/> next to the URL.",
+			"step2": "2. Select \"Site settings.\"",
+			"step3": "3. Under Permissions, find \"{{permission}}.\"",
+			"step4": "4. Change it to \"Allow\" (or \"Allow this time.\")",
+			"step5": "5. Refresh the page."
+		},
+		"edge": {
+			"step1": "1. Click the site controls <icon/> lock icon next to the website URL at the top.",
+			"step2": "2. Click \"Permissions for this site.\"",
+			"step3": "3. Find \"{{permission}}.\"",
+			"step4": "4. Change it to \"Allow.\"",
+			"step5": "5. Refresh the page."
+		},
+		"firefox": {
+			"step1": "1. Click the three lines menu (☰) in the top right",
+			"step2": "2. Go to Settings > Privacy & Security > Permissions > {{permission}}",
+			"step3": "3. Click 'Settings' and find this website",
+			"step4": "4. Change it from 'Block' to 'Allow'",
+			"step5": "5. Refresh the page and try again"
+		},
+		"safari": {
+			"step1": "1. Go to Safari > Preferences > Websites > {{permission}}",
+			"step2": "2. Find this website in the list",
+			"step3": "3. Change it from 'Deny' to 'Allow'",
+			"step4": "4. Refresh the page and try again"
+		},
+		"other": {
+			"step1": "1. Open your browser settings",
+			"step2": "2. Look for 'Privacy', 'Permissions', or 'Site Settings'",
+			"step3": "3. Find '{{permission}}' settings",
+			"step4": "4. Find this website and change it from 'Block' to 'Allow'",
+			"step5": "5. Refresh the page and try again"
+		}
+	},
+	"error": {
+		"generic": "Something went wrong! Please try again.",
+		"connection": "Sorry, we were unable to connect to Roundware. Please try again."
+	},
+	"errorBoundary": {
+		"title": "Something went wrong."
+	},
+	"copyable": {
+		"label": "Link",
+		"copied": "Copied",
+		"copy": "Copy to Clipboard"
+	},
+	"platformMessage": {
+		"continueAnyway": "Continue Anyway"
+	},
+	"welcomeAudio": {
+		"title": "Get Ready!",
+		"body": "Please put on headphones!",
+		"play": "Play",
+		"pause": "Pause",
+		"replay": "Replay"
+	}
+}

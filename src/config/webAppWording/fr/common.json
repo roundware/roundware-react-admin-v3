@@ -1,0 +1,21 @@
+{
+	"ok": "OK",
+	"cancel": "Annuler",
+	"close": "Fermer",
+	"back": "Retour",
+	"next": "Suivant",
+	"submit": "Envoyer",
+	"continue": "Continuer",
+	"delete": "Supprimer",
+	"tryAgain": "Réessayer",
+	"gotIt": "Compris !",
+	"listen": "Écouter",
+	"share": "Partager",
+	"loading": "Chargement…",
+	"warning": "Avertissement",
+	"note": "Remarque",
+	"block": "Bloquer",
+	"allow": "Autoriser",
+	"help": "Aide",
+	"info": "Infos"
+}

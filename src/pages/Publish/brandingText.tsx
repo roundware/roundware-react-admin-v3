@@ -31,7 +31,9 @@ interface BrandingText {
   language: string | null;
   setLanguage: (code: string) => void;
   get: (field: string, code?: string | null) => string;
-  set: (field: string, value: string) => void;
+  /** Any value, e.g. the info tabs' list. */
+  getValue: (field: string, code?: string | null) => unknown;
+  set: (field: string, value: unknown) => void;
   saving: boolean;
   error: string | null;
 }
@@ -97,13 +99,22 @@ export const BrandingTextProvider: React.FC<{
     [texts, language]
   );
 
+  const getValue = useCallback(
+    (field: string, code?: string | null) => {
+      const c = code ?? language;
+      return c ? texts[c]?.[field] : undefined;
+    },
+    [texts, language]
+  );
+
   const set = useCallback(
-    (field: string, value: string) => {
+    (field: string, value: unknown) => {
       if (!language) return;
       setTexts((t) => ({ ...t, [language]: { ...(t[language] ?? {}), [field]: value } }));
       // Empty in another language clears its translation (null), so the
-      // default language's shows; empty in the default language is "".
-      const sent = value === "" && language !== defaultCode ? null : value;
+      // default language's shows; empty in the default language is kept.
+      const empty = value === "" || (Array.isArray(value) && value.length === 0);
+      const sent = empty && language !== defaultCode ? null : value;
       pending.current = {
         ...pending.current,
         [language]: { ...(pending.current[language] ?? {}), [field]: sent },
@@ -128,7 +139,7 @@ export const BrandingTextProvider: React.FC<{
   );
 
   return (
-    <Ctx.Provider value={{ languages, defaultCode, language, setLanguage, get, set, saving, error }}>
+    <Ctx.Provider value={{ languages, defaultCode, language, setLanguage, get, getValue, set, saving, error }}>
       {children}
     </Ctx.Provider>
   );

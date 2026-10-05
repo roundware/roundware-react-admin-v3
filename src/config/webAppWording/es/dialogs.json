@@ -1,0 +1,128 @@
+{
+	"buttons": {
+		"gotIt": "¡ENTENDIDO!",
+		"tryAgain": "REINTENTAR"
+	},
+	"micPermission": {
+		"title": "Acceso al micrófono",
+		"body": "{{name}} quiere usar tu micrófono",
+		"bodyNoName": "Este sitio quiere usar tu micrófono"
+	},
+	"micBlocked": {
+		"title": "MICRÓFONO BLOQUEADO",
+		"body": "Para grabar tu voz, necesitamos acceso a tu micrófono. Si no quieres grabar, ¡siéntete libre de pasear y escuchar!",
+		"help": "AYUDA CON EL MICRÓFONO",
+		"listenMore": "SEGUIR ESCUCHANDO"
+	},
+	"audioRequired": {
+		"title": "SE NECESITA AUDIO",
+		"body": "Notamos que tu dispositivo no permite experiencias de audio. Este es un proyecto musical que requiere audio, así que conecta altavoces y un micrófono o prueba con otro dispositivo. ¡Gracias!"
+	},
+	"locationNotFound": {
+		"title": "¡NO ENCONTRAMOS TU UBICACIÓN!",
+		"body": "Lo sentimos, no pudimos encontrar tu ubicación. Actualiza tu navegador e inténtalo de nuevo."
+	},
+	"permissionDenied": {
+		"title": "¡SIN ACCESO A LA UBICACIÓN!",
+		"body": "Para participar plenamente en la experiencia de la obra necesitamos acceso a tu ubicación. Activa el acceso a la ubicación en tu navegador.",
+		"help": "AYUDA PARA ACTIVAR LA UBICACIÓN",
+		"videoTitle": "Video de ayuda"
+	},
+	"instructions": {
+		"locationTitle": "Ayuda con el acceso a la ubicación",
+		"microphoneTitle": "Ayuda con el acceso al micrófono",
+		"permission": {
+			"location": "Ubicación",
+			"microphone": "Micrófono"
+		},
+		"siteControls": "Controles del sitio",
+		"pageMenuIcon": "ícono inferior izquierdo",
+		"android": {
+			"step1": "1. Toca el menú de tres puntos (⋮) en la esquina superior derecha de tu navegador",
+			"step2": "2. Selecciona \"Configuración\"",
+			"step3": "3. Desplázate hacia abajo y busca \"Configuración de sitios\" (suele estar al final)",
+			"step4": "4. Toca \"{{permission}}\" en \"Permisos\"",
+			"step5": "5. Cámbialo de \"Bloquear\" a \"Permitir\"",
+			"step6": "6. Vuelve atrás y actualiza la página"
+		},
+		"iosAa": {
+			"step1": "1. Toca el botón <icon/> en la parte inferior",
+			"step2": "2. Selecciona \"Configuración del sitio web\"",
+			"step3": "3. Toca \"{{permission}}\"",
+			"step4": "4. Cámbialo a \"Permitir\"",
+			"step5": "5. Toca \"OK\" y actualiza la página"
+		},
+		"iosPageMenu": {
+			"step1": "1. Toca el ícono <icon/> en la parte inferior izquierda",
+			"step2": "2. Toca el menú de tres puntos (⋮)",
+			"step3": "3. Desplázate hasta el final",
+			"step4": "4. En \"Configuración del sitio web\", busca \"{{permission}}\"",
+			"step5": "5. Cámbialo a \"Permitir\"",
+			"step6": "6. Toca \"OK\" en la parte superior y actualiza la página"
+		},
+		"iosSettings": {
+			"step1": "1. Abre la app Configuración en tu iPhone/iPad",
+			"step2": "2. Desplázate hacia abajo y toca \"Safari\"",
+			"step3": "3. Desplázate hasta el final y busca la sección \"Configuración de sitios web\"",
+			"step4": "4. Toca \"{{permission}}\"",
+			"step5": "5. Cámbialo de \"Rechazar\" a \"Permitir\"",
+			"step6": "6. Vuelve a tu navegador y actualiza la página"
+		},
+		"chrome": {
+			"step1": "1. Haz clic en el ícono de controles del sitio <icon/> junto a la URL.",
+			"step2": "2. Selecciona \"Configuración de sitios\".",
+			"step3": "3. En Permisos, busca \"{{permission}}\".",
+			"step4": "4. Cámbialo a \"Permitir\" (o \"Permitir esta vez\").",
+			"step5": "5. Actualiza la página."
+		},
+		"edge": {
+			"step1": "1. Haz clic en el ícono de candado <icon/> de controles del sitio, junto a la URL en la parte superior.",
+			"step2": "2. Haz clic en \"Permisos para este sitio\".",
+			"step3": "3. Busca \"{{permission}}\".",
+			"step4": "4. Cámbialo a \"Permitir\".",
+			"step5": "5. Actualiza la página."
+		},
+		"firefox": {
+			"step1": "1. Haz clic en el menú de tres líneas (☰) en la esquina superior derecha",
+			"step2": "2. Ve a Ajustes > Privacidad y seguridad > Permisos > {{permission}}",
+			"step3": "3. Haz clic en 'Ajustes' y busca este sitio web",
+			"step4": "4. Cámbialo de 'Bloquear' a 'Permitir'",
+			"step5": "5. Actualiza la página e inténtalo de nuevo"
+		},
+		"safari": {
+			"step1": "1. Ve a Safari > Preferencias > Sitios web > {{permission}}",
+			"step2": "2. Busca este sitio web en la lista",
+			"step3": "3. Cámbialo de 'Rechazar' a 'Permitir'",
+			"step4": "4. Actualiza la página e inténtalo de nuevo"
+		},
+		"other": {
+			"step1": "1. Abre la configuración de tu navegador",
+			"step2": "2. Busca 'Privacidad', 'Permisos' o 'Configuración de sitios'",
+			"step3": "3. Busca la configuración de '{{permission}}'",
+			"step4": "4. Busca este sitio web y cámbialo de 'Bloquear' a 'Permitir'",
+			"step5": "5. Actualiza la página e inténtalo de nuevo"
+		}
+	},
+	"error": {
+		"generic": "¡Algo salió mal! Inténtalo de nuevo.",
+		"connection": "Lo sentimos, no pudimos conectarnos con Roundware. Inténtalo de nuevo."
+	},
+	"errorBoundary": {
+		"title": "Algo salió mal."
+	},
+	"copyable": {
+		"label": "Enlace",
+		"copied": "Copiado",
+		"copy": "Copiar al portapapeles"
+	},
+	"platformMessage": {
+		"continueAnyway": "Continuar de todos modos"
+	},
+	"welcomeAudio": {
+		"title": "¡Prepárate!",
+		"body": "¡Ponte los audífonos!",
+		"play": "Reproducir",
+		"pause": "Pausar",
+		"replay": "Volver a reproducir"
+	}
+}

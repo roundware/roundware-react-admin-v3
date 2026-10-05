@@ -1,0 +1,141 @@
+{
+	"launchButton": "开始",
+	"playButton": "播放",
+	"launchTooltip": "点击{{button}}开始收听",
+	"loadingAudio": "正在加载音频……",
+	"mixerControls": "混音控制",
+	"replay": "重播",
+	"speakButton": "说话",
+	"assetPlayer": {
+		"unsupported": "你的浏览器不支持音频播放！"
+	},
+	"history": {
+		"clear": "清除收听记录",
+		"showOnMap": "在地图上显示",
+		"empty": "你目前还没有收听记录。在地图上收听录音时，它们会显示在这里，方便你进一步探索。"
+	},
+	"drawer": {
+		"filters": "筛选",
+		"history": "记录"
+	},
+	"filters": {
+		"title": "筛选录音",
+		"byTags": "按标签筛选",
+		"description": "按描述筛选",
+		"descriptionPlaceholder": "输入内容……",
+		"byUser": "按用户筛选",
+		"selectTagsPlaceholder": "选择一项或多项……",
+		"updated": "成功！筛选条件已更新。"
+	},
+	"dateFilter": {
+		"selectRange": "选择日期范围",
+		"last7Days": "最近 7 天",
+		"last30Days": "最近 30 天",
+		"lastYear": "最近一年",
+		"customRange": "自定义范围",
+		"allDates": "全部日期",
+		"startDate": "开始日期",
+		"endDate": "结束日期"
+	},
+	"speakerToggle": {
+		"title": "声源"
+	},
+	"mixer": {
+		"soundOn": "声音开",
+		"soundOff": "声音关",
+		"skipping": "正在重新混音：跳到后面！"
+	},
+	"share": {
+		"includeGeo": "包含当前地理位置信息"
+	},
+	"timeMachine": {
+		"timeBased": "按时间",
+		"orderBased": "按顺序",
+		"speakerCount_one": "{{count}} 个声源",
+		"speakerCount_other": "{{count}} 个声源",
+		"automate": "自动播放",
+		"stop": "停止",
+		"hidePlayButton": "隐藏播放按钮",
+		"hint": "拖动滑块，按创建时间筛选声源"
+	},
+	"addVoice": {
+		"tapToRecord": "点击录音",
+		"moveCloser": "请靠近一个声源位置再录音",
+		"paused": "投稿已暂停",
+		"pausedBadge": "已暂停",
+		"outOfRangeBadge": "超出\n范围"
+	},
+	"outOfRange": {
+		"title": "超出范围",
+		"message": "你不在这个项目的范围内。请前往范围内的地点后再试。谢谢！"
+	},
+	"assetActions": {
+		"download": "下载这个音频文件",
+		"flag": "告诉我们你对这条录音有顾虑！",
+		"like": "告诉我们你喜欢这条录音！",
+		"show": "前往投稿页面"
+	},
+	"assetCard": {
+		"descriptionLabel": "描述：",
+		"readMore": "阅读更多",
+		"description": "描述",
+		"additionalInfo": "更多信息"
+	},
+	"downloading": {
+		"title": "正在下载音频……请稍候",
+		"progress_one": "{{completed}} / {{count}} 个文件",
+		"progress_other": "{{completed}} / {{count}} 个文件",
+		"remaining_one": "还剩 {{count}} 个文件",
+		"remaining_other": "还剩 {{count}} 个文件"
+	},
+	"locationRequired": {
+		"title": "需要位置权限",
+		"body": "开启定位才能完整参与这件艺术作品的体验。你的位置数据不会被保存或分享。"
+	},
+	"modeToggle": {
+		"walking": "步行模式",
+		"map": "地图模式",
+		"switchToWalking": "切换到步行模式",
+		"switchToMap": "切换到地图模式",
+		"current": "{{label}}（当前）"
+	},
+	"walkingErrors": {
+		"outOfRange": {
+			"title": "超出范围！",
+			"message": "你所在的位置目前无法使用步行模式！你仍然可以继续使用地图模式。"
+		},
+		"permissionDenied": {
+			"title": "权限被拒绝！",
+			"message": "访问你位置的权限被拒绝了！请重试，并允许访问位置以使用步行模式。"
+		},
+		"failedToDetermineLocation": {
+			"title": "无法确定位置！",
+			"message": "确定你的位置时出错了！请重试。"
+		},
+		"geolocationTimeout": {
+			"title": "位置请求超时！",
+			"message": "获取你的位置用时太久。请靠近窗户或到户外，然后点击“重试”。"
+		},
+		"insecureContext": {
+			"title": "连接不安全",
+			"message": "地理定位需要 HTTPS。请通过安全连接（https://）打开本网站。"
+		},
+		"offline": {
+			"title": "没有网络连接",
+			"message": "你已离线。请连接网络后重试。"
+		},
+		"positionUnavailable": {
+			"title": "无法获取位置",
+			"message": "定位服务可能已关闭或不可用。请开启定位服务和精确/高精度定位，然后重试。"
+		},
+		"locationServicesOff": {
+			"title": "定位服务已关闭！",
+			"message": "请在设备设置中开启定位服务，然后重试。iOS：设置 → 隐私与安全性 → 定位服务。Android：设置 → 位置信息。同时请确保浏览器已开启精确/高精度定位。"
+		},
+		"walkingModeNotSupported": {
+			"title": "不支持步行模式！",
+			"message": "你的浏览器不支持步行模式。"
+		}
+	},
+	"youAreHere": "你在这里"
+}

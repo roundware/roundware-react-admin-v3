@@ -1,0 +1,42 @@
+{
+	"listen": {
+		"title": "Écouter",
+		"description": "<div class=\"content\">  <h2>Écouter</h2>  <p>Touche <strong>Lecture</strong> pour commencer. Ce que tu entends est un mélange des enregistrements que des gens ont faits ici, mixés en direct pendant que tu écoutes : ce n’est donc jamais tout à fait pareil deux fois.</p>  <p>Utilise le sélecteur en bas de l’écran pour choisir comment écouter. En <strong>mode carte</strong>, fais glisser la carte pour écouter n’importe où. En <strong>mode marche</strong>, la carte suit la position de ton téléphone et le son change au fil de tes déplacements.</p>  <p>Chaque repère ou forme sur la carte est la contribution de quelqu’un. Touches-en un pour la voir et l’écouter seule.</p>  <p>Pour ajouter la tienne, touche le bouton d’enregistrement sur la carte.</p></div>"
+	},
+	"tags": {
+		"title": "Décris ton enregistrement",
+		"description": "<div class=\"content\">  <h2>Décris ton enregistrement</h2>  <p>Choisis les options qui décrivent le mieux ce que tu vas enregistrer. Elles aident les gens qui écoutent à le trouver, et certains projets s’en servent pour décider de ce qui est diffusé, et où.</p>  <p>Touche <strong>Suivant</strong> quand tu as fini. Tu peux revenir en arrière et modifier tes choix avant d’envoyer.</p></div>"
+	},
+	"location": {
+		"title": "Choisis un lieu",
+		"description": "<div class=\"content\">  <h2>Choisis un lieu</h2>  <p>Ton enregistrement sera placé ici sur la carte, et entendu par les personnes qui écoutent à proximité.</p>  <p>Touche <strong>Utiliser ma position</strong> pour le placer là où tu te trouves, ou cherche un lieu et déplace la carte pour choisir un endroit. Puis touche <strong>Suivant</strong>.</p></div>"
+	},
+	"record": {
+		"title": "Faire un enregistrement",
+		"description": "<div class=\"content\">  <h2>Faire un enregistrement</h2>  <p>Touche le micro pour commencer à enregistrer, puis touche-le à nouveau pour arrêter. La première fois, ton navigateur te demandera l’autorisation d’utiliser le micro.</p>  <p>Réécoute-le avant de décider de le garder. Ça ne te plaît pas ? Touche <strong>Supprimer</strong> et recommence.</p>  <p>Si le projet le permet, <strong>Ajouter un média</strong> joint une photo ou un texte à ton enregistrement.</p>  <p>Quand c’est bon, touche <strong>Envoyer</strong>. Une fois que tu as accepté les conditions du projet, ton enregistrement est ajouté à la carte.</p></div>"
+	},
+	"loop-start": {
+		"title": "Ajoute ta partie",
+		"description": "<div class=\"content\">  <h2>Ajouter ta partie</h2>  <p>Dans ce projet, les enregistrements sont joués ensemble comme une seule pièce qui tourne en boucle sans s’arrêter. Tu vas entendre la boucle, enregistrer par-dessus, puis écouter comment ta partie sonne dans le mix avant de décider de la garder.</p>  <p>Un casque aide : sans casque, ton micro risque de capter la boucle en plus de ta voix.</p>  <p>La première fois, ton navigateur te demandera l’autorisation d’utiliser le micro.</p></div>"
+	},
+	"rehearse": {
+		"title": "Découvre la boucle",
+		"description": "<div class=\"content\">  <h2>Découvre la boucle</h2>  <p>Touche <strong>Lecture</strong> pour écouter la boucle sur laquelle tu vas enregistrer. Écoute-la autant de fois que tu veux.</p>  <p>Quand c’est bon, touche <strong>Enregistrer</strong>.</p></div>"
+	},
+	"recording": {
+		"title": "Enregistrement",
+		"description": "<div class=\"content\">  <h2>Enregistrement</h2>  <p>L’enregistrement démarre après un court décompte, en rythme avec la boucle, et s’arrête tout seul quand la boucle arrive à la fin. Le cercle montre où tu en es.</p>  <p>L’indicateur de niveau te dit si ton niveau est trop faible ou trop fort.</p></div>"
+	},
+	"review": {
+		"title": "Réécoute",
+		"description": "<div class=\"content\">  <h2>Réécoute ton enregistrement</h2>  <p>Tu entends ta partie mixée avec la boucle.</p>  <p>Tu veux réessayer ? Réenregistre. Ça te plaît ? Touche <strong>Envoyer</strong> pour l’ajouter au projet ; il faudra peut-être un ou deux tours de boucle avant que tu l’entendes avec tous les autres.</p></div>"
+	},
+	"welcome": {
+		"title": "Bienvenue",
+		"description": "<div class=\"content\">  <h2>Bienvenue</h2>  <p>Ici, tu peux écouter les enregistrements faits sur place, et ajouter les tiens.</p>  <p>Touche le <strong>?</strong> sur n’importe quel écran pour obtenir de l’aide sur cet écran.</p></div>"
+	},
+	"help": {
+		"title": "Aide",
+		"description": "<div class=\"content\">  <h2>Aide</h2>  <p>Écoute les enregistrements que des gens ont faits ici, et ajoute les tiens.</p>  <p>Touche le <strong>?</strong> sur n’importe quel écran pour obtenir de l’aide sur cet écran.</p></div>"
+	}
+}

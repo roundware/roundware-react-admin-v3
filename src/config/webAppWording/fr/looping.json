@@ -1,0 +1,94 @@
+{
+	"consent": {
+		"fallback": "J’accepte que mon enregistrement soit utilisé à des fins artistiques dans le cadre de ce projet",
+		"checkingPermission": "Vérification de l’autorisation...",
+		"requestingPermission": "Demande d’autorisation...",
+		"httpsRequired": "L’accès au micro nécessite HTTPS. Utilise https:// ou localhost.",
+		"errors": {
+			"denied": "L’autorisation d’utiliser le micro a été refusée. Autorise l’accès au micro dans les paramètres de ton navigateur et réessaie.",
+			"notFound": "Aucun micro détecté. Branche un micro et réessaie.",
+			"notSupported": "Ce navigateur ne prend pas en charge l’accès au micro. Essaie avec un autre navigateur.",
+			"failed": "Impossible d’accéder au micro. Vérifie les paramètres de ton navigateur et réessaie."
+		}
+	},
+	"steps": {
+		"title": "Enregistrer",
+		"rehearse": "Répète en chantant\nsur la boucle",
+		"record": "Enregistre-toi\nen train de chanter",
+		"review": "Réécoute et envoie\nton enregistrement"
+	},
+	"stepIndicator": {
+		"rehearse": "RÉPÉTITION",
+		"recording": "ENREGISTREMENT",
+		"review": "RÉÉCOUTE"
+	},
+	"controls": {
+		"generating": "Création de la boucle à chanter...",
+		"getReady": "Prépare-toi à enregistrer tout ce que tu veux : double ce que tu entends, improvise, fais des sons, fredonne, siffle, etc. Pas de paroles, s’il te plaît.",
+		"haveFun": "Amuse-toi bien !",
+		"status": {
+			"idle": "Appuie sur Lecture pour commencer à répéter",
+			"playing": "Appuie sur Enregistrer quand tu veux chanter",
+			"preparing": "Préparation de l’enregistrement...",
+			"countdown": "Prépare-toi à enregistrer...",
+			"recording": "Enregistrement...",
+			"processing": "Traitement de l’enregistrement..."
+		}
+	},
+	"controlButton": {
+		"play": "Lecture",
+		"playLabel": "LECTURE",
+		"record": "Enregistrer",
+		"recordLabel": "ENREGISTRER",
+		"recording": "Enregistrement",
+		"rerecord": "Réenregistrer",
+		"loadingPreview": "CHARGEMENT DE L’APERÇU"
+	},
+	"rerecordDialog": {
+		"title": "Réenregistrer",
+		"description": "Vraiment ?\nTu vas perdre ton enregistrement.",
+		"confirm": "Oui, réenregistrer"
+	},
+	"exitDialog": {
+		"title": "Quitter l’enregistrement",
+		"description": "Tu veux vraiment arrêter ?\nTu vas perdre ton enregistrement.",
+		"confirm": "Oui, quitter"
+	},
+	"leaveDialog": {
+		"message": "Tu veux vraiment partir sans envoyer ton enregistrement ? Si tu pars, ton enregistrement sera supprimé.",
+		"stay": "Garder l’enregistrement",
+		"leave": "Supprimer l’enregistrement"
+	},
+	"thankYouDialog": {
+		"title": "Merci !",
+		"description": "Ta voix est en train d’être ajoutée au projet. Il faudra peut-être quelques tours de boucle, mais tu pourras bientôt t’entendre avec les autres voix de ce lieu."
+	},
+	"levelMeter": {
+		"tooQuiet": "Chante un peu plus fort !",
+		"gettingThere": "Presque...",
+		"good": "Bon niveau !",
+		"perfect": "Parfait !",
+		"gettingLoud": "Ça devient fort...",
+		"tooLoud": "Éloigne-toi un peu du micro !"
+	},
+	"submission": {
+		"submit": "Envoyer l’enregistrement",
+		"uploading": "Ta contribution est en cours d’envoi ! Garde cette page ouverte jusqu’à la fin de l’envoi.",
+		"genericError": "Une erreur s’est produite pendant l’envoi de ta contribution. Réessaie plus tard."
+	},
+	"errors": {
+		"server": "Le serveur rencontre des problèmes. Réessaie dans quelques instants.",
+		"submissionIssue": "Un problème est survenu lors de l’envoi de ton enregistrement.",
+		"invalid": "Les données de ton enregistrement semblent invalides. Essaie d’enregistrer à nouveau.",
+		"unauthorized": "Tu n’as pas l’autorisation de créer des haut-parleurs. Actualise la page et réessaie.",
+		"forbidden": "Tu n’as pas le droit de créer des haut-parleurs à cet endroit.",
+		"timeout": "L’envoi a pris trop de temps. Réessaie avec une connexion Internet stable.",
+		"tooLarge": "Ton fichier d’enregistrement est trop volumineux. Essaie d’enregistrer un extrait plus court.",
+		"unprocessable": "Ton enregistrement n’a pas pu être traité. Essaie d’enregistrer à nouveau.",
+		"tooManyRequests": "Trop de requêtes. Patiente un instant avant de réessayer.",
+		"uploadFailed": "Échec de l’envoi (erreur {{status}}). Réessaie.",
+		"network": "Impossible de se connecter au serveur. Vérifie ta connexion Internet et réessaie.",
+		"unexpected": "Une erreur inattendue s’est produite : {{message}}",
+		"unknownError": "Erreur inconnue"
+	}
+}

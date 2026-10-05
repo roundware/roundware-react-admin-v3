@@ -1,0 +1,63 @@
+{
+	"contributionsPaused": {
+		"title": "Las contribuciones están en pausa",
+		"notTaking": "Este proyecto no está recibiendo grabaciones nuevas en este momento.",
+		"stillListen": "Todo lo que ya está aquí sigue disponible para que lo escuches."
+	},
+	"legalAgreement": {
+		"title": "Acuerdo de consentimiento",
+		"agree": "ACEPTO",
+		"goBack": "Regresar"
+	},
+	"tagSelect": {
+		"selectAnOption": "¡Selecciona una opción!"
+	},
+	"location": {
+		"header": "¿Desde dónde grabas hoy?",
+		"useMyLocation": "Usar mi ubicación",
+		"streetMap": "Mapa de calles",
+		"searchLabel": "Escribe para elegir una ubicación",
+		"noResults": "No se encontraron resultados",
+		"geocoderFailed": "El geocodificador falló por: {{status}}"
+	},
+	"createRecording": {
+		"leavePrompt": {
+			"message": "¿Seguro que quieres salir sin enviar tu grabación? Si lo haces, tu grabación se eliminará.",
+			"stay": "Conservar grabación",
+			"leave": "Eliminar grabación"
+		},
+		"noSelectedTags": "No hay etiquetas seleccionadas",
+		"tapToRecord": "Toca para grabar",
+		"tapToUpload": "Toca para subir audio",
+		"tapToStop": "Toca para detener",
+		"deleteDialog": {
+			"question": "¿Eliminar tu borrador de grabación actual?",
+			"keep": "¡No, consérvala!",
+			"delete": "¡Sí, elimínala!"
+		},
+		"noLocation": "¡No se pudo obtener la latitud y la longitud!",
+		"uploading": "¡Estamos subiendo tu contribución! Mantén esta página abierta hasta que terminemos.",
+		"uploadComplete": "¡Subida completa! ¡Gracias por participar!",
+		"createNew": "Crear nueva grabación",
+		"resettingIn_one": "Reiniciando en {{count}} segundo...",
+		"resettingIn_other": "Reiniciando en {{count}} segundos...",
+		"resettingIn_many": "Reiniciando en {{count}} segundos..."
+	},
+	"micNotAccessible": {
+		"title": "Micrófono no disponible",
+		"message": "No podemos acceder a tu micrófono en este momento"
+	},
+	"additionalMedia": {
+		"add": "Agregar",
+		"addMedia": "Agregar contenido",
+		"addPhoto": "Agregar foto",
+		"addText": "Agregar texto",
+		"textPlaceholder": "¡Toca o haz clic para escribir!"
+	},
+	"contactInfo": {
+		"title": "Información de contacto",
+		"firstName": "Nombre",
+		"lastName": "Apellido",
+		"email": "Correo electrónico"
+	}
+}

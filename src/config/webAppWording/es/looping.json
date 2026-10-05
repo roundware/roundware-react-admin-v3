@@ -1,0 +1,94 @@
+{
+	"consent": {
+		"fallback": "Doy mi consentimiento para que mi grabación se use con los fines artísticos de este proyecto",
+		"checkingPermission": "Verificando permiso...",
+		"requestingPermission": "Solicitando permiso...",
+		"httpsRequired": "El acceso al micrófono requiere HTTPS. Usa https:// o localhost.",
+		"errors": {
+			"denied": "Se denegó el permiso para usar el micrófono. Permite el acceso al micrófono en la configuración de tu navegador e inténtalo de nuevo.",
+			"notFound": "No se encontró ningún micrófono. Conecta un micrófono e inténtalo de nuevo.",
+			"notSupported": "Este navegador no admite el acceso al micrófono. Prueba con otro navegador.",
+			"failed": "No se pudo acceder al micrófono. Revisa la configuración de tu navegador e inténtalo de nuevo."
+		}
+	},
+	"steps": {
+		"title": "Grabar",
+		"rehearse": "Ensaya cantando\nsobre el loop",
+		"record": "Grábate\ncantando",
+		"review": "Revisa y envía\ntu grabación"
+	},
+	"stepIndicator": {
+		"rehearse": "ENSAYO",
+		"recording": "GRABACIÓN",
+		"review": "REVISIÓN"
+	},
+	"controls": {
+		"generating": "Generando el loop para cantar...",
+		"getReady": "Prepárate para grabar lo que quieras: dobla lo que escuchas, improvisa, haz sonidos, tararea, silba, etc. Por favor, sin palabras.",
+		"haveFun": "¡Diviértete!",
+		"status": {
+			"idle": "Presiona reproducir para empezar a ensayar",
+			"playing": "Presiona grabar cuando quieras cantar",
+			"preparing": "Preparando la grabación...",
+			"countdown": "Prepárate para grabar...",
+			"recording": "Grabando...",
+			"processing": "Procesando la grabación..."
+		}
+	},
+	"controlButton": {
+		"play": "Reproducir",
+		"playLabel": "REPRODUCIR",
+		"record": "Grabar",
+		"recordLabel": "GRABAR",
+		"recording": "Grabando",
+		"rerecord": "Volver a grabar",
+		"loadingPreview": "CARGANDO VISTA PREVIA"
+	},
+	"rerecordDialog": {
+		"title": "Volver a grabar",
+		"description": "¿Seguro?\nPerderás tu grabación.",
+		"confirm": "Sí, volver a grabar"
+	},
+	"exitDialog": {
+		"title": "Salir de la grabación",
+		"description": "¿Seguro que quieres detenerte?\nPerderás tu grabación.",
+		"confirm": "Sí, salir"
+	},
+	"leaveDialog": {
+		"message": "¿Seguro que quieres salir sin enviar tu grabación? Si lo haces, tu grabación se eliminará.",
+		"stay": "Conservar grabación",
+		"leave": "Eliminar grabación"
+	},
+	"thankYouDialog": {
+		"title": "¡Gracias!",
+		"description": "Tu voz se está agregando al proyecto. Puede tardar algunas vueltas del loop, pero pronto podrás escucharte junto con las demás voces de este lugar."
+	},
+	"levelMeter": {
+		"tooQuiet": "¡Canta un poco más fuerte!",
+		"gettingThere": "Ya casi...",
+		"good": "¡Buen nivel!",
+		"perfect": "¡Perfecto!",
+		"gettingLoud": "Está subiendo mucho...",
+		"tooLoud": "¡Aléjate un poco del micrófono!"
+	},
+	"submission": {
+		"submit": "Enviar grabación",
+		"uploading": "¡Estamos subiendo tu contribución! Mantén esta página abierta hasta que terminemos.",
+		"genericError": "Ocurrió un error al intentar subir tu contribución. Inténtalo de nuevo más tarde."
+	},
+	"errors": {
+		"server": "El servidor tiene problemas. Inténtalo de nuevo en unos momentos.",
+		"submissionIssue": "Hubo un problema al enviar tu grabación.",
+		"invalid": "Los datos de tu grabación no parecen válidos. Intenta grabar de nuevo.",
+		"unauthorized": "No tienes autorización para crear altavoces. Actualiza la página e inténtalo de nuevo.",
+		"forbidden": "No tienes permiso para crear altavoces en este lugar.",
+		"timeout": "La subida tardó demasiado. Inténtalo de nuevo con una conexión a internet estable.",
+		"tooLarge": "Tu archivo de grabación es demasiado grande. Intenta grabar un fragmento más corto.",
+		"unprocessable": "No se pudo procesar tu grabación. Intenta grabar de nuevo.",
+		"tooManyRequests": "Demasiadas solicitudes. Espera un momento antes de intentarlo de nuevo.",
+		"uploadFailed": "La subida falló (Error {{status}}). Inténtalo de nuevo.",
+		"network": "No se pudo conectar con el servidor. Revisa tu conexión a internet e inténtalo de nuevo.",
+		"unexpected": "Ocurrió un error inesperado: {{message}}",
+		"unknownError": "Error desconocido"
+	}
+}

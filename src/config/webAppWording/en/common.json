@@ -1,0 +1,21 @@
+{
+	"ok": "OK",
+	"cancel": "Cancel",
+	"close": "Close",
+	"back": "Back",
+	"next": "Next",
+	"submit": "Submit",
+	"continue": "Continue",
+	"delete": "Delete",
+	"tryAgain": "Try again",
+	"gotIt": "Got it!",
+	"listen": "Listen",
+	"share": "Share",
+	"loading": "Loading…",
+	"warning": "Warning",
+	"note": "Note",
+	"block": "Block",
+	"allow": "Allow",
+	"help": "Help",
+	"info": "Info"
+}

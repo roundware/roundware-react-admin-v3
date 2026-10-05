@@ -1,0 +1,141 @@
+{
+	"launchButton": "STARTEN",
+	"playButton": "ABSPIELEN",
+	"launchTooltip": "TIPPE AUF {{button}}, UM ZUZUHÖREN",
+	"loadingAudio": "Audio wird geladen...",
+	"mixerControls": "Mixer-Steuerung",
+	"replay": "Erneut abspielen",
+	"speakButton": "Sprechen",
+	"assetPlayer": {
+		"unsupported": "Dein Browser unterstützt keine Audiowiedergabe!"
+	},
+	"history": {
+		"clear": "Hörverlauf löschen",
+		"showOnMap": "Auf der Karte zeigen",
+		"empty": "Du hast noch keinen Hörverlauf. Wenn du dir Aufnahmen auf der Karte anhörst, erscheinen sie hier, damit du sie später wiederentdecken kannst."
+	},
+	"drawer": {
+		"filters": "Filter",
+		"history": "Verlauf"
+	},
+	"filters": {
+		"title": "Aufnahmen filtern",
+		"byTags": "Nach Schlagwörtern filtern",
+		"description": "Beschreibungsfilter",
+		"descriptionPlaceholder": "Gib etwas ein...",
+		"byUser": "nach Nutzer filtern",
+		"selectTagsPlaceholder": "Wähle eins oder mehrere aus...",
+		"updated": "Erledigt! Filter aktualisiert."
+	},
+	"dateFilter": {
+		"selectRange": "Zeitraum auswählen",
+		"last7Days": "Letzte 7 Tage",
+		"last30Days": "Letzte 30 Tage",
+		"lastYear": "Letztes Jahr",
+		"customRange": "Eigener Zeitraum",
+		"allDates": "Gesamter Zeitraum",
+		"startDate": "Startdatum",
+		"endDate": "Enddatum"
+	},
+	"speakerToggle": {
+		"title": "Lautsprecher"
+	},
+	"mixer": {
+		"soundOn": "Ton an",
+		"soundOff": "Ton aus",
+		"skipping": "Audio wird neu gemischt: Wir springen vor!"
+	},
+	"share": {
+		"includeGeo": "Aktuelle Standortdaten einbeziehen"
+	},
+	"timeMachine": {
+		"timeBased": "Nach Zeit",
+		"orderBased": "Nach Reihenfolge",
+		"speakerCount_one": "{{count}} Lautsprecher",
+		"speakerCount_other": "{{count}} Lautsprecher",
+		"automate": "Automatisch",
+		"stop": "Stopp",
+		"hidePlayButton": "Abspieltaste ausblenden",
+		"hint": "Bewege den Regler, um Lautsprecher nach Erstellungszeit zu filtern"
+	},
+	"addVoice": {
+		"tapToRecord": "ZUM AUFNEHMEN TIPPEN",
+		"moveCloser": "Geh näher an einen Lautsprecher heran, um aufzunehmen",
+		"paused": "Beiträge sind pausiert",
+		"pausedBadge": "PAUSIERT",
+		"outOfRangeBadge": "AUSSER\nREICHWEITE"
+	},
+	"outOfRange": {
+		"title": "Außer Reichweite",
+		"message": "Du bist außerhalb der Reichweite dieses Projekts. Bitte begib dich an einen Ort innerhalb der Reichweite und versuch es noch einmal. Danke!"
+	},
+	"assetActions": {
+		"download": "diese Audiodatei herunterladen",
+		"flag": "sag uns, wenn dir dieser Beitrag Sorgen macht!",
+		"like": "sag uns, dass dir dieser Beitrag gefällt!",
+		"show": "zur Beitragsseite gehen"
+	},
+	"assetCard": {
+		"descriptionLabel": "Beschreibung:",
+		"readMore": "Weiterlesen",
+		"description": "Beschreibung",
+		"additionalInfo": "Weitere Informationen"
+	},
+	"downloading": {
+		"title": "Audio wird heruntergeladen... Bitte warten",
+		"progress_one": "{{completed}} von {{count}} Datei",
+		"progress_other": "{{completed}} von {{count}} Dateien",
+		"remaining_one": "Noch {{count}} Datei",
+		"remaining_other": "Noch {{count}} Dateien"
+	},
+	"locationRequired": {
+		"title": "Standortzugriff erforderlich",
+		"body": "Um voll am Kunstwerk teilzunehmen, musst du deinen Standort freigeben. Deine Standortdaten werden weder gespeichert noch weitergegeben."
+	},
+	"modeToggle": {
+		"walking": "Gehmodus",
+		"map": "Kartenmodus",
+		"switchToWalking": "Zum Gehmodus wechseln",
+		"switchToMap": "Zum Kartenmodus wechseln",
+		"current": "{{label}} (aktiv)"
+	},
+	"walkingErrors": {
+		"outOfRange": {
+			"title": "Außer Reichweite!",
+			"message": "Der Gehmodus ist an deinem Standort derzeit nicht verfügbar! Du kannst aber im Kartenmodus weitermachen."
+		},
+		"permissionDenied": {
+			"title": "Zugriff verweigert!",
+			"message": "Der Zugriff auf deinen Standort wurde verweigert! Bitte versuch es noch einmal und erlaube den Zugriff, um den Gehmodus zu nutzen."
+		},
+		"failedToDetermineLocation": {
+			"title": "Standort konnte nicht ermittelt werden!",
+			"message": "Beim Ermitteln deines Standorts ist ein Fehler aufgetreten! Bitte versuch es noch einmal."
+		},
+		"geolocationTimeout": {
+			"title": "Zeitüberschreitung bei der Standortabfrage!",
+			"message": "Es hat zu lange gedauert, deinen Standort zu ermitteln. Geh in die Nähe eines Fensters oder nach draußen und tippe auf „Erneut versuchen“."
+		},
+		"insecureContext": {
+			"title": "Unsichere Verbindung",
+			"message": "Die Standortbestimmung erfordert HTTPS. Bitte öffne die Website über eine sichere Verbindung (https://)."
+		},
+		"offline": {
+			"title": "Keine Internetverbindung",
+			"message": "Du bist offline. Stell eine Internetverbindung her und versuch es noch einmal."
+		},
+		"positionUnavailable": {
+			"title": "Position nicht verfügbar",
+			"message": "Die Ortungsdienste sind möglicherweise deaktiviert oder nicht verfügbar. Aktiviere die Ortungsdienste und die genaue Ortung und versuch es dann noch einmal."
+		},
+		"locationServicesOff": {
+			"title": "Ortungsdienste sind deaktiviert!",
+			"message": "Bitte aktiviere die Ortungsdienste in den Einstellungen deines Geräts und versuch es noch einmal. Unter iOS: Einstellungen → Datenschutz & Sicherheit → Ortungsdienste. Unter Android: Einstellungen → Standort. Stell außerdem sicher, dass in deinem Browser die genaue Ortung aktiviert ist."
+		},
+		"walkingModeNotSupported": {
+			"title": "Gehmodus nicht unterstützt!",
+			"message": "Dein Browser unterstützt den Gehmodus nicht."
+		}
+	},
+	"youAreHere": "Du bist hier"
+}

@@ -1,0 +1,63 @@
+{
+	"contributionsPaused": {
+		"title": "Les contributions sont en pause",
+		"notTaking": "Ce projet n’accepte pas de nouveaux enregistrements pour le moment.",
+		"stillListen": "Tu peux toujours écouter tout ce qui est déjà là."
+	},
+	"legalAgreement": {
+		"title": "Accord de consentement",
+		"agree": "J’ACCEPTE",
+		"goBack": "Retour"
+	},
+	"tagSelect": {
+		"selectAnOption": "Choisis une option !"
+	},
+	"location": {
+		"header": "D’où enregistres-tu aujourd’hui ?",
+		"useMyLocation": "Utiliser ma position",
+		"streetMap": "Plan des rues",
+		"searchLabel": "Écris pour choisir un lieu",
+		"noResults": "Aucun résultat",
+		"geocoderFailed": "Échec du géocodeur : {{status}}"
+	},
+	"createRecording": {
+		"leavePrompt": {
+			"message": "Tu veux vraiment partir sans envoyer ton enregistrement ? Si tu pars, ton enregistrement sera supprimé.",
+			"stay": "Garder l’enregistrement",
+			"leave": "Supprimer l’enregistrement"
+		},
+		"noSelectedTags": "Aucun tag sélectionné",
+		"tapToRecord": "Touche pour enregistrer",
+		"tapToUpload": "Touche pour importer un fichier audio",
+		"tapToStop": "Touche pour arrêter",
+		"deleteDialog": {
+			"question": "Supprimer ton brouillon d’enregistrement ?",
+			"keep": "Non, je le garde !",
+			"delete": "Oui, supprime-le !"
+		},
+		"noLocation": "Impossible d’obtenir la latitude et la longitude !",
+		"uploading": "Ta contribution est en cours d’envoi ! Garde cette page ouverte jusqu’à la fin de l’envoi.",
+		"uploadComplete": "Envoi terminé ! Merci de ta participation !",
+		"createNew": "Créer un nouvel enregistrement",
+		"resettingIn_one": "Réinitialisation dans {{count}} seconde...",
+		"resettingIn_many": "Réinitialisation dans {{count}} secondes...",
+		"resettingIn_other": "Réinitialisation dans {{count}} secondes..."
+	},
+	"micNotAccessible": {
+		"title": "Micro inaccessible",
+		"message": "Nous ne pouvons pas accéder à ton micro pour le moment"
+	},
+	"additionalMedia": {
+		"add": "Ajouter",
+		"addMedia": "Ajouter un média",
+		"addPhoto": "Ajouter une photo",
+		"addText": "Ajouter du texte",
+		"textPlaceholder": "Touche ou clique pour écrire !"
+	},
+	"contactInfo": {
+		"title": "Coordonnées",
+		"firstName": "Prénom",
+		"lastName": "Nom",
+		"email": "E-mail"
+	}
+}

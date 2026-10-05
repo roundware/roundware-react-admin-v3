@@ -1,0 +1,62 @@
+{
+	"contributionsPaused": {
+		"title": "投稿已暂停",
+		"notTaking": "这个项目目前不接收新的录音。",
+		"stillListen": "已有的所有录音你仍然可以随意收听。"
+	},
+	"legalAgreement": {
+		"title": "同意书",
+		"agree": "我同意",
+		"goBack": "返回"
+	},
+	"tagSelect": {
+		"selectAnOption": "请选择一个选项！"
+	},
+	"location": {
+		"header": "你今天在哪里录音？",
+		"useMyLocation": "使用我的位置",
+		"streetMap": "街道地图",
+		"searchLabel": "输入以选择位置",
+		"noResults": "未找到结果",
+		"geocoderFailed": "地理编码失败，原因：{{status}}"
+	},
+	"createRecording": {
+		"leavePrompt": {
+			"message": "确定不提交录音就离开吗？离开后，你的录音将被删除。",
+			"stay": "保留录音",
+			"leave": "删除录音"
+		},
+		"noSelectedTags": "未选择标签",
+		"tapToRecord": "点击录音",
+		"tapToUpload": "点击上传音频",
+		"tapToStop": "点击停止",
+		"deleteDialog": {
+			"question": "要删除当前的录音草稿吗？",
+			"keep": "不，保留它！",
+			"delete": "是，删除它！"
+		},
+		"noLocation": "无法获取经纬度！",
+		"uploading": "正在上传你的投稿！上传完成前请不要关闭此页面。",
+		"uploadComplete": "上传完成！感谢你的参与！",
+		"createNew": "录制新的录音",
+		"resettingIn_one": "{{count}} 秒后重置……",
+		"resettingIn_other": "{{count}} 秒后重置……"
+	},
+	"micNotAccessible": {
+		"title": "无法使用麦克风",
+		"message": "我们目前无法访问你的麦克风"
+	},
+	"additionalMedia": {
+		"add": "添加",
+		"addMedia": "添加媒体",
+		"addPhoto": "添加照片",
+		"addText": "添加文字",
+		"textPlaceholder": "点击输入文字！"
+	},
+	"contactInfo": {
+		"title": "联系信息",
+		"firstName": "名",
+		"lastName": "姓",
+		"email": "电子邮箱"
+	}
+}

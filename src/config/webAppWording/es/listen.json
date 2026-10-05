@@ -1,0 +1,144 @@
+{
+	"launchButton": "INICIAR",
+	"playButton": "REPRODUCIR",
+	"launchTooltip": "TOCA {{button}} PARA ESCUCHAR",
+	"loadingAudio": "Cargando audio...",
+	"mixerControls": "Controles del mezclador",
+	"replay": "Repetir",
+	"speakButton": "Hablar",
+	"assetPlayer": {
+		"unsupported": "¡Tu navegador no admite audio!"
+	},
+	"history": {
+		"clear": "Borrar historial de escucha",
+		"showOnMap": "Ver en el mapa",
+		"empty": "Todavía no tienes historial de escucha. A medida que escuches grabaciones en el mapa, aparecerán aquí para que puedas volver a descubrirlas."
+	},
+	"drawer": {
+		"filters": "Filtros",
+		"history": "Historial"
+	},
+	"filters": {
+		"title": "Filtrar grabaciones",
+		"byTags": "Filtrar por etiquetas",
+		"description": "Filtro por descripción",
+		"descriptionPlaceholder": "Escribe algo...",
+		"byUser": "filtrar por usuario",
+		"selectTagsPlaceholder": "Selecciona una o más...",
+		"updated": "¡Listo! Filtros actualizados."
+	},
+	"dateFilter": {
+		"selectRange": "Selecciona un rango de fechas",
+		"last7Days": "Últimos 7 días",
+		"last30Days": "Últimos 30 días",
+		"lastYear": "Último año",
+		"customRange": "Rango personalizado",
+		"allDates": "Todas las fechas",
+		"startDate": "Fecha de inicio",
+		"endDate": "Fecha de fin"
+	},
+	"speakerToggle": {
+		"title": "Altavoces"
+	},
+	"mixer": {
+		"soundOn": "Sonido activado",
+		"soundOff": "Sonido desactivado",
+		"skipping": "Remezclando audio: ¡saltando hacia adelante!"
+	},
+	"share": {
+		"includeGeo": "Incluir la ubicación actual"
+	},
+	"timeMachine": {
+		"timeBased": "Por fecha",
+		"orderBased": "Por orden",
+		"speakerCount_one": "{{count}} altavoz",
+		"speakerCount_many": "{{count}} altavoces",
+		"speakerCount_other": "{{count}} altavoces",
+		"automate": "Automatizar",
+		"stop": "Detener",
+		"hidePlayButton": "Ocultar botón de reproducción",
+		"hint": "Mueve el control para filtrar los altavoces por fecha de creación"
+	},
+	"addVoice": {
+		"tapToRecord": "TOCA PARA GRABAR",
+		"moveCloser": "Acércate a la ubicación de un altavoz para grabar",
+		"paused": "Las contribuciones están en pausa",
+		"pausedBadge": "EN PAUSA",
+		"outOfRangeBadge": "FUERA DE\nALCANCE"
+	},
+	"outOfRange": {
+		"title": "Fuera de alcance",
+		"message": "Estás fuera del alcance de este proyecto. Ve a algún lugar dentro del alcance e inténtalo de nuevo. ¡Gracias!"
+	},
+	"assetActions": {
+		"download": "descargar este archivo de audio",
+		"flag": "¡avísanos si esta te preocupa!",
+		"like": "¡dinos si te gusta esta!",
+		"show": "ir a la página de la contribución"
+	},
+	"assetCard": {
+		"descriptionLabel": "Descripción:",
+		"readMore": "Leer más",
+		"description": "Descripción",
+		"additionalInfo": "Información adicional"
+	},
+	"downloading": {
+		"title": "Descargando audio... Espera un momento",
+		"progress_one": "{{completed}} de {{count}} archivo",
+		"progress_many": "{{completed}} de {{count}} archivos",
+		"progress_other": "{{completed}} de {{count}} archivos",
+		"remaining_one": "Falta {{count}} archivo",
+		"remaining_many": "Faltan {{count}} archivos",
+		"remaining_other": "Faltan {{count}} archivos"
+	},
+	"locationRequired": {
+		"title": "Se necesita acceso a tu ubicación",
+		"body": "Activar la ubicación es necesario para participar plenamente en la experiencia de la obra. Tus datos de ubicación no se guardarán ni se compartirán."
+	},
+	"modeToggle": {
+		"walking": "Modo caminata",
+		"map": "Modo mapa",
+		"switchToWalking": "Cambiar a modo caminata",
+		"switchToMap": "Cambiar a modo mapa",
+		"current": "{{label}} (actual)"
+	},
+	"walkingErrors": {
+		"outOfRange": {
+			"title": "¡Fuera de alcance!",
+			"message": "El modo caminata no está disponible en tu ubicación. Puedes seguir usando el modo mapa."
+		},
+		"permissionDenied": {
+			"title": "¡Permiso denegado!",
+			"message": "Se denegó el permiso para acceder a tu ubicación. Inténtalo de nuevo y permite el acceso para usar el modo caminata."
+		},
+		"failedToDetermineLocation": {
+			"title": "¡No se pudo determinar tu ubicación!",
+			"message": "Hubo un error al determinar tu ubicación. Inténtalo de nuevo."
+		},
+		"geolocationTimeout": {
+			"title": "¡Se agotó el tiempo para obtener tu ubicación!",
+			"message": "Obtener tu ubicación tardó demasiado. Acércate a una ventana o sal al aire libre y toca Reintentar."
+		},
+		"insecureContext": {
+			"title": "Conexión no segura",
+			"message": "La geolocalización requiere HTTPS. Abre el sitio con una conexión segura (https://)."
+		},
+		"offline": {
+			"title": "Sin conexión a internet",
+			"message": "No tienes conexión. Conéctate a internet e inténtalo de nuevo."
+		},
+		"positionUnavailable": {
+			"title": "Ubicación no disponible",
+			"message": "Es posible que los servicios de ubicación estén desactivados o no disponibles. Activa los servicios de ubicación y la precisión alta, e inténtalo de nuevo."
+		},
+		"locationServicesOff": {
+			"title": "¡Los servicios de ubicación están desactivados!",
+			"message": "Activa los servicios de ubicación en la configuración de tu dispositivo e inténtalo de nuevo. En iOS: Configuración → Privacidad y seguridad → Localización. En Android: Configuración → Ubicación. Asegúrate también de que tu navegador tenga activada la ubicación precisa."
+		},
+		"walkingModeNotSupported": {
+			"title": "¡Modo caminata no compatible!",
+			"message": "Tu navegador no es compatible con el modo caminata."
+		}
+	},
+	"youAreHere": "Estás aquí"
+}

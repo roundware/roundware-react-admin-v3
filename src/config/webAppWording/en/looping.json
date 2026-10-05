@@ -1,0 +1,94 @@
+{
+	"consent": {
+		"fallback": "I consent to my recording being used for the artistic purposes of this project",
+		"checkingPermission": "Checking Permission...",
+		"requestingPermission": "Requesting Permission...",
+		"httpsRequired": "Microphone access requires HTTPS. Please use https:// or localhost.",
+		"errors": {
+			"denied": "Microphone permission was denied. Please allow microphone access in your browser settings and try again.",
+			"notFound": "No microphone found. Please connect a microphone and try again.",
+			"notSupported": "Microphone access is not supported in this browser. Please try a different browser.",
+			"failed": "Failed to access microphone. Please check your browser settings and try again."
+		}
+	},
+	"steps": {
+		"title": "Record",
+		"rehearse": "Rehearse your\nsinging to the loop",
+		"record": "Record yourself\nsinging",
+		"review": "Review and Submit\nyour recording"
+	},
+	"stepIndicator": {
+		"rehearse": "REHEARSE",
+		"recording": "RECORDING",
+		"review": "REVIEW"
+	},
+	"controls": {
+		"generating": "Generating sing-along loop...",
+		"getReady": "Get ready to record anything you want: double what you hear, improvise, make sounds, hum, whistle, etc. Please no words.",
+		"haveFun": "Have fun!",
+		"status": {
+			"idle": "Press play to start rehearsing",
+			"playing": "Press record when ready to sing",
+			"preparing": "Preparing to record...",
+			"countdown": "Get ready to record...",
+			"recording": "Recording...",
+			"processing": "Processing recording..."
+		}
+	},
+	"controlButton": {
+		"play": "Play",
+		"playLabel": "PLAY",
+		"record": "Record",
+		"recordLabel": "RECORD",
+		"recording": "Recording",
+		"rerecord": "Re-Record",
+		"loadingPreview": "LOADING PREVIEW"
+	},
+	"rerecordDialog": {
+		"title": "Re-record",
+		"description": "Are you sure?\nYou will lose your recording.",
+		"confirm": "Yes, Re-record"
+	},
+	"exitDialog": {
+		"title": "Exit Recording",
+		"description": "Are you sure you want to stop?\nYou will lose your recording.",
+		"confirm": "Yes, Exit"
+	},
+	"leaveDialog": {
+		"message": "Are you sure you want to leave without submitting your recording? If you do, your recording will be deleted.",
+		"stay": "Keep Recording",
+		"leave": "Delete Recording"
+	},
+	"thankYouDialog": {
+		"title": "Thank You!",
+		"description": "Your voice is being added to the project. It may take a few loops, but you will soon be able to hear yourself with the other voices in this location."
+	},
+	"levelMeter": {
+		"tooQuiet": "Sing a bit louder!",
+		"gettingThere": "Getting there...",
+		"good": "Good level!",
+		"perfect": "Perfect!",
+		"gettingLoud": "Getting loud...",
+		"tooLoud": "Pull back from the mic a bit!"
+	},
+	"submission": {
+		"submit": "Submit Recording",
+		"uploading": "Uploading your contribution now! Please keep this page open until we finish uploading.",
+		"genericError": "We encountered an error while trying to upload your contribution. Please try again later."
+	},
+	"errors": {
+		"server": "The server is experiencing issues. Please try again in a few moments.",
+		"submissionIssue": "There was an issue with your recording submission.",
+		"invalid": "Your recording data appears to be invalid. Please try recording again.",
+		"unauthorized": "You are not authorized to create speakers. Please refresh the page and try again.",
+		"forbidden": "You do not have permission to create speakers in this location.",
+		"timeout": "The upload took too long. Please try again with a stable internet connection.",
+		"tooLarge": "Your recording file is too large. Please try recording a shorter clip.",
+		"unprocessable": "Your recording could not be processed. Please try recording again.",
+		"tooManyRequests": "Too many requests. Please wait a moment before trying again.",
+		"uploadFailed": "Upload failed (Error {{status}}). Please try again.",
+		"network": "Unable to connect to the server. Please check your internet connection and try again.",
+		"unexpected": "An unexpected error occurred: {{message}}",
+		"unknownError": "Unknown error"
+	}
+}

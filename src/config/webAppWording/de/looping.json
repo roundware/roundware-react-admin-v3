@@ -1,0 +1,94 @@
+{
+	"consent": {
+		"fallback": "Ich bin damit einverstanden, dass meine Aufnahme für die künstlerischen Zwecke dieses Projekts verwendet wird",
+		"checkingPermission": "Berechtigung wird geprüft...",
+		"requestingPermission": "Berechtigung wird angefragt...",
+		"httpsRequired": "Der Mikrofonzugriff erfordert HTTPS. Bitte verwende https:// oder localhost.",
+		"errors": {
+			"denied": "Der Zugriff auf das Mikrofon wurde verweigert. Bitte erlaube den Mikrofonzugriff in deinen Browsereinstellungen und versuch es noch einmal.",
+			"notFound": "Kein Mikrofon gefunden. Bitte schließ ein Mikrofon an und versuch es noch einmal.",
+			"notSupported": "Dieser Browser unterstützt keinen Mikrofonzugriff. Bitte versuch es mit einem anderen Browser.",
+			"failed": "Auf das Mikrofon konnte nicht zugegriffen werden. Bitte überprüfe deine Browsereinstellungen und versuch es noch einmal."
+		}
+	},
+	"steps": {
+		"title": "Aufnehmen",
+		"rehearse": "Übe, zum Loop\nzu singen",
+		"record": "Nimm dich\nbeim Singen auf",
+		"review": "Hör dir deine Aufnahme an\nund sende sie ab"
+	},
+	"stepIndicator": {
+		"rehearse": "ÜBEN",
+		"recording": "AUFNAHME",
+		"review": "ANHÖREN"
+	},
+	"controls": {
+		"generating": "Mitsing-Loop wird erstellt...",
+		"getReady": "Mach dich bereit, aufzunehmen, was immer du möchtest: Verdopple, was du hörst, improvisiere, mach Geräusche, summe, pfeife usw. Bitte keine Worte.",
+		"haveFun": "Viel Spaß!",
+		"status": {
+			"idle": "Drücke auf Abspielen, um mit dem Üben zu beginnen",
+			"playing": "Drücke auf Aufnehmen, sobald du singen möchtest",
+			"preparing": "Aufnahme wird vorbereitet...",
+			"countdown": "Mach dich bereit für die Aufnahme...",
+			"recording": "Aufnahme läuft...",
+			"processing": "Aufnahme wird verarbeitet..."
+		}
+	},
+	"controlButton": {
+		"play": "Abspielen",
+		"playLabel": "ABSPIELEN",
+		"record": "Aufnehmen",
+		"recordLabel": "AUFNEHMEN",
+		"recording": "Aufnahme läuft",
+		"rerecord": "Neu aufnehmen",
+		"loadingPreview": "VORSCHAU LÄDT"
+	},
+	"rerecordDialog": {
+		"title": "Neu aufnehmen",
+		"description": "Bist du sicher?\nDeine Aufnahme geht dabei verloren.",
+		"confirm": "Ja, neu aufnehmen"
+	},
+	"exitDialog": {
+		"title": "Aufnahme beenden",
+		"description": "Willst du wirklich aufhören?\nDeine Aufnahme geht dabei verloren.",
+		"confirm": "Ja, beenden"
+	},
+	"leaveDialog": {
+		"message": "Willst du wirklich gehen, ohne deine Aufnahme abzusenden? Dann wird deine Aufnahme gelöscht.",
+		"stay": "Aufnahme behalten",
+		"leave": "Aufnahme löschen"
+	},
+	"thankYouDialog": {
+		"title": "Danke!",
+		"description": "Deine Stimme wird gerade zum Projekt hinzugefügt. Das kann ein paar Loop-Durchläufe dauern, aber bald hörst du dich zusammen mit den anderen Stimmen an diesem Ort."
+	},
+	"levelMeter": {
+		"tooQuiet": "Sing ein bisschen lauter!",
+		"gettingThere": "Fast geschafft...",
+		"good": "Guter Pegel!",
+		"perfect": "Perfekt!",
+		"gettingLoud": "Wird ziemlich laut...",
+		"tooLoud": "Geh ein Stück vom Mikro weg!"
+	},
+	"submission": {
+		"submit": "Aufnahme absenden",
+		"uploading": "Dein Beitrag wird jetzt hochgeladen! Bitte lass diese Seite geöffnet, bis der Upload abgeschlossen ist.",
+		"genericError": "Beim Hochladen deines Beitrags ist ein Fehler aufgetreten. Bitte versuch es später noch einmal."
+	},
+	"errors": {
+		"server": "Der Server hat gerade Probleme. Bitte versuch es in ein paar Augenblicken noch einmal.",
+		"submissionIssue": "Beim Absenden deiner Aufnahme ist ein Problem aufgetreten.",
+		"invalid": "Deine Aufnahmedaten scheinen ungültig zu sein. Bitte nimm noch einmal auf.",
+		"unauthorized": "Du bist nicht berechtigt, Lautsprecher zu erstellen. Bitte lade die Seite neu und versuch es noch einmal.",
+		"forbidden": "Du hast keine Berechtigung, an diesem Ort Lautsprecher zu erstellen.",
+		"timeout": "Der Upload hat zu lange gedauert. Bitte versuch es mit einer stabilen Internetverbindung noch einmal.",
+		"tooLarge": "Deine Aufnahmedatei ist zu groß. Bitte nimm einen kürzeren Ausschnitt auf.",
+		"unprocessable": "Deine Aufnahme konnte nicht verarbeitet werden. Bitte nimm noch einmal auf.",
+		"tooManyRequests": "Zu viele Anfragen. Bitte warte einen Moment, bevor du es noch einmal versuchst.",
+		"uploadFailed": "Upload fehlgeschlagen (Fehler {{status}}). Bitte versuch es noch einmal.",
+		"network": "Keine Verbindung zum Server möglich. Bitte überprüfe deine Internetverbindung und versuch es noch einmal.",
+		"unexpected": "Ein unerwarteter Fehler ist aufgetreten: {{message}}",
+		"unknownError": "Unbekannter Fehler"
+	}
+}

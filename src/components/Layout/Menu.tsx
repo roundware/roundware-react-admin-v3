@@ -11,6 +11,7 @@ import {
   PlayCircleOutline,
   Settings,
   Speed,
+  TextFields,
   Translate,
   Tune,
 } from "@mui/icons-material";
@@ -98,6 +99,8 @@ const GROUPS: Group[] = [
     openByDefault: () => true,
     items: [
       page("customize", "Look & Feel", "customize", "admin", <Palette />),
+      // The app's built-in wording, and the project's own, per language.
+      page("app-wording", "App wording", "app-wording", "admin", <TextFields />),
       page("audio-lab", "Audio lab", "audio-lab", "admin", <GraphicEq />),
       // Audio tracks: how contributions are played — which, when, how they
       // fade. Beside Audio lab, which shapes how speakers sound.
@@ -135,7 +138,9 @@ const GROUPS: Group[] = [
       resource("timedassets", "Timed assets", "editor"),
       resource("tagcategories", "Tag categories", "editor"),
       { ...resource("languages", "Languages", "admin"), icon: <Translate /> },
-      resource("localizedstrings", "Translations", "editor"),
+      // "Translations" (raw localization rows) is gone: every text is
+      // translated where it's edited, and the app's own wording on App
+      // wording. The resource stays registered for direct links.
       // Notifications are hidden until they are reworked (backlog 010): the
       // rules can be created, but nothing sends them.
     ],

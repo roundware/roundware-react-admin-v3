@@ -1,0 +1,42 @@
+{
+	"listen": {
+		"title": "收听",
+		"description": "<div class=\"content\">  <h2>收听</h2>  <p>点击<strong>播放</strong>开始。你听到的是人们在这里录下的声音的混音，在你收听时实时交融，所以每次听都不太一样。</p>  <p>使用屏幕底部的切换开关选择收听方式。在<strong>地图模式</strong>下，拖动地图即可收听任何地方。在<strong>步行模式</strong>下，地图会跟随手机的位置，声音也会随着你的移动而变化。</p>  <p>地图上的每个标记或形状都是一个人的投稿。点击它即可查看，并单独收听。</p>  <p>想添加你自己的声音，请点击地图上的录音按钮。</p></div>"
+	},
+	"tags": {
+		"title": "描述你的录音",
+		"description": "<div class=\"content\">  <h2>描述你的录音</h2>  <p>选择最能描述你即将录制内容的选项。它们能帮助听众找到你的录音，有些项目还会用它们来决定在哪里播放什么。</p>  <p>选好后点击<strong>下一步</strong>。提交之前，你可以返回修改你的选择。</p></div>"
+	},
+	"location": {
+		"title": "选择位置",
+		"description": "<div class=\"content\">  <h2>选择位置</h2>  <p>你的录音会被放在地图上的这个位置，附近收听的人都能听到。</p>  <p>点击<strong>使用我的位置</strong>把它放在你所在的地方，或者搜索地点并移动地图来选择一个位置。然后点击<strong>下一步</strong>。</p></div>"
+	},
+	"record": {
+		"title": "录音",
+		"description": "<div class=\"content\">  <h2>录音</h2>  <p>点击麦克风开始录音，再点击一次停止。第一次录音时，浏览器会请求使用麦克风的权限。</p>  <p>决定保留之前先回听一下。不满意？点击<strong>删除</strong>再试一次。</p>  <p>如果项目允许，可以用<strong>添加媒体</strong>为录音附上一张照片或一段文字。</p>  <p>准备好后，点击<strong>提交</strong>。同意项目条款后，你的录音就会被添加到地图上。</p></div>"
+	},
+	"loop-start": {
+		"title": "加入你的声部",
+		"description": "<div class=\"content\">  <h2>加入你的声部</h2>  <p>在这个项目中，所有录音会合成一首作品，不断循环播放。你会听到循环，跟着它录音，并在决定保留之前听听你的声部在混音中的效果。</p>  <p>建议戴上耳机：不戴耳机的话，麦克风除了录到你的声音，可能还会录到循环。</p>  <p>第一次录音时，浏览器会请求使用麦克风的权限。</p></div>"
+	},
+	"rehearse": {
+		"title": "熟悉循环",
+		"description": "<div class=\"content\">  <h2>熟悉循环</h2>  <p>点击<strong>播放</strong>，听听你将要跟着录音的循环。想听几遍都可以。</p>  <p>准备好后，点击<strong>录音</strong>。</p></div>"
+	},
+	"recording": {
+		"title": "录音中",
+		"description": "<div class=\"content\">  <h2>录音中</h2>  <p>短暂倒计时后，录音会跟着循环的节拍开始，并在循环播放到结尾时自动停止。圆圈显示录音的进度。</p>  <p>音量表会告诉你声音是太小还是太大。</p></div>"
+	},
+	"review": {
+		"title": "试听",
+		"description": "<div class=\"content\">  <h2>回听</h2>  <p>你听到的是你的声部与循环混在一起的效果。</p>  <p>想再来一次？那就重录。满意了？点击<strong>提交</strong>把它加入项目；可能要过一两轮循环，你才能听到它和其他人的声音在一起。</p></div>"
+	},
+	"welcome": {
+		"title": "欢迎",
+		"description": "<div class=\"content\">  <h2>欢迎</h2>  <p>在这里，你可以收听人们在这里录下的声音，也可以加入你自己的声音。</p>  <p>在任何页面点击<strong>?</strong>，即可获取该页面的帮助。</p></div>"
+	},
+	"help": {
+		"title": "帮助",
+		"description": "<div class=\"content\">  <h2>帮助</h2>  <p>收听人们在这里录下的声音，并加入你自己的声音。</p>  <p>在任何页面点击<strong>?</strong>，即可获取该页面的帮助。</p></div>"
+	}
+}

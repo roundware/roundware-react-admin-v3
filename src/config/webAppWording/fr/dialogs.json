@@ -1,0 +1,128 @@
+{
+	"buttons": {
+		"gotIt": "COMPRIS !",
+		"tryAgain": "RÉESSAYER"
+	},
+	"micPermission": {
+		"title": "Accès au micro",
+		"body": "{{name}} veut utiliser ton micro",
+		"bodyNoName": "Ce site veut utiliser ton micro"
+	},
+	"micBlocked": {
+		"title": "MICRO BLOQUÉ",
+		"body": "Pour enregistrer ta voix, nous avons besoin d’accéder à ton micro. Si tu ne veux pas enregistrer, libre à toi de te promener et d’écouter !",
+		"help": "AIDE POUR LE MICRO",
+		"listenMore": "CONTINUER À ÉCOUTER"
+	},
+	"audioRequired": {
+		"title": "SON REQUIS",
+		"body": "On dirait que ton appareil ne permet pas les expériences audio. Ce projet musical a besoin de son : branche des haut-parleurs et un micro, ou essaie sur un autre appareil. Merci !"
+	},
+	"locationNotFound": {
+		"title": "POSITION INTROUVABLE !",
+		"body": "Désolé, nous n’avons pas pu trouver ta position. Actualise la page de ton navigateur et réessaie."
+	},
+	"permissionDenied": {
+		"title": "PAS D’ACCÈS À TA POSITION !",
+		"body": "Pour participer pleinement à l’expérience de l’œuvre, nous avons besoin d’accéder à ta position. Active l’accès à la position dans ton navigateur.",
+		"help": "AIDE POUR ACTIVER LA POSITION",
+		"videoTitle": "Vidéo d’aide"
+	},
+	"instructions": {
+		"locationTitle": "Aide pour l’accès à la position",
+		"microphoneTitle": "Aide pour l’accès au micro",
+		"permission": {
+			"location": "Localisation",
+			"microphone": "Microphone"
+		},
+		"siteControls": "Contrôles du site",
+		"pageMenuIcon": "icône en bas à gauche",
+		"android": {
+			"step1": "1. Touche le menu à trois points (⋮) en haut à droite de ton navigateur",
+			"step2": "2. Sélectionne « Paramètres »",
+			"step3": "3. Fais défiler vers le bas et trouve « Paramètres des sites » (généralement tout en bas)",
+			"step4": "4. Touche « {{permission}} » sous « Autorisations »",
+			"step5": "5. Passe-le de « Bloquer » à « Autoriser »",
+			"step6": "6. Reviens en arrière et actualise la page"
+		},
+		"iosAa": {
+			"step1": "1. Touche le bouton <icon/> en bas",
+			"step2": "2. Sélectionne « Réglages du site web »",
+			"step3": "3. Touche « {{permission}} »",
+			"step4": "4. Passe-le sur « Autoriser »",
+			"step5": "5. Touche « OK » et actualise la page"
+		},
+		"iosPageMenu": {
+			"step1": "1. Touche l’icône <icon/> en bas à gauche",
+			"step2": "2. Touche le menu à trois points (⋮)",
+			"step3": "3. Fais défiler jusqu’en bas",
+			"step4": "4. Sous « Réglages du site web », trouve « {{permission}} »",
+			"step5": "5. Passe-le sur « Autoriser »",
+			"step6": "6. Touche « OK » en haut et actualise la page"
+		},
+		"iosSettings": {
+			"step1": "1. Ouvre l’app Réglages sur ton iPhone/iPad",
+			"step2": "2. Fais défiler vers le bas et touche « Safari »",
+			"step3": "3. Fais défiler jusqu’en bas et trouve la section « Réglages des sites web »",
+			"step4": "4. Touche « {{permission}} »",
+			"step5": "5. Passe-le de « Refuser » à « Autoriser »",
+			"step6": "6. Reviens dans ton navigateur et actualise la page"
+		},
+		"chrome": {
+			"step1": "1. Clique sur l’icône des contrôles du site <icon/> à côté de l’URL.",
+			"step2": "2. Sélectionne « Paramètres du site ».",
+			"step3": "3. Sous Autorisations, trouve « {{permission}} ».",
+			"step4": "4. Passe-le sur « Autoriser » (ou « Autoriser cette fois »).",
+			"step5": "5. Actualise la page."
+		},
+		"edge": {
+			"step1": "1. Clique sur l’icône de cadenas <icon/> des contrôles du site, à côté de l’URL en haut.",
+			"step2": "2. Clique sur « Autorisations pour ce site ».",
+			"step3": "3. Trouve « {{permission}} ».",
+			"step4": "4. Passe-le sur « Autoriser ».",
+			"step5": "5. Actualise la page."
+		},
+		"firefox": {
+			"step1": "1. Clique sur le menu à trois traits (☰) en haut à droite",
+			"step2": "2. Va dans Paramètres > Vie privée et sécurité > Permissions > {{permission}}",
+			"step3": "3. Clique sur « Paramètres » et trouve ce site web",
+			"step4": "4. Passe-le de « Bloquer » à « Autoriser »",
+			"step5": "5. Actualise la page et réessaie"
+		},
+		"safari": {
+			"step1": "1. Va dans Safari > Réglages > Sites web > {{permission}}",
+			"step2": "2. Trouve ce site web dans la liste",
+			"step3": "3. Passe-le de « Refuser » à « Autoriser »",
+			"step4": "4. Actualise la page et réessaie"
+		},
+		"other": {
+			"step1": "1. Ouvre les paramètres de ton navigateur",
+			"step2": "2. Cherche « Confidentialité », « Autorisations » ou « Paramètres des sites »",
+			"step3": "3. Trouve les paramètres de « {{permission}} »",
+			"step4": "4. Trouve ce site web et passe-le de « Bloquer » à « Autoriser »",
+			"step5": "5. Actualise la page et réessaie"
+		}
+	},
+	"error": {
+		"generic": "Une erreur s’est produite ! Réessaie.",
+		"connection": "Désolé, impossible de se connecter à Roundware. Réessaie."
+	},
+	"errorBoundary": {
+		"title": "Une erreur s’est produite."
+	},
+	"copyable": {
+		"label": "Lien",
+		"copied": "Copié",
+		"copy": "Copier dans le presse-papiers"
+	},
+	"platformMessage": {
+		"continueAnyway": "Continuer quand même"
+	},
+	"welcomeAudio": {
+		"title": "Prépare-toi !",
+		"body": "Mets ton casque !",
+		"play": "Lecture",
+		"pause": "Pause",
+		"replay": "Réécouter"
+	}
+}

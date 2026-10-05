@@ -1,0 +1,128 @@
+{
+	"buttons": {
+		"gotIt": "VERSTANDEN!",
+		"tryAgain": "ERNEUT VERSUCHEN"
+	},
+	"micPermission": {
+		"title": "Mikrofonzugriff",
+		"body": "{{name}} möchte dein Mikrofon verwenden",
+		"bodyNoName": "Diese Website möchte dein Mikrofon verwenden"
+	},
+	"micBlocked": {
+		"title": "MIKROFON BLOCKIERT",
+		"body": "Um deine Stimme aufzunehmen, brauchen wir Zugriff auf dein Mikrofon. Wenn du nichts aufnehmen möchtest, kannst du auch einfach umherstreifen und zuhören!",
+		"help": "HILFE ZUM MIKROFON",
+		"listenMore": "WEITER ZUHÖREN"
+	},
+	"audioRequired": {
+		"title": "AUDIO ERFORDERLICH",
+		"body": "Wir haben festgestellt, dass dein Gerät keine Audiowiedergabe unterstützt. Dies ist ein Musikprojekt, für das Audio nötig ist. Bitte schließ Lautsprecher und ein Mikrofon an oder versuch es mit einem anderen Gerät. Danke!"
+	},
+	"locationNotFound": {
+		"title": "STANDORT NICHT GEFUNDEN!",
+		"body": "Leider konnten wir deinen Standort nicht finden. Bitte lade die Seite in deinem Browser neu und versuch es noch einmal."
+	},
+	"permissionDenied": {
+		"title": "KEIN STANDORTZUGRIFF!",
+		"body": "Um voll am Kunstwerk teilzunehmen, brauchen wir Zugriff auf deinen Standort. Bitte erlaube den Standortzugriff in deinem Browser.",
+		"help": "HILFE ZUR STANDORTFREIGABE",
+		"videoTitle": "Hilfevideo"
+	},
+	"instructions": {
+		"locationTitle": "Hilfe zum Standortzugriff",
+		"microphoneTitle": "Hilfe zum Mikrofonzugriff",
+		"permission": {
+			"location": "Standort",
+			"microphone": "Mikrofon"
+		},
+		"siteControls": "Website-Steuerelemente",
+		"pageMenuIcon": "Symbol unten links",
+		"android": {
+			"step1": "1. Tippe oben rechts in deinem Browser auf das Drei-Punkte-Menü (⋮)",
+			"step2": "2. Wähle „Einstellungen“",
+			"step3": "3. Scrolle nach unten zu „Website-Einstellungen“ (meist ganz unten)",
+			"step4": "4. Tippe unter „Berechtigungen“ auf „{{permission}}“",
+			"step5": "5. Ändere die Einstellung von „Blockieren“ zu „Zulassen“",
+			"step6": "6. Geh zurück und lade die Seite neu"
+		},
+		"iosAa": {
+			"step1": "1. Tippe unten auf die Schaltfläche <icon/>",
+			"step2": "2. Wähle „Website-Einstellungen“",
+			"step3": "3. Tippe auf „{{permission}}“",
+			"step4": "4. Ändere die Einstellung zu „Erlauben“",
+			"step5": "5. Tippe auf „Fertig“ und lade die Seite neu"
+		},
+		"iosPageMenu": {
+			"step1": "1. Tippe unten links auf das Symbol <icon/>",
+			"step2": "2. Tippe auf das Drei-Punkte-Menü (⋮)",
+			"step3": "3. Scrolle ganz nach unten",
+			"step4": "4. Suche unter „Website-Einstellungen“ nach „{{permission}}“",
+			"step5": "5. Ändere die Einstellung zu „Erlauben“",
+			"step6": "6. Tippe oben auf „Fertig“ und lade die Seite neu"
+		},
+		"iosSettings": {
+			"step1": "1. Öffne die App „Einstellungen“ auf deinem iPhone/iPad",
+			"step2": "2. Scrolle nach unten und tippe auf „Safari“",
+			"step3": "3. Scrolle ganz nach unten zum Abschnitt „Einstellungen für Websites“",
+			"step4": "4. Tippe auf „{{permission}}“",
+			"step5": "5. Ändere die Einstellung von „Ablehnen“ zu „Erlauben“",
+			"step6": "6. Kehre zu deinem Browser zurück und lade die Seite neu"
+		},
+		"chrome": {
+			"step1": "1. Klicke neben der URL auf das Symbol für die Website-Steuerelemente <icon/>.",
+			"step2": "2. Wähle „Website-Einstellungen“.",
+			"step3": "3. Suche unter „Berechtigungen“ nach „{{permission}}“.",
+			"step4": "4. Ändere die Einstellung zu „Zulassen“ (oder „Diesmal zulassen“).",
+			"step5": "5. Lade die Seite neu."
+		},
+		"edge": {
+			"step1": "1. Klicke oben neben der Website-URL auf das Schlosssymbol <icon/> der Website-Steuerelemente.",
+			"step2": "2. Klicke auf „Berechtigungen für diese Website“.",
+			"step3": "3. Suche nach „{{permission}}“.",
+			"step4": "4. Ändere die Einstellung zu „Zulassen“.",
+			"step5": "5. Lade die Seite neu."
+		},
+		"firefox": {
+			"step1": "1. Klicke oben rechts auf das Menü mit den drei Linien (☰)",
+			"step2": "2. Geh zu Einstellungen > Datenschutz & Sicherheit > Berechtigungen > {{permission}}",
+			"step3": "3. Klicke auf „Einstellungen“ und suche diese Website",
+			"step4": "4. Ändere die Einstellung von „Blockieren“ zu „Erlauben“",
+			"step5": "5. Lade die Seite neu und versuch es noch einmal"
+		},
+		"safari": {
+			"step1": "1. Geh zu Safari > Einstellungen > Websites > {{permission}}",
+			"step2": "2. Suche diese Website in der Liste",
+			"step3": "3. Ändere die Einstellung von „Ablehnen“ zu „Erlauben“",
+			"step4": "4. Lade die Seite neu und versuch es noch einmal"
+		},
+		"other": {
+			"step1": "1. Öffne die Einstellungen deines Browsers",
+			"step2": "2. Suche nach „Datenschutz“, „Berechtigungen“ oder „Website-Einstellungen“",
+			"step3": "3. Suche die Einstellungen für „{{permission}}“",
+			"step4": "4. Suche diese Website und ändere die Einstellung von „Blockieren“ zu „Zulassen“",
+			"step5": "5. Lade die Seite neu und versuch es noch einmal"
+		}
+	},
+	"error": {
+		"generic": "Etwas ist schiefgelaufen! Bitte versuch es noch einmal.",
+		"connection": "Leider konnten wir keine Verbindung zu Roundware herstellen. Bitte versuch es noch einmal."
+	},
+	"errorBoundary": {
+		"title": "Etwas ist schiefgelaufen."
+	},
+	"copyable": {
+		"label": "Link",
+		"copied": "Kopiert",
+		"copy": "In die Zwischenablage kopieren"
+	},
+	"platformMessage": {
+		"continueAnyway": "Trotzdem fortfahren"
+	},
+	"welcomeAudio": {
+		"title": "Mach dich bereit!",
+		"body": "Bitte setz Kopfhörer auf!",
+		"play": "Abspielen",
+		"pause": "Pause",
+		"replay": "Erneut abspielen"
+	}
+}
