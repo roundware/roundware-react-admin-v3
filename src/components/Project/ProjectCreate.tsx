@@ -62,6 +62,8 @@ const ProjectCreate = (): JSX.Element => {
           <ReferenceArrayInput
             source="language_ids"
             reference="languages"
+            perPage={1000}
+            sort={{ field: "name", order: "ASC" }}
             label="Languages"
             validate={required()}
           >

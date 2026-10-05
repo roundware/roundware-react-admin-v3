@@ -18,9 +18,11 @@ import {
     SimpleForm,
     TextInput,
     Toolbar,
+    useGetList,
     usePermissions,
     useRecordContext,
 } from "react-admin";
+import { useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { buildLocalizationsPayload } from "../../utils";
 import AdvancedConfigInput from "./AdvancedConfigInput";
@@ -70,6 +72,34 @@ const DeleteProjectSection = () => {
         />
       )}
     </Box>
+  );
+};
+
+/**
+ * Which of the project's languages is its default: what participants see
+ * when a text has no translation in theirs, and the first tab of every
+ * translatable field (server docs/017). Changing it keeps every text — the
+ * server swaps them over.
+ */
+const DefaultLanguageInput = () => {
+  const languageIds = (useWatch({ name: "language_ids" }) as number[] | undefined) ?? [];
+  const { data: languages = [] } = useGetList("languages", {
+    pagination: { page: 1, perPage: 1000 },
+    sort: { field: "id", order: "ASC" },
+  });
+  const choices = languageIds
+    .map((id) => languages.find((l) => Number(l.id) === Number(id)))
+    .filter(Boolean)
+    .map((l) => ({ id: l!.id, name: l!.name }));
+  if (choices.length < 2) return null;
+  return (
+    <SelectInput
+      source="default_language_id"
+      label="Default language"
+      choices={choices}
+      fullWidth
+      helperText="Shown when a text has no translation in a participant's language. Changing it keeps all your text."
+    />
   );
 };
 
@@ -126,6 +156,8 @@ const ProjectEdit = (): JSX.Element => {
           <ReferenceArrayInput
             source="language_ids"
             reference="languages"
+            perPage={1000}
+            sort={{ field: "name", order: "ASC" }}
             label="Languages"
             validate={required()}
           >
@@ -135,9 +167,11 @@ const ProjectEdit = (): JSX.Element => {
               helperText="Projects can have multiple Languages assigned to them"
             />
           </ReferenceArrayInput>
+          <DefaultLanguageInput />
           <TranslatableField
             label="Description"
             fromProject
+            multiline
             source="description_loc_admin"
           />
           {/* <NumberInput source="latitude" validate={required()} /> */}
@@ -240,6 +274,7 @@ const ProjectEdit = (): JSX.Element => {
         </CardBox>
         <TranslatableField
           source="legal_agreement_loc_admin"
+            multiline
           fromProject
           label="Legal Agreement"
         />
@@ -253,6 +288,7 @@ const ProjectEdit = (): JSX.Element => {
               />
               <TranslatableField
                 source="sharing_message_loc_admin"
+                multiline
                 fromProject
                 label="Sharing Message"
               />
@@ -273,6 +309,7 @@ const ProjectEdit = (): JSX.Element => {
               />
               <TranslatableField
                 source="out_of_range_message_loc_admin"
+                multiline
                 fromProject
                 label="Out Of Range Message"
               />
@@ -285,6 +322,7 @@ const ProjectEdit = (): JSX.Element => {
           <TextInput source="demo_stream_url" fullWidth />
           <TranslatableField
             source="demo_stream_message_loc_admin"
+            multiline
             fromProject
             label="Demo Stream Message"
           />

@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import AudioRecorder from "components/common/AudioRecorder";
+import { useBrandingText } from "./brandingText";
 import React, { useEffect, useState } from "react";
 import {
   deleteBrandingFile,
@@ -43,6 +44,7 @@ interface Props {
 }
 
 const BrandingFilesPanel: React.FC<Props> = ({ projectId, onSaved, only }) => {
+  const text = useBrandingText();
   const [slots, setSlots] = useState<FileSlot[] | null>(null);
   const [files, setFiles] = useState<Record<string, SlotFiles>>({});
   const [busy, setBusy] = useState<string | null>(null);
@@ -115,14 +117,32 @@ const BrandingFilesPanel: React.FC<Props> = ({ projectId, onSaved, only }) => {
       )}
 
       {shown.map((slot) => {
-        const stored = files[slot.key] ?? { keys: [], urls: [] };
+        // A slot with a file per language shows the language picked at the
+        // top of Look & Feel; the default language's file is the main one.
+        const lang =
+          slot.localized && text?.language && text.language !== text.defaultCode
+            ? text.language
+            : undefined;
+        const main = files[slot.key] ?? { keys: [], urls: [] };
+        const stored = lang ? main.by_language?.[lang] ?? { keys: [], urls: [] } : main;
+        const langName = lang && text?.languages.find((l) => l.code === lang)?.name;
+        const defaultName = text?.languages.find((l) => l.code === text.defaultCode)?.name;
         const isBusy = busy === slot.key;
         return (
           <Box key={slot.key}>
             <Stack direction="row" spacing={1} alignItems="baseline">
-              <Typography variant="subtitle2">{slot.label}</Typography>
+              <Typography variant="subtitle2">
+                {slot.label}
+                {langName ? ` — ${langName}` : ""}
+              </Typography>
               {isBusy && <CircularProgress size={14} />}
             </Stack>
+            {lang && !stored.urls.length && (
+              <Typography variant="caption" color="text.secondary" display="block">
+                None yet: {langName} speakers hear the {defaultName} one
+                {main.urls.length ? "" : " (if there is one)"}.
+              </Typography>
+            )}
             {slot.description && (
               <Typography variant="caption" color="text.secondary" display="block">
                 {slot.description}
@@ -172,7 +192,8 @@ const BrandingFilesPanel: React.FC<Props> = ({ projectId, onSaved, only }) => {
                         deleteBrandingFile(
                           projectId,
                           slot.key,
-                          slot.multiple ? stored.keys[i] : undefined
+                          slot.multiple ? stored.keys[i] : undefined,
+                          lang
                         )
                       )
                     }
@@ -201,7 +222,7 @@ const BrandingFilesPanel: React.FC<Props> = ({ projectId, onSaved, only }) => {
                       e.target.value = "";
                       if (file) {
                         run(slot.key, () =>
-                          uploadBrandingFile(projectId, slot.key, file)
+                          uploadBrandingFile(projectId, slot.key, file, lang)
                         );
                       }
                     }}
@@ -225,7 +246,7 @@ const BrandingFilesPanel: React.FC<Props> = ({ projectId, onSaved, only }) => {
                       e.target.value = "";
                       if (file) {
                         run(slot.key, () =>
-                          uploadBrandingFile(projectId, slot.key, file)
+                          uploadBrandingFile(projectId, slot.key, file, lang)
                         );
                       }
                     }}
@@ -264,7 +285,7 @@ const BrandingFilesPanel: React.FC<Props> = ({ projectId, onSaved, only }) => {
                           const file = take.file;
                           setTake(null);
                           setRecordingSlot(null);
-                          run(slot.key, () => uploadBrandingFile(projectId, slot.key, file));
+                          run(slot.key, () => uploadBrandingFile(projectId, slot.key, file, lang));
                         }}
                       >
                         Use this recording

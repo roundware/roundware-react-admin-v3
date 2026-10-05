@@ -17,14 +17,30 @@ interface Props {
   source: string;
   label?: string;
   fromProject?: boolean;
+  /** Several lines (descriptions, agreements, messages). */
+  multiline?: boolean;
+  helperText?: string;
 }
+
+/**
+ * One text in each of the project's languages, a tab per language.
+ *
+ * The first tab is the project's default language: the server lists the
+ * project's languages default first, and keeps the default language's text
+ * in the field itself, other languages as translations (server docs/017). A
+ * language left empty falls back to the default language for participants.
+ */
 const TranslatableField = ({
   source,
   label = "",
   fromProject,
+  multiline,
+  helperText,
 }: Props): JSX.Element => {
   const [value, setValue] = useFieldValue<LocalizedString[]>(source, []);
   const [language_ids] = useFieldValue<number[]>(`language_ids`, []);
+  // On the project form, the default being chosen there leads.
+  const [formDefaultId] = useFieldValue<number | null>(`default_language_id`, null);
 
   const [loading, setLoading] = useState(true);
   const [languages, setLanguages] = useState<ILanguage[]>([]);
@@ -34,8 +50,9 @@ const TranslatableField = ({
   const dep = useMemo(
     () =>
       JSON.stringify(selectedProject?.language_ids) +
-      JSON.stringify(language_ids),
-    [selectedProject?.language_ids, language_ids]
+      JSON.stringify(language_ids) +
+      String(fromProject ? formDefaultId : ""),
+    [selectedProject?.language_ids, language_ids, formDefaultId, fromProject]
   );
   useEffect(() => {
     if (!fromProject && !selectedProject) return;
@@ -56,11 +73,15 @@ const TranslatableField = ({
         },
       })
       .then((res) => {
-        const neededIds =
-          (fromProject ? language_ids : selectedProject?.language_ids) || [];
-        const thisProjectLanguages = res.data.filter((l) => {
-          return neededIds.includes(Number(l.id));
-        }) as ILanguage[];
+        let neededIds: number[] =
+          ((fromProject ? language_ids : selectedProject?.language_ids) || []).map(Number);
+        if (fromProject && formDefaultId && neededIds.includes(Number(formDefaultId))) {
+          neededIds = [Number(formDefaultId), ...neededIds.filter((id) => id !== Number(formDefaultId))];
+        }
+        // In the project's order — its default language first.
+        const thisProjectLanguages = neededIds
+          .map((id) => res.data.find((l) => Number(l.id) === id))
+          .filter(Boolean) as ILanguage[];
         setLanguages(thisProjectLanguages);
         setSelectedLanguage(thisProjectLanguages?.[0]?.id);
       })
@@ -93,8 +114,8 @@ const TranslatableField = ({
         value={selectedLanguage}
         onChange={(_e, v) => setSelectedLanguage(Number(v))}
       >
-        {languages.map((l) => (
-          <Tab key={l.id} value={l.id} label={l.name} />
+        {languages.map((l, i) => (
+          <Tab key={l.id} value={l.id} label={i === 0 && languages.length > 1 ? `${l.name} (default)` : l.name} />
         ))}
       </Tabs>
       <Box p={2}>
@@ -123,20 +144,22 @@ const TranslatableField = ({
               language_code: lang?.language_code,
               text: newText,
             };
-            setValue(
-              [...previousFilter, newLanguageObject].filter((t) => {
-                if (t.id) {
-                  return true;
-                  // it text it being created but not text then filter out
-                } else if (t?.text?.length < 1) {
-                  return false;
-                }
-                return true;
-              })
-            );
+            // Every touched language is kept, empty or not: empty is sent as
+            // null, which clears it. (Empty new entries used to be dropped,
+            // so clearing the default language's text never saved — its
+            // entry has no row id; it is the field itself.)
+            setValue([...previousFilter, newLanguageObject]);
           }}
           fullWidth
-          label="Text"
+          multiline={multiline}
+          minRows={multiline ? 2 : undefined}
+          label={languages.find((l) => l.id === selectedLanguage)?.name ?? "Text"}
+          helperText={
+            helperText ??
+            (languages.length > 1 && selectedLanguage !== languages[0]?.id
+              ? `Left empty, participants see the ${languages[0]?.name} text.`
+              : undefined)
+          }
         />
       </Box>
     </Card>

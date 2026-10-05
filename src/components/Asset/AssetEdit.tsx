@@ -148,8 +148,9 @@ const AssetEdit = (): JSX.Element => {
 
         <AssetBundleField />
 
-        <TextInput multiline source='description' fullWidth />
-        <TranslatableField source='description_loc_admin' label='Localized Description' />
+        {/* A tab per language; the default language's is the description
+            itself (server docs/017), which had its own input as well. */}
+        <TranslatableField source='description_loc_admin' label='Description' multiline />
 
         <BooleanInput source='submitted' fullWidth />
 

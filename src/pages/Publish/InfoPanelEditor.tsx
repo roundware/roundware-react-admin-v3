@@ -1,16 +1,7 @@
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  CircularProgress,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
-import { Branding, errMessage, getBranding, patchBranding } from "./api";
+import { Accordion, AccordionDetails, AccordionSummary, Stack, Typography } from "@mui/material";
+import React from "react";
+import { BrandingTextField, useBrandingText } from "./brandingText";
 
 /**
  * The tabs of the participant-facing info panel.
@@ -25,12 +16,7 @@ import { Branding, errMessage, getBranding, patchBranding } from "./api";
  * route out of the API either.
  */
 
-interface Props {
-  projectId: number;
-  onSaved?: () => void;
-}
-
-const FIELDS: Array<{ key: keyof Branding; label: string; hint: string }> = [
+const FIELDS: Array<{ key: string; label: string; hint: string }> = [
   {
     key: "about_html",
     label: "About",
@@ -53,69 +39,12 @@ const FIELDS: Array<{ key: keyof Branding; label: string; hint: string }> = [
   },
 ];
 
-const InfoPanelEditor: React.FC<Props> = ({ projectId, onSaved }) => {
-  const [values, setValues] = useState<Record<string, string> | null>(null);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const debounce = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // The values as loaded. Saving is for edits: without this check the save
-  // effect fired on load too, re-saving what had just been read and
-  // reloading the preview every time the page opened.
-  const asLoaded = useRef<Record<string, string> | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    getBranding(projectId)
-      .then((b) => {
-        if (cancelled) return;
-        const next: Record<string, string> = {};
-        for (const f of FIELDS) next[f.key as string] = (b[f.key] as string) || "";
-        asLoaded.current = next;
-        setValues(next);
-      })
-      .catch((e) => !cancelled && setError(errMessage(e)));
-    return () => {
-      cancelled = true;
-    };
-  }, [projectId]);
-
-  // Debounced auto-save, matching the rest of this page.
-  useEffect(() => {
-    if (!values || values === asLoaded.current) return;
-    if (debounce.current) clearTimeout(debounce.current);
-    debounce.current = setTimeout(async () => {
-      setSaving(true);
-      setError(null);
-      try {
-        await patchBranding(projectId, values);
-        onSaved?.();
-      } catch (e) {
-        setError(errMessage(e));
-      } finally {
-        setSaving(false);
-      }
-    }, 800);
-    return () => {
-      if (debounce.current) clearTimeout(debounce.current);
-    };
-  }, [projectId, values, onSaved]);
-
-  if (error && !values) {
-    return (
-      <Typography color="error" variant="body2">
-        {error}
-      </Typography>
-    );
-  }
-  if (!values) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
-        <CircularProgress size={20} />
-      </Box>
-    );
-  }
-
-  const filled = FIELDS.filter((f) => values[f.key as string]?.trim()).length;
+/** Edited in the language picked at the top of Look & Feel (brandingText). */
+const InfoPanelEditor: React.FC = () => {
+  const ctx = useBrandingText();
+  if (!ctx) return null;
+  // Counted in the default language: a tab exists when it has text there.
+  const filled = FIELDS.filter((f) => ctx.get(f.key, ctx.defaultCode).trim()).length;
 
   return (
     <Accordion disableGutters elevation={0} sx={{ "&:before": { display: "none" } }}>
@@ -127,7 +56,6 @@ const InfoPanelEditor: React.FC<Props> = ({ projectId, onSaved }) => {
               ? "no tabs — participants see a generated About"
               : `${filled} tab${filled === 1 ? "" : "s"}`}
           </Typography>
-          {saving && <CircularProgress size={14} />}
         </Stack>
       </AccordionSummary>
       <AccordionDetails sx={{ px: 0 }}>
@@ -137,24 +65,14 @@ const InfoPanelEditor: React.FC<Props> = ({ projectId, onSaved }) => {
             empty and its tab is hidden. HTML is allowed — headings, paragraphs,
             lists and links.
           </Typography>
-          {error && (
-            <Typography color="error" variant="body2">
-              {error}
-            </Typography>
-          )}
           {FIELDS.map((f) => (
-            <TextField
-              key={f.key as string}
+            <BrandingTextField
+              key={f.key}
+              field={f.key}
               label={f.label}
-              value={values[f.key as string] ?? ""}
-              onChange={(e) =>
-                setValues((v) => ({ ...v!, [f.key as string]: e.target.value }))
-              }
               helperText={f.hint}
               multiline
               minRows={3}
-              fullWidth
-              size="small"
             />
           ))}
         </Stack>

@@ -396,6 +396,8 @@ const EditForm = ({
           label="Language"
           source="language_id"
           reference="languages"
+            perPage={1000}
+            sort={{ field: "name", order: "ASC" }}
         >
           <SelectInput optionText="name" fullWidth />
         </ReferenceInput>

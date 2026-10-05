@@ -27,6 +27,8 @@ export interface FileSlot {
   convert_to_mp3?: boolean;
   /** Where the admin offers it: "files" (Images & audio) or "map" (Map appearance). */
   panel?: "files" | "map";
+  /** A file per language (welcome audio), the default language's as the main one. */
+  localized?: boolean;
 }
 
 /** What a project has stored for a slot. Always lists, even for single slots —
@@ -34,6 +36,8 @@ export interface FileSlot {
 export interface SlotFiles {
   keys: string[];
   urls: string[];
+  /** Slots with a file per language: the non-default languages' files. */
+  by_language?: Record<string, { keys: string[]; urls: string[] }>;
 }
 
 export interface Branding {
@@ -127,7 +131,9 @@ export async function getThemeSchema(): Promise<ThemeSchema> {
 export async function uploadBrandingFile(
   projectId: number,
   slot: string,
-  file: File
+  file: File,
+  /** For a slot with a file per language: which language's (server docs/017). */
+  language?: string
 ): Promise<{ slot: string; files: Record<string, SlotFiles> }> {
   const token = localStorage.getItem("access_token");
   const slug = localStorage.getItem("tenant_slug");
@@ -141,7 +147,8 @@ export async function uploadBrandingFile(
   // Not apiFetcher: it sets a JSON content type, and a multipart body needs
   // the browser to set its own boundary.
   const resp = await fetch(
-    `${import.meta.env.VITE_SERVER_URL}/api/3/projects/${projectId}/branding/files/${slot}/`,
+    `${import.meta.env.VITE_SERVER_URL}/api/3/projects/${projectId}/branding/files/${slot}/` +
+      (language ? `?language=${encodeURIComponent(language)}` : ""),
     { method: "POST", headers, body: form }
   );
   if (!resp.ok) {
@@ -154,9 +161,13 @@ export async function uploadBrandingFile(
 export async function deleteBrandingFile(
   projectId: number,
   slot: string,
-  key?: string
+  key?: string,
+  language?: string
 ): Promise<{ slot: string; files: Record<string, SlotFiles> }> {
-  const query = key ? `?key=${encodeURIComponent(key)}` : "";
+  const params = new URLSearchParams();
+  if (key) params.set("key", key);
+  if (language) params.set("language", language);
+  const query = params.toString() ? `?${params}` : "";
   const { json } = await apiFetcher(
     `/projects/${projectId}/branding/files/${slot}/${query}`,
     { method: "DELETE" }

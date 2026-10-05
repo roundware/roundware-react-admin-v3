@@ -104,21 +104,19 @@ export const TagEdit = (): JSX.Element => {
         >
           <SelectInput optionText="name" fullWidth />
         </ReferenceInput>
-        <TextInput source="value" />
-        <TextInput source="description" />
-        <TranslatableField source="loc_msg_admin" label={`Localized Message`} />
-        <TranslatableField
-          source="loc_description_admin"
-          label={`Localized Description`}
-        />
+        {/* One field per text, a tab per language: the default language's
+            tab is the tag itself (server docs/017). There were separate
+            "value"/"description" inputs too, editing the same text twice. */}
+        <TranslatableField source="loc_msg_admin" label="Tag text" />
+        <TranslatableField source="loc_description_admin" label="Description" multiline />
         <SelectInput
           source="filter"
           choices={[
             { id: "", name: "No Filter" },
-            { id: "_within_10km", name: "Assets Within 10KM" },
+            { id: "_within_10km", name: "Contributions within 10 km" },
             {
               id: "_ten_most_recent_days",
-              name: "Assets created within 10 days.",
+              name: "Contributions from the last 10 days",
             },
           ]}
         />
@@ -166,21 +164,19 @@ export const TagCreate = (): JSX.Element => {
         >
           <SelectInput optionText="name" fullWidth />
         </ReferenceInput>
-        <TextInput source="value" />
-        <TextInput source="description" />
-        <TranslatableField source="loc_msg_admin" label={`Localized Message`} />
-        <TranslatableField
-          source="loc_description_admin"
-          label={`Localized Description`}
-        />
+        {/* One field per text, a tab per language: the default language's
+            tab is the tag itself (server docs/017). There were separate
+            "value"/"description" inputs too, editing the same text twice. */}
+        <TranslatableField source="loc_msg_admin" label="Tag text" />
+        <TranslatableField source="loc_description_admin" label="Description" multiline />
         <SelectInput
           source="filter"
           choices={[
             { id: "", name: "No Filter" },
-            { id: "_within_10km", name: "Assets Within 10KM" },
+            { id: "_within_10km", name: "Contributions within 10 km" },
             {
               id: "_ten_most_recent_days",
-              name: "Assets created within 10 days.",
+              name: "Contributions from the last 10 days",
             },
           ]}
         />
