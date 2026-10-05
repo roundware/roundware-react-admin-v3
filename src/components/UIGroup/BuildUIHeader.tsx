@@ -4,7 +4,7 @@ import { Typography } from "@mui/material";
 const BuildUIHeader = (): JSX.Element => {
   return (
     <>
-      <Typography variant="h5">Build UI</Typography>
+      <Typography variant="h5">Filters &amp; menus</Typography>
       <Typography variant="subtitle2">
         Select a UI Mode, add UI Groups to it, then use the Tree View to build
         the UI Item hierarchy. It helps to think of UI Groups as screens or

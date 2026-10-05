@@ -302,7 +302,7 @@ const AssetsChart = (): JSX.Element => {
           <>
             <Toolbar>
               <Typography variant="h5" style={{ flexGrow: 1 }}>
-                Assets
+                Contributions
               </Typography>
             </Toolbar>
           </>
@@ -399,7 +399,7 @@ const AssetsChart = (): JSX.Element => {
               align="center"
               color="text.secondary"
             >
-              Fetch Earlier Asset Data
+              Fetch earlier contributions
             </Typography>
             <Stack direction={"row-reverse"} justifyContent="center">
               {[

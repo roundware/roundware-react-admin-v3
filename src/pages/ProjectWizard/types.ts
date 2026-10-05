@@ -29,7 +29,7 @@ export const STEP_LABELS: Record<WizardStepId, string> = {
   project: "Project Basics",
   audiotrack: "Audiotrack",
   tags: "Content Tags",
-  uibuilder: "UI Builder",
+  uibuilder: "Filters & menus",
   speakers: "Speakers",
 };
 

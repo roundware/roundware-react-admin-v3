@@ -278,7 +278,7 @@ const SessionsChart = () => {
               align="center"
               color="text.secondary"
             >
-              Fetch Earlier Listening Data
+              Fetch earlier sessions
             </Typography>
             <Stack direction={"row-reverse"} justifyContent="center">
               {[

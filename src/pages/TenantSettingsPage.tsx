@@ -47,7 +47,7 @@ const TenantSettingsPage = (): JSX.Element => {
       setDescription(t.description || "");
       setLogoUrl(t.logo_url || "");
     } catch {
-      setError("Failed to load tenant settings.");
+      setError("Failed to load organization settings.");
     } finally {
       setLoading(false);
     }
@@ -85,7 +85,7 @@ const TenantSettingsPage = (): JSX.Element => {
 
   return (
     <Box sx={{ maxWidth: 600, mx: "auto", mt: 2 }}>
-      <Title title="Tenant Settings" />
+      <Title title="Organization settings" />
 
       {error && (
         <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>

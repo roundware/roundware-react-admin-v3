@@ -188,22 +188,22 @@ function buildResourceLookup(canEdit: boolean): { [index: string]: React.ReactNo
     assets: (
       <Resource name="assets" key="assets" list={AssetList}
         create={e ? AssetCreate : undefined} edit={e ? AssetEdit : undefined}
-        options={{ label: "Assets" }} icon={WebAsset} />
+        options={{ label: "Contributions" }} icon={WebAsset} />
     ),
     timedassets: (
       <Resource name="timedassets" key="timedassets" list={TimedAssetList}
         edit={e ? TimedAssetEdit : undefined} create={e ? TimedAssetCreate : undefined}
-        icon={WebAsset} options={{ label: "Timed Assets" }} />
+        icon={WebAsset} options={{ label: "Timed assets" }} />
     ),
     uigroups: (
       <Resource name="uigroups" key="uigroups" list={UiGroupList}
         edit={e ? UiGroupEdit : undefined} create={e ? UiGroupCreate : undefined}
-        icon={Build} options={{ label: "Build UI" }} />
+        icon={Build} options={{ label: "Filters & menus" }} />
     ),
     audiotracks: (
       <Resource name="audiotracks" key="audiotracks" list={AudioTrackList}
         edit={e ? AudioTrackEdit : undefined} create={e ? AudioTrackCreate : undefined}
-        icon={Audiotrack} options={{ label: "Audio Tracks" }} />
+        icon={Audiotrack} options={{ label: "Audio tracks" }} />
     ),
     speakers: (
       <Resource name="speakers" key="speakers" list={SpeakerList}
@@ -218,7 +218,7 @@ function buildResourceLookup(canEdit: boolean): { [index: string]: React.ReactNo
     listenevents: (
       <Resource name="listenevents" key="listenevents" list={ListenEventsList}
         edit={e ? ListenEventsEdit : undefined} create={e ? ListenEventsCreate : undefined}
-        icon={Hearing} options={{ label: "Listen Events" }} />
+        icon={Hearing} options={{ label: "Listen events" }} />
     ),
     sessions: (
       <Resource name="sessions" key="sessions" list={SessionList}
@@ -232,7 +232,7 @@ function buildResourceLookup(canEdit: boolean): { [index: string]: React.ReactNo
     ),
     tagcategories: (
       <Resource name="tagcategories" key="tagcategories"
-        options={{ label: "Tag Categories" }} list={TagCategoryList}
+        options={{ label: "Tag categories" }} list={TagCategoryList}
         edit={e ? TagCategoryEdit : undefined} create={e ? TagCategoryCreate : undefined}
         icon={Label} />
     ),
@@ -243,7 +243,7 @@ function buildResourceLookup(canEdit: boolean): { [index: string]: React.ReactNo
     ),
     localizedstrings: (
       <Resource name="localizedstrings" key="localizedstrings"
-        options={{ label: "Localized Strings" }} list={LocalizedStringList}
+        options={{ label: "Translations" }} list={LocalizedStringList}
         edit={e ? LocalizedStringEdit : undefined} create={e ? LocalizedStringCreate : undefined}
         icon={Translate} />
     ),

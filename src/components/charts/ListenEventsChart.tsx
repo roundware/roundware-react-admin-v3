@@ -233,7 +233,7 @@ const ListenEventsChart = () => {
         title={
           <Toolbar>
             <Typography variant="h5" style={{ flexGrow: 1 }}>
-              Asset Listening Data
+              Listening
             </Typography>
 
             <div>
@@ -397,7 +397,7 @@ const ListenEventsChart = () => {
               align="center"
               color="text.secondary"
             >
-              Fetch Earlier Listening Data
+              Fetch earlier listening
             </Typography>
             <Stack direction={"row-reverse"} justifyContent="center">
               {[

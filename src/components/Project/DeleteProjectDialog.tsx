@@ -157,7 +157,7 @@ const DeleteProjectDialog: React.FC<DeleteProjectDialogProps> = ({
               <Typography variant="body2" component="div">
                 <ul style={{ margin: 0, paddingLeft: 20 }}>
                   <li>Tags (tag categories are shared across projects and will not be deleted)</li>
-                  <li>Assets (audio recordings, photos, text)</li>
+                  <li>Contributions (audio recordings, photos, text)</li>
                   <li>Speakers and speaker shapes</li>
                   <li>Audiotracks</li>
                   <li>UI groups and UI items</li>

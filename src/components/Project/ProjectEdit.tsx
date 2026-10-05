@@ -165,7 +165,7 @@ const ProjectEdit = (): JSX.Element => {
           <BooleanInput source="geo_speak_enabled" defaultChecked />
         </CardBox>
 
-        <CardBox title="Asset Settings">
+        <CardBox title="Contribution settings">
           <BooleanInput source="auto_submit" />
           <SelectInput
             source="ordering"
@@ -196,7 +196,7 @@ const ProjectEdit = (): JSX.Element => {
             source="recording_radius"
             required
             fullWidth
-            helperText="Radius in meters of active range each Asset"
+            helperText="Radius in meters of active range each contribution"
           />
           <NumberInput
             source="max_recording_length_sec"

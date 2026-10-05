@@ -61,7 +61,7 @@ const AssetListensChart = ({ listenEvents, viewRange }: Props): JSX.Element => {
     <>
       <Toolbar>
         <Typography variant="body2" color="textSecondary">
-          Listens by Asset
+          Listens by contribution
         </Typography>
       </Toolbar>
       {!perAssetListens.length ? (
