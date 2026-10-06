@@ -42,7 +42,7 @@ const FEATURES = [
     icon: <Explore fontSize="large" color="primary" />,
     title: "Flexible Experiences",
     description:
-      "Build sound walks, story maps, interactive installations, and more with customizable tags, speakers, and audio tracks.",
+      "Build sound walks, story maps, interactive installations, and more with customizable tags, speakers, and playback.",
   },
   {
     icon: <Language fontSize="large" color="primary" />,

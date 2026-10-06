@@ -31,10 +31,10 @@ const AudiotrackStep: React.FC<AudiotrackStepProps> = ({ state, dispatch }) => {
 
   return (
     <Box>
-      <StepInstruction title="Audiotrack Settings">
-        An audiotrack controls how audio assets are mixed and played back.
-        Every project needs at least one. The defaults below work well for
-        most projects — adjust if you have specific mixing needs.
+      <StepInstruction title="Playback">
+        How contributions are chosen, mixed and faded as participants listen.
+        The defaults below work well for most projects — adjust them if you
+        have specific mixing needs.
       </StepInstruction>
 
       <Grid container spacing={3}>
@@ -97,7 +97,7 @@ const AudiotrackStep: React.FC<AudiotrackStepProps> = ({ state, dispatch }) => {
                 onChange={(e) => setShowAdvanced(e.target.checked)}
               />
             }
-            label="Show advanced audiotrack settings"
+            label="Show advanced playback settings"
           />
         </Grid>
 
@@ -199,7 +199,7 @@ const AudiotrackStep: React.FC<AudiotrackStepProps> = ({ state, dispatch }) => {
                       />
                     }
                     label="Repeat"
-                    title="Can an asset play more than once in this audiotrack?"
+                    title="Can a contribution play more than once?"
                   />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 4 }}>
@@ -214,7 +214,7 @@ const AudiotrackStep: React.FC<AudiotrackStepProps> = ({ state, dispatch }) => {
                       />
                     }
                     label="Start Silent"
-                    title="Should this audiotrack begin with silence for the dead air duration or play an asset immediately?"
+                    title="Begin with silence for the dead-air duration, or play a contribution straight away?"
                   />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 4 }}>
@@ -231,7 +231,7 @@ const AudiotrackStep: React.FC<AudiotrackStepProps> = ({ state, dispatch }) => {
                       />
                     }
                     label="Fadeout When Filtered"
-                    title="Should an asset playing in this audiotrack fadeout if it becomes unavailable while playing e.g. listener leaving active range."
+                    title="Should a playing contribution fade out if it becomes unavailable, e.g. when the listener leaves its range?"
                   />
                 </Grid>
               </Grid>

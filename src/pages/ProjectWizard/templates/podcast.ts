@@ -24,7 +24,9 @@ const podcast: WizardTemplate = {
     listen_enabled: true,
     geo_listen_enabled: false,
     speak_enabled: true,
-    geo_speak_enabled: false,
+    // Contributions keep where they were made when the device allows
+    // (Halsey, 2026-10-06).
+    geo_speak_enabled: true,
     // Voicemail length. Long enough for a real answer, short enough to edit.
     max_recording_length_sec: 120,
     recording_radius: 30,
@@ -104,6 +106,8 @@ const podcast: WizardTemplate = {
     },
   ],
   speakers: [],
+  // A show rarely has speaker audio at the start.
+  skipSpeakers: true,
 };
 
 export default podcast;

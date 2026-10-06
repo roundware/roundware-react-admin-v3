@@ -183,7 +183,7 @@ export function wizardReducer(state: WizardState, action: WizardAction): WizardS
         tags,
         uiGroups,
         speakers,
-        skipSpeakers: false,
+        skipSpeakers: t.skipSpeakers ?? false,
       };
     }
     // -- Project --

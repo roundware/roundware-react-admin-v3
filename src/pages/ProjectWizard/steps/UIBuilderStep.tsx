@@ -108,7 +108,7 @@ const UIBuilderStep: React.FC<UIBuilderStepProps> = ({ state, dispatch }) => {
 
   return (
     <Box>
-      <StepInstruction title="Set up Tag UI">
+      <StepInstruction title="Filters & Menus">
         Choose which categories and tags to present to your participants, both
         when they submit a recording (<strong>Speak</strong>) and when they
         listen to the audio stream (<strong>Listen</strong>).

@@ -1,4 +1,6 @@
 import {
+    Box,
+    Divider,
     Link,
     AppBar as MuiAppBar,
     Stack,
@@ -53,6 +55,8 @@ const AppBar = ({ container = HideOnScroll }: AppBarProps): JSX.Element => {
                 color: "#fff",
                 marginLeft: selectedProject ? 0 : 16,
               }}
+              // Quieter than the project beside it: the product, not the place.
+              sx={{ fontSize: "0.95rem", opacity: 0.8, whiteSpace: "nowrap" }}
               underline="hover"
             >
               Roundware Admin
@@ -61,11 +65,44 @@ const AppBar = ({ container = HideOnScroll }: AppBarProps): JSX.Element => {
                 swapped the whole admin's context mid-page — including the
                 router basename — which read as the app behaving oddly rather
                 than as a deliberate switch. The name is kept for orientation;
-                switching happens deliberately, on the Dashboard. */}
+                switching happens deliberately, on the Dashboard. It was set
+                like the "Roundware Admin" beside it and read as part of it;
+                now it is labeled, divided off and set larger. */}
             {selectedProject && (
-              <Typography variant="subtitle1" sx={{ color: "#fff", opacity: 0.9 }}>
-                {selectedProject.name}
-              </Typography>
+              <>
+                <Divider
+                  orientation="vertical"
+                  flexItem
+                  sx={{ borderColor: "rgba(255,255,255,0.45)", my: 0.5 }}
+                />
+                <Box sx={{ minWidth: 0, color: "#fff", lineHeight: 1.1 }}>
+                  {!isXSmall && (
+                    <Typography
+                      variant="overline"
+                      component="div"
+                      sx={{ fontSize: "0.65rem", lineHeight: 1.2, letterSpacing: "0.1em", opacity: 0.75 }}
+                    >
+                      Project
+                    </Typography>
+                  )}
+                  <Typography
+                    variant="h6"
+                    component="div"
+                    title={selectedProject.name}
+                    sx={{
+                      fontWeight: 600,
+                      fontSize: "1.15rem",
+                      lineHeight: 1.2,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      maxWidth: { xs: 160, sm: 360, md: 520 },
+                    }}
+                  >
+                    {selectedProject.name}
+                  </Typography>
+                </Box>
+              </>
             )}
           </Stack>
           <Stack spacing={1} direction="row" alignItems="center">

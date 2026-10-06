@@ -159,8 +159,8 @@ const DeleteProjectDialog: React.FC<DeleteProjectDialogProps> = ({
                   <li>Tags (tag categories are shared across projects and will not be deleted)</li>
                   <li>Contributions (audio recordings, photos, text)</li>
                   <li>Speakers and speaker shapes</li>
-                  <li>Audiotracks</li>
-                  <li>UI groups and UI items</li>
+                  <li>Playback settings</li>
+                  <li>Filters and menus</li>
                   <li>Sessions and events</li>
                   <li>Timed assets and notifications</li>
                   <li>Project localizations and branding</li>

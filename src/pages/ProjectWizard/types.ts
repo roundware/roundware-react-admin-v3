@@ -27,9 +27,9 @@ export type WizardStepId = (typeof WIZARD_STEPS)[number];
 export const STEP_LABELS: Record<WizardStepId, string> = {
   template: "Choose Template",
   project: "Project Basics",
-  audiotrack: "Audiotrack",
+  audiotrack: "Playback",
   tags: "Content Tags",
-  uibuilder: "Filters & menus",
+  uibuilder: "Filters & Menus",
   speakers: "Speakers",
 };
 
@@ -237,6 +237,8 @@ export interface WizardTemplate {
     tagIndices: number[];
   })[];
   speakers: Omit<WizardSpeaker, "tempId">[];
+  /** Start the Speakers step with "Add speakers later" checked. */
+  skipSpeakers?: boolean;
 }
 
 // ---- Creation progress ----------------------------------------------------

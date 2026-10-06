@@ -30,7 +30,7 @@ export async function executeCreation(
 ): Promise<number> {
   const steps: CreationStep[] = [
     { label: "Creating project...", status: "pending" },
-    { label: "Creating audiotrack...", status: "pending" },
+    { label: "Setting up playback...", status: "pending" },
     { label: "Creating tag categories...", status: "pending" },
     { label: "Creating tags...", status: "pending" },
     { label: "Creating UI groups...", status: "pending" },

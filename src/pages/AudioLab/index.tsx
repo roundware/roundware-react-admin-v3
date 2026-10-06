@@ -328,7 +328,7 @@ const AudioLabPage: React.FC = () => {
         as you make them. Which contributions play, when, and how they fade in and out is set
         under{" "}
         <Link component={RouterLink} to={`/project/${selectedProject.id}/audiotracks`}>
-          Playback
+          Playback Settings
         </Link>
         .
       </Typography>
