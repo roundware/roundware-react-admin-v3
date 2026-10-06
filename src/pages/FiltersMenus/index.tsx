@@ -87,19 +87,17 @@ interface Lang {
   name: string;
 }
 
-const MODE_TEXT: Record<Mode, { intro: string; field: string; hint: string; empty: string }> = {
+const MODE_TEXT: Record<Mode, { intro: string; field: string; empty: string }> = {
   speak: {
     intro:
-      "The questions contributors answer before they record — one screen each, in this order, picking one answer per question.",
+      "The questions contributors answer before they record — one screen each, in this order, picking one response per question.",
     field: "Question",
-    hint: "Shown above the answers, e.g. “What kind of sound is this?”",
     empty: "Contributors aren’t asked anything before recording.",
   },
   listen: {
     intro:
       "What listeners can narrow the sound by, from the Filters button on the listening screen. They can choose as many as they like in each.",
     field: "Label",
-    hint: "Shown on the filter, e.g. “Mood”.",
     empty: "Listeners have no filters.",
   },
 };
@@ -368,8 +366,16 @@ const FiltersMenusPage: React.FC = () => {
 
   const activeSpeak = groups.filter((g) => g.ui_mode === "speak" && g.is_active).sort(byIndex);
   const focusedSpeak = Math.max(0, activeSpeak.findIndex((g) => g.id === focusedId));
-  const previewPath = mode === "speak" ? (activeSpeak.length ? `/speak/tags/${focusedSpeak}` : "/speak") : "/listen";
-  const previewQuery = [lang && `lang=${encodeURIComponent(lang)}`, mode === "listen" && "rw_focus=filters"]
+  // With the questions switched off, the preview shows what contributors
+  // get — recording skips past them — so it isn't held to them.
+  const asking = mode === "speak" && askSpeak !== false && activeSpeak.length > 0;
+  const previewPath = mode === "speak" ? (asking ? `/speak/tags/${focusedSpeak}` : "/speak") : "/listen";
+  // The scope keeps the preview on these screens (the app's previewFocus.ts).
+  const previewQuery = [
+    lang && `lang=${encodeURIComponent(lang)}`,
+    mode === "listen" && "rw_focus=filters",
+    mode === "listen" ? "rw_scope=listen" : asking && "rw_scope=speak-tags",
+  ]
     .filter(Boolean)
     .join("&");
 
@@ -480,7 +486,6 @@ const FiltersMenusPage: React.FC = () => {
                               text={textOf(g)}
                               fallback={isDefault ? "" : textOf(g, defaultCode ?? "")}
                               fieldLabel={text.field}
-                              hint={text.hint}
                               focused={g.id === focusedId}
                               dragHandle={drag.dragHandleProps}
                               onFocus={() => setFocusedId(g.id)}
@@ -520,7 +525,7 @@ const FiltersMenusPage: React.FC = () => {
                 ))}
               </Stack>
               <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1 }}>
-                Each is one of your tag categories; its tags become the answers. Tags are edited under{" "}
+                Each is one of your tag categories; its tags become the responses. Tags are edited under{" "}
                 <Link component={RouterLink} to={`/project/${projectId}/tags`}>
                   Tags
                 </Link>
@@ -530,7 +535,7 @@ const FiltersMenusPage: React.FC = () => {
           )}
 
           <Typography variant="body2" color="text.secondary" sx={{ mt: 4 }}>
-            Need answers that only appear after a particular earlier answer — say, “Which episode?”
+            Need responses that only appear after a particular earlier response — say, “Which episode?”
             only for someone responding to an episode? Use the{" "}
             <Link component={RouterLink} to={`/project/${projectId}/uigroups-advanced`}>
               advanced editor
@@ -551,7 +556,7 @@ const FiltersMenusPage: React.FC = () => {
               />
               <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1 }}>
                 {mode === "speak"
-                  ? "Shows the question you last worked on. Answering it moves on, as it would for a contributor."
+                  ? "Shows the question you last worked on. Answering moves to the next question, as it would for a contributor; the preview stays on the questions."
                   : "Opens with the Filters panel showing, as listeners see it after pressing Filters."}
               </Typography>
             </CardContent>
@@ -564,7 +569,7 @@ const FiltersMenusPage: React.FC = () => {
 
 interface CardProps {
   group: Group;
-  /** The advanced editor's link, for conditional answers. */
+  /** The advanced editor's link, for conditional responses. */
   advancedUrl: string;
   /** The first Listen filter that's on: its choices also set what plays at the start. */
   firstListen: boolean;
@@ -575,7 +580,6 @@ interface CardProps {
   text: string;
   fallback: string;
   fieldLabel: string;
-  hint: string;
   focused: boolean;
   dragHandle: React.HTMLAttributes<HTMLElement> | null | undefined;
   onFocus: () => void;
@@ -642,9 +646,9 @@ const GroupCard: React.FC<CardProps> = (p) => {
               ? "Not translated: participants see the default language’s, shown in grey."
               : !p.text
               ? p.mode === "speak"
-                ? `Empty: contributors see only “${p.number}.” as the question. ${p.hint}`
-                : `Empty: the filter has no label. ${p.hint}`
-              : p.hint
+                ? `Empty: contributors see only “${p.number}.” as the question.`
+                : "Empty: the filter has no label."
+              : undefined
           }
           fullWidth
           size="small"
@@ -652,7 +656,7 @@ const GroupCard: React.FC<CardProps> = (p) => {
         />
 
         <Typography variant="subtitle2" sx={{ mt: 2, mb: 0.5 }}>
-          {p.mode === "speak" ? "Answers" : "Choices"}
+          {p.mode === "speak" ? "Responses" : "Choices"}
         </Typography>
         {p.firstListen && (
           <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
@@ -663,7 +667,7 @@ const GroupCard: React.FC<CardProps> = (p) => {
         )}
         {conditional ? (
           <Alert severity="info" sx={{ mb: 1 }}>
-            Some of these only appear after a particular earlier answer, so they’re edited in the{" "}
+            Some of these only appear after a particular earlier response, so they’re edited in the{" "}
             <Link component={RouterLink} to={p.advancedUrl}>
               advanced editor
             </Link>
@@ -717,22 +721,22 @@ const GroupCard: React.FC<CardProps> = (p) => {
             ))}
             {shown.length === 0 && (
               <Typography variant="caption" color="error">
-                No {p.mode === "speak" ? "answers" : "choices"} ticked — participants will see an empty{" "}
+                No {p.mode === "speak" ? "responses" : "choices"} ticked — participants will see an empty{" "}
                 {p.mode === "speak" ? "question" : "filter"}.
               </Typography>
             )}
             <Box sx={{ mt: 1 }}>
               <Button size="small" onClick={() => setAdvanced((a) => !a)} sx={{ px: 0 }}>
-                Advanced: conditional {p.mode === "speak" ? "answers" : "choices"}
+                Advanced: conditional {p.mode === "speak" ? "responses" : "choices"}
               </Button>
               <Collapse in={advanced}>
                 <Typography variant="body2" color="text.secondary">
-                  An answer can be made to appear only after a particular answer to an earlier
+                  A response can be made to appear only after a particular response to an earlier
                   question. That’s set up in the{" "}
                   <Link component={RouterLink} to={p.advancedUrl}>
                     advanced editor
                   </Link>
-                  ; once it is, this card shows its answers read-only.
+                  ; once it is, this card shows its responses read-only.
                 </Typography>
               </Collapse>
             </Box>

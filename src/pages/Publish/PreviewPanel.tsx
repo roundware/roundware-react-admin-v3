@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   CircularProgress,
+  Dialog,
   IconButton,
   Stack,
   ToggleButton,
@@ -150,43 +151,48 @@ const PreviewPanel: React.FC<Props> = ({
         {iframe(device)}
       </Box>
 
-      {fullscreen && (
-        <Box
-          sx={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 1300,
-            bgcolor: "rgba(0,0,0,0.85)",
-            p: 3,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
-            <ToggleButtonGroup
-              size="small"
-              exclusive
-              value={device}
-              onChange={(_, v) => v && setDevice(v)}
-              sx={{ bgcolor: "background.paper" }}
-            >
-              <ToggleButton value="mobile" title="Phone">
-                <SmartphoneIcon fontSize="small" />
-              </ToggleButton>
-              <ToggleButton value="tablet" title="Tablet">
-                <TabletIcon fontSize="small" />
-              </ToggleButton>
-              <ToggleButton value="desktop" title="Desktop">
-                <ComputerIcon fontSize="small" />
-              </ToggleButton>
-            </ToggleButtonGroup>
-            <IconButton onClick={() => setFullscreen(false)} sx={{ color: "#fff" }}>
-              <CloseIcon />
-            </IconButton>
+      {/* A dialog, drawn above everything: as a fixed box inside the page it
+          sat under the admin's top bar on some pages, hiding its own close
+          button. Esc closes it too. */}
+      <Dialog
+        fullScreen
+        open={fullscreen}
+        onClose={() => setFullscreen(false)}
+        PaperProps={{ sx: { bgcolor: "rgba(0,0,0,0.9)", p: 3, display: "flex", flexDirection: "column" } }}
+      >
+        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+          <ToggleButtonGroup
+            size="small"
+            exclusive
+            value={device}
+            onChange={(_, v) => v && setDevice(v)}
+            sx={{ bgcolor: "background.paper" }}
+          >
+            <ToggleButton value="mobile" title="Phone">
+              <SmartphoneIcon fontSize="small" />
+            </ToggleButton>
+            <ToggleButton value="tablet" title="Tablet">
+              <TabletIcon fontSize="small" />
+            </ToggleButton>
+            <ToggleButton value="desktop" title="Desktop">
+              <ComputerIcon fontSize="small" />
+            </ToggleButton>
+          </ToggleButtonGroup>
+          <Stack direction="row" spacing={1}>
+            <Tooltip title="Reload preview">
+              <IconButton onClick={() => setLocalBump((n) => n + 1)} sx={{ color: "#fff" }}>
+                <RefreshIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Exit full screen (Esc)">
+              <IconButton onClick={() => setFullscreen(false)} sx={{ color: "#fff" }} aria-label="Exit full screen">
+                <CloseIcon />
+              </IconButton>
+            </Tooltip>
           </Stack>
-          <Box sx={{ flex: 1, minHeight: 0 }}>{iframe(device)}</Box>
-        </Box>
-      )}
+        </Stack>
+        <Box sx={{ flex: 1, minHeight: 0 }}>{iframe(device)}</Box>
+      </Dialog>
     </>
   );
 };
