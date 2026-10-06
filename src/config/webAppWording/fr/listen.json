@@ -4,7 +4,6 @@
 	"launchTooltip": "TOUCHE {{button}} POUR ÉCOUTER",
 	"loadingAudio": "Chargement de l’audio...",
 	"mixerControls": "Commandes du mixeur",
-	"replay": "Réécouter",
 	"speakButton": "Parler",
 	"assetPlayer": {
 		"unsupported": "Ton navigateur ne prend pas en charge l’audio !"

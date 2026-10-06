@@ -4,7 +4,6 @@
 	"launchTooltip": "点击{{button}}开始收听",
 	"loadingAudio": "正在加载音频……",
 	"mixerControls": "混音控制",
-	"replay": "重播",
 	"speakButton": "说话",
 	"assetPlayer": {
 		"unsupported": "你的浏览器不支持音频播放！"

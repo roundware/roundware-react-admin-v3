@@ -4,7 +4,6 @@
 	"launchTooltip": "TAP {{button}} TO LISTEN",
 	"loadingAudio": "Loading audio...",
 	"mixerControls": "Mixer controls",
-	"replay": "Replay",
 	"speakButton": "Speak",
 	"assetPlayer": {
 		"unsupported": "Your browser does not support audio!"
