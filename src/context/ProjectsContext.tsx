@@ -5,6 +5,8 @@ import { useRoundwareDataProvider } from "./DataProviderContext";
 export interface IProject {
   id: number;
   name: string;
+  /** The language its text is written in first; others fall back to it. */
+  default_language_id?: number | null;
   description?: string;
   latitude: number;
   longitude: number;

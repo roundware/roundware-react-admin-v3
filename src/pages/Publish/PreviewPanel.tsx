@@ -25,6 +25,10 @@ interface Props {
   height?: number | string;
   /** Heading above the controls. */
   title?: string;
+  /** The app screen to open on, e.g. "/speak/tags/0" (default: the start). */
+  path?: string;
+  /** More of the link, e.g. "lang=es&rw_focus=filters". */
+  query?: string;
 }
 
 type Device = "mobile" | "tablet" | "desktop";
@@ -37,7 +41,14 @@ const SIZES: Record<Exclude<Device, "desktop">, { width: number; height: number 
   tablet: { width: 768, height: 1024 },
 };
 
-const PreviewPanel: React.FC<Props> = ({ projectId, refreshKey, height = 720, title = "Preview" }) => {
+const PreviewPanel: React.FC<Props> = ({
+  projectId,
+  refreshKey,
+  height = 720,
+  title = "Preview",
+  path = "/",
+  query,
+}) => {
   const [token, setToken] = useState<string | null>(null);
   const [device, setDevice] = useState<Device>("mobile");
   const [fullscreen, setFullscreen] = useState(false);
@@ -59,9 +70,9 @@ const PreviewPanel: React.FC<Props> = ({ projectId, refreshKey, height = 720, ti
   }, [projectId, refreshKey, localBump]);
 
   const src = token
-    ? `${webappUrl()}/?preview=1&project_id=${projectId}&token=${encodeURIComponent(
+    ? `${webappUrl()}${path}?preview=1&project_id=${projectId}&token=${encodeURIComponent(
         token
-      )}&_=${reloadKey}`
+      )}${query ? `&${query}` : ""}&_=${reloadKey}`
     : "";
 
   const iframe = (d: Device) => (

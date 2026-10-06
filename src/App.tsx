@@ -18,7 +18,7 @@ import {
 } from "@mui/icons-material";
 import { createBrowserHistory } from "history";
 import React from "react";
-import { Admin, CustomRoutes, Resource } from "react-admin";
+import { Admin, CustomRoutes, Resource, ResourceContextProvider } from "react-admin";
 import { Route } from "react-router-dom";
 import AssetCreate from "./components/Asset/AssetCreate";
 import AssetEdit from "./components/Asset/AssetEdit";
@@ -88,6 +88,7 @@ import ProjectWizardPage from "./pages/ProjectWizard";
 import TeamMembersPage from "./pages/TeamMembersPage";
 import TenantSettingsPage from "./pages/TenantSettingsPage";
 import AppCopyPage from "./pages/AppCopy";
+import FiltersMenusPage from "./pages/FiltersMenus";
 import AudioLabPage from "./pages/AudioLab";
 import PlanPage from "./pages/PlanPage";
 import adminTheme from "./styles";
@@ -166,6 +167,16 @@ function App({ basename }: { basename: string }): JSX.Element {
           <Route path="/audio-lab" element={<AudioLabPage />} />
           <Route path="/test-app" element={<TestAppPage />} />
           <Route path="/app-copy" element={<AppCopyPage />} />
+          {/* The previous Filters & Menus page: conditional answers (UI items
+              with a parent) are still edited here. */}
+          <Route
+            path="/uigroups-advanced"
+            element={
+              <ResourceContextProvider value="uigroups">
+                <UiGroupList />
+              </ResourceContextProvider>
+            }
+          />
           <Route path="/team" element={<TeamMembersPage />} />
           <Route path="/settings" element={<TenantSettingsPage />} />
           <Route path="/plan" element={<PlanPage />} />
@@ -198,7 +209,7 @@ function buildResourceLookup(canEdit: boolean): { [index: string]: React.ReactNo
         icon={WebAsset} options={{ label: "Timed Assets" }} />
     ),
     uigroups: (
-      <Resource name="uigroups" key="uigroups" list={UiGroupList}
+      <Resource name="uigroups" key="uigroups" list={FiltersMenusPage}
         edit={e ? UiGroupEdit : undefined} create={e ? UiGroupCreate : undefined}
         icon={Build} options={{ label: "Filters & Menus" }} />
     ),

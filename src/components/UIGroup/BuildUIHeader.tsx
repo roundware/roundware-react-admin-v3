@@ -1,15 +1,23 @@
 import React from "react";
-import { Typography } from "@mui/material";
+import { Link, Typography } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
+import { useProjects } from "context/ProjectsContext";
 
+// The advanced editor's heading: this is the previous Filters & Menus page,
+// kept for answers that depend on earlier ones (pages/FiltersMenus).
 const BuildUIHeader = (): JSX.Element => {
+  const { selectedProject } = useProjects();
   return (
     <>
-      <Typography variant="h5">Filters &amp; Menus</Typography>
+      <Typography variant="h5">Filters &amp; Menus: Advanced Editor</Typography>
       <Typography variant="subtitle2">
-        Select a UI Mode, add UI Groups to it, then use the Tree View to build
-        the UI Item hierarchy. It helps to think of UI Groups as screens or
-        prompts, with the UI Item tree representing available options depending
-        on previous inputs of a group.
+        For answers that only appear after a particular earlier answer. Pick Speak or Listen,
+        then a question in the tree on the right, and drag answers under the answer they
+        depend on. Everything else is simpler on the main{" "}
+        <Link component={RouterLink} to={`/project/${selectedProject?.id}/uigroups`}>
+          Filters &amp; Menus
+        </Link>{" "}
+        page.
       </Typography>
     </>
   );
