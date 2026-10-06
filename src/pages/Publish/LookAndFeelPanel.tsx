@@ -1,5 +1,6 @@
 // ---------------------------------------------------------------------------
-// Look & feel: the web app's three colors and its font
+// Look & feel: the web app's three colors, its fonts, and a few style
+// choices — corners, button shape, button text, text size
 // (roundware-server-v3 docs/015-theming.md).
 //
 // Roles, labels, descriptions, defaults and the font list all come from
@@ -21,6 +22,8 @@ import {
   MenuItem,
   Stack,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
 } from "@mui/material";
 import {
@@ -34,6 +37,8 @@ import {
 
 type RoleKey = ColorRole["key"];
 type Palette = Partial<Record<RoleKey, string>>;
+/** Chosen style options by key, and headingFont; absent means the default. */
+type Style = Record<string, string>;
 
 interface Props {
   projectId: number;
@@ -90,6 +95,7 @@ const LookAndFeelPanel: React.FC<Props> = ({ projectId, onSaved }) => {
   const [schema, setSchema] = useState<ThemeSchema | null>(null);
   const [chosen, setChosen] = useState<Palette>({});
   const [font, setFont] = useState("");
+  const [style, setStyle] = useState<Style>({});
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const debounce = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -102,6 +108,7 @@ const LookAndFeelPanel: React.FC<Props> = ({ projectId, onSaved }) => {
         setSchema(s);
         setChosen({ ...(b.theme_json?.palette ?? {}) });
         setFont(b.google_font_family ?? "");
+        setStyle({ ...(b.theme_json?.style ?? {}) });
       })
       .catch((e) => !cancelled && setError(errMessage(e)));
     return () => {
@@ -114,14 +121,17 @@ const LookAndFeelPanel: React.FC<Props> = ({ projectId, onSaved }) => {
   }, []);
 
   /** Saved only from user edits, never on load. */
-  const save = (palette: Palette, fontFamily: string) => {
+  const save = (palette: Palette, fontFamily: string, styleChoices: Style) => {
     if (debounce.current) clearTimeout(debounce.current);
     debounce.current = setTimeout(async () => {
       setSaving(true);
       setError(null);
       try {
         await patchBranding(projectId, {
-          theme_json: Object.keys(palette).length ? { palette } : {},
+          theme_json: {
+            ...(Object.keys(palette).length ? { palette } : {}),
+            ...(Object.keys(styleChoices).length ? { style: styleChoices } : {}),
+          },
           google_font_family: fontFamily,
         });
         onSaved?.();
@@ -149,18 +159,27 @@ const LookAndFeelPanel: React.FC<Props> = ({ projectId, onSaved }) => {
   const pick = (key: RoleKey, value: string) => {
     const next = { ...chosen, [key]: value };
     setChosen(next);
-    save(next, font);
+    save(next, font, style);
   };
   const pickFont = (value: string) => {
     setFont(value);
-    save(chosen, value);
+    save(chosen, value, style);
+  };
+  /** A default choice is stored as nothing, so later default changes reach it. */
+  const pickStyle = (key: string, value: string, defaultValue: string) => {
+    const next = { ...style };
+    if (!value || value === defaultValue) delete next[key];
+    else next[key] = value;
+    setStyle(next);
+    save(chosen, font, next);
   };
   const reset = () => {
     setChosen({});
     setFont("");
-    save({}, "");
+    setStyle({});
+    save({}, "", {});
   };
-  const isDefault = !Object.keys(chosen).length && !font;
+  const isDefault = !Object.keys(chosen).length && !font && !Object.keys(style).length;
   const problems = warnings(effective, schema.colors);
 
   return (
@@ -211,6 +230,60 @@ const LookAndFeelPanel: React.FC<Props> = ({ projectId, onSaved }) => {
           </MenuItem>
         ))}
       </TextField>
+
+      <TextField
+        select
+        size="small"
+        label="Heading font"
+        helperText="Titles, questions and headings."
+        value={style.headingFont || ""}
+        onChange={(e) => pickStyle("headingFont", e.target.value, "")}
+        SelectProps={{ displayEmpty: true }}
+        InputLabelProps={{ shrink: true }}
+      >
+        <MenuItem value="">Same as text (default)</MenuItem>
+        {[...schema.fonts, ...(style.headingFont && !schema.fonts.includes(style.headingFont) ? [style.headingFont] : [])].map(
+          (f) => (
+            <MenuItem key={f} value={f}>
+              {f}
+            </MenuItem>
+          )
+        )}
+      </TextField>
+
+      {(schema.styles ?? []).map((choice) => {
+        const value = style[choice.key] || choice.default;
+        return (
+          <Box key={choice.key}>
+            <Typography variant="body2">
+              {choice.label}
+              {!style[choice.key] && (
+                <Typography component="span" variant="caption" color="text.secondary">
+                  {" "}
+                  (default)
+                </Typography>
+              )}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 0.5 }}>
+              {choice.description}
+            </Typography>
+            <ToggleButtonGroup
+              size="small"
+              exclusive
+              value={value}
+              onChange={(_e, v) => v && pickStyle(choice.key, v, choice.default)}
+              aria-label={choice.label}
+              sx={{ flexWrap: "wrap" }}
+            >
+              {choice.options.map((o) => (
+                <ToggleButton key={o.value} value={o.value} sx={{ px: 1.25, textTransform: "none" }}>
+                  {o.label}
+                </ToggleButton>
+              ))}
+            </ToggleButtonGroup>
+          </Box>
+        );
+      })}
 
       {problems.length > 0 && (
         <Alert severity="warning" sx={{ "& ul": { m: 0, pl: 2 } }}>

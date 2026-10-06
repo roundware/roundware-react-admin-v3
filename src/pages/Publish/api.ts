@@ -43,7 +43,11 @@ export interface SlotFiles {
 export interface Branding {
   app_title: string;
   app_subtitle: string;
-  theme_json: { palette?: { primary?: string; secondary?: string; background?: string } };
+  theme_json: {
+    palette?: { primary?: string; secondary?: string; background?: string };
+    /** Style choices by key, and headingFont (server core/theme.py). */
+    style?: Record<string, string>;
+  };
   google_font_family?: string;
   files: Record<string, SlotFiles>;
   [key: string]: unknown;
@@ -115,10 +119,20 @@ export interface ColorRole {
   default: string;
 }
 
+export interface StyleChoice {
+  key: string;
+  label: string;
+  description: string;
+  options: { value: string; label: string }[];
+  default: string;
+}
+
 export interface ThemeSchema {
   colors: ColorRole[];
   default_font: string;
   fonts: string[];
+  /** Corners, button shape, button text, text size. */
+  styles: StyleChoice[];
 }
 
 /** The theme's colors, defaults and fonts — from the server, like the file
