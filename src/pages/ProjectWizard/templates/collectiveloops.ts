@@ -25,7 +25,10 @@ import { WizardTemplate } from "../types";
  */
 const collectiveloops: WizardTemplate = {
   key: "collectiveloops",
-  active: true,
+  // Not offered for now (Halsey, 2026-10-06): the looping project type isn't
+  // fully worked out and is much less common. Existing looping projects are
+  // unaffected — templates only apply at creation.
+  active: false,
   name: "Collective Loops",
   description:
     "Participants record over a shared looping base track, and each contribution joins a continuous collective mix that everyone hears. Best for installations and choral pieces rather than map browsing.",
