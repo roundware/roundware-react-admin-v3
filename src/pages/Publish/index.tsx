@@ -5,6 +5,8 @@ import { useProjects } from "../../context/ProjectsContext";
 import DeployCard from "./DeployCard";
 import LiveSiteCard from "./LiveSiteCard";
 import VersionsCard from "./VersionsCard";
+import TimeMachineCard from "./TimeMachineCard";
+import { LiveSiteState } from "./api";
 import BrandingPanel from "./BrandingPanel";
 import PreviewPanel from "./PreviewPanel";
 import ParadigmWarning from "./ParadigmWarning";
@@ -116,7 +118,7 @@ const PublishPage: React.FC = () => {
   // version; making a version live changes the live site.
   const [liveKey, setLiveKey] = useState(0);
   const [versionsKey, setVersionsKey] = useState(0);
-  const [published, setPublished] = useState(false);
+  const [live, setLive] = useState<LiveSiteState | null>(null);
   const reloadLive = useCallback(() => setLiveKey((k) => k + 1), []);
   const reloadVersions = useCallback(() => setVersionsKey((k) => k + 1), []);
 
@@ -140,15 +142,16 @@ const PublishPage: React.FC = () => {
       <LiveSiteCard
         projectId={projectId}
         refreshKey={deployKey + liveKey}
-        onPublished={setPublished}
+        onState={setLive}
         onUpdated={reloadVersions}
       />
       <VersionsCard
         projectId={projectId}
-        published={published}
+        published={!!live?.published}
         refreshKey={deployKey + versionsKey}
         onChange={reloadLive}
       />
+      <TimeMachineCard projectId={projectId} liveUrl={live?.published ? live.live_url : null} />
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 7 }}>

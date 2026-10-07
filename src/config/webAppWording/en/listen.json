@@ -48,14 +48,18 @@
 		"includeGeo": "Include Current Geo Information"
 	},
 	"timeMachine": {
-		"timeBased": "Time-based",
-		"orderBased": "Order-based",
-		"speakerCount_one": "{{count}} speaker",
-		"speakerCount_other": "{{count}} speakers",
-		"automate": "Automate",
-		"stop": "Stop",
-		"hidePlayButton": "Hide Play Button",
-		"hint": "Move slider to filter speakers by creation time"
+		"title": "Time machine",
+		"notAvailable": "Not available",
+		"notAvailableBody": "This project's time machine isn't open.",
+		"play": "Play",
+		"pause": "Pause",
+		"replay": "Play again",
+		"byDate": "By date",
+		"oneByOne": "One by one",
+		"speakers_one": "{{count}} speaker",
+		"speakers_other": "{{count}} speakers",
+		"contributions_one": "{{count}} contribution",
+		"contributions_other": "{{count}} contributions"
 	},
 	"addVoice": {
 		"tapToRecord": "TAP TO RECORD",

@@ -21,6 +21,8 @@ export interface LiveSiteState {
   live_version_name: string | null;
   /** When that version was saved. */
   live_version_created_at: string | null;
+  /** Whether it shows only contributions made before it was saved. */
+  live_version_freezes_contributions: boolean;
   /** When, and by whom, that version was made live. */
   updated_at: string | null;
   updated_by: string | null;
@@ -116,6 +118,8 @@ export interface SiteVersion {
   created_at: string;
   created_by: string | null;
   is_live: boolean;
+  /** While live, shows only contributions made before it was saved. */
+  freeze_contributions: boolean;
 }
 
 export async function listVersions(projectId: number): Promise<SiteVersion[]> {
@@ -124,22 +128,26 @@ export async function listVersions(projectId: number): Promise<SiteVersion[]> {
 }
 
 /** Save what the test site shows now, without making it live. */
-export async function saveVersion(projectId: number, name: string): Promise<SiteVersion> {
+export async function saveVersion(
+  projectId: number,
+  name: string,
+  freezeContributions = false
+): Promise<SiteVersion> {
   const { json } = await apiFetcher(`/projects/${projectId}/site-versions/`, {
     method: "POST",
-    body: JSON.stringify({ name }),
+    body: JSON.stringify({ name, freeze_contributions: freezeContributions }),
   });
   return json as SiteVersion;
 }
 
-export async function renameVersion(
+export async function editVersion(
   projectId: number,
   versionId: number,
-  name: string
+  patch: { name?: string; freeze_contributions?: boolean }
 ): Promise<SiteVersion> {
   const { json } = await apiFetcher(`/projects/${projectId}/site-versions/${versionId}/`, {
     method: "PATCH",
-    body: JSON.stringify({ name }),
+    body: JSON.stringify(patch),
   });
   return json as SiteVersion;
 }

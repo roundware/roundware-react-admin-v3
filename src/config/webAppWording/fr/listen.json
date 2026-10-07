@@ -48,15 +48,18 @@
 		"includeGeo": "Inclure ma position actuelle"
 	},
 	"timeMachine": {
-		"timeBased": "Par date",
-		"orderBased": "Par ordre",
-		"speakerCount_one": "{{count}} haut-parleur",
-		"speakerCount_many": "{{count}} haut-parleurs",
-		"speakerCount_other": "{{count}} haut-parleurs",
-		"automate": "Automatiser",
-		"stop": "Arrêter",
-		"hidePlayButton": "Masquer le bouton Lecture",
-		"hint": "Déplace le curseur pour filtrer les haut-parleurs par date de création"
+		"title": "Machine à remonter le temps",
+		"notAvailable": "Indisponible",
+		"notAvailableBody": "La machine à remonter le temps de ce projet n’est pas ouverte.",
+		"play": "Lecture",
+		"pause": "Pause",
+		"replay": "Rejouer",
+		"byDate": "Par date",
+		"oneByOne": "Un par un",
+		"speakers_one": "{{count}} haut-parleur",
+		"speakers_other": "{{count}} haut-parleurs",
+		"contributions_one": "{{count}} contribution",
+		"contributions_other": "{{count}} contributions"
 	},
 	"addVoice": {
 		"tapToRecord": "TOUCHE POUR ENREGISTRER",

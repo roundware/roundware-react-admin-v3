@@ -5,12 +5,14 @@ import {
   Button,
   Card,
   CardContent,
+  Checkbox,
   Chip,
   CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
   IconButton,
   List,
   ListItem,
@@ -29,8 +31,8 @@ import {
   deleteVersion,
   errMessage,
   listVersions,
+  editVersion,
   makeVersionLive,
-  renameVersion,
   saveVersion,
 } from "./api";
 
@@ -64,8 +66,12 @@ const VersionsCard: React.FC<Props> = ({ projectId, published, refreshKey, onCha
   const [versions, setVersions] = useState<SiteVersion[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  // The name dialog: saving a new version, or renaming one.
-  const [naming, setNaming] = useState<{ version?: SiteVersion; name: string } | null>(null);
+  // The version dialog: saving a new one, or editing one.
+  const [naming, setNaming] = useState<{
+    version?: SiteVersion;
+    name: string;
+    freeze: boolean;
+  } | null>(null);
   const [confirm, setConfirm] = useState<{ action: "live" | "delete"; version: SiteVersion } | null>(
     null
   );
@@ -94,10 +100,15 @@ const VersionsCard: React.FC<Props> = ({ projectId, published, refreshKey, onCha
 
   const handleName = () => {
     if (!naming) return;
-    const { version, name } = naming;
+    const { version, name, freeze } = naming;
     setNaming(null);
-    run(() =>
-      version ? renameVersion(projectId, version.id, name) : saveVersion(projectId, name)
+    run(
+      () =>
+        version
+          ? editVersion(projectId, version.id, { name, freeze_contributions: freeze })
+          : saveVersion(projectId, name, freeze),
+      // A live version's change shows on the live site.
+      version?.is_live ? onChange : undefined
     );
   };
 
@@ -121,7 +132,7 @@ const VersionsCard: React.FC<Props> = ({ projectId, published, refreshKey, onCha
             variant="outlined"
             size="small"
             disabled={busy}
-            onClick={() => setNaming({ name: "" })}
+            onClick={() => setNaming({ name: "", freeze: false })}
           >
             Save version
           </Button>
@@ -162,11 +173,13 @@ const VersionsCard: React.FC<Props> = ({ projectId, published, refreshKey, onCha
                         Make live
                       </Button>
                     )}
-                    <Tooltip title="Rename">
+                    <Tooltip title="Edit">
                       <IconButton
                         size="small"
                         disabled={busy}
-                        onClick={() => setNaming({ version: v, name: v.name })}
+                        onClick={() =>
+                          setNaming({ version: v, name: v.name, freeze: v.freeze_contributions })
+                        }
                       >
                         <EditIcon fontSize="small" />
                       </IconButton>
@@ -190,6 +203,9 @@ const VersionsCard: React.FC<Props> = ({ projectId, published, refreshKey, onCha
                     <Box component="span" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       {versionLabel(v)}
                       {v.is_live && <Chip label="Live" color="success" size="small" />}
+                      {v.freeze_contributions && (
+                        <Chip label="Contributions frozen" size="small" variant="outlined" />
+                      )}
                     </Box>
                   }
                   secondary={`Saved ${when(v.created_at)}${v.created_by ? ` by ${v.created_by}` : ""}`}
@@ -201,7 +217,7 @@ const VersionsCard: React.FC<Props> = ({ projectId, published, refreshKey, onCha
         )}
 
         <Dialog open={naming !== null} onClose={() => setNaming(null)} fullWidth maxWidth="xs">
-          <DialogTitle>{naming?.version ? "Rename version" : "Save version"}</DialogTitle>
+          <DialogTitle>{naming?.version ? "Edit version" : "Save version"}</DialogTitle>
           <DialogContent>
             {!naming?.version && (
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
@@ -222,11 +238,32 @@ const VersionsCard: React.FC<Props> = ({ projectId, published, refreshKey, onCha
                 if (e.key === "Enter" && naming?.name.trim()) handleName();
               }}
             />
+            <FormControlLabel
+              sx={{ mt: 2, alignItems: "flex-start" }}
+              control={
+                <Checkbox
+                  sx={{ pt: 0.5 }}
+                  checked={naming?.freeze ?? false}
+                  onChange={(e) => setNaming((n) => (n ? { ...n, freeze: e.target.checked } : n))}
+                />
+              }
+              label={
+                <Box>
+                  <Typography variant="body2">
+                    Show only contributions made before this version
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    For an archive: while it's live, the site shows the project as it
+                    was, recordings included. New recordings are kept but don't show.
+                  </Typography>
+                </Box>
+              }
+            />
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setNaming(null)}>Cancel</Button>
             <Button variant="contained" disabled={!naming?.name.trim()} onClick={handleName}>
-              {naming?.version ? "Rename" : "Save"}
+              {naming?.version ? "Save" : "Save version"}
             </Button>
           </DialogActions>
         </Dialog>

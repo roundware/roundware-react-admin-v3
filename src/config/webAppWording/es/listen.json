@@ -48,15 +48,18 @@
 		"includeGeo": "Incluir la ubicación actual"
 	},
 	"timeMachine": {
-		"timeBased": "Por fecha",
-		"orderBased": "Por orden",
-		"speakerCount_one": "{{count}} altavoz",
-		"speakerCount_many": "{{count}} altavoces",
-		"speakerCount_other": "{{count}} altavoces",
-		"automate": "Automatizar",
-		"stop": "Detener",
-		"hidePlayButton": "Ocultar botón de reproducción",
-		"hint": "Mueve el control para filtrar los altavoces por fecha de creación"
+		"title": "Máquina del tiempo",
+		"notAvailable": "No disponible",
+		"notAvailableBody": "La máquina del tiempo de este proyecto no está abierta.",
+		"play": "Reproducir",
+		"pause": "Pausa",
+		"replay": "Repetir",
+		"byDate": "Por fecha",
+		"oneByOne": "Uno a uno",
+		"speakers_one": "{{count}} altavoz",
+		"speakers_other": "{{count}} altavoces",
+		"contributions_one": "{{count}} aportación",
+		"contributions_other": "{{count}} aportaciones"
 	},
 	"addVoice": {
 		"tapToRecord": "TOCA PARA GRABAR",

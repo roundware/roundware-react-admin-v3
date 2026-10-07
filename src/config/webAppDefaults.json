@@ -251,8 +251,6 @@
 			],
 			"assetDisplay": "circle",
 			"rangeCircleOverlayVisible": true,
-			"displayTimeMachineSlider": false,
-			"timeMachineSliderMin": "2025-10-04T00:00:00.000Z",
 			"listenMapOverlayDisplay": false,
 			"mapOverlay": {
 				"latitude": null,

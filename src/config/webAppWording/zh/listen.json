@@ -48,14 +48,16 @@
 		"includeGeo": "包含当前地理位置信息"
 	},
 	"timeMachine": {
-		"timeBased": "按时间",
-		"orderBased": "按顺序",
-		"speakerCount_one": "{{count}} 个声源",
-		"speakerCount_other": "{{count}} 个声源",
-		"automate": "自动播放",
-		"stop": "停止",
-		"hidePlayButton": "隐藏播放按钮",
-		"hint": "拖动滑块，按创建时间筛选声源"
+		"title": "时光机",
+		"notAvailable": "暂不可用",
+		"notAvailableBody": "这个项目的时光机尚未开放。",
+		"play": "播放",
+		"pause": "暂停",
+		"replay": "重新播放",
+		"byDate": "按日期",
+		"oneByOne": "逐个",
+		"speakers_other": "{{count}} 个声源",
+		"contributions_other": "{{count}} 条投稿"
 	},
 	"addVoice": {
 		"tapToRecord": "点击录音",

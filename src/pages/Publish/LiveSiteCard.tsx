@@ -27,8 +27,8 @@ interface Props {
   /** Bumped when the project is published, moved or unpublished, or a
    *  version is made live. */
   refreshKey: number;
-  /** Whether the project is published, once known. */
-  onPublished?: (published: boolean) => void;
+  /** How the live site stands, once known. */
+  onState?: (state: LiveSiteState) => void;
   /** Called after the live site is updated (a new version is saved). */
   onUpdated?: () => void;
 }
@@ -38,7 +38,7 @@ interface Props {
  * live one doesn't, "Update live site", and the test site's contributions
  * (server docs/021).
  */
-const LiveSiteCard: React.FC<Props> = ({ projectId, refreshKey, onPublished, onUpdated }) => {
+const LiveSiteCard: React.FC<Props> = ({ projectId, refreshKey, onState, onUpdated }) => {
   const [state, setState] = useState<LiveSiteState | null>(null);
   const [busy, setBusy] = useState<"update" | "clear" | null>(null);
   const [confirm, setConfirm] = useState<"update" | "clear" | null>(null);
@@ -52,10 +52,10 @@ const LiveSiteCard: React.FC<Props> = ({ projectId, refreshKey, onPublished, onU
     getLiveSite(projectId)
       .then((s) => {
         setState(s);
-        onPublished?.(s.published);
+        onState?.(s);
       })
       .catch((e) => setError(errMessage(e)));
-  }, [projectId, onPublished]);
+  }, [projectId, onState]);
 
   useEffect(() => {
     setState(null);
@@ -140,6 +140,13 @@ const LiveSiteCard: React.FC<Props> = ({ projectId, refreshKey, onPublished, onU
           </Typography>
         )}
 
+        {state?.live_version_freezes_contributions && (
+          <Alert severity="info" sx={{ mb: 2 }}>
+            This version shows only contributions made before it was saved
+            {state.live_version_created_at ? ` (${when(state.live_version_created_at)})` : ""}.
+            New recordings are kept, and show once a version without this is live.
+          </Alert>
+        )}
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {error}
@@ -167,7 +174,8 @@ const LiveSiteCard: React.FC<Props> = ({ projectId, refreshKey, onPublished, onU
               ? "Nothing has been recorded on the test site."
               : `${tests} contribution${tests === 1 ? " was" : "s were"} recorded on the test site (or in the preview).`}{" "}
             They show only there and in Contributions, and send no
-            notifications. Deleting them keeps their files in storage.
+            notifications. In a looping project, loops recorded there count
+            too. Deleting them keeps their files in storage.
           </Typography>
           {tests > 0 && (
             <Button

@@ -8,6 +8,7 @@ import {
     AlertTitle,
     Box,
     Button,
+    Chip,
     IconButton,
     Paper,
     Stack,
@@ -28,6 +29,7 @@ import {
     Datagrid,
     DateTimeInput,
     EditButton,
+    FunctionField,
     List,
     TextField,
     TextInput,
@@ -207,6 +209,14 @@ const SpeakerList = (): JSX.Element => {
               <TextField source='id' />
               <BooleanField source='is_active' label='Active' />
               <TextField source='code' />
+              {/* A participant's loop recorded on the test site (server docs/021). */}
+              <FunctionField
+                label='Test'
+                sortBy='is_test'
+                render={(r: { is_test?: boolean }) =>
+                  r?.is_test ? <Chip label='Test' size='small' color='warning' variant='outlined' /> : null
+                }
+              />
 
               {/* <TextField source="backupuri" />
       <TextField source="shape.type" />

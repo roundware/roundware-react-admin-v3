@@ -48,14 +48,18 @@
 		"includeGeo": "Aktuelle Standortdaten einbeziehen"
 	},
 	"timeMachine": {
-		"timeBased": "Nach Zeit",
-		"orderBased": "Nach Reihenfolge",
-		"speakerCount_one": "{{count}} Lautsprecher",
-		"speakerCount_other": "{{count}} Lautsprecher",
-		"automate": "Automatisch",
-		"stop": "Stopp",
-		"hidePlayButton": "Abspieltaste ausblenden",
-		"hint": "Bewege den Regler, um Lautsprecher nach Erstellungszeit zu filtern"
+		"title": "Zeitmaschine",
+		"notAvailable": "Nicht verfügbar",
+		"notAvailableBody": "Die Zeitmaschine dieses Projekts ist nicht geöffnet.",
+		"play": "Abspielen",
+		"pause": "Pause",
+		"replay": "Noch einmal",
+		"byDate": "Nach Datum",
+		"oneByOne": "Einzeln",
+		"speakers_one": "{{count}} Lautsprecher",
+		"speakers_other": "{{count}} Lautsprecher",
+		"contributions_one": "{{count}} Beitrag",
+		"contributions_other": "{{count}} Beiträge"
 	},
 	"addVoice": {
 		"tapToRecord": "ZUM AUFNEHMEN TIPPEN",
