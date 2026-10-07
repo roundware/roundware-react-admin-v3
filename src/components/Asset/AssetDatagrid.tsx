@@ -1,5 +1,6 @@
 import CopyResourceButton from 'components/common/CopyResource';
 import DeleteWithBinary from 'components/common/DeleteWithBinary';
+import { Chip } from '@mui/material';
 import { FC, useLayoutEffect } from 'react';
 import {
     BooleanField,
@@ -8,6 +9,7 @@ import {
     DateField,
     EditButton,
     FieldProps,
+    FunctionField,
     NumberField,
     ReferenceArrayField,
     SingleFieldList,
@@ -34,6 +36,14 @@ export const AssetDatagrid = (): JSX.Element => {
       <Datagrid optimized bulkActionButtons={<DeleteWithBinary isBulk />} rowClick={false}>
         <TextField source='id' />
         <BooleanField source='submitted' />
+        {/* Made on the project's test site: shown only there (server docs/021). */}
+        <FunctionField
+          label='Test'
+          sortBy='is_test'
+          render={(r: { is_test?: boolean }) =>
+            r?.is_test ? <Chip label='Test' size='small' color='warning' variant='outlined' /> : null
+          }
+        />
 
         <AssetPreview source='file' label='Media' />
         <DateField source='created_at' label='Created' />

@@ -2,5 +2,7 @@
 	"comingSoonTitle": "Demnächst verfügbar",
 	"comingSoonBody": "Dieses Erlebnis wurde noch nicht veröffentlicht. Schau bald wieder vorbei.",
 	"errorTitle": "Laden nicht möglich",
-	"errorBody": "Wir konnten dieses Erlebnis nicht laden. Bitte versuch es später noch einmal."
+	"errorBody": "Wir konnten dieses Erlebnis nicht laden. Bitte versuch es später noch einmal.",
+	"testSite": "Testseite",
+	"testSiteHint": "Änderungen erscheinen zuerst hier. Teilnehmende sehen die Live-Seite."
 }

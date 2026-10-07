@@ -6,7 +6,21 @@ export interface DeploymentState {
   subdomain: string | null;
   hostname: string | null;
   url: string | null;
+  /** The test site: the project as it's being edited (server docs/021). */
+  test_url?: string | null;
   base_domain: string;
+}
+
+/** How a published project's live and test sites stand (server docs/021). */
+export interface LiveSiteState {
+  published: boolean;
+  live_url: string | null;
+  test_url: string | null;
+  updated_at: string | null;
+  updated_by: string | null;
+  /** Whether the test site differs from the live one; null when unpublished. */
+  has_changes: boolean | null;
+  test_contributions: number;
 }
 
 export interface SubdomainCheck {
@@ -71,6 +85,25 @@ export async function deployProject(
 
 export async function undeployProject(projectId: number): Promise<void> {
   await apiFetcher(`/projects/${projectId}/deployment/`, { method: "DELETE" });
+}
+
+export async function getLiveSite(projectId: number): Promise<LiveSiteState> {
+  const { json } = await apiFetcher(`/projects/${projectId}/live-site/`);
+  return json as LiveSiteState;
+}
+
+/** "Update live site": the live site becomes what the test site shows now. */
+export async function updateLiveSite(projectId: number): Promise<LiveSiteState> {
+  const { json } = await apiFetcher(`/projects/${projectId}/live-site/`, { method: "POST" });
+  return json as LiveSiteState;
+}
+
+/** Delete every contribution made on the test site. */
+export async function clearTestContributions(projectId: number): Promise<number> {
+  const { json } = await apiFetcher(`/projects/${projectId}/live-site/test-contributions/`, {
+    method: "DELETE",
+  });
+  return (json as { deleted: number }).deleted;
 }
 
 export async function checkSubdomain(subdomain: string): Promise<SubdomainCheck> {

@@ -2,5 +2,7 @@
 	"comingSoonTitle": "Próximamente",
 	"comingSoonBody": "Esta experiencia aún no se ha publicado. Vuelve pronto.",
 	"errorTitle": "No se pudo cargar",
-	"errorBody": "No pudimos cargar esta experiencia. Inténtalo de nuevo más tarde."
+	"errorBody": "No pudimos cargar esta experiencia. Inténtalo de nuevo más tarde.",
+	"testSite": "Sitio de prueba",
+	"testSiteHint": "Los cambios se ven aquí primero. Los participantes ven el sitio publicado."
 }

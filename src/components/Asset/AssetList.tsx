@@ -61,6 +61,7 @@ export const AssetList = (): JSX.Element => {
           fullWidth
         />,
         <BooleanInput key="submitted" source="submitted" label="Submitted" />,
+        <BooleanInput key="is_test" source="is_test" label="Made on the test site" />,
         <TextInput
           label="Description / Filename"
           key="contains_description|filename"

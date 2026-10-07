@@ -102,6 +102,7 @@ const DeployCard: React.FC<Props> = ({ projectId, onChange }) => {
         subdomain: null,
         hostname: null,
         url: null,
+        test_url: null,
         base_domain: prev?.base_domain ?? baseDomain,
       }));
       onChange?.();
@@ -114,8 +115,10 @@ const DeployCard: React.FC<Props> = ({ projectId, onChange }) => {
 
   const reasonText: Record<string, string> = {
     taken: "That subdomain is already taken.",
-    reserved: "That subdomain is reserved.",
-    invalid_format: "Use 3–63 lowercase letters, numbers, or hyphens.",
+    reserved: value.endsWith("-dev")
+      ? "Addresses ending in -dev are kept for test sites."
+      : "That subdomain is reserved.",
+    invalid_format: "Use 3–59 lowercase letters, numbers, or hyphens.",
   };
 
   return (
@@ -131,25 +134,34 @@ const DeployCard: React.FC<Props> = ({ projectId, onChange }) => {
           )}
         </Stack>
 
-        {/* Publishing connects an address to the project; the site reads the
-            project live, so there is nothing to re-publish after a change
-            (server docs/007). A separate test site is backlogged (010). */}
+        {/* Two addresses: the live site, frozen at "Update live site", and
+            the test site, showing every save (server docs/021). */}
         {state?.deployed ? (
           <Alert severity="success" sx={{ mb: 2 }}>
             <Typography variant="body2">
-              Live at{" "}
+              Live site:{" "}
               <Link href={state.url ?? `https://${state.hostname}`} target="_blank" rel="noopener">
                 <strong>{state.hostname}</strong>
               </Link>
             </Typography>
+            {state.test_url && (
+              <Typography variant="body2">
+                Test site:{" "}
+                <Link href={state.test_url} target="_blank" rel="noopener">
+                  <strong>{state.test_url.replace(/^https?:\/\//, "")}</strong>
+                </Link>
+              </Typography>
+            )}
             <Typography variant="caption" color="text.secondary">
-              Changes you save go live right away; there's no need to publish
-              again. Colors, fonts and images can take up to 5 minutes to appear.
+              Anyone with the test site's link can open it; search engines are
+              kept away. The live site can take up to 5 minutes to show an update.
             </Typography>
           </Alert>
         ) : (
           <Alert severity="info" sx={{ mb: 2 }}>
-            Once published, changes you save to this project go live right away.
+            Publishing gives the project two addresses: a live site for
+            participants, and a test site that shows your changes as you make
+            them, until you put them live.
           </Alert>
         )}
 

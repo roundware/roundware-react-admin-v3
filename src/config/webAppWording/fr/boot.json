@@ -2,5 +2,7 @@
 	"comingSoonTitle": "Bientôt disponible",
 	"comingSoonBody": "Cette expérience n’a pas encore été publiée. Reviens bientôt.",
 	"errorTitle": "Chargement impossible",
-	"errorBody": "Nous n’avons pas pu charger cette expérience. Réessaie plus tard."
+	"errorBody": "Nous n’avons pas pu charger cette expérience. Réessaie plus tard.",
+	"testSite": "Site de test",
+	"testSiteHint": "Les modifications apparaissent ici d’abord. Les participants voient le site en ligne."
 }

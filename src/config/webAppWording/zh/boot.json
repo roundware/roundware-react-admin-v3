@@ -2,5 +2,7 @@
 	"comingSoonTitle": "即将上线",
 	"comingSoonBody": "这个作品还没有发布，请稍后再来看看。",
 	"errorTitle": "无法加载",
-	"errorBody": "我们没能加载这个作品，请稍后再试。"
+	"errorBody": "我们没能加载这个作品，请稍后再试。",
+	"testSite": "测试站点",
+	"testSiteHint": "修改会先显示在这里。参与者看到的是正式站点。"
 }

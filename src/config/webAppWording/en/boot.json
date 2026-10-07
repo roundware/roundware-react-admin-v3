@@ -2,5 +2,7 @@
 	"comingSoonTitle": "Coming soon",
 	"comingSoonBody": "This experience hasn't been published yet. Check back soon.",
 	"errorTitle": "Unable to load",
-	"errorBody": "We couldn't load this experience. Please try again later."
+	"errorBody": "We couldn't load this experience. Please try again later.",
+	"testSite": "Test site",
+	"testSiteHint": "Changes show here first. Participants see the live site."
 }
