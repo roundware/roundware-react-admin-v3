@@ -1,0 +1,12 @@
+{
+	"pageTitle": "Shared from {{project}}",
+	"listenToMore": "Listen to more",
+	"addYourVoice": "Add your voice",
+	"added": "Added {{date}}",
+	"pending": "This contribution is waiting to be reviewed. It will appear here once it's approved — in the meantime, have a listen to the rest of the project.",
+	"notFound": "We couldn't find this contribution. It may have been removed.",
+	"loading": "Loading…",
+	"withIt": "Also with it",
+	"about": "About {{project}}",
+	"noAudio": "Your browser can't play this recording."
+}

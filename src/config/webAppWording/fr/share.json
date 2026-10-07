@@ -1,0 +1,12 @@
+{
+	"pageTitle": "Partagé depuis {{project}}",
+	"listenToMore": "Écouter la suite",
+	"addYourVoice": "Ajoutez votre voix",
+	"added": "Ajouté le {{date}}",
+	"pending": "Cette contribution attend d’être examinée. Elle apparaîtra ici une fois approuvée — en attendant, écoutez le reste du projet.",
+	"notFound": "Nous n’avons pas trouvé cette contribution. Elle a peut-être été supprimée.",
+	"loading": "Chargement…",
+	"withIt": "Avec elle",
+	"about": "À propos de {{project}}",
+	"noAudio": "Votre navigateur ne peut pas lire cet enregistrement."
+}

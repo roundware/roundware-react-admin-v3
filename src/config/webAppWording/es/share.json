@@ -1,0 +1,12 @@
+{
+	"pageTitle": "Compartido desde {{project}}",
+	"listenToMore": "Escuchar más",
+	"addYourVoice": "Añade tu voz",
+	"added": "Añadido el {{date}}",
+	"pending": "Esta contribución está pendiente de revisión. Aparecerá aquí cuando se apruebe; mientras tanto, escucha el resto del proyecto.",
+	"notFound": "No encontramos esta contribución. Puede que se haya eliminado.",
+	"loading": "Cargando…",
+	"withIt": "También con ella",
+	"about": "Acerca de {{project}}",
+	"noAudio": "Tu navegador no puede reproducir esta grabación."
+}

@@ -180,8 +180,9 @@ const ProjectCreate = (): JSX.Element => {
             <CardBox title="Sharing">
               <TextInput
                 source="sharing_url"
+                label="Own sharing page (optional)"
                 fullWidth
-                helperText="URL of web sharing page"
+                helperText="Leave empty to use Roundware's share page for each contribution. To use your own instead, give its address with [id] where the contribution's number goes, e.g. https://example.org/listen?item=[id]"
               />
               <TranslatableField
                 source="sharing_message_loc_admin"

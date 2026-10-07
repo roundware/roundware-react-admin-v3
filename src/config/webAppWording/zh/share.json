@@ -1,0 +1,12 @@
+{
+	"pageTitle": "分享自{{project}}",
+	"listenToMore": "收听更多",
+	"addYourVoice": "加入你的声音",
+	"added": "添加于{{date}}",
+	"pending": "这条内容正在等待审核，通过后会显示在这里。在此期间，先去听听项目里的其他内容吧。",
+	"notFound": "找不到这条内容，它可能已被删除。",
+	"loading": "加载中…",
+	"withIt": "附带内容",
+	"about": "关于{{project}}",
+	"noAudio": "你的浏览器无法播放这段录音。"
+}
