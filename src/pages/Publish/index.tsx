@@ -4,6 +4,7 @@ import { Title } from "react-admin";
 import { useProjects } from "../../context/ProjectsContext";
 import DeployCard from "./DeployCard";
 import LiveSiteCard from "./LiveSiteCard";
+import VersionsCard from "./VersionsCard";
 import BrandingPanel from "./BrandingPanel";
 import PreviewPanel from "./PreviewPanel";
 import ParadigmWarning from "./ParadigmWarning";
@@ -111,6 +112,13 @@ const PublishPage: React.FC = () => {
   // Bumped when the address changes, so the live-site card reloads.
   const [deployKey, setDeployKey] = useState(0);
   const handleDeployChange = useCallback(() => setDeployKey((k) => k + 1), []);
+  // The live-site and versions cards reload each other: an update saves a
+  // version; making a version live changes the live site.
+  const [liveKey, setLiveKey] = useState(0);
+  const [versionsKey, setVersionsKey] = useState(0);
+  const [published, setPublished] = useState(false);
+  const reloadLive = useCallback(() => setLiveKey((k) => k + 1), []);
+  const reloadVersions = useCallback(() => setVersionsKey((k) => k + 1), []);
 
   if (!selectedProject) return <NoProject title="Publish" what="publish it to the web" />;
   const projectId = selectedProject.id;
@@ -129,7 +137,18 @@ const PublishPage: React.FC = () => {
       <ParadigmWarning project={selectedProject} />
 
       <DeployCard projectId={projectId} onChange={handleDeployChange} />
-      <LiveSiteCard projectId={projectId} refreshKey={deployKey} />
+      <LiveSiteCard
+        projectId={projectId}
+        refreshKey={deployKey + liveKey}
+        onPublished={setPublished}
+        onUpdated={reloadVersions}
+      />
+      <VersionsCard
+        projectId={projectId}
+        published={published}
+        refreshKey={deployKey + versionsKey}
+        onChange={reloadLive}
+      />
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 7 }}>

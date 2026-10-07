@@ -16,6 +16,12 @@ export interface LiveSiteState {
   published: boolean;
   live_url: string | null;
   test_url: string | null;
+  /** The version the live site shows; its name is "" for an unnamed one. */
+  live_version_id: number | null;
+  live_version_name: string | null;
+  /** When that version was saved. */
+  live_version_created_at: string | null;
+  /** When, and by whom, that version was made live. */
   updated_at: string | null;
   updated_by: string | null;
   /** Whether the test site differs from the live one; null when unpublished. */
@@ -92,10 +98,65 @@ export async function getLiveSite(projectId: number): Promise<LiveSiteState> {
   return json as LiveSiteState;
 }
 
-/** "Update live site": the live site becomes what the test site shows now. */
-export async function updateLiveSite(projectId: number): Promise<LiveSiteState> {
-  const { json } = await apiFetcher(`/projects/${projectId}/live-site/`, { method: "POST" });
+/** "Update live site": save what the test site shows now as a version
+ *  (named, optionally) and make it live. */
+export async function updateLiveSite(projectId: number, name = ""): Promise<LiveSiteState> {
+  const { json } = await apiFetcher(`/projects/${projectId}/live-site/`, {
+    method: "POST",
+    body: JSON.stringify({ name }),
+  });
   return json as LiveSiteState;
+}
+
+/** A saved version of what participants see (server docs/021). */
+export interface SiteVersion {
+  id: number;
+  /** "" for one saved by "Update live site" without a name. */
+  name: string;
+  created_at: string;
+  created_by: string | null;
+  is_live: boolean;
+}
+
+export async function listVersions(projectId: number): Promise<SiteVersion[]> {
+  const { json } = await apiFetcher(`/projects/${projectId}/site-versions/`);
+  return json as SiteVersion[];
+}
+
+/** Save what the test site shows now, without making it live. */
+export async function saveVersion(projectId: number, name: string): Promise<SiteVersion> {
+  const { json } = await apiFetcher(`/projects/${projectId}/site-versions/`, {
+    method: "POST",
+    body: JSON.stringify({ name }),
+  });
+  return json as SiteVersion;
+}
+
+export async function renameVersion(
+  projectId: number,
+  versionId: number,
+  name: string
+): Promise<SiteVersion> {
+  const { json } = await apiFetcher(`/projects/${projectId}/site-versions/${versionId}/`, {
+    method: "PATCH",
+    body: JSON.stringify({ name }),
+  });
+  return json as SiteVersion;
+}
+
+export async function makeVersionLive(
+  projectId: number,
+  versionId: number
+): Promise<LiveSiteState> {
+  const { json } = await apiFetcher(
+    `/projects/${projectId}/site-versions/${versionId}/make-live/`,
+    { method: "POST" }
+  );
+  return json as LiveSiteState;
+}
+
+export async function deleteVersion(projectId: number, versionId: number): Promise<void> {
+  await apiFetcher(`/projects/${projectId}/site-versions/${versionId}/`, { method: "DELETE" });
 }
 
 /** Delete every contribution made on the test site. */

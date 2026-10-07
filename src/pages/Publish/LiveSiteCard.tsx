@@ -8,6 +8,7 @@ import {
   Chip,
   CircularProgress,
   Stack,
+  TextField,
   Typography,
 } from "@mui/material";
 import SyncIcon from "@mui/icons-material/Sync";
@@ -19,36 +20,42 @@ import {
   getLiveSite,
   updateLiveSite,
 } from "./api";
+import { versionLabel, when } from "./VersionsCard";
 
 interface Props {
   projectId: number;
-  /** Bumped when the project is published, moved or unpublished. */
+  /** Bumped when the project is published, moved or unpublished, or a
+   *  version is made live. */
   refreshKey: number;
+  /** Whether the project is published, once known. */
+  onPublished?: (published: boolean) => void;
+  /** Called after the live site is updated (a new version is saved). */
+  onUpdated?: () => void;
 }
-
-const when = (iso: string | null) =>
-  iso
-    ? new Date(iso).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })
-    : null;
 
 /**
  * A published project's live site: whether the test site has changes the
  * live one doesn't, "Update live site", and the test site's contributions
  * (server docs/021).
  */
-const LiveSiteCard: React.FC<Props> = ({ projectId, refreshKey }) => {
+const LiveSiteCard: React.FC<Props> = ({ projectId, refreshKey, onPublished, onUpdated }) => {
   const [state, setState] = useState<LiveSiteState | null>(null);
   const [busy, setBusy] = useState<"update" | "clear" | null>(null);
   const [confirm, setConfirm] = useState<"update" | "clear" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  // An optional name for the version "Update live site" saves.
+  const [name, setName] = useState("");
 
   const load = useCallback(() => {
     setError(null);
     getLiveSite(projectId)
-      .then(setState)
+      .then((s) => {
+        setState(s);
+        onPublished?.(s.published);
+      })
       .catch((e) => setError(errMessage(e)));
-  }, [projectId]);
+  }, [projectId, onPublished]);
 
   useEffect(() => {
     setState(null);
@@ -72,8 +79,10 @@ const LiveSiteCard: React.FC<Props> = ({ projectId, refreshKey }) => {
     setError(null);
     setNotice(null);
     try {
-      setState(await updateLiveSite(projectId));
+      setState(await updateLiveSite(projectId, name));
+      setName("");
       setNotice("The live site now shows the project as the test site does.");
+      onUpdated?.();
     } catch (e) {
       setError(errMessage(e));
     } finally {
@@ -119,7 +128,14 @@ const LiveSiteCard: React.FC<Props> = ({ projectId, refreshKey }) => {
         </Typography>
         {state?.updated_at && (
           <Typography variant="caption" color="text.secondary" component="p" sx={{ mb: 2 }}>
-            Last updated {when(state.updated_at)}
+            Showing{" "}
+            <strong>
+              {versionLabel({
+                name: state.live_version_name,
+                created_at: state.live_version_created_at,
+              })}
+            </strong>
+            , made live {when(state.updated_at)}
             {state.updated_by ? ` by ${state.updated_by}` : ""}.
           </Typography>
         )}
@@ -150,7 +166,8 @@ const LiveSiteCard: React.FC<Props> = ({ projectId, refreshKey }) => {
             {tests === 0
               ? "Nothing has been recorded on the test site."
               : `${tests} contribution${tests === 1 ? " was" : "s were"} recorded on the test site (or in the preview).`}{" "}
-            They show only there and in Contributions, and send no notifications.
+            They show only there and in Contributions, and send no
+            notifications. Deleting them keeps their files in storage.
           </Typography>
           {tests > 0 && (
             <Button
@@ -169,7 +186,24 @@ const LiveSiteCard: React.FC<Props> = ({ projectId, refreshKey }) => {
         <Confirm
           isOpen={confirm === "update"}
           title="Update the live site?"
-          content="Participants will see the project as the test site shows it now: its settings, look, copy, menus, tags, speakers and audio tracks."
+          content={
+            <>
+              <Typography variant="body2" sx={{ mb: 2 }}>
+                Participants will see the project as the test site shows it
+                now: its settings, look, copy, menus, tags, speakers and audio
+                tracks. It's saved as a version you can go back to.
+              </Typography>
+              <TextField
+                fullWidth
+                size="small"
+                label="Version name (optional)"
+                placeholder="Opening night"
+                value={name}
+                inputProps={{ maxLength: 200 }}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </>
+          }
           confirm="Update live site"
           cancel="Cancel"
           onConfirm={handleUpdate}
@@ -178,7 +212,7 @@ const LiveSiteCard: React.FC<Props> = ({ projectId, refreshKey }) => {
         <Confirm
           isOpen={confirm === "clear"}
           title={`Delete ${tests} test contribution${tests === 1 ? "" : "s"}?`}
-          content="They are deleted with their files. This can't be undone."
+          content="They are removed from the project for good. Their files are kept in storage."
           confirm="Delete"
           confirmColor="warning"
           cancel="Cancel"
