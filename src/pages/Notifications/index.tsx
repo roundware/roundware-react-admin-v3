@@ -331,11 +331,18 @@ const RuleCard: React.FC<CardProps> = ({ rule, events, members, onPatch, onTest,
           <Autocomplete
             multiple
             freeSolo
+            // An address typed and then left (clicking elsewhere) is added
+            // too — it used to stay as unsaved text that looked saved.
+            autoSelect
             size="small"
             options={[] as string[]}
             value={emails}
             onChange={(_e, values) => {
-              const cleaned = (values as string[]).map((v) => v.trim()).filter(Boolean);
+              // Several pasted at once — "a@x.org, b@y.org" — are each added.
+              const cleaned = (values as string[])
+                .flatMap((v) => v.split(/[\s,;]+/))
+                .map((v) => v.trim())
+                .filter(Boolean);
               const bad = cleaned.find((v) => !EMAIL.test(v));
               if (bad) {
                 setEmailError(`“${bad}” isn't an email address.`);
@@ -354,7 +361,7 @@ const RuleCard: React.FC<CardProps> = ({ rule, events, members, onPatch, onTest,
               <TextField
                 {...params}
                 label="Other email addresses"
-                placeholder="Type an address, then Enter"
+                placeholder="Type or paste addresses"
                 error={!!emailError}
                 helperText={emailError ?? "People outside the team, such as a moderator. Each email lets them stop these."}
               />
