@@ -31,22 +31,17 @@ const AudioOptions = (): JSX.Element => {
       <CardContent>
         <Typography variant="h6">Audio</Typography>
         <Grid container spacing={3}>
-          <Grid container size={{ xs: 12 }}>
-            <Grid size={{ xs: 12, md: 8 }}>
-              <FileEdit />
-            </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <Stack direction="row" spacing={3} justifyContent="center" alignItems="center" sx={{ height: '100%' }}>
-                <VolumeSlider />
-                <CustomSlider
-                  vertical
-                  icon={<LineWeightIcon />}
-                  field={`weight`}
-                  label="Weight"
-                  defaultValue={50}
-                />
-              </Stack>
-            </Grid>
+          {/* The waveform gets the card's full width; volume and weight sit
+              beneath it side by side. (They were vertical sliders in a
+              column beside it, which the waveform ran under.) */}
+          <Grid size={{ xs: 12 }}>
+            <FileEdit />
+          </Grid>
+          <Grid size={{ xs: 12 }}>
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={4}>
+              <VolumeSlider />
+              <CustomSlider icon={<LineWeightIcon />} field={`weight`} label="Weight" defaultValue={50} />
+            </Stack>
           </Grid>
           <Grid container sx={timesContainerSx} spacing={0}>
             <Grid size={{ xs: 4 }}>

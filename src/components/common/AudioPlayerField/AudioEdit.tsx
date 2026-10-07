@@ -222,10 +222,12 @@ const AudioEditField = ({
               plugins,
               onReady: handleReady,
               height: size === "small" ? 64 : 128,
-              width: size === "small" ? 280 : 800,
+              // The container's width: a fixed 800px overflowed the card's
+              // column and ran under the volume and weight sliders.
+              width: size === "small" ? 280 : "100%",
               url: audioSrc,
               scrollbar: true,
-              fillParent: false,
+              fillParent: true,
               autoCenter: true,
             } as any}
           />
