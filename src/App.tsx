@@ -9,7 +9,6 @@ import {
     Hearing,
     Label,
     Language,
-    Notifications,
     PeopleAlt,
     Speaker,
     TagFaces,
@@ -48,11 +47,6 @@ import {
     LocalizedStringEdit,
     LocalizedStringList,
 } from "./components/LocalizedString";
-import {
-    NotificationCreate,
-    NotificationEdit,
-    NotificationList,
-} from "./components/Notification";
 import ProjectCreate from "./components/Project/ProjectCreate";
 import ProjectEdit from "./components/Project/ProjectEdit";
 import ProjectList from "./components/Project/ProjectList";
@@ -89,6 +83,7 @@ import TeamMembersPage from "./pages/TeamMembersPage";
 import TenantSettingsPage from "./pages/TenantSettingsPage";
 import AppCopyPage from "./pages/AppCopy";
 import FiltersMenusPage from "./pages/FiltersMenus";
+import NotificationsPage from "./pages/Notifications";
 import AudioLabPage from "./pages/AudioLab";
 import PlanPage from "./pages/PlanPage";
 import adminTheme from "./styles";
@@ -167,6 +162,7 @@ function App({ basename }: { basename: string }): JSX.Element {
           <Route path="/audio-lab" element={<AudioLabPage />} />
           <Route path="/test-app" element={<TestAppPage />} />
           <Route path="/app-copy" element={<AppCopyPage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
           {/* The previous Filters & Menus page: conditional answers (UI items
               with a parent) are still edited here. */}
           <Route
@@ -192,7 +188,7 @@ export default App;
 const resourceKeys = [
   "assets", "timedassets", "uigroups", "audiotracks", "speakers",
   "events", "listenevents", "sessions", "tags",
-  "tagcategories", "languages", "localizedstrings", "users", "notifications",
+  "tagcategories", "languages", "localizedstrings", "users",
 ];
 
 function buildResourceLookup(canEdit: boolean): { [index: string]: React.ReactNode } {
@@ -264,11 +260,6 @@ function buildResourceLookup(canEdit: boolean): { [index: string]: React.ReactNo
       <Resource name="users" key="users" list={UserList}
         edit={e ? UserEdit : undefined} create={e ? UserCreate : undefined}
         icon={PeopleAlt} />
-    ),
-    notifications: (
-      <Resource name="notifications" key="notifications" list={NotificationList}
-        edit={e ? NotificationEdit : undefined} create={e ? NotificationCreate : undefined}
-        icon={Notifications} options={{ label: "Notifications" }} />
     ),
   };
 }

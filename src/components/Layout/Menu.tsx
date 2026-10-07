@@ -16,6 +16,7 @@ import {
   Tune,
 } from "@mui/icons-material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import NotificationsNone from "@mui/icons-material/NotificationsNone";
 import GraphicEq from "@mui/icons-material/GraphicEq";
 import DefaultIcon from "@mui/icons-material/ViewList";
 import PublicIcon from "@mui/icons-material/Public";
@@ -90,7 +91,12 @@ const GROUPS: Group[] = [
     label: "Content",
     icon: <Inventory2Outlined />,
     openByDefault: () => true,
-    items: [resource("assets", "Contributions", "viewer"), resource("speakers", "Speakers", "viewer")],
+    items: [
+      resource("assets", "Contributions", "viewer"),
+      resource("speakers", "Speakers", "viewer"),
+      // Who hears about new contributions (server docs/019).
+      page("notifications", "Notifications", "notifications", "admin", <NotificationsNone />),
+    ],
   },
   {
     key: "design",
@@ -141,8 +147,6 @@ const GROUPS: Group[] = [
       // "Translations" (raw localization rows) is gone: every text is
       // translated where it's edited, and the app's own copy on App
       // Copy. The resource stays registered for direct links.
-      // Notifications are hidden until they are reworked (backlog 010): the
-      // rules can be created, but nothing sends them.
     ],
   },
   {

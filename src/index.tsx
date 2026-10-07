@@ -11,6 +11,7 @@ import "./index.css";
 import LandingPage from "./pages/LandingPage";
 import OnboardingPlanPage from "./pages/OnboardingPlanPage";
 import RegisterPage from "./pages/RegisterPage";
+import UnsubscribePage from "./pages/UnsubscribePage";
 import ProjectRoute from "./ProjectRoute";
 
 const AppProviders = ({ children }: { children: React.ReactNode }) => (
@@ -62,6 +63,11 @@ const router = createBrowserRouter([
   {
     path: "/onboarding/plan",
     element: <OnboardingPlanPage />,
+  },
+  {
+    // Public: from a notification email's link (server docs/019).
+    path: "/unsubscribe",
+    element: <UnsubscribePage />,
   },
   {
     path: "/project/:projectId/*",
