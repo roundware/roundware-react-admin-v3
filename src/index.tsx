@@ -12,6 +12,10 @@ import LandingPage from "./pages/LandingPage";
 import OnboardingPlanPage from "./pages/OnboardingPlanPage";
 import RegisterPage from "./pages/RegisterPage";
 import UnsubscribePage from "./pages/UnsubscribePage";
+import AcceptInvitePage from "./pages/public/AcceptInvitePage";
+import ForgotPasswordPage from "./pages/public/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/public/ResetPasswordPage";
+import VerifyEmailPage from "./pages/public/VerifyEmailPage";
 import ProjectRoute from "./ProjectRoute";
 
 const AppProviders = ({ children }: { children: React.ReactNode }) => (
@@ -64,11 +68,16 @@ const router = createBrowserRouter([
     path: "/onboarding/plan",
     element: <OnboardingPlanPage />,
   },
+  // Public pages that emails link to — no sign-in (server services/email.py).
   {
-    // Public: from a notification email's link (server docs/019).
+    // From a notification email (server docs/019).
     path: "/unsubscribe",
     element: <UnsubscribePage />,
   },
+  { path: "/verify-email", element: <VerifyEmailPage /> },
+  { path: "/accept-invite", element: <AcceptInvitePage /> },
+  { path: "/reset-password", element: <ResetPasswordPage /> },
+  { path: "/forgot-password", element: <ForgotPasswordPage /> },
   {
     path: "/project/:projectId/*",
     element: (

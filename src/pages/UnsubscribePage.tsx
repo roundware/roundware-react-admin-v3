@@ -4,7 +4,7 @@
 // signed token names the recipient.
 // ---------------------------------------------------------------------------
 import { Box, Card, CardContent, CircularProgress, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 type State =
   | { kind: "working" }
@@ -14,7 +14,11 @@ type State =
 const UnsubscribePage: React.FC = () => {
   const [state, setState] = useState<State>({ kind: "working" });
 
+  // Once: React runs effects twice in development.
+  const sent = useRef(false);
   useEffect(() => {
+    if (sent.current) return;
+    sent.current = true;
     const token = new URLSearchParams(window.location.search).get("token");
     if (!token) {
       setState({ kind: "error", message: "This link is missing its code." });

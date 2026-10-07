@@ -123,6 +123,16 @@ const CustomLoginPage = () => {
               )}
             </Button>
 
+            <Typography variant="body2" align="center" sx={{ mb: 1 }}>
+              <Link
+                component="button"
+                type="button"
+                variant="body2"
+                onClick={() => navigate("/forgot-password")}
+              >
+                Forgot your password?
+              </Link>
+            </Typography>
             <Typography variant="body2" align="center">
               Don't have an account?{" "}
               <Link
