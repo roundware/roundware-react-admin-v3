@@ -200,7 +200,11 @@ const ProjectEdit = (): JSX.Element => {
         </CardBox>
 
         <CardBox title="Contribution settings">
-          <BooleanInput source="auto_submit" />
+          <BooleanInput
+            source="auto_submit"
+            label="Publish new contributions automatically"
+            helperText="Off: new contributions wait in Contributions until someone marks them Submitted."
+          />
           <SelectInput
             source="ordering"
             label="Playback Ordering"

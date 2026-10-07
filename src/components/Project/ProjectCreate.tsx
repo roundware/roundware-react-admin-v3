@@ -98,7 +98,12 @@ const ProjectCreate = (): JSX.Element => {
         </CardBox>
 
         <CardBox title="Asset Settings">
-          <BooleanInput source="auto_submit" />
+          <BooleanInput
+            source="auto_submit"
+            label="Publish new contributions automatically"
+            helperText="Off: new contributions wait in Contributions until someone marks them Submitted."
+            defaultValue={true}
+          />
           <SelectInput
             source="ordering"
             validate={required()}
