@@ -104,6 +104,12 @@ const ProjectCreate = (): JSX.Element => {
             helperText="Off: new contributions wait in Contributions until someone marks them Submitted."
             defaultValue={true}
           />
+          <BooleanInput
+            source="hold_out_of_range"
+            label="Hold contributions made out of range"
+            helperText="When publishing automatically: a contribution made farther than the Out of Range Distance from every active speaker waits for review."
+            defaultValue={true}
+          />
           <SelectInput
             source="ordering"
             validate={required()}
