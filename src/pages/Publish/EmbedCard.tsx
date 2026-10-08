@@ -67,8 +67,10 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
   const [photo, setPhoto] = useState(false);
   const [text, setText] = useState(false);
   const [upload, setUpload] = useState<"auto" | "always" | "never">("auto");
+  const [contact, setContact] = useState(false);
   const [lang, setLang] = useState("");
-  const [height, setHeight] = useState(680);
+  const [layout, setLayout] = useState<"auto" | "horizontal" | "vertical">("auto");
+  const [size, setSize] = useState<"compact" | "comfortable">("compact");
 
   useEffect(() => {
     Promise.all([apiFetcher(`/projects/${projectId}/`), apiFetcher(`/languages/`)])
@@ -104,13 +106,39 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
     q.set("location", location ? "1" : "0");
     q.set("photo", photo ? "1" : "0");
     q.set("text", text ? "1" : "0");
+    if (contact) q.set("contact", "1");
     if (upload !== "auto") q.set("upload", upload);
+    if (layout !== "auto") q.set("layout", layout);
+    if (size !== "compact") q.set("size", size);
     if (lang) q.set("lang", lang);
     return q.toString();
-  }, [questions, location, photo, text, upload, lang]);
+  }, [questions, location, photo, text, contact, upload, layout, size, lang]);
 
+  // The frame starts at a sensible height; the script then fits it to the
+  // recorder as it changes (its 'resize' messages). Without the script — a
+  // site builder that strips it — the starting height stays, and the
+  // recorder scrolls inside it.
+  const frameId = `roundware-recorder-${projectId}`;
+  const startHeight = layout === "horizontal" ? 220 : 360;
+  const maxWidth = layout === "vertical" ? 420 : 720;
   const code = (base: string) =>
-    `<iframe\n  src="${base}/embed?${query}"\n  allow="microphone; geolocation"\n  style="width: 100%; max-width: 480px; height: ${height}px; border: 0;"\n  title="Record a message">\n</iframe>`;
+    [
+      `<iframe`,
+      `  id="${frameId}"`,
+      `  src="${base}/embed?${query}"`,
+      `  allow="microphone; geolocation"`,
+      `  style="width: 100%; max-width: ${maxWidth}px; height: ${startHeight}px; border: 0;"`,
+      `  title="Record a message">`,
+      `</iframe>`,
+      `<script>`,
+      `  window.addEventListener("message", function (e) {`,
+      `    var frame = document.getElementById("${frameId}");`,
+      `    if (frame && e.source === frame.contentWindow && e.data && e.data.source === "roundware" && e.data.type === "resize") {`,
+      `      frame.style.height = e.data.height + "px";`,
+      `    }`,
+      `  });`,
+      `</script>`,
+    ].join("\n");
 
   const sites = project?.embed_allowed_sites ?? [];
 
@@ -191,15 +219,19 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
                   control={<Checkbox checked={text} onChange={(e) => setText(e.target.checked)} />}
                   label="Add text"
                 />
+                <FormControlLabel
+                  control={<Checkbox checked={contact} onChange={(e) => setContact(e.target.checked)} />}
+                  label="Name and email"
+                />
               </Stack>
-              {!location && (
-                <Typography variant="caption" color="text.secondary" display="block">
-                  Without asking, recordings are placed at the project's own location.
-                </Typography>
-              )}
+              <Typography variant="caption" color="text.secondary" display="block">
+                Recordings are placed at the project's location
+                {location ? " unless the contributor changes it" : ""}. Name and email are optional
+                for contributors, and only your team sees them.
+              </Typography>
             </Box>
 
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={2} useFlexGap flexWrap="wrap">
               <FormControl size="small" sx={{ minWidth: 220 }}>
                 <InputLabel>Uploading an audio file</InputLabel>
                 <Select
@@ -223,14 +255,21 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
                   ))}
                 </Select>
               </FormControl>
-              <TextField
-                type="number"
-                size="small"
-                label="Height (px)"
-                value={height}
-                onChange={(e) => setHeight(Math.max(320, Number(e.target.value) || 680))}
-                sx={{ width: 130 }}
-              />
+              <FormControl size="small" sx={{ minWidth: 170 }}>
+                <InputLabel>Layout</InputLabel>
+                <Select label="Layout" value={layout} onChange={(e) => setLayout(e.target.value as typeof layout)}>
+                  <MenuItem value="auto">By its width</MenuItem>
+                  <MenuItem value="horizontal">Horizontal</MenuItem>
+                  <MenuItem value="vertical">Vertical</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl size="small" sx={{ minWidth: 150 }}>
+                <InputLabel>Size</InputLabel>
+                <Select label="Size" value={size} onChange={(e) => setSize(e.target.value as typeof size)}>
+                  <MenuItem value="compact">Compact</MenuItem>
+                  <MenuItem value="comfortable">Comfortable</MenuItem>
+                </Select>
+              </FormControl>
             </Stack>
 
             {liveUrl ? (
@@ -259,7 +298,7 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
                   </Button>
                   <Typography variant="caption" color="text.secondary">
                     Keep <code>allow="microphone"</code>: without it, browsers won't let it record.
-                    Your page must be https.
+                    The script fits the frame to the recorder; your page must be https.
                   </Typography>
                 </Stack>
                 {testUrl && (
@@ -290,7 +329,7 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
                 title="Recorder"
                 path="/embed"
                 query={query}
-                height={height}
+                height={480}
               />
             )}
           </DialogContent>

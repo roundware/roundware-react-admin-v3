@@ -69,6 +69,7 @@ const AREAS: Array<{ ns: string; label: string }> = [
   { ns: "help", label: "Help screens" },
   { ns: "info", label: "Info panel" },
   { ns: "share", label: "Share page" },
+  { ns: "embed", label: "Embedded recorder" },
   { ns: "common", label: "Shared words (buttons and the like)" },
   { ns: "boot", label: "Loading and unavailable" },
 ];

@@ -21,6 +21,7 @@ import {
     TextField,
     Toolbar,
     TextInput,
+    FunctionField,
     useRecordContext,
     useRedirect,
 } from 'react-admin';
@@ -111,6 +112,21 @@ const AssetEdit = (): JSX.Element => {
         <Labeled label='Updated' fullWidth>
           <DateField source='updated_at' showTime />
         </Labeled>
+        {/* What the contributor chose to give (server docs/023): kept on their
+            participant, so it shows with each of their contributions. */}
+        <FunctionField
+          render={(r: { contributor_name?: string; contributor_email?: string | null }) =>
+            r?.contributor_name || r?.contributor_email ? (
+              <Labeled label='Contributor' fullWidth>
+                <span>
+                  {r.contributor_name}
+                  {r.contributor_name && r.contributor_email ? ' · ' : ''}
+                  {r.contributor_email && <a href={`mailto:${r.contributor_email}`}>{r.contributor_email}</a>}
+                </span>
+              </Labeled>
+            ) : null
+          }
+        />
 
         <ReferenceInput
           label='Project'
