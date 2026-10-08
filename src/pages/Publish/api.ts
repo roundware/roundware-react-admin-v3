@@ -296,8 +296,17 @@ export function webappUrl(): string {
   return (import.meta.env.VITE_WEBAPP_URL || "http://localhost:2345").replace(/\/$/, "");
 }
 
-/** Extract a human message from an apiFetcher/HttpError. */
+/** Extract a human message from an apiFetcher/HttpError. A validation
+ *  error's detail is a list of {msg, …}: their messages, joined. */
 export function errMessage(e: unknown): string {
-  const anyErr = e as { body?: { detail?: string }; message?: string };
-  return anyErr?.body?.detail || anyErr?.message || "Something went wrong.";
+  const anyErr = e as { body?: { detail?: unknown }; message?: string };
+  const detail = anyErr?.body?.detail;
+  if (typeof detail === "string") return detail;
+  if (Array.isArray(detail)) {
+    const msgs = detail
+      .map((d) => (typeof d?.msg === "string" ? d.msg.replace(/^Value error, /, "") : null))
+      .filter(Boolean);
+    if (msgs.length) return msgs.join(" ");
+  }
+  return anyErr?.message || "Something went wrong.";
 }

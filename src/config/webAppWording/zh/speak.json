@@ -27,7 +27,6 @@
 			"stay": "保留录音",
 			"leave": "删除录音"
 		},
-		"noSelectedTags": "未选择标签",
 		"tapToRecord": "点击录音",
 		"tapToUpload": "点击上传音频",
 		"tapToStop": "点击停止",

@@ -6,6 +6,7 @@ import DeployCard from "./DeployCard";
 import LiveSiteCard from "./LiveSiteCard";
 import VersionsCard from "./VersionsCard";
 import TimeMachineCard from "./TimeMachineCard";
+import EmbedCard from "./EmbedCard";
 import { LiveSiteState } from "./api";
 import BrandingPanel from "./BrandingPanel";
 import PreviewPanel from "./PreviewPanel";
@@ -150,6 +151,11 @@ const PublishPage: React.FC = () => {
         published={!!live?.published}
         refreshKey={deployKey + versionsKey}
         onChange={reloadLive}
+      />
+      <EmbedCard
+        projectId={projectId}
+        liveUrl={live?.published ? live.live_url : null}
+        testUrl={live?.published ? live.test_url : null}
       />
       <TimeMachineCard projectId={projectId} liveUrl={live?.published ? live.live_url : null} />
 

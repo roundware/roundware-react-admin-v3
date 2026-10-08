@@ -27,7 +27,6 @@
 			"stay": "Keep Recording",
 			"leave": "Delete Recording"
 		},
-		"noSelectedTags": "No selected tags",
 		"tapToRecord": "Tap to Record",
 		"tapToUpload": "Tap to Upload Audio",
 		"tapToStop": "Tap to Stop",

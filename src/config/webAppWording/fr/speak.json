@@ -27,7 +27,6 @@
 			"stay": "Garder l’enregistrement",
 			"leave": "Supprimer l’enregistrement"
 		},
-		"noSelectedTags": "Aucun tag sélectionné",
 		"tapToRecord": "Touche pour enregistrer",
 		"tapToUpload": "Touche pour importer un fichier audio",
 		"tapToStop": "Touche pour arrêter",
