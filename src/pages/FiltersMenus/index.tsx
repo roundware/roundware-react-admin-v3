@@ -16,6 +16,8 @@
 import { DragDropContext, Draggable, Droppable, DropResult } from "@hello-pangea/dnd";
 import DeleteIcon from "@mui/icons-material/DeleteOutline";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 import {
   Alert,
   Box,
@@ -28,6 +30,7 @@ import {
   Collapse,
   Container,
   Grid,
+  FormControlLabel,
   IconButton,
   Link,
   Stack,
@@ -56,12 +59,16 @@ interface Item {
   sort_index: number;
   is_active: boolean;
   parent_id: number | null;
+  /** Selected by default: chosen already when the question or filter appears. */
+  is_default: boolean;
 }
 
 interface Group {
   id: number;
   name: string;
   ui_mode: Mode;
+  /** "multi": several answers allowed (Listen filters always are). */
+  select_type: string;
   tag_category_id: number;
   sort_index: number;
   is_active: boolean;
@@ -90,7 +97,7 @@ interface Lang {
 const MODE_TEXT: Record<Mode, { intro: string; field: string; empty: string }> = {
   speak: {
     intro:
-      "The questions contributors answer before they record — one screen each, in this order, picking one response per question.",
+      "The questions contributors answer before they record — one screen each, in this order, picking one response per question (or several, where a question allows it).",
     field: "Question",
     empty: "Contributors aren’t asked anything before recording.",
   },
@@ -314,6 +321,29 @@ const FiltersMenusPage: React.FC = () => {
     });
   };
 
+  // Selected by default. A question taking one answer has at most one.
+  const setDefault = (g: Group, item: Item, on: boolean) => {
+    const single = g.ui_mode === "speak" && g.select_type !== "multi";
+    const others = single && on ? g.ui_items.filter((i) => i.is_default && i.id !== item.id) : [];
+    updateGroup(g.id, (x) => ({
+      ...x,
+      ui_items: x.ui_items.map((i) =>
+        i.id === item.id ? { ...i, is_default: on } : others.some((o) => o.id === i.id) ? { ...i, is_default: false } : i
+      ),
+    }));
+    save(() =>
+      Promise.all([
+        patchItem(item.id, { is_default: on }),
+        ...others.map((o) => patchItem(o.id, { is_default: false })),
+      ])
+    );
+  };
+
+  const setSeveral = (g: Group, several: boolean) => {
+    updateGroup(g.id, (x) => ({ ...x, select_type: several ? "multi" : "single" }));
+    save(() => patchGroup(g.id, { select_type: several ? "multi" : "single" }));
+  };
+
   const hideTag = (g: Group, item: Item) => {
     updateGroup(g.id, (x) => ({ ...x, ui_items: x.ui_items.filter((i) => i.id !== item.id) }));
     save(() => apiFetcher(`/uiitems/${item.id}/`, { method: "DELETE" }));
@@ -493,6 +523,8 @@ const FiltersMenusPage: React.FC = () => {
                               onActive={(on) => setActive(g, on)}
                               onShowTag={(t) => showTag(g, t)}
                               onHideTag={(i) => hideTag(g, i)}
+                              onDefault={(i, on) => setDefault(g, i, on)}
+                              onSeveral={(on) => setSeveral(g, on)}
                               onRemove={() => removeGroup(g)}
                             />
                           </Box>
@@ -587,6 +619,8 @@ interface CardProps {
   onActive: (on: boolean) => void;
   onShowTag: (t: Tag) => void;
   onHideTag: (i: Item) => void;
+  onDefault: (i: Item, on: boolean) => void;
+  onSeveral: (on: boolean) => void;
   onRemove: () => void;
 }
 
@@ -655,16 +689,27 @@ const GroupCard: React.FC<CardProps> = (p) => {
           sx={{ mt: 1.5 }}
         />
 
-        <Typography variant="subtitle2" sx={{ mt: 2, mb: 0.5 }}>
-          {p.mode === "speak" ? "Responses" : "Choices"}
+        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mt: 2, mb: 0.5 }}>
+          <Typography variant="subtitle2">{p.mode === "speak" ? "Responses" : "Choices"}</Typography>
+          {p.mode === "speak" && (
+            <FormControlLabel
+              control={
+                <Switch size="small" checked={g.select_type === "multi"} onChange={(_e, on) => p.onSeveral(on)} />
+              }
+              label={<Typography variant="body2">Allow several answers</Typography>}
+              sx={{ mr: 0 }}
+            />
+          )}
+        </Stack>
+        <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
+          {p.mode === "speak"
+            ? g.select_type === "multi"
+              ? "Contributors choose one or more, then press Next. Starred responses start chosen."
+              : "Contributors choose one and move on. A starred response starts chosen; they can press Next to keep it."
+            : "Starred choices start selected, so they’re what plays before listeners choose anything."}
+          {p.firstListen &&
+            " With none starred in any filter, what plays first is recordings with at least one of this filter’s choices — untick one, and recordings with only that tag won’t play."}
         </Typography>
-        {p.firstListen && (
-          <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
-            The first filter also decides what plays before listeners choose anything: only
-            recordings with at least one of the choices ticked here. Untick one, and recordings with
-            only that tag won’t play.
-          </Typography>
-        )}
         {conditional ? (
           <Alert severity="info" sx={{ mb: 1 }}>
             Some of these only appear after a particular earlier response, so they’re edited in the{" "}
@@ -697,7 +742,23 @@ const GroupCard: React.FC<CardProps> = (p) => {
                             onChange={() => p.onHideTag(item)}
                             slotProps={{ input: { "aria-label": tagName(item.tag_id) } }}
                           />
-                          <Typography variant="body2">{tagName(item.tag_id)}</Typography>
+                          <Typography variant="body2" sx={{ flex: 1 }}>
+                            {tagName(item.tag_id)}
+                          </Typography>
+                          <Tooltip title={item.is_default ? "Selected by default" : "Select by default"}>
+                            <IconButton
+                              size="small"
+                              onClick={() => p.onDefault(item, !item.is_default)}
+                              aria-label={`${tagName(item.tag_id)}: selected by default`}
+                              aria-pressed={item.is_default}
+                            >
+                              {item.is_default ? (
+                                <StarIcon fontSize="small" color="primary" />
+                              ) : (
+                                <StarBorderIcon fontSize="small" sx={{ color: "text.disabled" }} />
+                              )}
+                            </IconButton>
+                          </Tooltip>
                         </Stack>
                       )}
                     </Draggable>

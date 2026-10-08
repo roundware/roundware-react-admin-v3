@@ -10,7 +10,8 @@
 		"goBack": "Regresar"
 	},
 	"tagSelect": {
-		"selectAnOption": "¡Selecciona una opción!"
+		"selectAnOption": "¡Selecciona una opción!",
+		"chooseSeveral": "Elige todas las que correspondan"
 	},
 	"location": {
 		"header": "¿Desde dónde grabas hoy?",

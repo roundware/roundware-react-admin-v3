@@ -10,7 +10,8 @@
 		"goBack": "Go Back"
 	},
 	"tagSelect": {
-		"selectAnOption": "Please select an option!"
+		"selectAnOption": "Please select an option!",
+		"chooseSeveral": "Choose all that apply"
 	},
 	"location": {
 		"header": "Where are you recording today?",

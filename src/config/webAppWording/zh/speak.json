@@ -10,7 +10,8 @@
 		"goBack": "返回"
 	},
 	"tagSelect": {
-		"selectAnOption": "请选择一个选项！"
+		"selectAnOption": "请选择一个选项！",
+		"chooseSeveral": "可多选"
 	},
 	"location": {
 		"header": "你今天在哪里录音？",

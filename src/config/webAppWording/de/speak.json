@@ -10,7 +10,8 @@
 		"goBack": "Zurück"
 	},
 	"tagSelect": {
-		"selectAnOption": "Bitte wähle eine Option aus!"
+		"selectAnOption": "Bitte wähle eine Option aus!",
+		"chooseSeveral": "Wähle alle zutreffenden aus"
 	},
 	"location": {
 		"header": "Wo nimmst du heute auf?",

@@ -10,7 +10,8 @@
 		"goBack": "Retour"
 	},
 	"tagSelect": {
-		"selectAnOption": "Choisis une option !"
+		"selectAnOption": "Choisis une option !",
+		"chooseSeveral": "Choisis toutes les réponses qui conviennent"
 	},
 	"location": {
 		"header": "D’où enregistres-tu aujourd’hui ?",
