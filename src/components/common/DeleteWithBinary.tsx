@@ -34,9 +34,9 @@ import { useCanEdit } from '../../hooks/useCanEdit';
  * shown only when there are attachments, starts unticked, and without it the
  * attachments are kept as ordinary assets.
  *
- * It used to offer "Also delete file?", which the server never read — asset
- * files were always deleted, speaker files never were — so it is gone rather
- * than left promising something it cannot do.
+ * For assets and speakers it also offers to delete for good: their media
+ * files too. Unticked (the default), files are kept in storage — media is
+ * never deleted unless asked (Halsey, 2026-10-08).
  */
 const DeleteWithBinary = ({
   isBulk,
@@ -63,15 +63,18 @@ const DeleteWithBinary = ({
   const [openDialog, setOpenDialog] = useState(false);
   const [attachmentIds, setAttachmentIds] = useState<Identifier[]>([]);
   const [includeAttachments, setIncludeAttachments] = useState(false);
+  const [deleteFiles, setDeleteFiles] = useState(false);
 
   if (!canEdit || !record) return null;
 
   const isAssets = resource === 'assets';
+  const hasMedia = isAssets || resource === 'speakers';
   const ids: Identifier[] = isBulk ? lc?.selectedIds ?? [] : [record.id];
   const isLoading = isBulk ? isDeletingMany : isDeletingOne;
 
   const handleDeleteButton = async () => {
     setIncludeAttachments(false);
+    setDeleteFiles(false);
     setAttachmentIds([]);
     setOpenDialog(true);
     if (!isAssets) return;
@@ -111,8 +114,10 @@ const DeleteWithBinary = ({
   };
 
   const handleConfirm = async () => {
-    const meta =
-      isAssets && includeAttachments ? { include_attachments: true } : undefined;
+    const flags: Record<string, boolean> = {};
+    if (isAssets && includeAttachments) flags.include_attachments = true;
+    if (hasMedia && deleteFiles) flags.delete_files = true;
+    const meta = Object.keys(flags).length ? flags : undefined;
     const options = {
       onError: (e: unknown) => {
         notify('Error deleting record ' + (e as Error)?.toString(), { type: 'error' });
@@ -157,11 +162,24 @@ const DeleteWithBinary = ({
             {isBulk
               ? `Delete the ${ids.length} selected records?`
               : 'Are you sure you want to delete this record?'}
-            {isAssets &&
-              (isBulk
-                ? ' Their audio and image files are deleted too.'
-                : ' Its audio or image file is deleted too.')}
           </DialogContentText>
+
+          {hasMedia && (
+            <>
+              <FormControlLabel
+                sx={{ mt: 1 }}
+                control={
+                  <Checkbox checked={deleteFiles} onChange={(_e, c) => setDeleteFiles(c)} />
+                }
+                label='Delete for good: delete the media files from storage too'
+              />
+              <Alert severity={deleteFiles ? 'warning' : 'info'} sx={{ mt: 1 }}>
+                {deleteFiles
+                  ? "The audio and image files are deleted too. This can't be undone."
+                  : 'The audio and image files are kept in storage.'}
+              </Alert>
+            </>
+          )}
 
           {isAssets && n > 0 && (
             <>

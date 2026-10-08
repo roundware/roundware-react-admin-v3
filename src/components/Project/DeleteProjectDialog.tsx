@@ -48,7 +48,8 @@ const DeleteProjectDialog: React.FC<DeleteProjectDialogProps> = ({
   onDeleted,
 }) => {
   const [confirmed, setConfirmed] = useState(false);
-  const [keepFiles, setKeepFiles] = useState(false);
+  // Media is kept unless asked: "delete for good" (server docs/021).
+  const [deleteFiles, setDeleteFiles] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [statuses, setStatuses] = useState<DeleteStatus[]>([]);
   const [done, setDone] = useState(false);
@@ -56,7 +57,7 @@ const DeleteProjectDialog: React.FC<DeleteProjectDialogProps> = ({
   const handleClose = () => {
     if (deleting) return; // Prevent closing while deleting
     setConfirmed(false);
-    setKeepFiles(false);
+    setDeleteFiles(false);
     setDeleting(false);
     setStatuses([]);
     setDone(false);
@@ -84,8 +85,7 @@ const DeleteProjectDialog: React.FC<DeleteProjectDialogProps> = ({
       );
 
       try {
-        const deleteFilesParam = keepFiles ? "false" : "true";
-        await apiFetcher(`/projects/${project.id}/?delete_files=${deleteFilesParam}`, {
+        await apiFetcher(`/projects/${project.id}/?delete_files=${deleteFiles}`, {
           method: "DELETE",
         });
         setStatuses((prev) =>
@@ -171,14 +171,14 @@ const DeleteProjectDialog: React.FC<DeleteProjectDialogProps> = ({
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={keepFiles}
-                  onChange={(e) => setKeepFiles(e.target.checked)}
+                  checked={deleteFiles}
+                  onChange={(e) => setDeleteFiles(e.target.checked)}
                 />
               }
               label={
                 <Typography variant="body2">
-                  Keep media files (audio, images) in storage for potential
-                  reuse in other projects
+                  Delete for good: delete its media files (audio, images) from
+                  storage too. This can't be undone. Unticked, they're kept.
                 </Typography>
               }
               sx={{ mt: 2 }}
