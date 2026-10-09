@@ -304,6 +304,11 @@ export class RoundwareDataProvider implements DataProvider {
             }
             return true;
           });
+        } else if (filter === 'has_contact') {
+          // Contributions whose contributor gave a name or email (server docs/023).
+          json = json.filter(
+            (d) => !!(d.contributor_name || d.contributor_email) === !!filters[filter]
+          );
         } else if (filter.startsWith(`contains_`)) {
           const keysToCheck = filter.slice(9).split(`+`);
           const filterValue = filters[filter].toLowerCase();

@@ -26,7 +26,7 @@ import CodeIcon from "@mui/icons-material/Code";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { apiFetcher } from "../../roundwareDataProvider/tokenAuthProvider";
 import { errMessage } from "./api";
-import PreviewPanel from "./PreviewPanel";
+import EmbedPreview from "./EmbedPreview";
 
 interface Props {
   projectId: number;
@@ -71,6 +71,8 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
   const [lang, setLang] = useState("");
   const [layout, setLayout] = useState<"auto" | "horizontal" | "vertical">("auto");
   const [size, setSize] = useState<"compact" | "comfortable">("compact");
+  // Light or dark: "" for the project's own setting (Customize).
+  const [appearance, setAppearance] = useState<"" | "light" | "dark" | "auto">("");
 
   useEffect(() => {
     Promise.all([apiFetcher(`/projects/${projectId}/`), apiFetcher(`/languages/`)])
@@ -110,9 +112,10 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
     if (upload !== "auto") q.set("upload", upload);
     if (layout !== "auto") q.set("layout", layout);
     if (size !== "compact") q.set("size", size);
+    if (appearance) q.set("appearance", appearance);
     if (lang) q.set("lang", lang);
     return q.toString();
-  }, [questions, location, photo, text, contact, upload, layout, size, lang]);
+  }, [questions, location, photo, text, contact, upload, layout, size, appearance, lang]);
 
   // The frame starts at a sensible height; the script then fits it to the
   // recorder as it changes (its 'resize' messages). Without the script — a
@@ -126,7 +129,7 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
       `<iframe`,
       `  id="${frameId}"`,
       `  src="${base}/embed?${query}"`,
-      `  allow="microphone; geolocation"`,
+      `  allow="microphone; camera; geolocation"`,
       `  style="width: 100%; max-width: ${maxWidth}px; height: ${startHeight}px; border: 0;"`,
       `  title="Record a message">`,
       `</iframe>`,
@@ -270,6 +273,21 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
                   <MenuItem value="comfortable">Comfortable</MenuItem>
                 </Select>
               </FormControl>
+              <FormControl size="small" sx={{ minWidth: 220 }}>
+                <InputLabel shrink>Light or dark</InputLabel>
+                <Select
+                  label="Light or dark"
+                  notched
+                  displayEmpty
+                  value={appearance}
+                  onChange={(e) => setAppearance(e.target.value as typeof appearance)}
+                >
+                  <MenuItem value="">The project's setting</MenuItem>
+                  <MenuItem value="light">Light</MenuItem>
+                  <MenuItem value="dark">Dark</MenuItem>
+                  <MenuItem value="auto">Follow the visitor's device</MenuItem>
+                </Select>
+              </FormControl>
             </Stack>
 
             {liveUrl ? (
@@ -297,8 +315,9 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
                     {copied ? "Copied" : "Copy code"}
                   </Button>
                   <Typography variant="caption" color="text.secondary">
-                    Keep <code>allow="microphone"</code>: without it, browsers won't let it record.
-                    The script fits the frame to the recorder; your page must be https.
+                    Keep <code>allow="microphone; camera"</code>: without it, browsers won't let it
+                    record or take photos. The script fits the frame to the recorder; your page must
+                    be https.
                   </Typography>
                 </Stack>
                 {testUrl && (
@@ -314,7 +333,7 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
           </Stack>
         )}
 
-        <Dialog open={trying} onClose={() => setTrying(false)} fullWidth maxWidth="sm">
+        <Dialog open={trying} onClose={() => setTrying(false)} fullWidth maxWidth="md">
           <DialogTitle sx={{ display: "flex", alignItems: "center", py: 1 }}>
             <Box sx={{ flexGrow: 1 }}>The recorder, as embedded</Box>
             <IconButton onClick={() => setTrying(false)} aria-label="Close">
@@ -322,16 +341,7 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
             </IconButton>
           </DialogTitle>
           <DialogContent>
-            {trying && (
-              <PreviewPanel
-                projectId={projectId}
-                refreshKey={0}
-                title="Recorder"
-                path="/embed"
-                query={query}
-                height={480}
-              />
-            )}
+            {trying && <EmbedPreview projectId={projectId} query={query} startHeight={startHeight} />}
           </DialogContent>
         </Dialog>
       </CardContent>

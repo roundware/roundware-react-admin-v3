@@ -17,5 +17,12 @@
 	"block": "屏蔽",
 	"allow": "允许",
 	"help": "帮助",
-	"info": "信息"
+	"info": "信息",
+	"camera": {
+		"take": "拍照",
+		"retake": "重拍",
+		"use": "使用照片",
+		"chooseFile": "选择文件",
+		"unavailable": "此处无法使用相机。请选择文件。"
+	}
 }

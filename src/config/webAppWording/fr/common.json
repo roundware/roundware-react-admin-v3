@@ -17,5 +17,12 @@
 	"block": "Bloquer",
 	"allow": "Autoriser",
 	"help": "Aide",
-	"info": "Infos"
+	"info": "Infos",
+	"camera": {
+		"take": "Prendre une photo",
+		"retake": "Reprendre",
+		"use": "Utiliser la photo",
+		"chooseFile": "Choisir un fichier",
+		"unavailable": "Impossible d'utiliser la caméra ici. Choisissez un fichier."
+	}
 }

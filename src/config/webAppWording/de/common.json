@@ -17,5 +17,12 @@
 	"block": "Blockieren",
 	"allow": "Zulassen",
 	"help": "Hilfe",
-	"info": "Info"
+	"info": "Info",
+	"camera": {
+		"take": "Foto aufnehmen",
+		"retake": "Neu aufnehmen",
+		"use": "Foto verwenden",
+		"chooseFile": "Datei auswählen",
+		"unavailable": "Die Kamera ist hier nicht verfügbar. Wähle stattdessen eine Datei."
+	}
 }

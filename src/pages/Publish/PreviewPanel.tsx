@@ -97,7 +97,7 @@ const PreviewPanel: React.FC<Props> = ({
           title="Web app preview"
           src={src}
           style={{ width: "100%", height: "100%", border: "none" }}
-          allow="microphone; geolocation; autoplay"
+          allow="microphone; camera; geolocation; autoplay"
         />
       ) : (
         <Box

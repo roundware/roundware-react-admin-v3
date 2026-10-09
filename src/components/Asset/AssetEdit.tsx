@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import AddIcon from '@mui/icons-material/Add';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import AudioOptions from 'components/common/AudioOptions';
 import FileDownloadButton from 'components/common/FileDownloadButton';
 import LocationSelector from 'components/common/LocationSelector';
@@ -21,7 +21,6 @@ import {
     TextField,
     Toolbar,
     TextInput,
-    FunctionField,
     useRecordContext,
     useRedirect,
 } from 'react-admin';
@@ -112,21 +111,7 @@ const AssetEdit = (): JSX.Element => {
         <Labeled label='Updated' fullWidth>
           <DateField source='updated_at' showTime />
         </Labeled>
-        {/* What the contributor chose to give (server docs/023): kept on their
-            participant, so it shows with each of their contributions. */}
-        <FunctionField
-          render={(r: { contributor_name?: string; contributor_email?: string | null }) =>
-            r?.contributor_name || r?.contributor_email ? (
-              <Labeled label='Contributor' fullWidth>
-                <span>
-                  {r.contributor_name}
-                  {r.contributor_name && r.contributor_email ? ' · ' : ''}
-                  {r.contributor_email && <a href={`mailto:${r.contributor_email}`}>{r.contributor_email}</a>}
-                </span>
-              </Labeled>
-            ) : null
-          }
-        />
+        <ContributorField />
 
         <ReferenceInput
           label='Project'
@@ -181,6 +166,26 @@ const AssetEdit = (): JSX.Element => {
         <TagIdSelector source='tag_ids' multiple label='Tags' />
       </SimpleForm>
     </Edit>
+  );
+};
+
+/**
+ * What the contributor chose to give (server docs/023): kept on their
+ * participant, so it shows with each of their contributions. Labeled like the
+ * dates above it, and absent when they gave nothing.
+ */
+const ContributorField = () => {
+  const r = useRecordContext<{ id: number; contributor_name?: string; contributor_email?: string | null }>();
+  if (!r?.contributor_name && !r?.contributor_email) return null;
+  return (
+    // A Box, not a span: Labeled leaves out its label for plain elements.
+    <Labeled label='Contributor' fullWidth>
+      <Box component='span' sx={{ fontSize: 14 }}>
+        {r.contributor_name}
+        {r.contributor_name && r.contributor_email ? ' · ' : ''}
+        {r.contributor_email && <a href={`mailto:${r.contributor_email}`}>{r.contributor_email}</a>}
+      </Box>
+    </Labeled>
   );
 };
 
