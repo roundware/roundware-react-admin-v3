@@ -11,8 +11,10 @@ interface Props {
 /** A 0–100 field as a labeled horizontal slider (the label and value above). */
 const CustomSlider = ({ field, label, defaultValue = 100, icon }: Props): JSX.Element => {
   const [value, setValue] = useFieldValue<number>(field, defaultValue);
+  // Only a missing value takes the default (0 is a value), and filling it in
+  // is no change of the user's.
   React.useEffect(() => {
-    setValue(value || defaultValue);
+    if (value == null) setValue(defaultValue, { shouldDirty: false });
   }, []);
   return (
     <Box sx={{ flex: 1, minWidth: 0 }}>

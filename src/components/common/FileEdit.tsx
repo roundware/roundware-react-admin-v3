@@ -2,7 +2,7 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Box, Button, Grid, Stack, Tab, Tabs } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { FileField, FileInput } from 'react-admin';
 
 import Delete from '@mui/icons-material/Delete';
@@ -21,7 +21,14 @@ export const FileEdit = (): JSX.Element => {
 
   const [mediaType] = useFieldValue<IAsset[`media_type`]>(`media_type`);
 
+  // A file of another media type is dropped when the media type changes. Not
+  // on load: the asset's own file stays, and the form stays unchanged.
+  // (Compared with the last media type rather than skipping the first run,
+  // which StrictMode runs twice.)
+  const lastMediaType = useRef(mediaType);
   useEffect(() => {
+    if (mediaType === lastMediaType.current) return;
+    lastMediaType.current = mediaType;
     const fileExt =
       typeof value == 'string'
         ? value?.split(`.`)?.reverse()[0]
@@ -159,7 +166,7 @@ export const getFileExtensions = (mediaType: string): string[] => {
     case 'audio':
       return [`mp3`, `wav`, `m4a`];
     case `photo`:
-      return [`jpg`, `png`, `gif`];
+      return [`jpg`, `jpeg`, `png`, `gif`, `webp`];
     case `text`:
       return [`txt`];
     default:

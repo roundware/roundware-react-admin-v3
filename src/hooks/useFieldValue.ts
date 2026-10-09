@@ -4,13 +4,14 @@ import { useFormContext } from "react-hook-form";
 const useFieldValue = <T>(
   fieldName: string,
   defaultValue?: T
-): [T, (newValue: T) => void] => {
+): [T, (newValue: T, options?: { shouldDirty?: boolean }) => void] => {
   const ctx = useFormContext();
   const value: T = ctx.watch(fieldName);
-  const setValue = (newValue: T) =>
-    ctx.setValue(fieldName, newValue, {
-      shouldDirty: true,
-    });
+  // Dirty by default: what the user changes. A value the form fills in by
+  // itself (a default, or one worked out on load) passes shouldDirty: false,
+  // or an untouched form warns of unsaved changes when left.
+  const setValue = (newValue: T, { shouldDirty = true } = {}) =>
+    ctx.setValue(fieldName, newValue, { shouldDirty });
   useEffect(() => {
     if (typeof value == "undefined" && typeof defaultValue != "undefined") {
       ctx.setValue(fieldName, defaultValue);

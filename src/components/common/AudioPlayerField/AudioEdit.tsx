@@ -41,7 +41,6 @@ const AudioEditField = ({
   
 
   const [id] = useFieldValue<number>(`id`);
-  const [, setDurationInSec] = useFieldValue(`audio_length_in_seconds`);
 
   // Keep a reference to the Regions plugin instance
   const regionsPluginRef = React.useRef<any>(null);
@@ -114,10 +113,10 @@ const AudioEditField = ({
     // when no end_time is specified make sure to set to it to the audio length
     if (loading) return;
     const audioDuration = wavesurferRef.current.getDuration()?.toFixed(2);
-    setDurationInSec(Number(audioDuration));
 
-    if (!end_time) changeEndTime(Number(audioDuration));
-    if (!start_time && typeof start_time !== "number") changeStartTime(0);
+    // Filled in, not changed by the user: no unsaved changes for these.
+    if (!end_time) changeEndTime(Number(audioDuration), { shouldDirty: false });
+    if (!start_time && typeof start_time !== "number") changeStartTime(0, { shouldDirty: false });
   }, [end_time, loading]);
 
   useEffect(() => {

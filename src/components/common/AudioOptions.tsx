@@ -7,7 +7,7 @@ import {
     Typography,
 } from "@mui/material";
 import Card from "@mui/material/Card";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import useFieldValue from "../../hooks/useFieldValue";
 import CustomSlider from "./CustomSlider";
 import { FileEdit } from "./FileEdit";
@@ -18,10 +18,17 @@ const AudioOptions = (): JSX.Element => {
   const [startTime, setStartTime] = useFieldValue(`start_time`);
   const [endTime, setEndTime] = useFieldValue(`end_time`);
   const [file] = useFieldValue(`file`);
-  const [, setVolume] = useFieldValue(`volume`);
+  const [, setVolume] = useFieldValue(`volume`, 1);
   const [durationInSec] = useFieldValue(`audio_length_sec`);
 
+  // A new file starts at full volume. Not on load: an asset without a file
+  // (text, say) keeps its volume, and the form stays unchanged.
+  // (Compared with the last file rather than skipping the first run, which
+  // StrictMode runs twice.)
+  const lastFile = useRef(file);
   useEffect(() => {
+    if (file === lastFile.current) return;
+    lastFile.current = file;
     if (typeof file !== "string") setVolume(1);
   }, [file]);
 
