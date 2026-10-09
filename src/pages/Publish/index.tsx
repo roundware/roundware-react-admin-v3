@@ -1,5 +1,16 @@
 import React, { useCallback, useState } from "react";
-import { Box, Card, CardContent, Container, Grid, Typography } from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Card,
+  CardContent,
+  Container,
+  Grid,
+  Typography,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Title } from "react-admin";
 import { useProjects } from "../../context/ProjectsContext";
 import DeployCard from "./DeployCard";
@@ -110,6 +121,8 @@ export const TestAppPage: React.FC = () => {
 
 /** Where the app lives: its web address, deploying and unpublishing, and
  *  putting changes live (server docs/021). */
+const ADVANCED_KEY = "rw-publish-advanced-open";
+
 const PublishPage: React.FC = () => {
   const { selectedProject } = useProjects();
   // Bumped when the address changes, so the live-site card reloads.
@@ -122,6 +135,22 @@ const PublishPage: React.FC = () => {
   const [live, setLive] = useState<LiveSiteState | null>(null);
   const reloadLive = useCallback(() => setLiveKey((k) => k + 1), []);
   const reloadVersions = useCallback(() => setVersionsKey((k) => k + 1), []);
+  // Advanced is closed until opened, then stays as left (this browser only).
+  const [advanced, setAdvanced] = useState(() => {
+    try {
+      return localStorage.getItem(ADVANCED_KEY) === "1";
+    } catch {
+      return false;
+    }
+  });
+  const toggleAdvanced = (_e: React.SyntheticEvent, open: boolean) => {
+    setAdvanced(open);
+    try {
+      localStorage.setItem(ADVANCED_KEY, open ? "1" : "0");
+    } catch {
+      // Not remembered; no harm.
+    }
+  };
 
   if (!selectedProject) return <NoProject title="Publish" what="publish it to the web" />;
   const projectId = selectedProject.id;
@@ -146,20 +175,10 @@ const PublishPage: React.FC = () => {
         onState={setLive}
         onUpdated={reloadVersions}
       />
-      <VersionsCard
-        projectId={projectId}
-        published={!!live?.published}
-        refreshKey={deployKey + versionsKey}
-        onChange={reloadLive}
-      />
-      <EmbedCard
-        projectId={projectId}
-        liveUrl={live?.published ? live.live_url : null}
-        testUrl={live?.published ? live.test_url : null}
-      />
-      <TimeMachineCard projectId={projectId} liveUrl={live?.published ? live.live_url : null} />
-
-      <Grid container spacing={3}>
+      {/* What most people come here for: the address, the live site, and
+          how it looks. The rest is behind Advanced (Halsey, 2026-10-09:
+          the page had become too packed to follow). */}
+      <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid size={{ xs: 12, md: 7 }}>
           <Card>
             <CardContent>
@@ -168,6 +187,36 @@ const PublishPage: React.FC = () => {
           </Card>
         </Grid>
       </Grid>
+
+      <Accordion
+        expanded={advanced}
+        onChange={toggleAdvanced}
+        disableGutters
+        sx={{ bgcolor: "transparent", boxShadow: "none", "&::before": { display: "none" } }}
+      >
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ px: 0 }}>
+          <Box>
+            <Typography variant="h6">Advanced</Typography>
+            <Typography variant="body2" color="text.secondary">
+              Saved versions, embedding a recorder on another site, and the time machine.
+            </Typography>
+          </Box>
+        </AccordionSummary>
+        <AccordionDetails sx={{ px: 0 }}>
+          <VersionsCard
+            projectId={projectId}
+            published={!!live?.published}
+            refreshKey={deployKey + versionsKey}
+            onChange={reloadLive}
+          />
+          <EmbedCard
+            projectId={projectId}
+            liveUrl={live?.published ? live.live_url : null}
+            testUrl={live?.published ? live.test_url : null}
+          />
+          <TimeMachineCard projectId={projectId} liveUrl={live?.published ? live.live_url : null} />
+        </AccordionDetails>
+      </Accordion>
     </Container>
   );
 };
