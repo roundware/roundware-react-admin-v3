@@ -32,17 +32,20 @@ import { mapLibraries, mapsApiVersion } from "../../utils";
 import { errMessage, getBranding } from "./api";
 import BrandingFilesPanel from "./BrandingFilesPanel";
 import SpeakerMapLayer from "./SpeakerMapLayer";
+import SpeakerStylesEditor, { StateOverrides } from "./SpeakerStylesEditor";
+import { StateName } from "./speakerStates";
 
 /**
  * One map for everything about how the listen map looks: whether speakers
- * are drawn, the Google Maps style, and the placement of the project's
- * overlay image.
+ * are drawn and how they look in each state (SpeakerStylesEditor), the
+ * Google Maps style, and the placement of the project's overlay image.
  *
  * It draws with the web app's own geometry (utilities/mapOverlayGeometry.ts,
  * a twin of the app's copy) and the web app's built-in style (vendored as
  * webAppMapStyle.json), so what an author arranges here is what participants
- * see. All are ordinary project config — `map.speakerDisplay`, `map.mapOverlay`,
- * `map.listenMapOverlayDisplay` and `map.googleMapsStyle` in ui_config_json —
+ * see. All are ordinary project config — `map.speakerDisplay`,
+ * `map.speakerStateStyles`, `map.mapOverlay`, `map.listenMapOverlayDisplay`
+ * and `map.googleMapsStyle` in ui_config_json —
  * so the Advanced configuration panel shows the same values.
  *
  * Saving is explicit rather than automatic, unlike the rest of this page:
@@ -137,6 +140,10 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
   const [rotation, setRotation] = useState(DEFAULT_OVERLAY.rotation);
   const [opacity, setOpacity] = useState(DEFAULT_OVERLAY.opacity);
   const [styleText, setStyleText] = useState("");
+  // The project's own speaker state styles (only what differs from the
+  // app's), and the state the map draws every speaker in.
+  const [stateOverrides, setStateOverrides] = useState<StateOverrides>({});
+  const [previewState, setPreviewState] = useState<StateName>("idle");
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -150,6 +157,7 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
     enabled: boolean;
     overlay: OverlayConfig;
     styleText: string;
+    stateOverrides: StateOverrides;
   } | null>(null);
 
   const applySaved = useCallback(
@@ -165,6 +173,7 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
       setRotation(s.overlay.rotation);
       setOpacity(s.overlay.opacity);
       setStyleText(s.styleText);
+      setStateOverrides(s.stateOverrides);
       setDirty(false);
     },
     [projectCenter]
@@ -193,6 +202,7 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
           styleText: Array.isArray(map.googleMapsStyle)
             ? JSON.stringify(map.googleMapsStyle, null, 2)
             : "",
+          stateOverrides: (map.speakerStateStyles ?? {}) as StateOverrides,
         };
         savedRef.current = saved;
         applySaved(saved);
@@ -257,6 +267,16 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
     fitted.current = true;
   }, [map, speakers]);
 
+  // The map draws the unsaved state styles: the built-ins with the project's
+  // changes over them.
+  const previewConfig = useMemo(
+    () => ({
+      ...mapConfig,
+      speakerStateStyles: merge({}, DEFAULT_MAP.speakerStateStyles, stateOverrides),
+    }),
+    [mapConfig, stateOverrides]
+  );
+
   const touch = <T,>(setter: (v: T) => void) => (v: T) => {
     setter(v);
     setDirty(true);
@@ -287,6 +307,9 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
       };
       if (parsedStyle) mapSection.googleMapsStyle = parsedStyle;
       else delete mapSection.googleMapsStyle; // back to the built-in
+      // Only what differs from the app's built-in styles.
+      if (Object.keys(stateOverrides).length) mapSection.speakerStateStyles = stateOverrides;
+      else delete mapSection.speakerStateStyles;
       doc.map = mapSection;
 
       await apiFetcher(`/projects/${projectId}/`, {
@@ -299,6 +322,7 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
         enabled,
         overlay: mapSection.mapOverlay,
         styleText,
+        stateOverrides,
       };
       setDirty(false);
       setMapConfig(merge({}, DEFAULT_MAP, mapSection));
@@ -375,7 +399,8 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
               <SpeakerMapLayer
                 speakers={speakers}
                 display={speakerDisplay}
-                mapConfig={mapConfig}
+                mapConfig={previewConfig}
+                state={speakerDisplay === "polygons" ? previewState : "idle"}
                 palette={palette}
                 imageUrl={speakerImageUrl}
               />
@@ -423,6 +448,19 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
                 </Box>
               )}
             </Box>
+
+            {speakerDisplay === "polygons" && palette && (
+              <SpeakerStylesEditor
+                recordingMethod={selectedProject?.recording_method}
+                selected={previewState}
+                onSelect={setPreviewState}
+                defaults={DEFAULT_MAP.speakerStateStyles}
+                base={DEFAULT_MAP.speakerDisplayDefaults}
+                overrides={stateOverrides}
+                onChange={touch(setStateOverrides)}
+                palette={palette}
+              />
+            )}
 
             <Box>
               <Typography variant="subtitle2" gutterBottom>

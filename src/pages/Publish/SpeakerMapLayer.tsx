@@ -4,14 +4,15 @@ import { ProjectPalette } from "../../hooks/useProjectPalette";
 import { ISpeaker } from "../../types/speaker";
 import { polygonToGoogleMapPaths } from "../../utilities";
 import { speakerImageBounds } from "../../utilities/speakerImageBounds";
+import { resolveStyle, StateName } from "./speakerStates";
 
 /**
- * A project's speakers as the listen map shows them before anything plays —
- * shapes, images or nothing — for Map appearance's map. Read-only: speakers
+ * A project's speakers as the listen map shows them — shapes, images or
+ * nothing — for Map appearance's map, all in one state. Read-only: speakers
  * are edited on the Speakers page.
  *
- * Mirrors the web app's idle state (its SpeakerPolygons / SpeakerImages and
- * utils/speakerStyles.ts), from the project's merged map config, so a style
+ * Mirrors the web app (its SpeakerPolygons / SpeakerImages and
+ * utils/speakerStyles.ts) from the project's merged map config, so a style
  * change in Advanced configuration shows here too.
  */
 
@@ -25,21 +26,9 @@ interface Props {
   palette: ProjectPalette;
   /** The project's speaker image, if it has uploaded one. */
   imageUrl: string | null;
+  /** The state to draw every speaker in (default Ready). */
+  state?: StateName;
 }
-
-const ROLE: Record<string, keyof ProjectPalette> = {
-  brand: "primary",
-  backdrop: "secondary",
-  card: "background",
-};
-
-/** A config color — hex, or a theme role like "brand/25" — as #rrggbb. */
-const resolveColor = (value: string | null | undefined, palette: ProjectPalette): string | null => {
-  if (!value) return null;
-  const role = /^(brand|backdrop|card)(\/\d+)?$/.exec(value);
-  const hex = role ? palette[ROLE[role[1]]] : value;
-  return /^#[0-9a-f]{6}/i.test(hex) ? hex.slice(0, 7) : null;
-};
 
 // The web app's built-in speaker icon: MUI's VolumeUp, as an image.
 const VOLUME_UP_PATH =
@@ -81,43 +70,18 @@ const SpeakerShapes = ({ shapes }: { shapes: { paths: google.maps.LatLng[]; opti
   return null;
 };
 
-const SpeakerMapLayer: React.FC<Props> = ({ speakers, display, mapConfig, palette, imageUrl }) => {
-  // The idle style: the speaker's own colors, else the palette's first color;
-  // opacities from the idle state where set, else the display defaults.
-  const style = useMemo(() => {
-    const defaults = mapConfig.speakerDisplayDefaults ?? {};
-    const idle = mapConfig.speakerStateStyles?.idle ?? {};
-    const pick = (stateValue: unknown, fallback: unknown) => (stateValue ?? fallback) as number;
-    return {
-      fallback: resolveColor(mapConfig.speakerPolygonColors?.[0]?.[0], palette) ?? palette.primary,
-      idleFill: resolveColor(idle.fill_color, palette),
-      idleStroke: resolveColor(idle.stroke_color, palette),
-      fillOpacity: pick(idle.fill_opacity, defaults.fillOpacity),
-      strokeOpacity: pick(idle.stroke_opacity, defaults.strokeOpacity),
-      strokeWeight: pick(idle.stroke_weight, defaults.strokeWeight),
-    };
-  }, [mapConfig, palette]);
-
+const SpeakerMapLayer: React.FC<Props> = ({ speakers, display, mapConfig, palette, imageUrl, state = "idle" }) => {
+  // Every speaker drawn in one state — the one being edited — so its look
+  // shows on the project's own shapes (speakerStates.ts mirrors the app).
   const shapes = useMemo(
     () =>
       speakers
         .filter((s) => s.shape)
-        .map((s) => {
-          const fill = resolveColor(s.fill_color, palette) ?? style.fallback;
-          const stroke = resolveColor(s.border_color, palette) ?? fill;
-          return {
-            paths: polygonToGoogleMapPaths(s.shape as any),
-            options: {
-              clickable: false,
-              fillColor: style.idleFill ?? fill,
-              fillOpacity: style.fillOpacity,
-              strokeColor: style.idleStroke ?? stroke,
-              strokeOpacity: style.strokeOpacity,
-              strokeWeight: style.strokeWeight,
-            },
-          };
-        }),
-    [speakers, palette, style]
+        .map((s) => ({
+          paths: polygonToGoogleMapPaths(s.shape as any),
+          options: resolveStyle(s, state, mapConfig, palette),
+        })),
+    [speakers, palette, mapConfig, state]
   );
 
   if (display === "none") return null;
