@@ -112,6 +112,9 @@ const MODE_TEXT: Record<Mode, { intro: string; field: string; empty: string }> =
 const asList = <T,>(json: unknown): T[] =>
   (Array.isArray(json) ? json : (json as { results?: T[] })?.results ?? []) as T[];
 
+/** The app's listen sidebar filters, in the order it shows them. */
+const SIDEBAR_FILTERS = ["date", "tags", "description"];
+
 const byIndex = (a: { sort_index: number; id: number }, b: { sort_index: number; id: number }) =>
   a.sort_index - b.sort_index || a.id - b.id;
 
@@ -134,6 +137,10 @@ const FiltersMenusPage: React.FC = () => {
   // The project's switch for asking the Speak questions at all
   // (allow_speak_tags): off, the app skips straight past them.
   const [askSpeak, setAskSpeak] = useState<boolean | null>(null);
+  // Besides tags, the listen sidebar can filter by date and by words in the
+  // description (the app's ui.listenSidebar.filter.available).
+  const [listenFilters, setListenFilters] = useState<string[] | null>(null);
+  const uiConfig = useRef<Record<string, any>>({});
 
   // Saves run one after another, so reorders and adds can't overtake each
   // other; the preview reloads once they settle.
@@ -165,6 +172,8 @@ const FiltersMenusPage: React.FC = () => {
       setTags(asList<Tag>(t.json));
       setCategories(asList<Category>(c.json));
       setAskSpeak(Boolean((p.json as { allow_speak_tags?: boolean }).allow_speak_tags));
+      uiConfig.current = (p.json as { ui_config_json?: Record<string, any> }).ui_config_json ?? {};
+      setListenFilters(uiConfig.current.ui?.listenSidebar?.filter?.available ?? SIDEBAR_FILTERS);
       setLanguages(langs);
       setDefaultCode(def);
       setLanguage((cur) => cur ?? def);
@@ -266,6 +275,25 @@ const FiltersMenusPage: React.FC = () => {
       apiFetcher(`/projects/${projectId}/`, {
         method: "PATCH",
         body: JSON.stringify({ allow_speak_tags: on }),
+      })
+    );
+  };
+
+  const setListenFilter = (kind: string, on: boolean) => {
+    const current = listenFilters ?? SIDEBAR_FILTERS;
+    const next = SIDEBAR_FILTERS.filter((k) => (k === kind ? on : current.includes(k)));
+    setListenFilters(next);
+    // The whole settings document goes back, as the map editor sends it.
+    const doc = structuredClone(uiConfig.current);
+    doc.ui ??= {};
+    doc.ui.listenSidebar ??= {};
+    doc.ui.listenSidebar.filter ??= {};
+    doc.ui.listenSidebar.filter.available = next;
+    uiConfig.current = doc;
+    save(() =>
+      apiFetcher(`/projects/${projectId}/`, {
+        method: "PATCH",
+        body: JSON.stringify({ ui_config_json: doc }),
       })
     );
   };
@@ -494,6 +522,34 @@ const FiltersMenusPage: React.FC = () => {
             </Alert>
           )}
 
+          {mode === "listen" && listenFilters !== null && (
+            <Card variant="outlined" sx={{ mb: 2 }}>
+              <CardContent sx={{ py: 1.5, "&:last-child": { pb: 1.5 } }}>
+                <Typography variant="subtitle2">Besides tags, listeners can filter by</Typography>
+                <Stack direction={{ xs: "column", sm: "row" }} spacing={{ sm: 3 }}>
+                  {[
+                    { kind: "date", label: "Date", help: "when it was recorded" },
+                    { kind: "description", label: "Description", help: "words in it" },
+                  ].map(({ kind, label, help }) => (
+                    <Stack key={kind} direction="row" alignItems="center">
+                      <Switch
+                        checked={listenFilters.includes(kind)}
+                        onChange={(_e, on) => setListenFilter(kind, on)}
+                        slotProps={{ input: { "aria-label": `Let listeners filter by ${label.toLowerCase()}` } }}
+                      />
+                      <Typography variant="body2">
+                        {label}{" "}
+                        <Typography component="span" variant="body2" color="text.secondary">
+                          ({help})
+                        </Typography>
+                      </Typography>
+                    </Stack>
+                  ))}
+                </Stack>
+              </CardContent>
+            </Card>
+          )}
+
           {loading ? (
             <CircularProgress />
           ) : (
@@ -509,7 +565,6 @@ const FiltersMenusPage: React.FC = () => {
                               group={g}
                               advancedUrl={`/project/${projectId}/uigroups-advanced`}
                               firstListen={mode === "listen" && g.id === modeGroups.find((x) => x.is_active)?.id}
-                              number={index + 1}
                               mode={mode}
                               category={categoryName(g.tag_category_id)}
                               tags={tagsOf(g.tag_category_id)}
@@ -605,7 +660,6 @@ interface CardProps {
   advancedUrl: string;
   /** The first Listen filter that's on: its choices also set what plays at the start. */
   firstListen: boolean;
-  number: number;
   mode: Mode;
   category: string;
   tags: Tag[];
@@ -651,7 +705,6 @@ const GroupCard: React.FC<CardProps> = (p) => {
             <DragIndicatorIcon />
           </Box>
           <Typography variant="h6" sx={{ flex: 1 }}>
-            {p.mode === "speak" ? `${p.number}. ` : ""}
             {p.category}
           </Typography>
           <Tooltip title={g.is_active ? "Shown to participants" : "Hidden from participants"}>
@@ -680,7 +733,7 @@ const GroupCard: React.FC<CardProps> = (p) => {
               ? "Not translated: participants see the default language’s, shown in grey."
               : !p.text
               ? p.mode === "speak"
-                ? `Empty: contributors see only “${p.number}.” as the question.`
+                ? "Empty: contributors see no question."
                 : "Empty: the filter has no label."
               : undefined
           }
