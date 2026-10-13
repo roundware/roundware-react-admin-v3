@@ -24,6 +24,7 @@
 		"descriptionPlaceholder": "Gib etwas ein...",
 		"byUser": "nach Nutzer filtern",
 		"selectTagsPlaceholder": "Wähle eins oder mehrere aus...",
+		"allTagsPlaceholder": "Alle — wähle aus, um einzugrenzen",
 		"updated": "Erledigt! Filter aktualisiert."
 	},
 	"dateFilter": {

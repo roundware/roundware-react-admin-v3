@@ -24,6 +24,7 @@
 		"descriptionPlaceholder": "Escribe algo...",
 		"byUser": "filtrar por usuario",
 		"selectTagsPlaceholder": "Selecciona una o más...",
+		"allTagsPlaceholder": "Todo — selecciona para acotar",
 		"updated": "¡Listo! Filtros actualizados."
 	},
 	"dateFilter": {

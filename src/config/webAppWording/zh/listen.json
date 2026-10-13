@@ -24,6 +24,7 @@
 		"descriptionPlaceholder": "输入内容……",
 		"byUser": "按用户筛选",
 		"selectTagsPlaceholder": "选择一项或多项……",
+		"allTagsPlaceholder": "全部——选择以缩小范围",
 		"updated": "成功！筛选条件已更新。"
 	},
 	"dateFilter": {

@@ -24,6 +24,7 @@
 		"descriptionPlaceholder": "Type something...",
 		"byUser": "filter by user",
 		"selectTagsPlaceholder": "Select one or more...",
+		"allTagsPlaceholder": "All — select to narrow down",
 		"updated": "Success! Filters updated."
 	},
 	"dateFilter": {
