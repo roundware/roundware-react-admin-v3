@@ -13,7 +13,7 @@ import React, { useEffect, useState } from "react";
  * better done on the speaker form afterwards.
  *
  * The recording arrives as a WebM `Blob` from `AudioRecorder`; the server runs
- * every upload through FFmpeg and stores MP3 + M4A, so the container it was
+ * every upload through FFmpeg and stores it as an MP3, so the container it was
  * captured in does not matter.
  *
  * Preview is a bare `<audio>` element rather than `SpeakerAudioPlayer`. That
