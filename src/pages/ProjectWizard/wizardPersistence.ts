@@ -13,7 +13,20 @@
 import { INITIAL_STATE } from "./wizardReducer";
 import { WizardState } from "./types";
 
-const KEY = "roundware.wizard.v1";
+const PREFIX = "roundware.wizard.v1";
+
+/** One draft per person and organization. It was one key for the tab, so a
+ *  new account signing up in it was handed the last account's draft, on
+ *  its last step (2026-10-13). Signing out clears them all. */
+const key = (): string => {
+  try {
+    const user = JSON.parse(localStorage.getItem("user") ?? "null") as { id?: number; email?: string } | null;
+    const who = user?.id ?? user?.email ?? "anonymous";
+    return `${PREFIX}:${who}:${localStorage.getItem("tenant_slug") ?? ""}`;
+  } catch {
+    return `${PREFIX}:anonymous:`;
+  }
+};
 
 /** sessionStorage, not localStorage: this is one sitting's work, and a draft
  *  silently resurrected days later in another tab is worse than none. */
@@ -39,7 +52,7 @@ export function saveWizardState(state: WizardState): void {
   const s = store();
   if (!s) return;
   try {
-    s.setItem(KEY, JSON.stringify(strip(state)));
+    s.setItem(key(), JSON.stringify(strip(state)));
   } catch {
     // Quota, or a value that will not serialize. Losing the draft is bad;
     // breaking the wizard to complain about it is worse.
@@ -48,7 +61,21 @@ export function saveWizardState(state: WizardState): void {
 
 export function clearWizardState(): void {
   try {
-    store()?.removeItem(KEY);
+    store()?.removeItem(key());
+  } catch {
+    /* nothing useful to do */
+  }
+}
+
+/** Every draft in this tab, whoever's — on signing out. Includes the old
+ *  unscoped one, which could be anybody's. */
+export function clearAllWizardDrafts(): void {
+  const s = store();
+  if (!s) return;
+  try {
+    Object.keys(s)
+      .filter((k) => k === PREFIX || k.startsWith(`${PREFIX}:`))
+      .forEach((k) => s.removeItem(k));
   } catch {
     /* nothing useful to do */
   }
@@ -66,7 +93,7 @@ export function loadWizardState(): WizardState {
   const s = store();
   if (!s) return INITIAL_STATE;
   try {
-    const raw = s.getItem(KEY);
+    const raw = s.getItem(key());
     if (!raw) return INITIAL_STATE;
     const saved = JSON.parse(raw) as Partial<WizardState>;
     if (!saved || typeof saved !== "object") return INITIAL_STATE;
@@ -93,7 +120,7 @@ export function hasSavedDraft(): boolean {
   const s = store();
   if (!s) return false;
   try {
-    const raw = s.getItem(KEY);
+    const raw = s.getItem(key());
     if (!raw) return false;
     const saved = JSON.parse(raw) as Partial<WizardState>;
     return Boolean(saved?.templateKey) && (saved?.activeStep ?? 0) > 0;

@@ -1,5 +1,6 @@
 import { AuthProvider } from "react-admin";
 import { dataProvider } from "./DataProviderContext";
+import { clearAllWizardDrafts } from "../pages/ProjectWizard/wizardPersistence";
 
 /**
  * Tenant info stored in localStorage.
@@ -65,6 +66,8 @@ const tokenAuthProvider: AuthProvider = {
   },
 
   logout: () => {
+    // Unfinished project drafts go with the person (wizardPersistence.ts).
+    clearAllWizardDrafts();
     localStorage.removeItem("access_token");
     localStorage.removeItem("tenant_slug");
     localStorage.removeItem("tenants");
