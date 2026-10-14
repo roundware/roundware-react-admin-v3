@@ -145,14 +145,9 @@ const ProjectCreate = (): JSX.Element => {
             fullWidth
             helperText="Max time users can speak"
           />
-          <NumberInput
-            source="speaker_attenuation_distance"
-            fullWidth
-            min={0}
-            step={1}
-            defaultValue={3}
-            helperText="Default attenuation distance (meters) for new speakers created via the web app; can be overridden per-speaker"
-          />
+          {/* No default attenuation distance: a new project records
+              standard contributions, which don't use it. It shows on the
+              edit page once Recording method is Looping. */}
           {/* audio_stream_bitrate hidden — managed server-side */}
           <SelectInput
             source="audio_stream_bitrate"

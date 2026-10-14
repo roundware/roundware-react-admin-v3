@@ -13,6 +13,8 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useEffect, useMemo, useState } from "react";
 import { useInput, useRecordContext } from "react-admin";
+import { useWatch } from "react-hook-form";
+import { isLoopingOnlySetting } from "../../config/fieldVisibility";
 import { apiFetcher } from "../../roundwareDataProvider/tokenAuthProvider";
 import webAppDefaults from "../../config/webAppDefaults.json";
 import {
@@ -97,12 +99,23 @@ const AdvancedConfigInput = (): JSX.Element => {
     [parsed.value, record, schema]
   );
 
+  // Looping-only settings are left out for other projects — unless set,
+  // so nothing in effect is hidden (config/fieldVisibility.ts). Follows the
+  // Recording method field on this page as it changes.
+  const recordingMethod = useWatch({ name: "recording_method" }) ?? record?.recording_method;
+  const looping = recordingMethod === "looping";
+  const shownRows = useMemo(
+    () => (looping ? rows : rows.filter((r) => r.source !== "default" || !isLoopingOnlySetting(r.path))),
+    [rows, looping]
+  );
+  const hiddenCount = rows.length - shownRows.length;
+
   const visibleRows = useMemo(
     () =>
       filter.trim()
-        ? rows.filter((r) => r.path.toLowerCase().includes(filter.trim().toLowerCase()))
-        : rows,
-    [rows, filter]
+        ? shownRows.filter((r) => r.path.toLowerCase().includes(filter.trim().toLowerCase()))
+        : shownRows,
+    [shownRows, filter]
   );
 
   const handleChange = (next: string) => {
@@ -174,7 +187,8 @@ const AdvancedConfigInput = (): JSX.Element => {
             flexWrap="wrap"
           >
             <Typography variant="subtitle2">
-              Effective configuration ({rows.length} settings)
+              Effective configuration ({shownRows.length} settings
+              {hiddenCount > 0 && `; ${hiddenCount} for looping projects left out`})
             </Typography>
             <Typography variant="caption" color="text.secondary">
               defaults from web app v{STAMP.webappVersion}, {STAMP.generatedAt}

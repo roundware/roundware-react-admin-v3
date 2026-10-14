@@ -23,6 +23,7 @@ import {
     useRecordContext,
 } from "react-admin";
 import { useWatch } from "react-hook-form";
+import { showsDefaultAttenuation } from "../../config/fieldVisibility";
 import { useNavigate } from "react-router-dom";
 import { buildLocalizationsPayload } from "../../utils";
 import AdvancedConfigInput from "./AdvancedConfigInput";
@@ -99,6 +100,23 @@ const DefaultLanguageInput = () => {
       choices={choices}
       fullWidth
       helperText="Shown when a text has no translation in a participant's language. Changing it keeps all your text."
+    />
+  );
+};
+
+/** Only looping projects' web apps create speakers, so only they use a
+ *  default attenuation distance (config/fieldVisibility.ts). Follows the
+ *  Recording method field above as it changes. */
+const DefaultAttenuationInput = () => {
+  const recordingMethod = useWatch({ name: "recording_method" }) as string | undefined;
+  if (!showsDefaultAttenuation({ recording_method: recordingMethod })) return null;
+  return (
+    <NumberInput
+      source="speaker_attenuation_distance"
+      fullWidth
+      min={0}
+      step={1}
+      helperText="Default attenuation distance (meters) for the loops participants record; each speaker can then have its own"
     />
   );
 };
@@ -257,13 +275,7 @@ const ProjectEdit = (): JSX.Element => {
             ]}
             helperText="Looping is the Collective Loops paradigm: contributions become speakers in a synced mix, rather than assets on the map"
           />
-          <NumberInput
-            source="speaker_attenuation_distance"
-            fullWidth
-            min={0}
-            step={1}
-            helperText="Default attenuation distance (meters) for new speakers created via the web app; can be overridden per-speaker"
-          />
+          <DefaultAttenuationInput />
           {/* audio_stream_bitrate hidden — managed server-side */}
           <SelectInput
             source="audio_stream_bitrate"

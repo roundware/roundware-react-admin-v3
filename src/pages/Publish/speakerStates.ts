@@ -11,6 +11,7 @@
  *      border). Only colors are per speaker for now; the resolver takes the
  *      speaker last so per-speaker state styles can join it later.
  */
+import { isLooping } from "../../config/fieldVisibility";
 import type { ProjectPalette } from "../../hooks/useProjectPalette";
 
 export type StateName = "not_loaded" | "idle" | "playing" | "current_session" | "recent";
@@ -42,7 +43,7 @@ export const STATES: { name: StateName; label: string; help: string; looping?: b
 
 /** The states a project's speakers can be in: classic projects have three. */
 export const statesFor = (recordingMethod: string | undefined) =>
-  STATES.filter((s) => !s.looping || recordingMethod === "looping");
+  STATES.filter((s) => !s.looping || isLooping({ recording_method: recordingMethod }));
 
 const ROLE: Record<string, keyof ProjectPalette> = {
   brand: "primary",

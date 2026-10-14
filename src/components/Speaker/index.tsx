@@ -3,7 +3,7 @@ import ColorPicker from 'components/common/ColorPicker';
 import DualListReferenceInput from 'components/common/DualListReferenceInput';
 import FileDownloadButton from 'components/common/FileDownloadButton';
 import FormToolbar from 'components/common/FormToolbar';
-import { showsSpeakerHierarchy } from 'config/fieldVisibility';
+import { showsSpeakerHierarchy, showsSpeakerVariants } from 'config/fieldVisibility';
 import { useProjects } from 'context/ProjectsContext';
 import { useSpeakers } from 'context/SpeakersContext';
 import useBoolean from 'hooks/useBoolean';
@@ -166,7 +166,7 @@ export const SpeakerEdit = (): JSX.Element => {
         <TextInput source='uri' fullWidth />
         <TextInput source='backup_uri' fullWidth />
 
-        <VariantAudioControls />
+        {showsSpeakerVariants(selectedProject) && <VariantAudioControls />}
 
         <NumberInput
           source='attenuation_distance'
@@ -350,7 +350,7 @@ export const SpeakerCreate = (): JSX.Element => {
         <SpeakerShapeInput />
 
         <SpeakerAudioControls />
-        <VariantAudioControls />
+        {showsSpeakerVariants(selectedProject) && <VariantAudioControls />}
         <NumberInput
           source='attenuation_distance'
           fullWidth
