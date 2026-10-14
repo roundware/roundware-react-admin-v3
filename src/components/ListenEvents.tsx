@@ -40,18 +40,34 @@ export const ListenEventsList = (): JSX.Element => {
         <ReferenceInput source="asset_id" reference="assets" key="asset_id">
           <SelectInput optionText="id" />
         </ReferenceInput>,
+        <SelectInput
+          key="kind"
+          source="kind"
+          label="Heard"
+          choices={[
+            { id: "asset", name: "Contributions" },
+            { id: "speaker", name: "Speakers" },
+          ]}
+        />,
       ]}
     >
+      {/* What a session heard: a contribution or a speaker, from when, for
+          how long, and where the listener was (server docs/010). */}
       <Datagrid rowClick="edit">
         <NumberField source="id" />
-        <NumberField source="duration_in_seconds" />
-        <DateField source="start_time" />
+        <DateField source="started_at" label="Started" showTime />
+        <NumberField source="duration_sec" label="Seconds" options={{ maximumFractionDigits: 1 }} />
         <ReferenceField source="session_id" reference="sessions">
           <TextField source="id" />
         </ReferenceField>
-        <ReferenceField source="asset_id" reference="assets">
+        <ReferenceField source="asset_id" reference="assets" label="Contribution" emptyText="">
           <TextField source="id" />
         </ReferenceField>
+        <ReferenceField source="speaker_id" reference="speakers" label="Speaker" emptyText="">
+          <TextField source="code" />
+        </ReferenceField>
+        <NumberField source="latitude" options={{ maximumFractionDigits: 5 }} />
+        <NumberField source="longitude" options={{ maximumFractionDigits: 5 }} />
         <EditButton />
         <DeleteButton />
         <CopyResourceButton />

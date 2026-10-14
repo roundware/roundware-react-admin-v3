@@ -31,7 +31,9 @@ const AssetListensChart = ({ listenEvents, viewRange }: Props): JSX.Element => {
 
   const perAssetListens = useMemo(() => {
     const listensPerAsset = listenEvents
-      .filter((r) => {
+      .filter((r): r is typeof r & { asset_id: number } => {
+        // Contributions only: speakers heard are in the history too.
+        if (r.asset_id == null) return false;
         // v3 names it `started_at` (v2: `start_time`).
         const date = new Date(r.started_at ?? r.start_time);
         return isWithinRange(date, viewRange);

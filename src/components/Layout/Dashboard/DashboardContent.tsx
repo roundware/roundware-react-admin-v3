@@ -30,7 +30,8 @@ const DashboardContent = () => {
   const listenEventsCountQuery = useQuery({
     queryKey: ["listeneventsCount", projectId],
     queryFn: () =>
-      apiFetcher(`/listenevents/count/?project_id=${projectId}`),
+      // Contributions heard; speakers are in the history too (docs/010).
+      apiFetcher(`/listenevents/count/?project_id=${projectId}&kind=asset`),
     enabled: !!projectId,
   });
 
