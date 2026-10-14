@@ -83,11 +83,15 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
   // A speaker with no color of its own is drawn in the project's Brand
   // color, as the web app draws it (it was a fixed blue here).
   const brand = palette?.primary ?? "#5B8ED6";
+  // An inactive speaker (one participants don't hear) is drawn as a dotted
+  // black outline with no fill, so active ones stand out; selected, it's
+  // drawn like the rest so its shape can be seen while it's edited.
+  const inactive = speaker.is_active === false && !isSelected;
   const shapePolygonOptions: PolygonProps[`options`] = {
     fillColor: (speaker.fill_color || brand).slice(0, 7),
-    fillOpacity: isSelected ? 0.5 : 0.3,
+    fillOpacity: inactive ? 0 : isSelected ? 0.5 : 0.3,
     strokeColor: (speaker.border_color || speaker.fill_color || brand).slice(0, 7),
-    strokeOpacity: 1,
+    strokeOpacity: inactive ? 0 : 1,
     strokeWeight: 2,
     clickable: true,
     draggable: isSelected,
@@ -288,6 +292,31 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
     }
   }, [isSelected, polygon, speaker]);
 
+  // Polygons can't be dotted: the inactive outline is a line of dots along
+  // the shape, closed back to its first point.
+  const inactiveOutline = useMemo(
+    () => (inactive && Array.isArray(shapePath) && shapePath.length ? [...shapePath, shapePath[0]] : null),
+    [inactive, shapePath]
+  );
+  const inactiveOutlineOptions = {
+    strokeOpacity: 0,
+    clickable: false,
+    zIndex: 3,
+    icons: [
+      {
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          fillColor: "#000000",
+          fillOpacity: 1,
+          strokeOpacity: 0,
+          scale: 1.5,
+        },
+        offset: "0",
+        repeat: "8px",
+      },
+    ],
+  };
+
   const polylineOptions = {
     strokeColor: "#000000",
     strokeOpacity: 0.1,
@@ -457,7 +486,9 @@ const SpeakerPolygonsGroup = ({ speaker }: Props): JSX.Element => {
         options={shapePolygonOptions}
       />
 
-      {attenuationBorderPath && (
+      {inactiveOutline && <PolylineF path={inactiveOutline} options={inactiveOutlineOptions} />}
+
+      {attenuationBorderPath && !inactive && (
         <PolygonF
           paths={attenuationBorderPath}
           onClick={handleClick}
