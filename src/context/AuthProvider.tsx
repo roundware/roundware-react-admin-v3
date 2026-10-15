@@ -1,5 +1,6 @@
 import { AuthProvider } from "react-admin";
 import { dataProvider } from "./DataProviderContext";
+import { accessTokenExpired } from "../roundwareDataProvider/tokenAuthProvider";
 import { clearAllWizardDrafts } from "../pages/ProjectWizard/wizardPersistence";
 
 /**
@@ -80,8 +81,9 @@ const tokenAuthProvider: AuthProvider = {
     return Promise.resolve();
   },
 
+  // A stored sign-in that has run out counts as none (accessTokenExpired).
   checkAuth: () =>
-    localStorage.getItem("access_token")
+    localStorage.getItem("access_token") && !accessTokenExpired()
       ? Promise.resolve()
       : Promise.reject(),
 

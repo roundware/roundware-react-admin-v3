@@ -14,7 +14,39 @@ function serverMessage(body: unknown): string | null {
   return typeof detail === "string" && detail ? detail : null;
 }
 
+/** The keys a sign-in keeps (AuthProvider's login and logout). */
+export const AUTH_KEYS = ["access_token", "tenant_slug", "tenants", "user"];
+
+/**
+ * True when the stored sign-in has run out (its JWT's `exp`, 8 hours by
+ * default). Signing in is the only renewal — there's no refresh — so an
+ * admin left open overnight held a dead sign-in: pages kept what they had
+ * loaded, and requests like the preview's failed with "Could not start
+ * preview" instead of asking to sign in again (2026-10-15).
+ */
+export function accessTokenExpired(): boolean {
+  const token = localStorage.getItem("access_token");
+  if (!token) return false;
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
+    return typeof payload.exp === "number" && payload.exp * 1000 <= Date.now();
+  } catch {
+    return false;
+  }
+}
+
+/** The server refused the sign-in: drop it and reload, which lands on Sign
+ *  In (index.tsx). Only for a stored sign-in — a wrong password is a 401 too. */
+function endExpiredSession(e: unknown): void {
+  if (!(e instanceof HttpError) || e.status !== 401) return;
+  if (!localStorage.getItem("access_token")) return;
+  AUTH_KEYS.forEach((k) => localStorage.removeItem(k));
+  window.dispatchEvent(new Event("roundware-auth-change"));
+  window.location.reload();
+}
+
 function withServerMessage(e: unknown): never {
+  endExpiredSession(e);
   if (e instanceof HttpError) {
     const msg = serverMessage(e.body);
     if (msg) throw new HttpError(msg, e.status, e.body);
