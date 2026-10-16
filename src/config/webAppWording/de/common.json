@@ -26,5 +26,8 @@
 		"use": "Foto verwenden",
 		"chooseFile": "Datei auswählen",
 		"unavailable": "Die Kamera ist hier nicht verfügbar. Wähle stattdessen eine Datei."
-	}
+	},
+	"play": "Abspielen",
+	"pause": "Pause",
+	"position": "Position"
 }

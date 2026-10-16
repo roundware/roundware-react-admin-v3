@@ -26,5 +26,8 @@
 		"use": "使用照片",
 		"chooseFile": "选择文件",
 		"unavailable": "此处无法使用相机。请选择文件。"
-	}
+	},
+	"play": "播放",
+	"pause": "暂停",
+	"position": "进度"
 }

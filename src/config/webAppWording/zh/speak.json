@@ -41,7 +41,10 @@
 		"thankYouBody": "你的录音已加入项目。感谢参与！",
 		"createNew": "录制新的录音",
 		"resettingIn_one": "{{count}} 秒后重置……",
-		"resettingIn_other": "{{count}} 秒后重置……"
+		"resettingIn_other": "{{count}} 秒后重置……",
+		"upTo": "最长 {{time}}",
+		"redo": "重新录制",
+		"orUpload": "或上传文件"
 	},
 	"micNotAccessible": {
 		"title": "无法使用麦克风",
@@ -52,12 +55,15 @@
 		"addMedia": "添加媒体",
 		"addPhoto": "添加照片",
 		"addText": "添加文字",
-		"textPlaceholder": "点击输入文字！"
+		"textPlaceholder": "点击输入文字！",
+		"photo": "照片",
+		"text": "文字"
 	},
 	"contactInfo": {
 		"title": "联系信息",
 		"firstName": "名",
 		"lastName": "姓",
-		"email": "电子邮箱"
+		"email": "电子邮箱",
+		"short": "联系方式"
 	}
 }

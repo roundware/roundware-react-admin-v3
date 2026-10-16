@@ -41,7 +41,10 @@
 		"thankYouBody": "Deine Aufnahme ist jetzt Teil des Projekts. Danke fürs Mitmachen!",
 		"createNew": "Neue Aufnahme erstellen",
 		"resettingIn_one": "Zurücksetzen in {{count}} Sekunde...",
-		"resettingIn_other": "Zurücksetzen in {{count}} Sekunden..."
+		"resettingIn_other": "Zurücksetzen in {{count}} Sekunden...",
+		"upTo": "Bis zu {{time}}",
+		"redo": "Neu aufnehmen",
+		"orUpload": "oder eine Datei hochladen"
 	},
 	"micNotAccessible": {
 		"title": "Mikrofon nicht verfügbar",
@@ -52,12 +55,15 @@
 		"addMedia": "Medien hinzufügen",
 		"addPhoto": "Foto hinzufügen",
 		"addText": "Text hinzufügen",
-		"textPlaceholder": "Zum Schreiben tippen/klicken!"
+		"textPlaceholder": "Zum Schreiben tippen/klicken!",
+		"photo": "Foto",
+		"text": "Text"
 	},
 	"contactInfo": {
 		"title": "Kontaktdaten",
 		"firstName": "Vorname",
 		"lastName": "Nachname",
-		"email": "E-Mail"
+		"email": "E-Mail",
+		"short": "Kontakt"
 	}
 }

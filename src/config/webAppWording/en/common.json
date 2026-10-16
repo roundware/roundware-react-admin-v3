@@ -26,5 +26,8 @@
 		"use": "Use photo",
 		"chooseFile": "Choose a file",
 		"unavailable": "Can't use the camera here. Choose a file instead."
-	}
+	},
+	"play": "Play",
+	"pause": "Pause",
+	"position": "Position"
 }

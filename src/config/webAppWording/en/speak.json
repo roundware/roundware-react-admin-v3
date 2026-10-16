@@ -41,7 +41,10 @@
 		"thankYouBody": "Your recording is now part of the project. Thank you for taking part!",
 		"createNew": "Create New Recording",
 		"resettingIn_one": "Resetting in {{count}} second...",
-		"resettingIn_other": "Resetting in {{count}} seconds..."
+		"resettingIn_other": "Resetting in {{count}} seconds...",
+		"upTo": "Up to {{time}}",
+		"redo": "Redo",
+		"orUpload": "or upload a file"
 	},
 	"micNotAccessible": {
 		"title": "Microphone not accessible",
@@ -52,12 +55,15 @@
 		"addMedia": "Add Media",
 		"addPhoto": "Add Photo",
 		"addText": "Add Text",
-		"textPlaceholder": "Tap/Click to Type!"
+		"textPlaceholder": "Tap/Click to Type!",
+		"photo": "Photo",
+		"text": "Text"
 	},
 	"contactInfo": {
 		"title": "Contact Info",
 		"firstName": "First Name",
 		"lastName": "Last Name",
-		"email": "Email"
+		"email": "Email",
+		"short": "Contact"
 	}
 }

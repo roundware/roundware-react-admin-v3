@@ -42,7 +42,10 @@
 		"createNew": "Créer un nouvel enregistrement",
 		"resettingIn_one": "Réinitialisation dans {{count}} seconde...",
 		"resettingIn_many": "Réinitialisation dans {{count}} secondes...",
-		"resettingIn_other": "Réinitialisation dans {{count}} secondes..."
+		"resettingIn_other": "Réinitialisation dans {{count}} secondes...",
+		"upTo": "Jusqu’à {{time}}",
+		"redo": "Refaire",
+		"orUpload": "ou importer un fichier"
 	},
 	"micNotAccessible": {
 		"title": "Micro inaccessible",
@@ -53,12 +56,15 @@
 		"addMedia": "Ajouter un média",
 		"addPhoto": "Ajouter une photo",
 		"addText": "Ajouter du texte",
-		"textPlaceholder": "Touche ou clique pour écrire !"
+		"textPlaceholder": "Touche ou clique pour écrire !",
+		"photo": "Photo",
+		"text": "Texte"
 	},
 	"contactInfo": {
 		"title": "Coordonnées",
 		"firstName": "Prénom",
 		"lastName": "Nom",
-		"email": "E-mail"
+		"email": "E-mail",
+		"short": "Contact"
 	}
 }
