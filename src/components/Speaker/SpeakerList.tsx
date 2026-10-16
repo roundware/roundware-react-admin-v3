@@ -198,10 +198,12 @@ const SpeakerList = (): JSX.Element => {
             ]}
           >
             <FilteredDataSync />
+            <FollowSelectedSpeaker />
             <Datagrid
               bulkActionButtons={<DeleteWithBinary isBulk />}
               style={{ flexShrink: 1 }}
               rowClick={false}
+              rowSx={(r) => (r.id == selectedSpeaker ? { bgcolor: 'action.selected' } : {})}
             >
               <SpeakerHighter />
               <SpeakerAudioPlayer />
@@ -275,6 +277,36 @@ const FilteredDataSync = () => {
   }, [filterValues, selectedProject, dataProvider, setSpeakers]);
   
   return null; // This component doesn't render anything
+};
+
+/**
+ * A speaker chosen on the map is also chosen in the list: its row is
+ * highlighted, on whichever page of the list it's on (Halsey, 2026-10-16).
+ */
+const FollowSelectedSpeaker = () => {
+  const { data, perPage, setPage, sort, filterValues } = useListContext();
+  const { selectedSpeaker } = useSpeakers();
+  const { selectedProject } = useProjects();
+  const dataProvider = useRoundwareDataProvider();
+
+  React.useEffect(() => {
+    if (selectedSpeaker == null || !selectedProject) return;
+    if (data?.some((r) => r.id == selectedSpeaker)) return; // on this page already
+    dataProvider
+      .getList('speakers', {
+        pagination: { page: 1, perPage: 0 },
+        sort,
+        filter: { project_id: selectedProject.id, ...filterValues },
+      })
+      .then((r) => {
+        const i = r.data.findIndex((s) => s.id == selectedSpeaker);
+        if (i >= 0 && perPage) setPage(Math.floor(i / perPage) + 1);
+      })
+      .catch(() => undefined); // the list stays where it is
+    // Only when the choice changes, not as the list pages.
+  }, [selectedSpeaker]);
+
+  return null;
 };
 
 const SpeakerHighter = () => {
