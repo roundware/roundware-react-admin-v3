@@ -51,6 +51,8 @@ export interface FileSlot {
   panel?: "files" | "map";
   /** A file per language (welcome audio), the default language's as the main one. */
   localized?: boolean;
+  /** Only looping projects use it (click tracks): offered to no others. */
+  looping_only?: boolean;
 }
 
 /** What a project has stored for a slot. Always lists, even for single slots —

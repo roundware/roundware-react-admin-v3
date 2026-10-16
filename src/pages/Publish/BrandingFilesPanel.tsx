@@ -13,6 +13,8 @@ import {
 import AudioRecorder from "components/common/AudioRecorder";
 import { useBrandingText } from "./brandingText";
 import React, { useEffect, useState } from "react";
+import { useProjects } from "context/ProjectsContext";
+import { isLooping } from "../../config/fieldVisibility";
 import {
   deleteBrandingFile,
   errMessage,
@@ -44,6 +46,7 @@ interface Props {
 }
 
 const BrandingFilesPanel: React.FC<Props> = ({ projectId, onSaved, only }) => {
+  const { selectedProject } = useProjects();
   const text = useBrandingText();
   const [slots, setSlots] = useState<FileSlot[] | null>(null);
   const [files, setFiles] = useState<Record<string, SlotFiles>>({});
@@ -105,7 +108,9 @@ const BrandingFilesPanel: React.FC<Props> = ({ projectId, onSaved, only }) => {
     );
   }
 
-  const shown = slots.filter((s) => (only ? only.includes(s.key) : (s.panel ?? "files") === "files"));
+  const shown = slots
+    .filter((s) => (only ? only.includes(s.key) : (s.panel ?? "files") === "files"))
+    .filter((s) => !s.looping_only || isLooping(selectedProject));
 
   return (
     <Stack spacing={2.5}>
