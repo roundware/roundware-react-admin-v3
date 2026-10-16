@@ -66,5 +66,13 @@
 		"lastName": "姓",
 		"email": "电子邮箱",
 		"short": "联系方式"
+	},
+	"levelMeter": {
+		"tooQuiet": "说话再大声一点！",
+		"gettingThere": "快好了……",
+		"good": "音量不错！",
+		"perfect": "完美！",
+		"gettingLoud": "有点大声了……",
+		"tooLoud": "离麦克风远一点！"
 	}
 }

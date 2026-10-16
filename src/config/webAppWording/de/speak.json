@@ -66,5 +66,13 @@
 		"lastName": "Nachname",
 		"email": "E-Mail",
 		"short": "Kontakt"
+	},
+	"levelMeter": {
+		"tooQuiet": "Sprich ein bisschen lauter!",
+		"gettingThere": "Fast geschafft...",
+		"good": "Guter Pegel!",
+		"perfect": "Perfekt!",
+		"gettingLoud": "Wird ziemlich laut...",
+		"tooLoud": "Geh ein Stück vom Mikro weg!"
 	}
 }

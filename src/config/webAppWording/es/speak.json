@@ -67,5 +67,13 @@
 		"lastName": "Apellido",
 		"email": "Correo electrónico",
 		"short": "Contacto"
+	},
+	"levelMeter": {
+		"tooQuiet": "¡Habla un poco más fuerte!",
+		"gettingThere": "Ya casi...",
+		"good": "¡Buen nivel!",
+		"perfect": "¡Perfecto!",
+		"gettingLoud": "Está subiendo mucho...",
+		"tooLoud": "¡Aléjate un poco del micrófono!"
 	}
 }

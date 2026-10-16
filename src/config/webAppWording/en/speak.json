@@ -66,5 +66,13 @@
 		"lastName": "Last Name",
 		"email": "Email",
 		"short": "Contact"
+	},
+	"levelMeter": {
+		"tooQuiet": "Speak a bit louder!",
+		"gettingThere": "Getting there...",
+		"good": "Good level!",
+		"perfect": "Perfect!",
+		"gettingLoud": "Getting loud...",
+		"tooLoud": "Pull back from the mic a bit!"
 	}
 }
