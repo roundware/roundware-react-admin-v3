@@ -13,6 +13,9 @@ import { errMessage, getBranding, getThemeSchema, patchBranding, ThemeSchema } f
 export const SPLASH_DARKENING = "splashDarkening";
 /** The same for the Home screen's background (docs/025). */
 export const HOME_DARKENING = "homeDarkening";
+/** Whether Home's image buttons show their labels (docs/025). This
+ *  component offers any one style choice, so App start uses it too. */
+export const HOME_BUTTON_LABELS = "homeButtonLabels";
 /** Which darkening goes with which background image. */
 export const DARKENING_FOR_SLOT: Record<string, string> = {
   splash_background: SPLASH_DARKENING,

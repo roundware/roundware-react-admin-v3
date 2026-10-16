@@ -14,11 +14,11 @@
 // MUI's stock purple ended up stored in projects no one had styled.)
 // ---------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from "react";
-import { HOME_DARKENING, SPLASH_DARKENING } from "./SplashDarkening";
+import { HOME_BUTTON_LABELS, HOME_DARKENING, SPLASH_DARKENING } from "./SplashDarkening";
 
 /** Style choices set beside the image they apply to (SplashDarkening):
  *  left out here, and kept as saved when this panel saves. */
-const PLACED_ELSEWHERE = [SPLASH_DARKENING, HOME_DARKENING];
+const PLACED_ELSEWHERE = [SPLASH_DARKENING, HOME_DARKENING, HOME_BUTTON_LABELS];
 import {
   Alert,
   Box,

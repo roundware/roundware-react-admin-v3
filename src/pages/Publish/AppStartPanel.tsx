@@ -15,6 +15,7 @@ import { apiFetcher } from "../../roundwareDataProvider/tokenAuthProvider";
 import { errMessage } from "./api";
 import BrandingFilesPanel from "./BrandingFilesPanel";
 import { BrandingTextField } from "./brandingText";
+import SplashDarkening, { HOME_BUTTON_LABELS } from "./SplashDarkening";
 
 /**
  * How the app starts (server docs/025): the splash on or off, and opening on
@@ -198,6 +199,7 @@ const AppStartPanel: React.FC<Props> = ({ projectId, onSaved, onPreview }) => {
             helperText="Leave empty for the app's own (Speak), in each language."
           />
           <BrandingFilesPanel projectId={projectId} onSaved={onSaved} only={HOME_FILES} />
+          <SplashDarkening projectId={projectId} onSaved={onSaved} styleKey={HOME_BUTTON_LABELS} />
         </Stack>
       )}
     </Stack>
