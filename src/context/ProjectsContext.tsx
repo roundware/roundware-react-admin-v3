@@ -58,6 +58,19 @@ export const useProjects = (): IProjectsContext =>
 export interface AllowChildrenOnlyProps {
   children: React.ReactNode;
 }
+/**
+ * Projects in alphabetical order, ignoring case and with numbers in order
+ * ("Walk 2" before "Walk 10"). Names that start with a bracketed tag, like
+ * "[V2-ARCHIVE] …", come after the rest, grouped by tag — so tagging
+ * archives keeps them out of the way (Halsey, 2026-10-16).
+ */
+const tagged = (name: string) => /^\s*\[/.test(name);
+const byName = (a: IProject, b: IProject): number => {
+  const an = a.name ?? "", bn = b.name ?? "";
+  if (tagged(an) !== tagged(bn)) return tagged(an) ? 1 : -1;
+  return an.localeCompare(bn, undefined, { numeric: true, sensitivity: "base" });
+};
+
 export const ProjectsProvider = ({
   children,
 }: AllowChildrenOnlyProps): JSX.Element => {
@@ -86,7 +99,7 @@ export const ProjectsProvider = ({
       })
       .then((r) => {
         if (r.data) {
-          setProjectsList(r.data);
+          setProjectsList([...r.data].sort(byName));
           if (project)
             setProject(r.data.find((p) => p.id == project.id) || null);
         }
