@@ -15,7 +15,7 @@ import { useBrandingText } from "./brandingText";
 import React, { useEffect, useState } from "react";
 import { useProjects } from "context/ProjectsContext";
 import { isLooping } from "../../config/fieldVisibility";
-import SplashDarkening from "./SplashDarkening";
+import SplashDarkening, { DARKENING_FOR_SLOT } from "./SplashDarkening";
 import {
   deleteBrandingFile,
   errMessage,
@@ -316,8 +316,8 @@ const BrandingFilesPanel: React.FC<Props> = ({ projectId, onSaved, only }) => {
               </Box>
             )}
             {/* Beside the image it darkens, once there is one. */}
-            {slot.key === "splash_background" && main.urls.length > 0 && !lang && (
-              <SplashDarkening projectId={projectId} onSaved={onSaved} />
+            {DARKENING_FOR_SLOT[slot.key] && main.urls.length > 0 && !lang && (
+              <SplashDarkening projectId={projectId} onSaved={onSaved} styleKey={DARKENING_FOR_SLOT[slot.key]} />
             )}
           </Box>
         );

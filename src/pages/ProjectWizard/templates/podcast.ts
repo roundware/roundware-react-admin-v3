@@ -40,6 +40,7 @@ const podcast: WizardTemplate = {
   // marker, no bounds markers, no map overlay on the listen page. The sidebar
   // carries browsing instead, since the map cannot.
   config: {
+    flow: { opening: "home" }, // "a speak-first interface" (docs/025; to confirm)
     listen: {
       availableListenModes: ["map"],
       geoListenMode: ["map"],

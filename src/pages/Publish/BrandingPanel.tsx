@@ -1,5 +1,6 @@
 import React from "react";
 import { CircularProgress, Stack, Typography } from "@mui/material";
+import AppStartPanel from "./AppStartPanel";
 import BrandingFilesPanel from "./BrandingFilesPanel";
 import DialogCopyEditor from "./DialogCopyEditor";
 import InfoPanelEditor from "./InfoPanelEditor";
@@ -9,6 +10,8 @@ import { BrandingTextField, BrandingTextProvider, LanguageSwitch, useBrandingTex
 interface Props {
   projectId: number;
   onSaved?: () => void;
+  /** Open the preview on a path (App start's screens). */
+  onPreview?: (path: string) => void;
 }
 
 /**
@@ -16,7 +19,7 @@ interface Props {
  * info panel — is edited in the language picked at the top, and so is the
  * welcome audio (server docs/017).
  */
-const BrandingPanel: React.FC<Props> = ({ projectId, onSaved }) => (
+const BrandingPanel: React.FC<Props> = ({ projectId, onSaved, onPreview }) => (
   <BrandingTextProvider projectId={projectId} onSaved={onSaved}>
     <Stack spacing={2.5}>
       <Header />
@@ -35,6 +38,8 @@ const BrandingPanel: React.FC<Props> = ({ projectId, onSaved }) => (
         label="Intro button"
         helperText="The button that starts the experience. Leave empty for the app's own (ENTER in English), in each language."
       />
+
+      <AppStartPanel projectId={projectId} onSaved={onSaved} onPreview={onPreview} />
 
       <LookAndFeelPanel projectId={projectId} onSaved={onSaved} />
 

@@ -200,6 +200,9 @@ export interface TemplateConfig {
   map?: Record<string, unknown>;
   ui?: Record<string, unknown>;
   features?: Record<string, unknown>;
+  /** How the app starts (server docs/025): the splash, and opening on the
+   *  map or on Home. Leave out for the defaults (splash, then the map). */
+  flow?: { splash?: boolean; opening?: "listen" | "home" };
   theme?: Record<string, unknown>;
   locale?: string;
 }

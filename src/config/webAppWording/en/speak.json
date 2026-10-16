@@ -37,7 +37,8 @@
 		},
 		"noLocation": "Failed to get latitude & longitude!",
 		"uploading": "Uploading your contribution now! Please keep this page open until we finish uploading.",
-		"uploadComplete": "Upload Complete! Thank you for participating!",
+		"thankYouTitle": "Thank You!",
+		"thankYouBody": "Your recording is now part of the project. Thank you for taking part!",
 		"createNew": "Create New Recording",
 		"resettingIn_one": "Resetting in {{count}} second...",
 		"resettingIn_other": "Resetting in {{count}} seconds..."

@@ -104,6 +104,26 @@ const DefaultLanguageInput = () => {
   );
 };
 
+/** A looping project always listens: contributors record over what they
+ *  hear, and the server refuses Listen off with looping (docs/025). */
+const loopingNeedsListen = (value: unknown, all: Record<string, unknown>) =>
+  value === "looping" && all?.listen_enabled === false
+    ? "Looping needs Listen on: contributors record over what they hear."
+    : undefined;
+
+const ListenEnabledInput = () => {
+  const recordingMethod = useWatch({ name: "recording_method" }) as string | undefined;
+  const looping = recordingMethod === "looping";
+  return (
+    <BooleanInput
+      source="listen_enabled"
+      defaultChecked
+      disabled={looping}
+      helperText={looping ? "Always on for looping: contributors record over what they hear." : undefined}
+    />
+  );
+};
+
 /** Only looping projects' web apps create speakers, so only they use a
  *  default attenuation distance (config/fieldVisibility.ts). Follows the
  *  Recording method field above as it changes. */
@@ -211,7 +231,7 @@ const ProjectEdit = (): JSX.Element => {
           />
           <BooleanInput source="allow_photos" />
           <BooleanInput source="allow_text" />
-          <BooleanInput source="listen_enabled" defaultChecked />
+          <ListenEnabledInput />
           <BooleanInput source="speak_enabled" defaultChecked />
           <BooleanInput source="geo_listen_enabled" defaultChecked />
           <BooleanInput source="geo_speak_enabled" defaultChecked />
@@ -267,7 +287,7 @@ const ProjectEdit = (): JSX.Element => {
           />
           <SelectInput
             source="recording_method"
-            validate={required()}
+            validate={[required(), loopingNeedsListen]}
             fullWidth
             choices={[
               { id: "standard", name: "Standard — one recording per contribution" },

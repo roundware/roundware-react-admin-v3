@@ -43,6 +43,8 @@ export const CustomizePage: React.FC = () => {
   // Bumped whenever branding is saved → reloads the preview iframe.
   const [refreshKey, setRefreshKey] = useState(0);
   const handleSaved = useCallback(() => setRefreshKey((k) => k + 1), []);
+  // The preview opens on the screen being worked on (App start: "/", "/home").
+  const [previewPath, setPreviewPath] = useState("/");
 
   if (!selectedProject) return <NoProject title="Look & Feel" what="change how it looks" />;
   const projectId = selectedProject.id;
@@ -61,7 +63,7 @@ export const CustomizePage: React.FC = () => {
         <Grid size={{ xs: 12, md: 5 }}>
           <Card>
             <CardContent>
-              <BrandingPanel projectId={projectId} onSaved={handleSaved} />
+              <BrandingPanel projectId={projectId} onSaved={handleSaved} onPreview={setPreviewPath} />
             </CardContent>
           </Card>
         </Grid>
@@ -69,7 +71,7 @@ export const CustomizePage: React.FC = () => {
           <Card sx={{ position: { md: "sticky" }, top: { md: 80 } }}>
             <CardContent>
               <Box>
-                <PreviewPanel projectId={projectId} refreshKey={refreshKey} />
+                <PreviewPanel projectId={projectId} refreshKey={refreshKey} path={previewPath} />
               </Box>
             </CardContent>
           </Card>

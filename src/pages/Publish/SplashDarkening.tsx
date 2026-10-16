@@ -11,8 +11,19 @@ import { errMessage, getBranding, getThemeSchema, patchBranding, ThemeSchema } f
  * other (LookAndFeelPanel leaves it out the same way).
  */
 export const SPLASH_DARKENING = "splashDarkening";
+/** The same for the Home screen's background (docs/025). */
+export const HOME_DARKENING = "homeDarkening";
+/** Which darkening goes with which background image. */
+export const DARKENING_FOR_SLOT: Record<string, string> = {
+  splash_background: SPLASH_DARKENING,
+  home_background: HOME_DARKENING,
+};
 
-const SplashDarkening: React.FC<{ projectId: number; onSaved?: () => void }> = ({ projectId, onSaved }) => {
+const SplashDarkening: React.FC<{ projectId: number; onSaved?: () => void; styleKey?: string }> = ({
+  projectId,
+  onSaved,
+  styleKey = SPLASH_DARKENING,
+}) => {
   const [choice, setChoice] = useState<ThemeSchema["styles"][number] | null>(null);
   const [value, setValue] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -22,15 +33,15 @@ const SplashDarkening: React.FC<{ projectId: number; onSaved?: () => void }> = (
     Promise.all([getThemeSchema(), getBranding(projectId)])
       .then(([s, b]) => {
         if (cancelled) return;
-        const c = (s.styles ?? []).find((x) => x.key === SPLASH_DARKENING) ?? null;
+        const c = (s.styles ?? []).find((x) => x.key === styleKey) ?? null;
         setChoice(c);
-        setValue((b.theme_json?.style ?? {})[SPLASH_DARKENING] ?? c?.default ?? null);
+        setValue((b.theme_json?.style ?? {})[styleKey] ?? c?.default ?? null);
       })
       .catch((e) => !cancelled && setError(errMessage(e)));
     return () => {
       cancelled = true;
     };
-  }, [projectId]);
+  }, [projectId, styleKey]);
 
   if (!choice || value === null) return null;
 
@@ -41,8 +52,8 @@ const SplashDarkening: React.FC<{ projectId: number; onSaved?: () => void }> = (
       const b = await getBranding(projectId);
       const style = { ...(b.theme_json?.style ?? {}) };
       // The default is stored as nothing, so a later default reaches it.
-      if (v === choice.default) delete style[SPLASH_DARKENING];
-      else style[SPLASH_DARKENING] = v;
+      if (v === choice.default) delete style[styleKey];
+      else style[styleKey] = v;
       await patchBranding(projectId, {
         theme_json: { ...(b.theme_json ?? {}), style },
       });

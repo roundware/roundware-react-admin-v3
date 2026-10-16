@@ -47,8 +47,9 @@ export interface FileSlot {
   extensions: string[];
   /** Stored as MP3 whatever is uploaded — so a browser recording (WebM) is fine. */
   convert_to_mp3?: boolean;
-  /** Where the admin offers it: "files" (Images & audio) or "map" (Map appearance). */
-  panel?: "files" | "map";
+  /** Where the admin offers it: "files" (Images & audio), "map" (Map
+   *  appearance) or "start" (App start: the Home screen). */
+  panel?: "files" | "map" | "start";
   /** A file per language (welcome audio), the default language's as the main one. */
   localized?: boolean;
   /** Only looping projects use it (click tracks): offered to no others. */

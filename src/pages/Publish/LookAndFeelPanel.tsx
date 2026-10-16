@@ -14,7 +14,11 @@
 // MUI's stock purple ended up stored in projects no one had styled.)
 // ---------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from "react";
-import { SPLASH_DARKENING } from "./SplashDarkening";
+import { HOME_DARKENING, SPLASH_DARKENING } from "./SplashDarkening";
+
+/** Style choices set beside the image they apply to (SplashDarkening):
+ *  left out here, and kept as saved when this panel saves. */
+const PLACED_ELSEWHERE = [SPLASH_DARKENING, HOME_DARKENING];
 import {
   Alert,
   Box,
@@ -130,9 +134,11 @@ const LookAndFeelPanel: React.FC<Props> = ({ projectId, onSaved }) => {
       try {
         // Splash darkening is set beside the splash image (SplashDarkening):
         // keep whatever is saved for it now, not this panel's copy.
-        const { [SPLASH_DARKENING]: _mine, ...ours } = styleChoices;
-        const saved = (await getBranding(projectId)).theme_json?.style?.[SPLASH_DARKENING];
-        const styleOut = saved ? { ...ours, [SPLASH_DARKENING]: saved } : ours;
+        const savedStyle = (await getBranding(projectId)).theme_json?.style ?? {};
+        const styleOut: Style = Object.fromEntries(
+          Object.entries(styleChoices).filter(([k]) => !PLACED_ELSEWHERE.includes(k))
+        );
+        for (const k of PLACED_ELSEWHERE) if (savedStyle[k]) styleOut[k] = savedStyle[k];
         await patchBranding(projectId, {
           theme_json: {
             ...(Object.keys(palette).length ? { palette } : {}),
@@ -257,7 +263,7 @@ const LookAndFeelPanel: React.FC<Props> = ({ projectId, onSaved }) => {
         )}
       </TextField>
 
-      {(schema.styles ?? []).filter((c) => c.key !== SPLASH_DARKENING).map((choice) => {
+      {(schema.styles ?? []).filter((c) => !PLACED_ELSEWHERE.includes(c.key)).map((choice) => {
         const value = style[choice.key] || choice.default;
         return (
           <Box key={choice.key}>

@@ -37,7 +37,8 @@
 		},
 		"noLocation": "Breiten- und Längengrad konnten nicht ermittelt werden!",
 		"uploading": "Dein Beitrag wird jetzt hochgeladen! Bitte lass diese Seite geöffnet, bis der Upload abgeschlossen ist.",
-		"uploadComplete": "Upload abgeschlossen! Danke fürs Mitmachen!",
+		"thankYouTitle": "Danke!",
+		"thankYouBody": "Deine Aufnahme ist jetzt Teil des Projekts. Danke fürs Mitmachen!",
 		"createNew": "Neue Aufnahme erstellen",
 		"resettingIn_one": "Zurücksetzen in {{count}} Sekunde...",
 		"resettingIn_other": "Zurücksetzen in {{count}} Sekunden..."

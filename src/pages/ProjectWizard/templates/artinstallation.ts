@@ -22,6 +22,7 @@ const artinstallation: WizardTemplate = {
   // A single fixed site, usually one room. Continuous playback, no map at all,
   // and a short auto-reset so the piece is ready for the next visitor.
   config: {
+    flow: { splash: true, opening: "home" }, // a visitor at a piece chooses (docs/025; to confirm)
     listen: {
       availableListenModes: ["map"],
       geoListenMode: ["map"],
