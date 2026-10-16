@@ -43,8 +43,8 @@
 		"resettingIn_one": "{{count}} 秒后重置……",
 		"resettingIn_other": "{{count}} 秒后重置……",
 		"upTo": "最长 {{time}}",
-		"redo": "重新录制",
-		"orUpload": "或上传文件"
+		"orUpload": "或上传文件",
+		"recordAgain": "重新录制"
 	},
 	"micNotAccessible": {
 		"title": "无法使用麦克风",
@@ -57,7 +57,8 @@
 		"addText": "添加文字",
 		"textPlaceholder": "点击输入文字！",
 		"photo": "照片",
-		"text": "文字"
+		"text": "文字",
+		"heading": "添加到你的录音（可选）"
 	},
 	"contactInfo": {
 		"title": "联系信息",

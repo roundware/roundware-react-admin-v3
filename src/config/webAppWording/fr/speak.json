@@ -44,8 +44,8 @@
 		"resettingIn_many": "Réinitialisation dans {{count}} secondes...",
 		"resettingIn_other": "Réinitialisation dans {{count}} secondes...",
 		"upTo": "Jusqu’à {{time}}",
-		"redo": "Refaire",
-		"orUpload": "ou importer un fichier"
+		"orUpload": "ou importer un fichier",
+		"recordAgain": "Réenregistrer"
 	},
 	"micNotAccessible": {
 		"title": "Micro inaccessible",
@@ -58,7 +58,8 @@
 		"addText": "Ajouter du texte",
 		"textPlaceholder": "Touche ou clique pour écrire !",
 		"photo": "Photo",
-		"text": "Texte"
+		"text": "Texte",
+		"heading": "Ajouter à votre enregistrement (facultatif)"
 	},
 	"contactInfo": {
 		"title": "Coordonnées",

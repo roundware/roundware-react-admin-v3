@@ -43,8 +43,8 @@
 		"resettingIn_one": "Zurücksetzen in {{count}} Sekunde...",
 		"resettingIn_other": "Zurücksetzen in {{count}} Sekunden...",
 		"upTo": "Bis zu {{time}}",
-		"redo": "Neu aufnehmen",
-		"orUpload": "oder eine Datei hochladen"
+		"orUpload": "oder eine Datei hochladen",
+		"recordAgain": "Noch einmal aufnehmen"
 	},
 	"micNotAccessible": {
 		"title": "Mikrofon nicht verfügbar",
@@ -57,7 +57,8 @@
 		"addText": "Text hinzufügen",
 		"textPlaceholder": "Zum Schreiben tippen/klicken!",
 		"photo": "Foto",
-		"text": "Text"
+		"text": "Text",
+		"heading": "Zu deiner Aufnahme hinzufügen (optional)"
 	},
 	"contactInfo": {
 		"title": "Kontaktdaten",

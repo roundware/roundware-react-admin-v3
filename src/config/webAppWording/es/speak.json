@@ -44,8 +44,8 @@
 		"resettingIn_other": "Reiniciando en {{count}} segundos...",
 		"resettingIn_many": "Reiniciando en {{count}} segundos...",
 		"upTo": "Hasta {{time}}",
-		"redo": "Rehacer",
-		"orUpload": "o sube un archivo"
+		"orUpload": "o sube un archivo",
+		"recordAgain": "Grabar de nuevo"
 	},
 	"micNotAccessible": {
 		"title": "Micrófono no disponible",
@@ -58,7 +58,8 @@
 		"addText": "Agregar texto",
 		"textPlaceholder": "¡Toca o haz clic para escribir!",
 		"photo": "Foto",
-		"text": "Texto"
+		"text": "Texto",
+		"heading": "Añadir a tu grabación (opcional)"
 	},
 	"contactInfo": {
 		"title": "Información de contacto",

@@ -43,8 +43,8 @@
 		"resettingIn_one": "Resetting in {{count}} second...",
 		"resettingIn_other": "Resetting in {{count}} seconds...",
 		"upTo": "Up to {{time}}",
-		"redo": "Redo",
-		"orUpload": "or upload a file"
+		"orUpload": "or upload a file",
+		"recordAgain": "Record again"
 	},
 	"micNotAccessible": {
 		"title": "Microphone not accessible",
@@ -57,7 +57,8 @@
 		"addText": "Add Text",
 		"textPlaceholder": "Tap/Click to Type!",
 		"photo": "Photo",
-		"text": "Text"
+		"text": "Text",
+		"heading": "Add to your recording (optional)"
 	},
 	"contactInfo": {
 		"title": "Contact Info",
