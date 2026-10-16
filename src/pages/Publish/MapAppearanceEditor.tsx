@@ -1,5 +1,8 @@
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Alert,
   Box,
   Button,
@@ -48,9 +51,12 @@ import { StateName } from "./speakerStates";
  * and `map.googleMapsStyle` in ui_config_json —
  * so the Advanced configuration panel shows the same values.
  *
- * Saving is explicit rather than automatic, unlike the rest of this page:
- * dragging an overlay into place is dozens of intermediate positions, and
- * none of them should reach a live project.
+ * It saves as you go, like the rest of the page, a moment after the last
+ * change (2026-10-16). It used to wait for Save map, so that the dozens of
+ * positions an overlay passes through while dragged never reached a live
+ * project; since the test and live sites (server docs/021) a save reaches
+ * only the test site until Update live site, so that reason went, and a
+ * change left unsaved was lost on leaving the page.
  */
 
 interface Props {
@@ -76,7 +82,9 @@ interface OverlayConfig {
 const DEFAULT_MAP = (webAppDefaults as { defaults: { map: Record<string, any> } })
   .defaults.map;
 const DEFAULT_OVERLAY: OverlayConfig = DEFAULT_MAP.mapOverlay;
-const BUILT_IN_STYLE = (webAppMapStyle as { style: google.maps.MapTypeStyle[] }).style;
+// The #55 app's style: the app's default until 2026-10-16, now a preset.
+// With none set the app shows Google's standard map.
+const MINIMAL_STYLE = (webAppMapStyle as { style: google.maps.MapTypeStyle[] }).style;
 
 const containerStyle = { width: "100%", height: "480px" };
 
@@ -277,8 +285,12 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
     [mapConfig, stateOverrides]
   );
 
+  // Each change bumps this; a save that finishes after a newer change
+  // leaves the editor dirty, so the newer one is saved too.
+  const version = useRef(0);
   const touch = <T,>(setter: (v: T) => void) => (v: T) => {
     setter(v);
+    version.current += 1;
     setDirty(true);
     setSavedNote(null);
   };
@@ -286,6 +298,7 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
   // ---- Save -----------------------------------------------------------------
   const save = async () => {
     if (styleError) return;
+    const savingVersion = version.current;
     setSaving(true);
     setError(null);
     try {
@@ -306,7 +319,7 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
         opacity,
       };
       if (parsedStyle) mapSection.googleMapsStyle = parsedStyle;
-      else delete mapSection.googleMapsStyle; // back to the built-in
+      else delete mapSection.googleMapsStyle; // Google's standard map
       // Only what differs from the app's built-in styles.
       if (Object.keys(stateOverrides).length) mapSection.speakerStateStyles = stateOverrides;
       else delete mapSection.speakerStateStyles;
@@ -324,9 +337,9 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
         styleText,
         stateOverrides,
       };
-      setDirty(false);
+      if (version.current === savingVersion) setDirty(false);
       setMapConfig(merge({}, DEFAULT_MAP, mapSection));
-      setSavedNote("Saved. Participants see it the next time they open the map.");
+      setSavedNote("Saved: on the test site now, on the live site after Update live site.");
       onSaved?.();
     } catch (e) {
       setError(errMessage(e));
@@ -334,6 +347,32 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
       setSaving(false);
     }
   };
+
+  // ---- Saving as you go ----------------------------------------------------
+  // One save at a time, a moment after the last change; a change still
+  // waiting is saved on leaving the page.
+  const saveRef = useRef(save);
+  saveRef.current = save;
+  const queue = useRef<Promise<void>>(Promise.resolve());
+  const requestSave = useCallback(() => {
+    queue.current = queue.current.then(() => saveRef.current());
+  }, []);
+  const pending = useRef(false);
+  pending.current = dirty && !styleError;
+  useEffect(() => {
+    if (!dirty || styleError) return;
+    const t = setTimeout(requestSave, 800);
+    return () => clearTimeout(t);
+  }, [dirty, styleError, speakerDisplay, enabled, center, widthMeters, rotation, opacity, styleText, stateOverrides, requestSave]);
+  useEffect(() => () => {
+    if (pending.current) requestSave();
+  }, [requestSave]);
+  useEffect(() => {
+    if (!dirty) return;
+    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [dirty]);
 
   if (error && !loaded) {
     return <Alert severity="error">{error}</Alert>;
@@ -346,9 +385,33 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
     );
   }
 
+  const status = saving
+    ? "Saving…"
+    : dirty
+      ? styleError
+        ? "Fix the map style to save"
+        : "Saving soon…"
+      : savedNote
+        ? "Saved"
+        : "Changes save as you go";
+
+  const section = (title: string, summary: string, body: React.ReactNode, open = false) => (
+    <Accordion defaultExpanded={open} disableGutters variant="outlined">
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Box>
+          <Typography variant="subtitle2">{title}</Typography>
+          <Typography variant="caption" color="text.secondary">
+            {summary}
+          </Typography>
+        </Box>
+      </AccordionSummary>
+      <AccordionDetails>{body}</AccordionDetails>
+    </Accordion>
+  );
+
   return (
     <Stack spacing={2}>
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <Stack direction="row" alignItems="flex-start" justifyContent="space-between" spacing={2}>
         <Box>
           <Typography variant="h6">Map appearance</Typography>
           <Typography variant="body2" color="text.secondary">
@@ -357,233 +420,197 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
             location picker when recording.
           </Typography>
         </Box>
-        <Stack direction="row" spacing={1} alignItems="center">
-          {dirty && (
-            <Button
-              size="small"
-              onClick={() => savedRef.current && applySaved(savedRef.current)}
-              disabled={saving}
-            >
-              Revert
-            </Button>
-          )}
-          <Button
-            variant="contained"
-            onClick={save}
-            disabled={!dirty || saving || Boolean(styleError)}
-          >
-            {saving ? "Saving…" : "Save map"}
-          </Button>
-        </Stack>
+        <Typography
+          variant="body2"
+          color={dirty && styleError ? "error" : "text.secondary"}
+          sx={{ whiteSpace: "nowrap", pt: 0.5 }}
+          title={savedNote ?? undefined}
+        >
+          {status}
+        </Typography>
       </Stack>
 
       {error && <Alert severity="error">{error}</Alert>}
-      {savedNote && !dirty && <Alert severity="success">{savedNote}</Alert>}
 
       <Grid container spacing={2}>
-        <Grid size={{ xs: 12, md: 8 }}>
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={projectCenter}
-            zoom={18}
-            onLoad={setMap}
-            onUnmount={() => setMap(null)}
-            options={{
-              styles: parsedStyle ?? BUILT_IN_STYLE,
-              streetViewControl: false,
-              mapTypeControl: false,
-              fullscreenControl: true,
-            }}
-          >
-            {palette && (
-              <SpeakerMapLayer
-                speakers={speakers}
-                display={speakerDisplay}
-                mapConfig={previewConfig}
-                state={speakerDisplay === "polygons" ? previewState : "idle"}
-                palette={palette}
-                imageUrl={speakerImageUrl}
-              />
-            )}
-            {overlayUrl && (
-              <MarkerF
-                position={center}
-                draggable
-                title="Drag to move the overlay"
-                onDrag={(e) => {
-                  const p = e.latLng;
-                  if (p) touch(setCenter)({ lat: p.lat(), lng: p.lng() });
-                }}
-              />
-            )}
-          </GoogleMap>
+        {/* The map stays in view while the controls beside it scroll. */}
+        <Grid size={{ xs: 12, md: 7 }}>
+          <Box sx={{ position: { md: "sticky" }, top: { md: 80 } }}>
+            <GoogleMap
+              mapContainerStyle={containerStyle}
+              center={projectCenter}
+              zoom={18}
+              onLoad={setMap}
+              onUnmount={() => setMap(null)}
+              options={{
+                styles: parsedStyle ?? [],
+                streetViewControl: false,
+                mapTypeControl: false,
+                fullscreenControl: true,
+              }}
+            >
+              {palette && (
+                <SpeakerMapLayer
+                  speakers={speakers}
+                  display={speakerDisplay}
+                  mapConfig={previewConfig}
+                  state={speakerDisplay === "polygons" ? previewState : "idle"}
+                  palette={palette}
+                  imageUrl={speakerImageUrl}
+                />
+              )}
+              {overlayUrl && (
+                <MarkerF
+                  position={center}
+                  draggable
+                  title="Drag to move the overlay"
+                  onDrag={(e) => {
+                    const p = e.latLng;
+                    if (p) touch(setCenter)({ lat: p.lat(), lng: p.lng() });
+                  }}
+                />
+              )}
+            </GoogleMap>
+          </Box>
         </Grid>
 
-        <Grid size={{ xs: 12, md: 4 }}>
-          <Stack spacing={2.5}>
-            <Box>
-              <Typography variant="subtitle2" gutterBottom>
-                Speakers on the map
-              </Typography>
-              <ToggleButtonGroup
-                exclusive
-                size="small"
-                value={speakerDisplay}
-                onChange={(_e, v: SpeakerDisplay | null) => v && touch(setSpeakerDisplay)(v)}
-              >
-                {SPEAKER_DISPLAYS.map((d) => (
-                  <ToggleButton key={d.value} value={d.value} sx={{ px: 2 }}>
-                    {d.label}
-                  </ToggleButton>
-                ))}
-              </ToggleButtonGroup>
-              <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}>
-                {SPEAKER_DISPLAYS.find((d) => d.value === speakerDisplay)?.help}
-              </Typography>
-              {/* The image is a branding file: uploading saves it at once,
-                  like every upload; the choice above waits for Save map. */}
-              {speakerDisplay === "images" && (
-                <Box sx={{ mt: 1.5 }}>
-                  <BrandingFilesPanel projectId={projectId} only={["speaker_image"]} onSaved={onSaved} />
+        <Grid size={{ xs: 12, md: 5 }}>
+          <Stack spacing={1}>
+            {section(
+              "Speakers",
+              SPEAKER_DISPLAYS.find((d) => d.value === speakerDisplay)?.label ?? "",
+              <Stack spacing={2.5}>
+                <Box>
+                  <ToggleButtonGroup
+                    exclusive
+                    size="small"
+                    value={speakerDisplay}
+                    onChange={(_e, v: SpeakerDisplay | null) => v && touch(setSpeakerDisplay)(v)}
+                  >
+                    {SPEAKER_DISPLAYS.map((d) => (
+                      <ToggleButton key={d.value} value={d.value} sx={{ px: 2 }}>
+                        {d.label}
+                      </ToggleButton>
+                    ))}
+                  </ToggleButtonGroup>
+                  <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}>
+                    {SPEAKER_DISPLAYS.find((d) => d.value === speakerDisplay)?.help}
+                  </Typography>
+                  {/* The image is a branding file: uploading saves it at once. */}
+                  {speakerDisplay === "images" && (
+                    <Box sx={{ mt: 1.5 }}>
+                      <BrandingFilesPanel projectId={projectId} only={["speaker_image"]} onSaved={onSaved} />
+                    </Box>
+                  )}
                 </Box>
-              )}
-            </Box>
-
-            {speakerDisplay === "polygons" && palette && (
-              <SpeakerStylesEditor
-                recordingMethod={selectedProject?.recording_method}
-                selected={previewState}
-                onSelect={setPreviewState}
-                defaults={DEFAULT_MAP.speakerStateStyles}
-                base={DEFAULT_MAP.speakerDisplayDefaults}
-                overrides={stateOverrides}
-                onChange={touch(setStateOverrides)}
-                palette={palette}
-              />
+                {speakerDisplay === "polygons" && palette && (
+                  <SpeakerStylesEditor
+                    recordingMethod={selectedProject?.recording_method}
+                    selected={previewState}
+                    onSelect={setPreviewState}
+                    defaults={DEFAULT_MAP.speakerStateStyles}
+                    base={DEFAULT_MAP.speakerDisplayDefaults}
+                    overrides={stateOverrides}
+                    onChange={touch(setStateOverrides)}
+                    palette={palette}
+                  />
+                )}
+              </Stack>,
+              true
             )}
 
-            <Box>
-              <Typography variant="subtitle2" gutterBottom>
-                Overlay image
-              </Typography>
-              {overlayUrl ? (
-                <FormControlLabel
-                  control={
-                    <Switch checked={enabled} onChange={(e) => touch(setEnabled)(e.target.checked)} />
-                  }
-                  label={enabled ? "Shown to participants" : "Hidden from participants"}
-                />
+            {section(
+              "Overlay image",
+              overlayUrl ? (enabled ? "Shown to participants" : "Hidden from participants") : "None uploaded",
+              overlayUrl ? (
+                <Stack spacing={2}>
+                  <FormControlLabel
+                    control={<Switch checked={enabled} onChange={(e) => touch(setEnabled)(e.target.checked)} />}
+                    label={enabled ? "Shown to participants" : "Hidden from participants"}
+                  />
+                  <Typography variant="body2" color="text.secondary">
+                    Drag the pin to move it. It is drawn here exactly as the app
+                    draws it, whether or not it is shown to participants yet.
+                  </Typography>
+                  <Box>
+                    <Typography variant="caption" color="text.secondary">
+                      Width on the ground — {Math.round(widthMeters)} m
+                    </Typography>
+                    <Slider value={widthMeters} min={5} max={1000} step={1} onChange={(_e, v) => touch(setWidthMeters)(v as number)} />
+                  </Box>
+                  <Box>
+                    <Typography variant="caption" color="text.secondary">
+                      Rotation — {Math.round(rotation)}°
+                    </Typography>
+                    <Slider value={rotation} min={-180} max={180} step={0.5} marks={[{ value: 0 }]} onChange={(_e, v) => touch(setRotation)(v as number)} />
+                  </Box>
+                  <Box>
+                    <Typography variant="caption" color="text.secondary">
+                      Opacity — {Math.round(opacity * 100)}%
+                    </Typography>
+                    <Slider value={opacity} min={0.05} max={1} step={0.05} onChange={(_e, v) => touch(setOpacity)(v as number)} />
+                  </Box>
+                  <Stack direction="row" spacing={1}>
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        const c = map?.getCenter();
+                        if (c) touch(setCenter)({ lat: c.lat(), lng: c.lng() });
+                      }}
+                    >
+                      Move to map center
+                    </Button>
+                    <Button size="small" onClick={() => touch(setCenter)(projectCenter)}>
+                      Project location
+                    </Button>
+                  </Stack>
+                </Stack>
               ) : (
-                <Alert severity="info" sx={{ mt: 1 }}>
-                  Upload a <strong>Map overlay</strong> image under Images &amp; audio
-                  to place one here.
+                <Alert severity="info">
+                  Upload a <strong>Map overlay</strong> image under Images &amp; audio to place one here.
                 </Alert>
-              )}
-            </Box>
+              )
+            )}
 
-            {overlayUrl && (
-              <>
-                <Typography variant="body2" color="text.secondary">
-                  Drag the pin to move it. It is drawn here exactly as the app
-                  draws it, whether or not it is shown to participants yet.
-                </Typography>
-
-                <Box>
-                  <Typography variant="caption" color="text.secondary">
-                    Width on the ground — {Math.round(widthMeters)} m
-                  </Typography>
-                  <Slider
-                    value={widthMeters}
-                    min={5}
-                    max={1000}
-                    step={1}
-                    onChange={(_e, v) => touch(setWidthMeters)(v as number)}
-                  />
-                </Box>
-                <Box>
-                  <Typography variant="caption" color="text.secondary">
-                    Rotation — {Math.round(rotation)}°
-                  </Typography>
-                  <Slider
-                    value={rotation}
-                    min={-180}
-                    max={180}
-                    step={0.5}
-                    marks={[{ value: 0 }]}
-                    onChange={(_e, v) => touch(setRotation)(v as number)}
-                  />
-                </Box>
-                <Box>
-                  <Typography variant="caption" color="text.secondary">
-                    Opacity — {Math.round(opacity * 100)}%
-                  </Typography>
-                  <Slider
-                    value={opacity}
-                    min={0.05}
-                    max={1}
-                    step={0.05}
-                    onChange={(_e, v) => touch(setOpacity)(v as number)}
-                  />
-                </Box>
+            {section(
+              "Map style",
+              parsedStyle
+                ? JSON.stringify(parsedStyle) === JSON.stringify(MINIMAL_STYLE)
+                  ? "Minimal"
+                  : "Custom"
+                : "Google's standard map",
+              <Stack spacing={1}>
                 <Stack direction="row" spacing={1}>
-                  <Button
-                    size="small"
-                    onClick={() => {
-                      const c = map?.getCenter();
-                      if (c) touch(setCenter)({ lat: c.lat(), lng: c.lng() });
-                    }}
-                  >
-                    Move to map center
+                  <Button size="small" variant={styleText ? "text" : "outlined"} onClick={() => touch(setStyleText)("")}>
+                    Google standard
                   </Button>
-                  <Button size="small" onClick={() => touch(setCenter)(projectCenter)}>
-                    Project location
+                  <Button size="small" onClick={() => touch(setStyleText)(JSON.stringify(MINIMAL_STYLE, null, 2))}>
+                    Minimal
                   </Button>
                 </Stack>
-              </>
+                <TextField
+                  value={styleText}
+                  onChange={(e) => touch(setStyleText)(e.target.value)}
+                  placeholder="Empty shows Google's standard map. Paste a style array from mapstyle.withgoogle.com or snazzymaps.com to use your own."
+                  multiline
+                  minRows={4}
+                  maxRows={14}
+                  fullWidth
+                  size="small"
+                  error={Boolean(styleError)}
+                  helperText={
+                    styleError ??
+                    (parsedStyle
+                      ? `Custom style, ${parsedStyle.length} rule${parsedStyle.length === 1 ? "" : "s"} — previewing on the map.`
+                      : "Google's standard map. Minimal is the sparse style projects used by default until October 2026.")
+                  }
+                  sx={{ "& textarea": { fontFamily: "monospace", fontSize: 12 } }}
+                />
+              </Stack>
             )}
           </Stack>
         </Grid>
       </Grid>
-
-      <Box>
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="subtitle2">Google Maps style</Typography>
-          <Stack direction="row" spacing={1}>
-            <Button
-              size="small"
-              onClick={() => touch(setStyleText)(JSON.stringify(BUILT_IN_STYLE, null, 2))}
-            >
-              Start from the built-in style
-            </Button>
-            <Button
-              size="small"
-              startIcon={<RestartAltIcon />}
-              disabled={!styleText}
-              onClick={() => touch(setStyleText)("")}
-            >
-              Use built-in
-            </Button>
-          </Stack>
-        </Stack>
-        <TextField
-          value={styleText}
-          onChange={(e) => touch(setStyleText)(e.target.value)}
-          placeholder="Empty uses Roundware's built-in style. Paste a style array from mapstyle.withgoogle.com or snazzymaps.com to replace it."
-          multiline
-          minRows={4}
-          maxRows={14}
-          fullWidth
-          size="small"
-          error={Boolean(styleError)}
-          helperText={
-            styleError ??
-            (parsedStyle
-              ? `Custom style, ${parsedStyle.length} rule${parsedStyle.length === 1 ? "" : "s"} — previewing above.`
-              : "Using the built-in style.")
-          }
-          sx={{ mt: 1, "& textarea": { fontFamily: "monospace", fontSize: 12 } }}
-        />
-      </Box>
     </Stack>
   );
 };
