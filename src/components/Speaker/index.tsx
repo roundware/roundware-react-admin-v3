@@ -82,8 +82,7 @@ export const SpeakerEdit = (): JSX.Element => {
     // Strip fields the server doesn't accept on PATCH
     delete data.id;
     delete data.project_id;
-    delete data.parents;
-    delete data.children;
+    // parents / children are saved: the server takes them since 2026-10-16.
     delete data.created_at;
     delete data.updated_at;
     delete data.variant_uris;
