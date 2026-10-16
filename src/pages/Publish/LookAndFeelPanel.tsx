@@ -14,6 +14,7 @@
 // MUI's stock purple ended up stored in projects no one had styled.)
 // ---------------------------------------------------------------------------
 import React, { useEffect, useRef, useState } from "react";
+import { SPLASH_DARKENING } from "./SplashDarkening";
 import {
   Alert,
   Box,
@@ -127,10 +128,15 @@ const LookAndFeelPanel: React.FC<Props> = ({ projectId, onSaved }) => {
       setSaving(true);
       setError(null);
       try {
+        // Splash darkening is set beside the splash image (SplashDarkening):
+        // keep whatever is saved for it now, not this panel's copy.
+        const { [SPLASH_DARKENING]: _mine, ...ours } = styleChoices;
+        const saved = (await getBranding(projectId)).theme_json?.style?.[SPLASH_DARKENING];
+        const styleOut = saved ? { ...ours, [SPLASH_DARKENING]: saved } : ours;
         await patchBranding(projectId, {
           theme_json: {
             ...(Object.keys(palette).length ? { palette } : {}),
-            ...(Object.keys(styleChoices).length ? { style: styleChoices } : {}),
+            ...(Object.keys(styleOut).length ? { style: styleOut } : {}),
           },
           google_font_family: fontFamily,
         });
@@ -251,7 +257,7 @@ const LookAndFeelPanel: React.FC<Props> = ({ projectId, onSaved }) => {
         )}
       </TextField>
 
-      {(schema.styles ?? []).map((choice) => {
+      {(schema.styles ?? []).filter((c) => c.key !== SPLASH_DARKENING).map((choice) => {
         const value = style[choice.key] || choice.default;
         return (
           <Box key={choice.key}>
