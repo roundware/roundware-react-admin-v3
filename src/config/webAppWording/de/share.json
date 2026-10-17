@@ -6,7 +6,6 @@
 	"pending": "Dieser Beitrag wird noch geprüft. Er erscheint hier, sobald er freigegeben ist – hör dir bis dahin den Rest des Projekts an.",
 	"notFound": "Wir haben diesen Beitrag nicht gefunden. Vielleicht wurde er entfernt.",
 	"loading": "Wird geladen…",
-	"withIt": "Dazu",
 	"about": "Über {{project}}",
 	"noAudio": "Dein Browser kann diese Aufnahme nicht abspielen."
 }
