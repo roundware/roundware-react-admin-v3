@@ -1,7 +1,7 @@
 import { WizardTemplate } from "../types";
 
 /**
- * Collective Loops — the "Invisible Choir" paradigm.
+ * Collective Loops — the looping paradigm.
  *
  * The only template with `recording_method: "looping"`, which is what makes a
  * contribution become a *speaker* joining the continuous mix rather than an
@@ -20,8 +20,8 @@ import { WizardTemplate } from "../types";
  *    Publishing without it is what the Publish page warns about.
  *
  * The engine tuning in `listen.speaker` is deliberately absent: the web app's
- * config.ts defaults are already the Choir defaults, so overriding them here
- * would just be a second copy to keep in sync.
+ * config.ts defaults already hold the looping engine's tuning, so overriding
+ * them here would just be a second copy to keep in sync.
  */
 const collectiveloops: WizardTemplate = {
   key: "collectiveloops",

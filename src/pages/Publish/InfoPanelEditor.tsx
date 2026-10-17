@@ -23,7 +23,7 @@ import { BrandingTextField, useBrandingText } from "./brandingText";
  * one tab per non-empty field and skips the rest, which is why leaving a box
  * empty hides its tab rather than showing an empty one.
  *
- * Until now the panel showed four hardcoded tabs of Invisible Choir's copy to
+ * Until now the panel showed four hardcoded tabs of the original app's copy to
  * every project, because these fields had no editor and, for three of them, no
  * route out of the API either.
  */
