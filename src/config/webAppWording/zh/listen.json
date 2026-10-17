@@ -139,5 +139,11 @@
 			"message": "你的浏览器不支持步行模式。"
 		}
 	},
-	"youAreHere": "你在这里"
+	"youAreHere": "你在这里",
+	"assetLabels": {
+		"like": "喜欢",
+		"flag": "举报",
+		"download": "下载",
+		"show": "打开页面"
+	}
 }

@@ -141,5 +141,11 @@
 			"message": "Dein Browser unterstützt den Gehmodus nicht."
 		}
 	},
-	"youAreHere": "Du bist hier"
+	"youAreHere": "Du bist hier",
+	"assetLabels": {
+		"like": "Gefällt mir",
+		"flag": "Melden",
+		"download": "Herunterladen",
+		"show": "Seite öffnen"
+	}
 }

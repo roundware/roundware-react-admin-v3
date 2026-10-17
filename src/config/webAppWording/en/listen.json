@@ -141,5 +141,11 @@
 			"message": "Your browser doesn't support Walking Mode."
 		}
 	},
-	"youAreHere": "You Are Here"
+	"youAreHere": "You Are Here",
+	"assetLabels": {
+		"like": "Like",
+		"flag": "Report",
+		"download": "Download",
+		"show": "Open page"
+	}
 }

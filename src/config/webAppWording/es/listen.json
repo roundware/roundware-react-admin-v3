@@ -143,5 +143,11 @@
 			"message": "Tu navegador no es compatible con el modo caminata."
 		}
 	},
-	"youAreHere": "Estás aquí"
+	"youAreHere": "Estás aquí",
+	"assetLabels": {
+		"like": "Me gusta",
+		"flag": "Reportar",
+		"download": "Descargar",
+		"show": "Abrir página"
+	}
 }

@@ -143,5 +143,11 @@
 			"message": "Ton navigateur ne prend pas en charge le mode marche."
 		}
 	},
-	"youAreHere": "Tu es ici"
+	"youAreHere": "Tu es ici",
+	"assetLabels": {
+		"like": "J’aime",
+		"flag": "Signaler",
+		"download": "Télécharger",
+		"show": "Ouvrir la page"
+	}
 }
