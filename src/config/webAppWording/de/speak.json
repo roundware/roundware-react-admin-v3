@@ -25,15 +25,17 @@
 		"leavePrompt": {
 			"message": "Willst du wirklich gehen, ohne deine Aufnahme abzusenden? Dann wird deine Aufnahme gelöscht.",
 			"stay": "Aufnahme behalten",
-			"leave": "Aufnahme löschen"
+			"leave": "Aufnahme löschen",
+			"title": "Ohne Absenden gehen?"
 		},
 		"tapToRecord": "Zum Aufnehmen tippen",
 		"tapToUpload": "Zum Hochladen von Audio tippen",
 		"tapToStop": "Zum Stoppen tippen",
 		"deleteDialog": {
-			"question": "Deinen aktuellen Aufnahmeentwurf löschen?",
-			"keep": "Nein, behalten!",
-			"delete": "Ja, löschen!"
+			"question": "Neu aufnehmen?",
+			"keep": "Behalten",
+			"delete": "Löschen",
+			"body": "Damit wird die Aufnahme gelöscht, die du gerade gemacht hast."
 		},
 		"noLocation": "Breiten- und Längengrad konnten nicht ermittelt werden!",
 		"uploading": "Dein Beitrag wird jetzt hochgeladen! Bitte lass diese Seite geöffnet, bis der Upload abgeschlossen ist.",

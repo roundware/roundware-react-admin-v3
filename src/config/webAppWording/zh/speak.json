@@ -25,15 +25,17 @@
 		"leavePrompt": {
 			"message": "确定不提交录音就离开吗？离开后，你的录音将被删除。",
 			"stay": "保留录音",
-			"leave": "删除录音"
+			"leave": "删除录音",
+			"title": "不提交就离开？"
 		},
 		"tapToRecord": "点击录音",
 		"tapToUpload": "点击上传音频",
 		"tapToStop": "点击停止",
 		"deleteDialog": {
-			"question": "要删除当前的录音草稿吗？",
-			"keep": "不，保留它！",
-			"delete": "是，删除它！"
+			"question": "重新录制？",
+			"keep": "保留",
+			"delete": "删除",
+			"body": "这会删除你刚录好的录音。"
 		},
 		"noLocation": "无法获取经纬度！",
 		"uploading": "正在上传你的投稿！上传完成前请不要关闭此页面。",

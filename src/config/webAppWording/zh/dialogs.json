@@ -105,7 +105,8 @@
 	},
 	"error": {
 		"generic": "出错了！请重试。",
-		"connection": "抱歉，我们无法连接到 Roundware。请重试。"
+		"connection": "抱歉，我们无法连接到 Roundware。请重试。",
+		"title": "出了点问题"
 	},
 	"errorBoundary": {
 		"title": "出错了。"

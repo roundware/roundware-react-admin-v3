@@ -105,7 +105,8 @@
 	},
 	"error": {
 		"generic": "Something went wrong! Please try again.",
-		"connection": "Sorry, we were unable to connect to Roundware. Please try again."
+		"connection": "Sorry, we were unable to connect to Roundware. Please try again.",
+		"title": "Something went wrong"
 	},
 	"errorBoundary": {
 		"title": "Something went wrong."

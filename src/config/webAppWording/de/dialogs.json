@@ -105,7 +105,8 @@
 	},
 	"error": {
 		"generic": "Etwas ist schiefgelaufen! Bitte versuch es noch einmal.",
-		"connection": "Leider konnten wir keine Verbindung zu Roundware herstellen. Bitte versuch es noch einmal."
+		"connection": "Leider konnten wir keine Verbindung zu Roundware herstellen. Bitte versuch es noch einmal.",
+		"title": "Etwas ist schiefgelaufen"
 	},
 	"errorBoundary": {
 		"title": "Etwas ist schiefgelaufen."

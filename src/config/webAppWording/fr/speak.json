@@ -25,15 +25,17 @@
 		"leavePrompt": {
 			"message": "Tu veux vraiment partir sans envoyer ton enregistrement ? Si tu pars, ton enregistrement sera supprimé.",
 			"stay": "Garder l’enregistrement",
-			"leave": "Supprimer l’enregistrement"
+			"leave": "Supprimer l’enregistrement",
+			"title": "Partir sans envoyer ?"
 		},
 		"tapToRecord": "Touche pour enregistrer",
 		"tapToUpload": "Touche pour importer un fichier audio",
 		"tapToStop": "Touche pour arrêter",
 		"deleteDialog": {
-			"question": "Supprimer ton brouillon d’enregistrement ?",
-			"keep": "Non, je le garde !",
-			"delete": "Oui, supprime-le !"
+			"question": "Réenregistrer ?",
+			"keep": "Le garder",
+			"delete": "Le supprimer",
+			"body": "L’enregistrement que vous venez de faire sera supprimé."
 		},
 		"noLocation": "Impossible d’obtenir la latitude et la longitude !",
 		"uploading": "Ta contribution est en cours d’envoi ! Garde cette page ouverte jusqu’à la fin de l’envoi.",

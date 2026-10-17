@@ -105,7 +105,8 @@
 	},
 	"error": {
 		"generic": "Une erreur s’est produite ! Réessaie.",
-		"connection": "Désolé, impossible de se connecter à Roundware. Réessaie."
+		"connection": "Désolé, impossible de se connecter à Roundware. Réessaie.",
+		"title": "Un problème est survenu"
 	},
 	"errorBoundary": {
 		"title": "Une erreur s’est produite."

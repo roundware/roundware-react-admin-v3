@@ -105,7 +105,8 @@
 	},
 	"error": {
 		"generic": "¡Algo salió mal! Inténtalo de nuevo.",
-		"connection": "Lo sentimos, no pudimos conectarnos con Roundware. Inténtalo de nuevo."
+		"connection": "Lo sentimos, no pudimos conectarnos con Roundware. Inténtalo de nuevo.",
+		"title": "Algo salió mal"
 	},
 	"errorBoundary": {
 		"title": "Algo salió mal."

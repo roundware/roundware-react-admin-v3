@@ -25,15 +25,17 @@
 		"leavePrompt": {
 			"message": "¿Seguro que quieres salir sin enviar tu grabación? Si lo haces, tu grabación se eliminará.",
 			"stay": "Conservar grabación",
-			"leave": "Eliminar grabación"
+			"leave": "Eliminar grabación",
+			"title": "¿Salir sin enviar?"
 		},
 		"tapToRecord": "Toca para grabar",
 		"tapToUpload": "Toca para subir audio",
 		"tapToStop": "Toca para detener",
 		"deleteDialog": {
-			"question": "¿Eliminar tu borrador de grabación actual?",
-			"keep": "¡No, consérvala!",
-			"delete": "¡Sí, elimínala!"
+			"question": "¿Grabar de nuevo?",
+			"keep": "Conservarla",
+			"delete": "Borrarla",
+			"body": "Se borrará la grabación que acabas de hacer."
 		},
 		"noLocation": "¡No se pudo obtener la latitud y la longitud!",
 		"uploading": "¡Estamos subiendo tu contribución! Mantén esta página abierta hasta que terminemos.",

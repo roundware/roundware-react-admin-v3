@@ -25,15 +25,17 @@
 		"leavePrompt": {
 			"message": "Are you sure you want to leave without submitting your recording? If you do, your recording will be deleted.",
 			"stay": "Keep Recording",
-			"leave": "Delete Recording"
+			"leave": "Delete Recording",
+			"title": "Leave without submitting?"
 		},
 		"tapToRecord": "Tap to Record",
 		"tapToUpload": "Tap to Upload Audio",
 		"tapToStop": "Tap to Stop",
 		"deleteDialog": {
-			"question": "Delete your current draft recording?",
-			"keep": "No, keep it!",
-			"delete": "Yes, delete it!"
+			"question": "Record again?",
+			"keep": "Keep it",
+			"delete": "Delete it",
+			"body": "This deletes the recording you just made."
 		},
 		"noLocation": "Failed to get latitude & longitude!",
 		"uploading": "Uploading your contribution now! Please keep this page open until we finish uploading.",
