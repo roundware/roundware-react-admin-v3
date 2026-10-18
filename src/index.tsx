@@ -59,6 +59,27 @@ const LandingOrAdmin: React.FC = () => {
   );
 };
 
+// A link from a platform email (server docs/026) names the organization the
+// page is in, `?tenant=slug`: switch to it before anything loads, so a
+// superuser lands in the right one. Only signed in, and only to an
+// organization they're on or as a superuser (the server refuses others).
+(function switchTenantFromLink() {
+  try {
+    const url = new URL(window.location.href);
+    const slug = url.searchParams.get("tenant");
+    if (!slug || !localStorage.getItem("access_token")) return;
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    const tenants: { slug: string }[] = JSON.parse(localStorage.getItem("tenants") || "[]");
+    if (user?.is_superuser || tenants.some((t) => t.slug === slug)) {
+      localStorage.setItem("tenant_slug", slug);
+    }
+    url.searchParams.delete("tenant");
+    window.history.replaceState(window.history.state, "", url.toString());
+  } catch {
+    // Without storage, the page opens in the current organization.
+  }
+})();
+
 const router = createBrowserRouter([
   {
     path: "/register",
