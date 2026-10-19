@@ -96,7 +96,7 @@
 	},
 	"locationRequired": {
 		"title": "Se necesita acceso a tu ubicación",
-		"body": "Activar la ubicación es necesario para participar plenamente en la experiencia de la obra. Tus datos de ubicación no se guardarán ni se compartirán."
+		"body": "Activar la ubicación es necesario para participar plenamente en la experiencia. Tus datos de ubicación son anónimos y no se compartirán sin tu indicación."
 	},
 	"modeToggle": {
 		"walking": "Modo caminata",

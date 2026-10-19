@@ -96,7 +96,7 @@
 	},
 	"locationRequired": {
 		"title": "Accès à ta position requis",
-		"body": "Activer la position est nécessaire pour participer pleinement à l’expérience de l’œuvre. Tes données de position ne seront ni conservées ni partagées."
+		"body": "Activer la position est nécessaire pour participer pleinement à l’expérience. Tes données de position sont anonymes et ne seront pas partagées sans ton accord."
 	},
 	"modeToggle": {
 		"walking": "Mode marche",

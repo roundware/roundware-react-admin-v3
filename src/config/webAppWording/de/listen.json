@@ -94,7 +94,7 @@
 	},
 	"locationRequired": {
 		"title": "Standortzugriff erforderlich",
-		"body": "Um voll am Kunstwerk teilzunehmen, musst du deinen Standort freigeben. Deine Standortdaten werden weder gespeichert noch weitergegeben."
+		"body": "Um voll am Erlebnis teilzunehmen, musst du deinen Standort freigeben. Deine Standortdaten sind anonym und werden nur auf deine Anweisung hin weitergegeben."
 	},
 	"modeToggle": {
 		"walking": "Gehmodus",

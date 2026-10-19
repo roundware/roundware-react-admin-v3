@@ -94,7 +94,7 @@
 	},
 	"locationRequired": {
 		"title": "Location Access Required",
-		"body": "Enabling location is necessary to participate fully in the artwork experience. Your location data won't be saved or shared."
+		"body": "Enabling location is necessary to participate fully in the experience. Your location data is anonymous and won't be shared without your instruction."
 	},
 	"modeToggle": {
 		"walking": "Walking mode",
