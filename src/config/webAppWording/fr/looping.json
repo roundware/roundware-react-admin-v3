@@ -13,8 +13,8 @@
 	},
 	"steps": {
 		"title": "Enregistrer",
-		"rehearse": "Répète en chantant\nsur la boucle",
-		"record": "Enregistre-toi\nen train de chanter",
+		"rehearse": "Répète\navec la boucle",
+		"record": "Enregistre-toi\navec la boucle",
 		"review": "Réécoute et envoie\nton enregistrement"
 	},
 	"stepIndicator": {
@@ -23,12 +23,12 @@
 		"review": "RÉÉCOUTE"
 	},
 	"controls": {
-		"generating": "Création de la boucle à chanter...",
+		"generating": "Préparation de la boucle...",
 		"getReady": "Prépare-toi à enregistrer tout ce que tu veux : double ce que tu entends, improvise, fais des sons, fredonne, siffle, etc. Pas de paroles, s’il te plaît.",
 		"haveFun": "Amuse-toi bien !",
 		"status": {
 			"idle": "Appuie sur Lecture pour commencer à répéter",
-			"playing": "Appuie sur Enregistrer quand tu veux chanter",
+			"playing": "Appuie sur Enregistrer quand tu veux commencer",
 			"preparing": "Préparation de l’enregistrement...",
 			"countdown": "Prépare-toi à enregistrer...",
 			"recording": "Enregistrement...",
@@ -68,7 +68,7 @@
 		"description": "Ta voix est en train d’être ajoutée au projet. Il faudra peut-être quelques tours de boucle, mais tu pourras bientôt t’entendre avec les autres voix de ce lieu."
 	},
 	"levelMeter": {
-		"tooQuiet": "Chante un peu plus fort !",
+		"tooQuiet": "Un peu plus fort, s’il te plaît !",
 		"gettingThere": "Presque...",
 		"good": "Bon niveau !",
 		"perfect": "Parfait !",

@@ -13,8 +13,8 @@
 	},
 	"steps": {
 		"title": "录音",
-		"rehearse": "跟着循环\n练习演唱",
-		"record": "录下\n你的演唱",
+		"rehearse": "跟着循环\n练习",
+		"record": "跟着循环\n录音",
 		"review": "试听并提交\n你的录音"
 	},
 	"stepIndicator": {
@@ -23,12 +23,12 @@
 		"review": "试听"
 	},
 	"controls": {
-		"generating": "正在生成伴唱循环……",
+		"generating": "正在准备循环……",
 		"getReady": "准备好录下你想录的任何声音：跟着你听到的唱、即兴发挥、发出声响、哼唱、吹口哨，都可以。请不要说话或唱词。",
 		"haveFun": "玩得开心！",
 		"status": {
 			"idle": "点击播放开始练习",
-			"playing": "准备好演唱时点击录音",
+			"playing": "准备好时点击录音",
 			"preparing": "正在准备录音……",
 			"countdown": "准备录音……",
 			"recording": "录音中……",

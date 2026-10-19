@@ -13,8 +13,8 @@
 	},
 	"steps": {
 		"title": "Grabar",
-		"rehearse": "Ensaya cantando\nsobre el loop",
-		"record": "Grábate\ncantando",
+		"rehearse": "Ensaya\ncon el loop",
+		"record": "Grábate\ncon el loop",
 		"review": "Revisa y envía\ntu grabación"
 	},
 	"stepIndicator": {
@@ -23,12 +23,12 @@
 		"review": "REVISIÓN"
 	},
 	"controls": {
-		"generating": "Generando el loop para cantar...",
+		"generating": "Preparando el loop...",
 		"getReady": "Prepárate para grabar lo que quieras: dobla lo que escuchas, improvisa, haz sonidos, tararea, silba, etc. Por favor, sin palabras.",
 		"haveFun": "¡Diviértete!",
 		"status": {
 			"idle": "Presiona reproducir para empezar a ensayar",
-			"playing": "Presiona grabar cuando quieras cantar",
+			"playing": "Presiona grabar cuando quieras empezar",
 			"preparing": "Preparando la grabación...",
 			"countdown": "Prepárate para grabar...",
 			"recording": "Grabando...",
@@ -68,7 +68,7 @@
 		"description": "Tu voz se está agregando al proyecto. Puede tardar algunas vueltas del loop, pero pronto podrás escucharte junto con las demás voces de este lugar."
 	},
 	"levelMeter": {
-		"tooQuiet": "¡Canta un poco más fuerte!",
+		"tooQuiet": "¡Un poco más fuerte, por favor!",
 		"gettingThere": "Ya casi...",
 		"good": "¡Buen nivel!",
 		"perfect": "¡Perfecto!",

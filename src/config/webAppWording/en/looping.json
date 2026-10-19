@@ -13,8 +13,8 @@
 	},
 	"steps": {
 		"title": "Record",
-		"rehearse": "Rehearse your\nsinging to the loop",
-		"record": "Record yourself\nsinging",
+		"rehearse": "Rehearse along\nwith the loop",
+		"record": "Record yourself\nwith the loop",
 		"review": "Review and Submit\nyour recording"
 	},
 	"stepIndicator": {
@@ -23,12 +23,12 @@
 		"review": "REVIEW"
 	},
 	"controls": {
-		"generating": "Generating sing-along loop...",
+		"generating": "Preparing the loop...",
 		"getReady": "Get ready to record anything you want: double what you hear, improvise, make sounds, hum, whistle, etc. Please no words.",
 		"haveFun": "Have fun!",
 		"status": {
 			"idle": "Press play to start rehearsing",
-			"playing": "Press record when ready to sing",
+			"playing": "Press record when you're ready",
 			"preparing": "Preparing to record...",
 			"countdown": "Get ready to record...",
 			"recording": "Recording...",
@@ -68,7 +68,7 @@
 		"description": "Your voice is being added to the project. It may take a few loops, but you will soon be able to hear yourself with the other voices in this location."
 	},
 	"levelMeter": {
-		"tooQuiet": "Sing a bit louder!",
+		"tooQuiet": "A bit louder, please!",
 		"gettingThere": "Getting there...",
 		"good": "Good level!",
 		"perfect": "Perfect!",

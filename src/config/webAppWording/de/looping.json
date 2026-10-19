@@ -13,8 +13,8 @@
 	},
 	"steps": {
 		"title": "Aufnehmen",
-		"rehearse": "Übe, zum Loop\nzu singen",
-		"record": "Nimm dich\nbeim Singen auf",
+		"rehearse": "Übe mit\ndem Loop",
+		"record": "Nimm dich\nmit dem Loop auf",
 		"review": "Hör dir deine Aufnahme an\nund sende sie ab"
 	},
 	"stepIndicator": {
@@ -23,12 +23,12 @@
 		"review": "ANHÖREN"
 	},
 	"controls": {
-		"generating": "Mitsing-Loop wird erstellt...",
+		"generating": "Loop wird vorbereitet...",
 		"getReady": "Mach dich bereit, aufzunehmen, was immer du möchtest: Verdopple, was du hörst, improvisiere, mach Geräusche, summe, pfeife usw. Bitte keine Worte.",
 		"haveFun": "Viel Spaß!",
 		"status": {
 			"idle": "Drücke auf Abspielen, um mit dem Üben zu beginnen",
-			"playing": "Drücke auf Aufnehmen, sobald du singen möchtest",
+			"playing": "Drücke auf Aufnehmen, sobald du bereit bist",
 			"preparing": "Aufnahme wird vorbereitet...",
 			"countdown": "Mach dich bereit für die Aufnahme...",
 			"recording": "Aufnahme läuft...",
@@ -68,7 +68,7 @@
 		"description": "Deine Stimme wird gerade zum Projekt hinzugefügt. Das kann ein paar Loop-Durchläufe dauern, aber bald hörst du dich zusammen mit den anderen Stimmen an diesem Ort."
 	},
 	"levelMeter": {
-		"tooQuiet": "Sing ein bisschen lauter!",
+		"tooQuiet": "Ein bisschen lauter, bitte!",
 		"gettingThere": "Fast geschafft...",
 		"good": "Guter Pegel!",
 		"perfect": "Perfekt!",
