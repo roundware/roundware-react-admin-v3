@@ -17,6 +17,10 @@ import ForgotPasswordPage from "./pages/public/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/public/ResetPasswordPage";
 import VerifyEmailPage from "./pages/public/VerifyEmailPage";
 import ProjectRoute from "./ProjectRoute";
+import { startErrorReporting } from "./monitoring";
+
+// Before anything renders (off without VITE_SENTRY_DSN).
+startErrorReporting();
 
 const AppProviders = ({ children }: { children: React.ReactNode }) => (
   <LocalizationProvider dateAdapter={AdapterDateFns}>
