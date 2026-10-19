@@ -31,6 +31,10 @@
 		"tapToRecord": "Tap to Record",
 		"tapToUpload": "Tap to Upload Audio",
 		"tapToStop": "Tap to Stop",
+		"interruptedDialog": {
+			"title": "Recording interrupted",
+			"body": "Your recording was interrupted by another event on your phone (an incoming call, the screen turning off, etc.), so it stopped. What was recorded up to then is kept: listen to it, then record again or carry on."
+		},
 		"deleteDialog": {
 			"question": "Record again?",
 			"keep": "Keep it",

@@ -31,6 +31,10 @@
 		"tapToRecord": "点击录音",
 		"tapToUpload": "点击上传音频",
 		"tapToStop": "点击停止",
+		"interruptedDialog": {
+			"title": "录音被中断",
+			"body": "你的录音被手机上的其他事件打断了（来电、屏幕关闭等），所以已停止。到那时为止录下的内容已保留：先听一听，再重新录制或继续。"
+		},
 		"deleteDialog": {
 			"question": "重新录制？",
 			"keep": "保留",

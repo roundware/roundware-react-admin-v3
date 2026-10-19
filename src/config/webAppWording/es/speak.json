@@ -31,6 +31,10 @@
 		"tapToRecord": "Toca para grabar",
 		"tapToUpload": "Toca para subir audio",
 		"tapToStop": "Toca para detener",
+		"interruptedDialog": {
+			"title": "Grabación interrumpida",
+			"body": "Tu grabación se interrumpió por otra cosa en tu teléfono (una llamada, la pantalla que se apaga, etc.), así que se detuvo. Lo grabado hasta entonces se conserva: escúchalo y luego vuelve a grabar o continúa."
+		},
 		"deleteDialog": {
 			"question": "¿Grabar de nuevo?",
 			"keep": "Conservarla",

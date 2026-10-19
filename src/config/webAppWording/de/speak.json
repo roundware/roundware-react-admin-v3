@@ -31,6 +31,10 @@
 		"tapToRecord": "Zum Aufnehmen tippen",
 		"tapToUpload": "Zum Hochladen von Audio tippen",
 		"tapToStop": "Zum Stoppen tippen",
+		"interruptedDialog": {
+			"title": "Aufnahme unterbrochen",
+			"body": "Deine Aufnahme wurde durch etwas anderes auf deinem Telefon unterbrochen (einen Anruf, das Ausschalten des Bildschirms usw.) und hat deshalb aufgehört. Was bis dahin aufgenommen wurde, bleibt erhalten: Hör es dir an und nimm dann neu auf oder mach weiter."
+		},
 		"deleteDialog": {
 			"question": "Neu aufnehmen?",
 			"keep": "Behalten",

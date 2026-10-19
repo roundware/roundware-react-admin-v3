@@ -31,6 +31,10 @@
 		"tapToRecord": "Touche pour enregistrer",
 		"tapToUpload": "Touche pour importer un fichier audio",
 		"tapToStop": "Touche pour arrêter",
+		"interruptedDialog": {
+			"title": "Enregistrement interrompu",
+			"body": "Ton enregistrement a été interrompu par autre chose sur ton téléphone (un appel, l’écran qui s’éteint, etc.), il s’est donc arrêté. Ce qui a été enregistré jusque-là est conservé : écoute-le, puis enregistre à nouveau ou continue."
+		},
 		"deleteDialog": {
 			"question": "Réenregistrer ?",
 			"keep": "Le garder",
