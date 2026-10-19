@@ -93,7 +93,7 @@ async function fetchListenEvents({
   pageSize?: number;
 }) {
   const res = await apiFetcher(
-    `/listenevents/?page=${pageParam}&paginate=true&page_size=${
+    `/listeninghistoryitems/?page=${pageParam}&paginate=true&page_size=${
       pageSize || PAGE_SIZE
     }&start_time__gte=${startDate.toISOString()}&start_time__lte=${endDate.toISOString()}&project_id=${projectId}&kind=asset`
   );
@@ -217,10 +217,10 @@ const ListenEventsChart = () => {
 
   const redirect = useRedirect();
   const handleOnBarClick = (data: { date: number }) => {
-    if (ResourceList.includes(`listenevents`))
+    if (ResourceList.includes(`listeninghistoryitems`))
       redirect(
         `list`,
-        `listenevents?filter=${JSON.stringify({
+        `listeninghistoryitems?filter=${JSON.stringify({
           [`start_time__gte`]: new Date(data?.date).toISOString(),
           [`start_time__lte`]: addDays(new Date(data?.date), 1).toISOString(),
         })}`

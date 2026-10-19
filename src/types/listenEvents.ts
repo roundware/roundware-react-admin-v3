@@ -1,5 +1,5 @@
-// A v3 listening-history item (GET /listenevents/, an alias of
-// /listeninghistoryitems/). The v2 names are kept optional for the few
+// A v3 listening-history item (GET /listeninghistoryitems/; v2 called them
+// listen events, at /listenevents/). The v2 names are kept optional for the few
 // places that still fall back to them.
 export type IListenEvent = {
   id: number;

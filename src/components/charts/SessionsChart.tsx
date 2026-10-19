@@ -161,7 +161,7 @@ const SessionsChart = () => {
 
   const redirect = useRedirect();
   const handleOnBarClick = (data: { date: number }) => {
-    if (ResourceList.includes(`listenevents`))
+    if (ResourceList.includes(`listeninghistoryitems`))
       redirect(
         `list`,
         `sessions?filter=${JSON.stringify({

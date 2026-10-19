@@ -140,8 +140,8 @@ function App({ basename }: { basename: string }): JSX.Element {
         />,
         ...(selectedProject && import.meta.env.VITE_INCLUDE_TABS === "all"
           ? Object.values(lookup)
-          : import.meta.env.VITE_INCLUDE_TABS?.split(`,`)
-              ?.filter((r: string) => Object.keys(lookup).includes(r))
+          : includedTabs()
+              .filter((r: string) => Object.keys(lookup).includes(r))
               .map((r: string) => lookup[r]) || []),
         // Tenants resource — always registered; menu entry hidden for non-superusers
         // (Menu.tsx runs inside <Admin> where usePermissions is safe to call)
@@ -189,7 +189,7 @@ export default App;
 
 const resourceKeys = [
   "assets", "timedassets", "uigroups", "audiotracks", "speakers",
-  "events", "listenevents", "sessions", "tags",
+  "events", "listeninghistoryitems", "sessions", "tags",
   "tagcategories", "languages", "localizedstrings", "users",
 ];
 
@@ -226,8 +226,8 @@ function buildResourceLookup(canEdit: boolean): { [index: string]: React.ReactNo
         edit={e ? EventsEdit : undefined} create={e ? EventsCreate : undefined}
         icon={Event} />
     ),
-    listenevents: (
-      <Resource name="listenevents" key="listenevents" list={ListenEventsList}
+    listeninghistoryitems: (
+      <Resource name="listeninghistoryitems" key="listeninghistoryitems" list={ListenEventsList}
         edit={e ? ListenEventsEdit : undefined} create={e ? ListenEventsCreate : undefined}
         icon={Hearing} options={{ label: "Listen Events" }} />
     ),
@@ -266,11 +266,18 @@ function buildResourceLookup(canEdit: boolean): { [index: string]: React.ReactNo
   };
 }
 
+// VITE_INCLUDE_TABS (the build's settings) names the tabs. "listenevents"
+// was v2's name for listening history, now /listeninghistoryitems/; read as
+// the new one, so builds configured before the rename keep the tab.
+function includedTabs(): string[] {
+  return (import.meta.env.VITE_INCLUDE_TABS?.split(`,`) ?? []).map((r: string) =>
+    r.trim() === "listenevents" ? "listeninghistoryitems" : r.trim()
+  );
+}
+
 export const ResourceList = [
   `projects`,
   ...(import.meta.env.VITE_INCLUDE_TABS === "all"
     ? resourceKeys
-    : import.meta.env.VITE_INCLUDE_TABS?.split(`,`)?.filter((r: string) =>
-        resourceKeys.includes(r)
-      ) || []),
+    : includedTabs().filter((r: string) => resourceKeys.includes(r))),
 ];

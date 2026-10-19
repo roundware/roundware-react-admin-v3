@@ -31,7 +31,7 @@ const DashboardContent = () => {
     queryKey: ["listeneventsCount", projectId],
     queryFn: () =>
       // Contributions heard; speakers are in the history too (docs/010).
-      apiFetcher(`/listenevents/count/?project_id=${projectId}&kind=asset`),
+      apiFetcher(`/listeninghistoryitems/count/?project_id=${projectId}&kind=asset`),
     enabled: !!projectId,
   });
 
@@ -67,7 +67,7 @@ const DashboardContent = () => {
                     )?.count?.toLocaleString() || `0`
                   )
                 }
-                to={ResourceList.includes(`listenevents`) && "listenevents"}
+                to={ResourceList.includes(`listeninghistoryitems`) && "listeninghistoryitems"}
                 helperText={`Total`}
               />
             </Grid>
@@ -148,7 +148,7 @@ const DashboardContent = () => {
               <ListenEventsChart />
             </Grid>
 
-            {/* moved inseide listenevents chart */}
+            {/* moved inside the listening history chart */}
             {/* <Grid item xs={12}>
             {assets && listenEvents ? (
               <AssetListensChart

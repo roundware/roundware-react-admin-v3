@@ -132,7 +132,7 @@ const GROUPS: Group[] = [
     label: "Activity",
     icon: <Insights />,
     openByDefault: () => false,
-    items: [resource("sessions", "Sessions", "admin"), resource("listenevents", "Listen Events", "admin")],
+    items: [resource("sessions", "Sessions", "admin"), resource("listeninghistoryitems", "Listen Events", "admin")],
   },
   {
     key: "advanced",
