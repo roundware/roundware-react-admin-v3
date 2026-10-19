@@ -41,7 +41,7 @@
 		"uploading": "正在上传你的投稿！上传完成前请不要关闭此页面。",
 		"thankYouTitle": "谢谢！",
 		"thankYouBody": "你的录音已加入项目。感谢参与！",
-		"createNew": "录制新的录音",
+		"createNew": "再录一段",
 		"resettingIn_one": "{{count}} 秒后重置……",
 		"resettingIn_other": "{{count}} 秒后重置……",
 		"upTo": "最长 {{time}}",

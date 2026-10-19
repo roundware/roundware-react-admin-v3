@@ -41,7 +41,7 @@
 		"uploading": "¡Estamos subiendo tu contribución! Mantén esta página abierta hasta que terminemos.",
 		"thankYouTitle": "¡Gracias!",
 		"thankYouBody": "Tu grabación ya forma parte del proyecto. ¡Gracias por participar!",
-		"createNew": "Crear nueva grabación",
+		"createNew": "Grabar otra",
 		"resettingIn_one": "Reiniciando en {{count}} segundo...",
 		"resettingIn_other": "Reiniciando en {{count}} segundos...",
 		"resettingIn_many": "Reiniciando en {{count}} segundos...",

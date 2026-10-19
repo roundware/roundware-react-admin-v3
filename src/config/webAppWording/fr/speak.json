@@ -41,7 +41,7 @@
 		"uploading": "Ta contribution est en cours d’envoi ! Garde cette page ouverte jusqu’à la fin de l’envoi.",
 		"thankYouTitle": "Merci !",
 		"thankYouBody": "Ton enregistrement fait maintenant partie du projet. Merci d'avoir participé !",
-		"createNew": "Créer un nouvel enregistrement",
+		"createNew": "Enregistrer encore",
 		"resettingIn_one": "Réinitialisation dans {{count}} seconde...",
 		"resettingIn_many": "Réinitialisation dans {{count}} secondes...",
 		"resettingIn_other": "Réinitialisation dans {{count}} secondes...",

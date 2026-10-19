@@ -41,7 +41,7 @@
 		"uploading": "Uploading your contribution now! Please keep this page open until we finish uploading.",
 		"thankYouTitle": "Thank You!",
 		"thankYouBody": "Your recording is now part of the project. Thank you for taking part!",
-		"createNew": "Create New Recording",
+		"createNew": "Record Another",
 		"resettingIn_one": "Resetting in {{count}} second...",
 		"resettingIn_other": "Resetting in {{count}} seconds...",
 		"upTo": "Up to {{time}}",
