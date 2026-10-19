@@ -44,6 +44,10 @@
 		"rerecord": "Réenregistrer",
 		"loadingPreview": "CHARGEMENT DE L’APERÇU"
 	},
+	"interruptedDialog": {
+		"title": "Enregistrement interrompu",
+		"body": "Ton enregistrement a été interrompu par autre chose sur ton téléphone (un appel, l’écran qui s’éteint, etc.), le processus a donc recommencé. Réessaie !"
+	},
 	"rerecordDialog": {
 		"title": "Réenregistrer",
 		"description": "Vraiment ?\nTu vas perdre ton enregistrement.",

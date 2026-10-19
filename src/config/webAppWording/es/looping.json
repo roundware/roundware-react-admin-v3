@@ -44,6 +44,10 @@
 		"rerecord": "Volver a grabar",
 		"loadingPreview": "CARGANDO VISTA PREVIA"
 	},
+	"interruptedDialog": {
+		"title": "Grabación interrumpida",
+		"body": "Tu grabación se interrumpió por otra cosa en tu teléfono (una llamada, la pantalla que se apaga, etc.), así que el proceso ha vuelto a empezar. ¡Inténtalo de nuevo!"
+	},
 	"rerecordDialog": {
 		"title": "Volver a grabar",
 		"description": "¿Seguro?\nPerderás tu grabación.",

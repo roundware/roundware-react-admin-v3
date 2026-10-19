@@ -44,6 +44,10 @@
 		"rerecord": "重录",
 		"loadingPreview": "正在加载试听"
 	},
+	"interruptedDialog": {
+		"title": "录音被中断",
+		"body": "你的录音被手机上的其他事件打断了（来电、屏幕关闭等），所以流程已重置。请再试一次！"
+	},
 	"rerecordDialog": {
 		"title": "重录",
 		"description": "确定吗？\n你的录音将会丢失。",

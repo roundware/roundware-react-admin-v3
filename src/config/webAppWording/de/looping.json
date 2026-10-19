@@ -44,6 +44,10 @@
 		"rerecord": "Neu aufnehmen",
 		"loadingPreview": "VORSCHAU LÄDT"
 	},
+	"interruptedDialog": {
+		"title": "Aufnahme unterbrochen",
+		"body": "Deine Aufnahme wurde durch etwas anderes auf deinem Telefon unterbrochen (einen Anruf, das Ausschalten des Bildschirms usw.), deshalb beginnt der Ablauf von vorn. Bitte versuche es noch einmal!"
+	},
 	"rerecordDialog": {
 		"title": "Neu aufnehmen",
 		"description": "Bist du sicher?\nDeine Aufnahme geht dabei verloren.",

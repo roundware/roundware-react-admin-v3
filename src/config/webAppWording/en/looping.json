@@ -44,6 +44,10 @@
 		"rerecord": "Re-Record",
 		"loadingPreview": "LOADING PREVIEW"
 	},
+	"interruptedDialog": {
+		"title": "Recording interrupted",
+		"body": "Your recording was interrupted by another event on your phone (an incoming call, the screen turning off, etc.), so the process has reset. Please try again!"
+	},
 	"rerecordDialog": {
 		"title": "Re-record",
 		"description": "Are you sure?\nYou will lose your recording.",
