@@ -370,6 +370,20 @@ const ProjectEdit = (): JSX.Element => {
           />
         </CardBox>
 
+        {/* The author's own Google Analytics (server docs/010): the live web
+            app loads Google's script with it; empty, nothing of Google's
+            loads. Not on the test site or in the preview. */}
+        <CardBox title="Analytics">
+          <TextInput
+            source="google_analytics_id"
+            label="Google Analytics measurement ID"
+            placeholder="G-XXXXXXXXXX"
+            fullWidth
+            parse={(v: string) => v ?? ""}
+            helperText="Your own Google Analytics 4 property, from its data stream (Admin › Data streams). Counts visits to the live site only. Leave empty for no analytics. Where visitors' consent is required (the EU, the UK), asking for it is yours to arrange."
+          />
+        </CardBox>
+
         <AdvancedConfigInput />
       </SimpleForm>
       <DeleteProjectSection />
