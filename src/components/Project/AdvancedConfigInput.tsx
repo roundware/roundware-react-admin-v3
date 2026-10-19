@@ -42,6 +42,17 @@ import {
  */
 
 const DEFAULTS = (webAppDefaults as { defaults: Record<string, unknown> }).defaults;
+
+/** The defaults this project gets. The speaker player follows the recording
+ *  method when a project names none, as the web app decides it
+ *  (src/speakerMode.ts): looping mode for looping projects, classic for the
+ *  rest — the built-in defaults say looping mode, which only looping gets. */
+function defaultsFor(recordingMethod: unknown): Record<string, unknown> {
+  if (recordingMethod === "looping") return DEFAULTS;
+  const listen = (DEFAULTS.listen ?? {}) as Record<string, unknown>;
+  const speaker = (listen.speaker ?? {}) as Record<string, unknown>;
+  return { ...DEFAULTS, listen: { ...listen, speaker: { ...speaker, mode: "classic" } } };
+}
 const STAMP = (webAppDefaults as { _generated: { webappVersion: string; generatedAt: string } })
   ._generated;
 
@@ -88,22 +99,23 @@ const AdvancedConfigInput = (): JSX.Element => {
     [parsed.value, schema]
   );
 
+  // Follows the Recording method field on this page as it changes.
+  const recordingMethod = useWatch({ name: "recording_method" }) ?? record?.recording_method;
+  const looping = recordingMethod === "looping";
+
   const rows = useMemo(
     () =>
       buildRows(
-        DEFAULTS,
+        defaultsFor(recordingMethod),
         isPlainObject(parsed.value) ? parsed.value : {},
         record as Record<string, unknown> | undefined,
         schema
       ),
-    [parsed.value, record, schema]
+    [parsed.value, record, schema, recordingMethod]
   );
 
   // Looping-only settings are left out for other projects — unless set,
-  // so nothing in effect is hidden (config/fieldVisibility.ts). Follows the
-  // Recording method field on this page as it changes.
-  const recordingMethod = useWatch({ name: "recording_method" }) ?? record?.recording_method;
-  const looping = recordingMethod === "looping";
+  // so nothing in effect is hidden (config/fieldVisibility.ts).
   const shownRows = useMemo(
     () => (looping ? rows : rows.filter((r) => r.source !== "default" || !isLoopingOnlySetting(r.path))),
     [rows, looping]
