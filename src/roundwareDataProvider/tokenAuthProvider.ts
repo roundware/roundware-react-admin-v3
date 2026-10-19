@@ -36,23 +36,29 @@ export function accessTokenExpired(): boolean {
 }
 
 /** The server refused the sign-in: drop it and reload, which lands on Sign
- *  In (index.tsx). Only for a stored sign-in — a wrong password is a 401 too. */
-function endExpiredSession(e: unknown): void {
+ *  In (index.tsx). Only for a stored sign-in — a wrong password is a 401 too.
+ *  And only when the refused request carried that sign-in: one sent before
+ *  signing in (the Sign In page asks for lists too) could be refused just
+ *  after, and it signed the new session straight out (2026-10-19). */
+function endExpiredSession(e: unknown, sentWith: string | null): void {
   if (!(e instanceof HttpError) || e.status !== 401) return;
-  if (!localStorage.getItem("access_token")) return;
+  if (!sentWith || localStorage.getItem("access_token") !== sentWith) return;
   AUTH_KEYS.forEach((k) => localStorage.removeItem(k));
   window.dispatchEvent(new Event("roundware-auth-change"));
   window.location.reload();
 }
 
-function withServerMessage(e: unknown): never {
-  endExpiredSession(e);
-  if (e instanceof HttpError) {
-    const msg = serverMessage(e.body);
-    if (msg) throw new HttpError(msg, e.status, e.body);
-  }
-  throw e;
-}
+/** The handler for a request's failure, knowing the sign-in it was sent with. */
+const withServerMessage =
+  (sentWith: string | null) =>
+  (e: unknown): never => {
+    endExpiredSession(e, sentWith);
+    if (e instanceof HttpError) {
+      const msg = serverMessage(e.body);
+      if (msg) throw new HttpError(msg, e.status, e.body);
+    }
+    throw e;
+  };
 
 /**
  * Build fetch options with JWT Bearer token + X-Tenant-Slug header.
@@ -83,7 +89,7 @@ export function createOptionsFromToken(): Options {
 export function fetchJsonWithAuthToken(url: string, options: object) {
   return fetchUtils
     .fetchJson(url, Object.assign(createOptionsFromToken(), options))
-    .catch(withServerMessage);
+    .catch(withServerMessage(localStorage.getItem("access_token")));
 }
 
 /**
@@ -157,7 +163,9 @@ export function XMLHttpRequestWithAuthToken(
  */
 export function fetcher(url: string, options: Options = {}) {
   const authOpts = createOptionsFromToken();
-  return fetchUtils.fetchJson(url, { ...options, ...authOpts }).catch(withServerMessage);
+  return fetchUtils
+    .fetchJson(url, { ...options, ...authOpts })
+    .catch(withServerMessage(localStorage.getItem("access_token")));
 }
 
 /**
@@ -171,7 +179,7 @@ export function apiFetcher(url: string, options: Options = {}) {
       ...options,
       ...authOpts,
     })
-    .catch(withServerMessage);
+    .catch(withServerMessage(localStorage.getItem("access_token")));
 }
 
 // Default export kept for backward compat

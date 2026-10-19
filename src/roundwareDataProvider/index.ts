@@ -80,6 +80,25 @@ export class RoundwareDataProvider implements DataProvider {
   private fetchedAt = new Map<string, number>();
   private changeListeners = new Set<() => void>();
 
+  // One request per URL at a time. Opening a project, several parts of the
+  // admin each asked for the same whole list before the first came back,
+  // and each went to the network: five identical requests for 1,615
+  // contributions within seconds, which used up the API's database
+  // connections while the database was busy (Sentry, 2026-10-19). Callers
+  // asking for a URL already on its way share that request.
+  private inflight = new Map<string, Promise<{ json: any }>>();
+
+  private fetchShared(url: string): Promise<{ json: any }> {
+    // Shared only under the same sign-in: a request sent before signing in
+    // (or as someone else) must not answer one sent after.
+    const key = `${localStorage.getItem("access_token") ?? ""} ${localStorage.getItem("tenant_slug") ?? ""} ${url}`;
+    const pending = this.inflight.get(key);
+    if (pending) return pending;
+    const request = this.httpClient(url).finally(() => this.inflight.delete(key));
+    this.inflight.set(key, request);
+    return request;
+  }
+
   private freshKey(resource: string, projectId?: number) {
     return `${projectId ?? this.currentProjectId}:${resource}`;
   }
@@ -180,7 +199,9 @@ export class RoundwareDataProvider implements DataProvider {
         // other filters;
         ...filters,
       }),
-      ...getOrderingQuery(params.sort!),
+      // No server-side ordering: lists are sorted here, below, whenever a
+      // sort is asked for, so the same list in another order is the same
+      // request and can be shared (fetchShared).
       // ...(paginate && getPaginationQuery(params.pagination)),
     };
 
@@ -203,7 +224,12 @@ export class RoundwareDataProvider implements DataProvider {
        */
       this.revalidatingResources.push(resource);
       /** get with query params for now to send response quickly, but we will fetch again without any filters  after this */
-      ({ json } = await this.httpClient(url));
+      try {
+        ({ json } = await this.fetchShared(url));
+      } finally {
+        // Even when it failed: left in, the list was never revalidated again.
+        this.revalidatingResources = this.revalidatingResources.filter((r) => r !== resource);
+      }
       json = this.normalizeApiResponse(json);
 
       /** filter events by project_id client side */
@@ -217,10 +243,6 @@ export class RoundwareDataProvider implements DataProvider {
       this.setResourse(resource, json, params.filter.project_id);
       this.fetchedAt.set(this.freshKey(resource, params.filter.project_id), Date.now());
 
-      /** remove frmo revalidating resources */
-      this.revalidatingResources = this.revalidatingResources.filter(
-        (r) => r !== resource
-      );
       // above code we might have fetched with filter;
       // below code we fetch without filter and save it;
       // should happen async
@@ -236,8 +258,11 @@ export class RoundwareDataProvider implements DataProvider {
           }),
         };
         const newUrl = `${this.apiUrl}/${resource}/?${stringify(newQuery)}`;
+        // The same request again when there were no other filters (only the
+        // project): what just came back is already the whole list.
+        if (newUrl === url) return;
 
-        this.httpClient(newUrl).then(
+        this.fetchShared(newUrl).then(
           ({ json: newJson }: { json: RaRecord[] }) => {
             const normalizedJson = this.normalizeApiResponse(newJson);
             // save in cache
