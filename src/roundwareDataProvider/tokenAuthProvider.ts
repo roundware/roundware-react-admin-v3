@@ -11,7 +11,17 @@ import { fetchUtils, HttpError, Options, RaRecord } from "react-admin";
  */
 function serverMessage(body: unknown): string | null {
   const detail = (body as { detail?: unknown } | null)?.detail;
-  return typeof detail === "string" && detail ? detail : null;
+  if (typeof detail === "string" && detail) return detail;
+  // A field that didn't validate: FastAPI sends a list, one per problem,
+  // each with its message ("Value error, " and all). It showed as
+  // "Unprocessable Content" (2026-10-19).
+  if (Array.isArray(detail)) {
+    const msgs = detail
+      .map((d) => (typeof d?.msg === "string" ? d.msg.replace(/^Value error, /, "") : ""))
+      .filter(Boolean);
+    if (msgs.length) return Array.from(new Set(msgs)).join(" ");
+  }
+  return null;
 }
 
 /** The keys a sign-in keeps (AuthProvider's login and logout). */
