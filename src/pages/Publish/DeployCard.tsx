@@ -7,13 +7,16 @@ import {
   CardContent,
   Chip,
   CircularProgress,
+  FormControlLabel,
   InputAdornment,
   Link,
   Stack,
+  Switch,
   TextField,
   Typography,
 } from "@mui/material";
 import PublicIcon from "@mui/icons-material/Public";
+import { apiFetcher } from "../../roundwareDataProvider/tokenAuthProvider";
 import {
   DeploymentState,
   SubdomainCheck,
@@ -28,6 +31,77 @@ interface Props {
   projectId: number;
   onChange?: () => void;
 }
+
+type SiteKey = "test_site_enabled" | "live_site_enabled";
+
+/**
+ * Each site on or off, keeping the address (server docs/021): the test site
+ * off shows "not available", the live site off "back soon". The preview
+ * here, and Test App, work either way. Saved at once; switching the live
+ * site off shows within 5 minutes (browsers keep its settings that long),
+ * anything else at once.
+ */
+const SiteSwitches: React.FC<{ projectId: number; onError: (m: string) => void }> = ({
+  projectId,
+  onError,
+}) => {
+  const [sites, setSites] = useState<Record<SiteKey, boolean> | null>(null);
+  useEffect(() => {
+    apiFetcher(`/projects/${projectId}/`)
+      .then(({ json }) =>
+        setSites({
+          test_site_enabled: json.test_site_enabled !== false,
+          live_site_enabled: json.live_site_enabled !== false,
+        })
+      )
+      .catch((e) => onError(errMessage(e)));
+  }, [projectId]);
+
+  const set = async (key: SiteKey, on: boolean) => {
+    const before = sites;
+    setSites((s) => (s ? { ...s, [key]: on } : s));
+    try {
+      await apiFetcher(`/projects/${projectId}/`, {
+        method: "PATCH",
+        body: JSON.stringify({ [key]: on }),
+      });
+    } catch (e) {
+      setSites(before);
+      onError(errMessage(e));
+    }
+  };
+
+  if (!sites) return null;
+  const row = (key: SiteKey, label: string, help: string) => (
+    <Box>
+      <FormControlLabel
+        control={<Switch checked={sites[key]} onChange={(e) => set(key, e.target.checked)} />}
+        label={label}
+      />
+      <Typography variant="caption" color="text.secondary" display="block" sx={{ ml: 6, mt: -0.5 }}>
+        {help}
+      </Typography>
+    </Box>
+  );
+  return (
+    <Stack spacing={1} sx={{ mb: 2 }}>
+      {row(
+        "live_site_enabled",
+        sites.live_site_enabled ? "Live site on" : "Live site off",
+        sites.live_site_enabled
+          ? "Participants can open it. Off, its address shows \"Back soon\" within 5 minutes — kept for this project."
+          : "Its address shows \"Back soon\". Turn it on to bring the site back as it was."
+      )}
+      {row(
+        "test_site_enabled",
+        sites.test_site_enabled ? "Test site on" : "Test site off",
+        sites.test_site_enabled
+          ? "Anyone with its link can open it. Off, it shows \"Not available\"; the preview here and Test App still work."
+          : "Its address shows \"Not available\". The preview here and Test App still work."
+      )}
+    </Stack>
+  );
+};
 
 const DeployCard: React.FC<Props> = ({ projectId, onChange }) => {
   const [state, setState] = useState<DeploymentState | null>(null);
@@ -153,8 +227,8 @@ const DeployCard: React.FC<Props> = ({ projectId, onChange }) => {
               </Typography>
             )}
             <Typography variant="caption" color="text.secondary">
-              Anyone with the test site's link can open it; search engines are
-              kept away. The live site can take up to 5 minutes to show an update.
+              Search engines are kept away from the test site. The live site can
+              take up to 5 minutes to show an update.
             </Typography>
           </Alert>
         ) : (
@@ -170,6 +244,8 @@ const DeployCard: React.FC<Props> = ({ projectId, onChange }) => {
             {error}
           </Alert>
         )}
+
+        {state?.deployed && <SiteSwitches projectId={projectId} onError={setError} />}
 
         <TextField
           label="Subdomain"
@@ -216,6 +292,13 @@ const DeployCard: React.FC<Props> = ({ projectId, onChange }) => {
             </Button>
           )}
         </Box>
+        {state?.deployed && (
+          <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1 }}>
+            Unpublishing takes both sites down and gives up the address — another
+            project could take it. To take a site down and keep the address, switch it
+            off above.
+          </Typography>
+        )}
       </CardContent>
     </Card>
   );

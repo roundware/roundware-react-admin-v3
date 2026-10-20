@@ -1,6 +1,10 @@
 {
 	"comingSoonTitle": "Coming soon",
 	"comingSoonBody": "This experience hasn't been published yet. Check back soon.",
+	"unavailableTitle": "Not available",
+	"unavailableBody": "This test site is switched off.",
+	"offlineTitle": "Back soon",
+	"offlineBody": "This experience is offline for now. Check back soon.",
 	"errorTitle": "Unable to load",
 	"errorBody": "We couldn't load this experience. Please try again later.",
 	"testSite": "Test site",

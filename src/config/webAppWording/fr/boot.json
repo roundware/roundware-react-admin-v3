@@ -1,6 +1,10 @@
 {
 	"comingSoonTitle": "Bientôt disponible",
 	"comingSoonBody": "Cette expérience n’a pas encore été publiée. Reviens bientôt.",
+	"unavailableTitle": "Indisponible",
+	"unavailableBody": "Ce site de test est désactivé.",
+	"offlineTitle": "Bientôt de retour",
+	"offlineBody": "Cette expérience est hors ligne pour le moment. Reviens bientôt.",
 	"errorTitle": "Chargement impossible",
 	"errorBody": "Nous n’avons pas pu charger cette expérience. Réessaie plus tard.",
 	"testSite": "Site de test",

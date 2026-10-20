@@ -1,6 +1,10 @@
 {
 	"comingSoonTitle": "Demnächst verfügbar",
 	"comingSoonBody": "Dieses Erlebnis wurde noch nicht veröffentlicht. Schau bald wieder vorbei.",
+	"unavailableTitle": "Nicht verfügbar",
+	"unavailableBody": "Diese Testseite ist ausgeschaltet.",
+	"offlineTitle": "Bald wieder da",
+	"offlineBody": "Dieses Erlebnis ist gerade offline. Schau bald wieder vorbei.",
 	"errorTitle": "Laden nicht möglich",
 	"errorBody": "Wir konnten dieses Erlebnis nicht laden. Bitte versuch es später noch einmal.",
 	"testSite": "Testseite",

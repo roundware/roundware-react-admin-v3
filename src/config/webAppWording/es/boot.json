@@ -1,6 +1,10 @@
 {
 	"comingSoonTitle": "Próximamente",
 	"comingSoonBody": "Esta experiencia aún no se ha publicado. Vuelve pronto.",
+	"unavailableTitle": "No disponible",
+	"unavailableBody": "Este sitio de prueba está desactivado.",
+	"offlineTitle": "Volvemos pronto",
+	"offlineBody": "Esta experiencia no está disponible por ahora. Vuelve pronto.",
 	"errorTitle": "No se pudo cargar",
 	"errorBody": "No pudimos cargar esta experiencia. Inténtalo de nuevo más tarde.",
 	"testSite": "Sitio de prueba",
