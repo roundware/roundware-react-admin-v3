@@ -164,7 +164,9 @@ const SpeakerDrawer = (): JSX.Element | null => {
   };
 
   /** Whether the drawing manager should be active */
-  const shouldDraw = !!selectedSpeaker && !selectedSpeakerData?.shape;
+  // Not for a global speaker, which plays everywhere (docs/027).
+  const shouldDraw =
+    !!selectedSpeaker && !selectedSpeakerData?.shape && !selectedSpeakerData?.is_global;
 
   /** Hook manages DrawingManager lifecycle — no JSX component needed */
   useDrawingManager({
@@ -218,10 +220,10 @@ const SpeakerDrawer = (): JSX.Element | null => {
 
   // Only set unsaved when we actually start drawing a new shape
   useEffect(() => {
-    if (selectedSpeaker && !selectedSpeakerData?.shape && drawnPaths) {
+    if (shouldDraw && drawnPaths) {
       setIsCurrentSpeakerSaved(false);
     }
-  }, [drawnPaths, selectedSpeaker, selectedSpeakerData?.shape]);
+  }, [drawnPaths, shouldDraw]);
 
   /** removes current shape */
   const handleRedraw = () => setCurrentShape(null);

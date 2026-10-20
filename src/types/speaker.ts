@@ -5,6 +5,9 @@ export interface ISpeaker {
   attenuation_distance: number;
   code: string;
   is_active: boolean;
+  /** Plays everywhere, at its max volume: its shape (kept, for switching
+   *  back) and fade don't count (server docs/027). */
+  is_global?: boolean;
   min_volume: number;
   max_volume: number;
   uri: string;

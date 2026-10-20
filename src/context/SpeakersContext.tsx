@@ -82,7 +82,8 @@ export const SpeakersProvider = ({
 
   const speakersWithoutShape = useMemo(() => {
     return (speakers || [])
-      .filter((s) => !s.shape)
+      // A global speaker needs none: it plays everywhere.
+      .filter((s) => !s.shape && !s.is_global)
       .map((s) => {
         return {
           ...s,

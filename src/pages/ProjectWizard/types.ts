@@ -149,6 +149,9 @@ export interface WizardSpeaker {
   audioFile: File | null;
   code: string;
   is_active: boolean;
+  /** Plays everywhere: no shape needed, and one drawn is kept but ignored
+   *  (server docs/027). */
+  is_global?: boolean;
   attenuation_distance: number;
   min_volume: number;
   max_volume: number;

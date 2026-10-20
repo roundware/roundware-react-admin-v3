@@ -74,7 +74,8 @@ const SpeakerShapesControl = ({ speakers: propSpeakers }: SpeakerShapesControlPr
       setMap(map);
 
       // Fit map to existing speaker shapes, or default to zoom 15
-      const shapedSpeakers = (speakers || []).filter((s) => s?.shape?.coordinates);
+      // A global speaker's kept shape doesn't count (docs/027).
+      const shapedSpeakers = (speakers || []).filter((s) => s?.shape?.coordinates && !s.is_global);
       if (shapedSpeakers.length > 0) {
         const bounds = new google.maps.LatLngBounds();
         shapedSpeakers.forEach((s) => {
@@ -188,7 +189,8 @@ const SpeakerShapesControl = ({ speakers: propSpeakers }: SpeakerShapesControlPr
                   <SpeakerDrawer />
                   {/* all other polygons */}
                   {speakers
-                    ?.filter((s) => s.shape)
+                    // A global speaker plays everywhere: no area to edit.
+                    ?.filter((s) => s.shape && !s.is_global)
                     ?.map((s) => (
                       <SpeakerPolygonGroup speaker={s} key={s.id} />
                     ))}

@@ -29,10 +29,28 @@ import {
     useUpdate,
 } from 'react-admin';
 import { Navigate, useParams } from 'react-router-dom';
+import { useWatch } from 'react-hook-form';
 import { apiFetcher } from 'roundwareDataProvider/tokenAuthProvider';
 import SpeakerAudioControls from './SpeakerAudioControls';
 import SpeakerShapeInput from './SpeakerShapeInput';
 import VariantAudioControls from './VariantAudioControls';
+
+/** Plays everywhere (server docs/027): at its max volume, wherever the
+ *  listener is — for a project available anywhere. */
+const GlobalInput = () => (
+  <BooleanInput
+    source='is_global'
+    label='Plays everywhere'
+    fullWidth
+    helperText="Heard everywhere at its max volume, with no area or fade — for a project available anywhere. A shape it has is kept, for switching back. Nowhere is out of range while it's active."
+  />
+);
+
+/** Its area and fade: only for a speaker that doesn't play everywhere. */
+const WhenLocal = ({ children }: { children: React.ReactNode }) => {
+  const isGlobal = useWatch({ name: 'is_global' });
+  return isGlobal ? null : <>{children}</>;
+};
 
 // Validation function for hex colors
 const validateHexColor = (value: string) => {
@@ -159,6 +177,7 @@ export const SpeakerEdit = (): JSX.Element => {
       >
         <TextInput source='id' fullWidth InputProps={{ readOnly: true }} />
         <BooleanInput source='is_active' fullWidth />
+        <GlobalInput />
         <TextInput source='code' fullWidth validate={maxLength(10)} />
         <SpeakerAudioControls />
         <FileDownloadButton source='uri' />
@@ -167,14 +186,16 @@ export const SpeakerEdit = (): JSX.Element => {
 
         {showsSpeakerVariants(selectedProject) && <VariantAudioControls />}
 
-        <NumberInput
-          source='attenuation_distance'
-          required
-          fullWidth
-          min={0}
-          step={1}
-          helperText="Meters (positive integers only)"
-        />
+        <WhenLocal>
+          <NumberInput
+            source='attenuation_distance'
+            required
+            fullWidth
+            min={0}
+            step={1}
+            helperText="Meters (positive integers only)"
+          />
+        </WhenLocal>
 
         <ColorPicker
           source='fill_color'
@@ -343,18 +364,25 @@ export const SpeakerCreate = (): JSX.Element => {
         toolbar={<FormToolbar />}
         reValidateMode='onBlur'
       >
-        <BooleanInput source='is_active' fullWidth defaultChecked />
+        {/* defaultValue: defaultChecked did nothing, so the box started
+            off and a speaker made here was saved inactive unless ticked. */}
+        <BooleanInput source='is_active' fullWidth defaultValue={true} />
         <TextInput source='code' validate={maxLength(10)} fullWidth required />
+        <GlobalInput />
 
-        <SpeakerShapeInput />
+        <WhenLocal>
+          <SpeakerShapeInput />
+        </WhenLocal>
 
         <SpeakerAudioControls />
         {showsSpeakerVariants(selectedProject) && <VariantAudioControls />}
-        <NumberInput
-          source='attenuation_distance'
-          fullWidth
-          helperText='Meters'
-        />
+        <WhenLocal>
+          <NumberInput
+            source='attenuation_distance'
+            fullWidth
+            helperText='Meters'
+          />
+        </WhenLocal>
 
         <ColorPicker
           source='fill_color'

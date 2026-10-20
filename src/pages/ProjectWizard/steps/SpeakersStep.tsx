@@ -135,6 +135,7 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
                     />
                   </Grid>
 
+                  {!spk.is_global && (
                   <Grid size={{ xs: 6, sm: 4 }}>
                     <WizardNumberField
                       label="Attenuation Distance"
@@ -151,6 +152,7 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
                       size="small"
                     />
                   </Grid>
+                  )}
 
                   <Grid size={{ xs: 6, sm: 4 }}>
                     <FormControlLabel
@@ -169,6 +171,29 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
                       }
                       label="Active"
                     />
+                  </Grid>
+
+                  {/* Plays everywhere (server docs/027): no area or fade. */}
+                  <Grid size={{ xs: 12, sm: 4 }}>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={!!spk.is_global}
+                          onChange={(e) =>
+                            dispatch({
+                              type: "UPDATE_SPEAKER",
+                              tempId: spk.tempId,
+                              patch: { is_global: e.target.checked },
+                            })
+                          }
+                          size="small"
+                        />
+                      }
+                      label="Plays everywhere"
+                    />
+                    <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: -0.5 }}>
+                      At its max volume, wherever the listener is — no area to draw.
+                    </Typography>
                   </Grid>
 
                   <Grid size={{ xs: 6, sm: 2 }}>
@@ -256,6 +281,7 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
                         })
                       }
                     />
+                    {!spk.is_global && (
                     <ShapeDrawInput
                       value={spk.shape}
                       onChange={(shape) =>
@@ -270,6 +296,7 @@ const SpeakersStep: React.FC<SpeakersStepProps> = ({ state, dispatch }) => {
                         lng: state.project.longitude,
                       }}
                     />
+                    )}
                   </Grid>
                 </Grid>
               </CardContent>

@@ -4,6 +4,7 @@ import CardBox from "components/common/CardBox";
 import LocationSelector from "components/common/LocationSelector";
 import TranslatableField from "components/common/TranslatableField";
 import { useProjects } from "context/ProjectsContext";
+import { useSpeakers } from "context/SpeakersContext";
 import { useState } from "react";
 import {
     BooleanInput,
@@ -137,6 +138,25 @@ const DefaultAttenuationInput = () => {
       min={0}
       step={1}
       helperText="Default attenuation distance (meters) for the loops participants record; each speaker can then have its own"
+    />
+  );
+};
+
+/** Out of range: the distance, and a word when it can't apply — an active
+ *  speaker that plays everywhere leaves nowhere out of range (docs/027). */
+const OutOfRangeDistanceInput = () => {
+  const { speakers } = useSpeakers();
+  const everywhere = (speakers ?? []).some((s) => s.is_global && s.is_active);
+  return (
+    <NumberInput
+      source="out_of_range_distance"
+      required
+      fullWidth
+      helperText={
+        everywhere
+          ? "No effect while a speaker plays everywhere: nowhere is out of range."
+          : "Distance from nearest speaker threshold to trigger Out Of Range warning"
+      }
     />
   );
 };
@@ -338,12 +358,7 @@ const ProjectEdit = (): JSX.Element => {
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <CardBox title="Out of Range">
-              <NumberInput
-                source="out_of_range_distance"
-                required
-                fullWidth
-                helperText="Distance from nearest speaker threshold to trigger Out Of Range warning"
-              />
+              <OutOfRangeDistanceInput />
               <TextInput
                 source="out_of_range_url"
                 fullWidth

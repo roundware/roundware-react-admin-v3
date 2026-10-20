@@ -249,13 +249,15 @@ export async function executeCreation(
           project_id: projectId,
           code: spk.code,
           is_active: spk.is_active,
+          is_global: !!spk.is_global,
           attenuation_distance: spk.attenuation_distance,
           min_volume: spk.min_volume,
           max_volume: spk.max_volume,
           fill_color: spk.fill_color,
           border_color: spk.border_color,
-          // Required — the web app throws on a shapeless speaker. The server
-          // derives boundary and attenuation_border from this.
+          // Required unless it plays everywhere — the web app throws on a
+          // shapeless local speaker. The server derives boundary and
+          // attenuation_border from this.
           shape: spk.shape,
         });
 

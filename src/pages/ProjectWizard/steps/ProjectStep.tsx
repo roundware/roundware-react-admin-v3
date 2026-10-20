@@ -308,6 +308,10 @@ const ProjectStep: React.FC<ProjectStepProps> = ({ state, dispatch }) => {
                   size="small"
                   helperText={[
                     "How far outside the speakers' areas still counts as in range.",
+                    // docs/027
+                    !state.skipSpeakers &&
+                      state.speakers.some((spk) => spk.is_global && spk.is_active) &&
+                      "No effect while a speaker plays everywhere.",
                     listensByLocation && "Farther, listeners are told they're out of range.",
                     recordsLocation && "Recordings made farther away wait for your review.",
                   ]

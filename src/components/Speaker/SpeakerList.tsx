@@ -211,6 +211,14 @@ const SpeakerList = (): JSX.Element => {
               <TextField source='id' />
               <BooleanField source='is_active' label='Active' />
               <TextField source='code' />
+              {/* Plays everywhere, with no area (server docs/027). */}
+              <FunctionField
+                label='Where'
+                sortBy='is_global'
+                render={(r: { is_global?: boolean }) =>
+                  r?.is_global ? <Chip label='Everywhere' size='small' color='primary' variant='outlined' /> : null
+                }
+              />
               {/* A participant's loop recorded on the test site (server docs/021). */}
               <FunctionField
                 label='Test'

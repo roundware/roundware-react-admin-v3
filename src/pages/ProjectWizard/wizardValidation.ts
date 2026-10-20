@@ -159,7 +159,8 @@ function validateSpeakers(state: WizardState): ValidationResult {
   // listener's location is set, which happens during boot, so the project never
   // becomes usable. Block it here rather than let someone discover it after
   // deploying.
-  const unshaped = state.speakers.filter((spk) => !spk.shape);
+  // A speaker that plays everywhere needs no area (server docs/027).
+  const unshaped = state.speakers.filter((spk) => !spk.shape && !spk.is_global);
   if (unshaped.length > 0) {
     const which = unshaped
       .map((spk) => spk.code.trim() || "(unnamed)")

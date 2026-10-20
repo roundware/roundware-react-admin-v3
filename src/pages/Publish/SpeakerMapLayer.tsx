@@ -44,7 +44,7 @@ const SpeakerImages = ({ speakers, url, opacity }: { speakers: ISpeaker[]; url: 
   useEffect(() => {
     if (!map) return;
     const overlays = speakers
-      .map((s) => s.shape && speakerImageBounds(s.shape as any))
+      .map((s) => s.shape && !s.is_global && speakerImageBounds(s.shape as any))
       .filter((b): b is google.maps.LatLngBoundsLiteral => !!b)
       .map((bounds) => {
         const o = new google.maps.GroundOverlay(url, bounds, { opacity, clickable: false });
@@ -76,7 +76,8 @@ const SpeakerMapLayer: React.FC<Props> = ({ speakers, display, mapConfig, palett
   const shapes = useMemo(
     () =>
       speakers
-        .filter((s) => s.shape)
+        // A global speaker plays everywhere: no area to draw (docs/027).
+        .filter((s) => s.shape && !s.is_global)
         .map((s) => ({
           paths: polygonToGoogleMapPaths(s.shape as any),
           options: resolveStyle(s, state, mapConfig, palette),

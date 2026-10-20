@@ -5,6 +5,11 @@ import { MultiPolygon } from "@turf/helpers";
 import React from "react";
 import { required, useInput, Validator } from "react-admin";
 
+const drawIt = required("Draw a coverage area");
+/** Required — except for a speaker that plays everywhere (docs/027). */
+const needsShape: Validator = (value, values) =>
+  values?.is_global ? undefined : drawIt(value, values);
+
 /**
  * react-admin adapter around {@link ShapeDrawInput}, for the speaker Create
  * form.
@@ -21,7 +26,7 @@ import { required, useInput, Validator } from "react-admin";
 const SpeakerShapeInput: React.FC<{
   source?: string;
   validate?: Validator | Validator[];
-}> = ({ source = "shape", validate = required("Draw a coverage area") }) => {
+}> = ({ source = "shape", validate = needsShape }) => {
   const { selectedProject } = useProjects();
   const { field, fieldState } = useInput({ source, validate });
 

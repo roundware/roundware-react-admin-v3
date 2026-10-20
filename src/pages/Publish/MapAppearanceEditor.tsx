@@ -269,7 +269,7 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
   useEffect(() => {
     if (!map || fitted.current || !speakers.length) return;
     const bounds = new google.maps.LatLngBounds();
-    speakers.forEach((s) => s.shape && polygonToGoogleMapPaths(s.shape as any).forEach((p) => bounds.extend(p)));
+    speakers.forEach((s) => s.shape && !s.is_global && polygonToGoogleMapPaths(s.shape as any).forEach((p) => bounds.extend(p)));
     if (overlayUrl) bounds.extend(center);
     if (!bounds.isEmpty()) map.fitBounds(bounds, 24);
     fitted.current = true;
