@@ -19,6 +19,8 @@ export interface PlanData {
   price_cents_monthly: number;
   /** A project's own web address (server docs/028). */
   allows_custom_domain?: boolean;
+  /** Custom CSS in Look & Feel (server docs/029). */
+  allows_custom_css?: boolean;
 }
 
 export interface LimitUsage {
@@ -88,6 +90,7 @@ export function planFeatures(p: PlanData): string[] {
       : `${plural(p.max_contributions, "contribution")}, across all projects`,
     p.max_members === UNLIMITED ? "Unlimited team members" : plural(p.max_members, "team member"),
     ...(p.allows_custom_domain ? ["A custom URL for each project"] : []),
+    ...(p.allows_custom_css ? ["Custom CSS"] : []),
   ];
 }
 

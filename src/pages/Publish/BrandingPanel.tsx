@@ -2,6 +2,7 @@ import React from "react";
 import { CircularProgress, Stack, Typography } from "@mui/material";
 import AppStartPanel from "./AppStartPanel";
 import BrandingFilesPanel from "./BrandingFilesPanel";
+import CustomCssPanel from "./CustomCssPanel";
 import DialogCopyEditor from "./DialogCopyEditor";
 import InfoPanelEditor from "./InfoPanelEditor";
 import LookAndFeelPanel from "./LookAndFeelPanel";
@@ -44,6 +45,8 @@ const BrandingPanel: React.FC<Props> = ({ projectId, onSaved, onPreview }) => (
       <LookAndFeelPanel projectId={projectId} onSaved={onSaved} />
 
       <BrandingFilesPanel projectId={projectId} onSaved={onSaved} />
+
+      <CustomCssPanel projectId={projectId} onSaved={onSaved} />
 
       <InfoPanelEditor />
 
