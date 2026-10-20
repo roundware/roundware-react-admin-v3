@@ -18,6 +18,7 @@ import {
 import { WizardState } from "../types";
 import { WizardAction } from "../wizardReducer";
 import { listens, speaks } from "../wizardSteps";
+import ActivitiesPanel from "../components/ActivitiesPanel";
 import StepInstruction from "../components/StepInstruction";
 import WizardLocationSelector from "../components/WizardLocationSelector";
 import WizardTranslatableField from "../components/WizardTranslatableField";
@@ -166,6 +167,11 @@ const ProjectStep: React.FC<ProjectStepProps> = ({ state, dispatch }) => {
               />
             )}
           />
+        </Grid>
+
+        {/* What people do here — the steps after, and the settings below, follow it */}
+        <Grid size={{ xs: 12 }}>
+          <ActivitiesPanel state={state} dispatch={dispatch} />
         </Grid>
 
         {/* Key Settings — each only where it applies */}

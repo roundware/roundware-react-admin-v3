@@ -25,13 +25,6 @@ function validateTemplate(state: WizardState): ValidationResult {
   if (state.templateKey === null) {
     return fail("Choose a template to continue.");
   }
-  if (!listens(state) && !speaks(state)) {
-    return fail("Turn on Listen, Speak or both: what will people do here?");
-  }
-  // The server refuses it too (docs/025).
-  if (isLooping(state) && !listens(state)) {
-    return fail("A looping project needs Listen on: contributors record over what they hear.");
-  }
   return ok;
 }
 
@@ -41,6 +34,13 @@ function validateProject(state: WizardState): ValidationResult {
 
   if (!project.name.trim()) {
     errors.push("Project name is required.");
+  }
+  if (!listens(state) && !speaks(state)) {
+    errors.push("Turn on Listen, Speak or both: what will people do here?");
+  }
+  // The server refuses it too (docs/025).
+  if (isLooping(state) && !listens(state)) {
+    errors.push("A looping project needs Listen on: contributors record over what they hear.");
   }
   if (project.latitude === 0 && project.longitude === 0) {
     errors.push("Please set a project location (latitude and longitude).");

@@ -190,8 +190,7 @@ const ProjectWizardPage: React.FC = () => {
       </Card>
 
       {/* ---- Validation Errors ---- */}
-      {/* On the first screen, once a template is chosen: what people do. */}
-      {!validation.valid && (currentStepId !== "template" || state.templateKey !== null) && (
+      {!validation.valid && currentStepId !== "template" && (
         <Box sx={{ mb: 2 }}>
           {validation.errors.map((err, i) => (
             <Typography key={i} color="error" variant="body2">

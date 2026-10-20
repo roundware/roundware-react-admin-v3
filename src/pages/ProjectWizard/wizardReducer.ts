@@ -190,9 +190,7 @@ export function wizardReducer(state: WizardState, action: WizardAction): WizardS
       return {
         ...state,
         templateKey: t.key,
-        // Stays on the first screen, where what people do (Listen, Speak)
-        // is set next, from the template's.
-        activeStep: "template",
+        activeStep: "project", // on to Project Basics
         project: { ...DEFAULT_PROJECT, ...t.project },
         audiotrack: { ...DEFAULT_AUDIOTRACK, ...t.audiotrack },
         categories,
