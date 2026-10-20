@@ -313,3 +313,37 @@ export function errMessage(e: unknown): string {
   }
   return anyErr?.message || "Something went wrong.";
 }
+
+/** A project's own address, e.g. stories.mypodcast.org (server docs/028). */
+export interface CustomDomainState {
+  /** Whether the organization's plan allows one. */
+  allowed: boolean;
+  hostname: string | null;
+  verified: boolean;
+  verified_at: string | null;
+  /** The CNAME's target: the project's Roundware address. */
+  target: string | null;
+  url: string | null;
+}
+
+export async function getCustomDomain(projectId: number): Promise<CustomDomainState> {
+  const { json } = await apiFetcher(`/projects/${projectId}/custom-domain/`);
+  return json as CustomDomainState;
+}
+
+export async function setCustomDomain(projectId: number, hostname: string): Promise<CustomDomainState> {
+  const { json } = await apiFetcher(`/projects/${projectId}/custom-domain/`, {
+    method: "PUT",
+    body: JSON.stringify({ hostname }),
+  });
+  return json as CustomDomainState;
+}
+
+export async function checkCustomDomain(projectId: number): Promise<CustomDomainState> {
+  const { json } = await apiFetcher(`/projects/${projectId}/custom-domain/check/`, { method: "POST" });
+  return json as CustomDomainState;
+}
+
+export async function removeCustomDomain(projectId: number): Promise<void> {
+  await apiFetcher(`/projects/${projectId}/custom-domain/`, { method: "DELETE" });
+}

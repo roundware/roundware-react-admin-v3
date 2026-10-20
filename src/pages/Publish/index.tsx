@@ -14,6 +14,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Title } from "react-admin";
 import { useProjects } from "../../context/ProjectsContext";
 import DeployCard from "./DeployCard";
+import CustomDomainCard from "./CustomDomainCard";
 import LiveSiteCard from "./LiveSiteCard";
 import VersionsCard from "./VersionsCard";
 import TimeMachineCard from "./TimeMachineCard";
@@ -171,6 +172,10 @@ const PublishPage: React.FC = () => {
       <ParadigmWarning project={selectedProject} />
 
       <DeployCard projectId={projectId} onChange={handleDeployChange} />
+      {/* Its own address, once published (server docs/028). */}
+      {live?.published && (
+        <CustomDomainCard key={deployKey} projectId={projectId} onChange={reloadLive} />
+      )}
       <LiveSiteCard
         projectId={projectId}
         refreshKey={deployKey + liveKey}

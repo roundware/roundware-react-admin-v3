@@ -254,6 +254,9 @@ const DeployCard: React.FC<Props> = ({ projectId, onChange }) => {
           fullWidth
           size="small"
           placeholder="my-tour"
+          // The address loads after the field: without this the label sat
+          // over it.
+          InputLabelProps={{ shrink: true }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">.{baseDomain}</InputAdornment>
