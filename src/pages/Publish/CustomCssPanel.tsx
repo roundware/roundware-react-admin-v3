@@ -21,7 +21,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import hooksFile from "../../config/webAppCssHooks.json";
-import { errMessage, FileSlot, getBranding, getBrandingSchema, patchBranding } from "./api";
+import { errMessage, FileSlot, getBranding, getBrandingSchema, patchBranding, webappUrl } from "./api";
 
 interface Props {
   projectId: number;
@@ -35,6 +35,41 @@ interface Hook {
 }
 
 const HOOKS = (hooksFile as { hooks: Hook[] }).hooks;
+
+/** Worked examples, each insertable (Halsey, 2026-10-21). */
+const EXAMPLES: { title: string; css: (image?: string) => string }[] = [
+  {
+    title: "A see-through header",
+    css: () => `.rw-header {\n  background: rgba(0, 0, 0, 0.35);\n  backdrop-filter: blur(6px);\n}`,
+  },
+  {
+    title: "The embedded recorder, square and flat",
+    css: () => `html.rw-embed .rw-embed-recorder {\n  border-radius: 0;\n  box-shadow: none;\n}`,
+  },
+  {
+    title: "Hide the walk / map toggle",
+    css: () => `.rw-walk-toggle {\n  display: none;\n}`,
+  },
+  {
+    title: "A spaced-out splash title",
+    css: () => `.rw-intro-title {\n  letter-spacing: 0.08em;\n  text-transform: uppercase;\n}`,
+  },
+  {
+    title: "A larger Sound button, on the map only",
+    css: () => `html.rw-page-listen .rw-sound-button {\n  transform: scale(1.2);\n}`,
+  },
+  {
+    title: "One of your images behind Home",
+    css: (image) =>
+      `.rw-home {\n  background-image: url("${image ?? "…an image's address, from the list below…"}");\n  background-size: cover;\n}`,
+  },
+];
+
+/** What the preview said was clicked (web app HookPicker). */
+interface Picked {
+  hooks: string[];
+  scope: string | null;
+}
 
 const EXAMPLE = `/* For example: */
 .rw-header { background: rgba(0, 0, 0, 0.4); }
@@ -54,6 +89,52 @@ const CustomCssPanel: React.FC<Props> = ({ projectId, onSaved }) => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
+  const [picking, setPicking] = useState(false);
+  const [picked, setPicked] = useState<Picked | null>(null);
+  const pickingRef = React.useRef(false);
+
+  // Pick an element: ask the preview beside this (Look & Feel's), and hear
+  // what was clicked. A preview reloaded after a save says "ready", and is
+  // asked again while picking.
+  const previewOrigin = React.useMemo(() => new URL(webappUrl()).origin, []);
+  const toPreview = React.useCallback(
+    (on: boolean) => {
+      document
+        .querySelectorAll<HTMLIFrameElement>('iframe[title="Web app preview"]')
+        .forEach((f) => f.contentWindow?.postMessage({ source: "rw-admin", type: "pick", on }, previewOrigin));
+    },
+    [previewOrigin]
+  );
+  useEffect(() => {
+    pickingRef.current = picking;
+  }, [picking]);
+  useEffect(() => {
+    const onMessage = (e: MessageEvent) => {
+      if (e.origin !== previewOrigin || e.data?.source !== "rw-preview") return;
+      if (e.data.type === "picked") {
+        setPicked({ hooks: e.data.hooks ?? [], scope: e.data.scope ?? null });
+        setPicking(false);
+      } else if (e.data.type === "pick-stopped") setPicking(false);
+      else if (e.data.type === "ready" && pickingRef.current) toPreview(true);
+    };
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, [previewOrigin, toPreview]);
+  // Leaving the section (or the page) stops it.
+  useEffect(() => () => toPreview(false), [toPreview]);
+
+  const startPicking = () => {
+    setPicked(null);
+    setPicking(true);
+    toPreview(true);
+  };
+  const stopPicking = () => {
+    setPicking(false);
+    toPreview(false);
+  };
+
+  /** Add a rule at the end of the CSS, ready to fill in. */
+  const insert = (rule: string) => setCss((c) => `${c.trimEnd()}${c.trim() ? "\n\n" : ""}${rule}\n`);
 
   useEffect(() => {
     Promise.all([getBranding(projectId), getBrandingSchema()])
@@ -164,6 +245,58 @@ const CustomCssPanel: React.FC<Props> = ({ projectId, onSaved }) => {
 
             <Box>
               <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                What&apos;s it called?
+              </Typography>
+              {picking ? (
+                <Alert
+                  severity="info"
+                  action={
+                    <Button color="inherit" size="small" onClick={stopPicking}>
+                      Stop
+                    </Button>
+                  }
+                >
+                  Point at a part of the preview, then click it. (Esc stops.)
+                </Alert>
+              ) : (
+                <Button variant="outlined" size="small" onClick={startPicking}>
+                  Pick an element in the preview
+                </Button>
+              )}
+              {picked && <PickedResult picked={picked} onInsert={insert} />}
+            </Box>
+
+            <Accordion disableGutters variant="outlined" sx={{ "&:before": { display: "none" } }}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography variant="subtitle2">Examples</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Stack spacing={1.5}>
+                  {EXAMPLES.map((ex) => {
+                    const text = ex.css(images[0]?.url);
+                    return (
+                      <Box key={ex.title}>
+                        <Stack direction="row" alignItems="center" justifyContent="space-between">
+                          <Typography variant="body2">{ex.title}</Typography>
+                          <Button size="small" onClick={() => insert(text)}>
+                            Insert
+                          </Button>
+                        </Stack>
+                        <Box
+                          component="pre"
+                          sx={{ m: 0, p: 1, bgcolor: "action.hover", borderRadius: 1, fontSize: 12, overflowX: "auto" }}
+                        >
+                          {text}
+                        </Box>
+                      </Box>
+                    );
+                  })}
+                </Stack>
+              </AccordionDetails>
+            </Accordion>
+
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
                 The project&apos;s images
               </Typography>
               {images.length === 0 ? (
@@ -216,6 +349,56 @@ const CustomCssPanel: React.FC<Props> = ({ projectId, onSaved }) => {
         )}
       </AccordionDetails>
     </Accordion>
+  );
+};
+
+/** What was clicked: its hooks, closest first, and a rule to start from. */
+const PickedResult: React.FC<{ picked: Picked; onInsert: (rule: string) => void }> = ({ picked, onInsert }) => {
+  const where = (name: string) => HOOKS.find((h) => h.name === name)?.where;
+  if (picked.hooks.length === 0) {
+    return (
+      <Alert severity="warning" sx={{ mt: 1 }}>
+        That part has no rw- class yet, nor anything around it. Tell Roundware which part it was,
+        and a class can be added.
+      </Alert>
+    );
+  }
+  const [closest, ...outer] = picked.hooks;
+  const scope = picked.scope ? `html.${picked.scope} ` : "";
+  const rule = `${scope}.${closest} {\n  \n}`;
+  return (
+    <Box sx={{ mt: 1, p: 1.5, border: "1px solid", borderColor: "divider", borderRadius: 1 }}>
+      <Typography variant="body2">
+        <Box component="code" sx={{ fontWeight: 700 }}>
+          .{closest}
+        </Box>
+        {where(closest) ? ` — ${where(closest)}` : ""}
+      </Typography>
+      {outer.length > 0 && (
+        <Typography variant="caption" color="text.secondary" display="block">
+          Inside: {outer.map((h) => `.${h}`).join(", ")}
+        </Typography>
+      )}
+      <Box component="pre" sx={{ my: 1, p: 1, bgcolor: "action.hover", borderRadius: 1, fontSize: 12 }}>
+        {rule}
+      </Box>
+      <Stack direction="row" spacing={1}>
+        <Button size="small" variant="contained" onClick={() => onInsert(rule)}>
+          Insert this rule
+        </Button>
+        {scope && (
+          <Button size="small" onClick={() => onInsert(`.${closest} {\n  \n}`)}>
+            On every page
+          </Button>
+        )}
+      </Stack>
+      {picked.scope && (
+        <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}>
+          <code>html.{picked.scope}</code> keeps it to this{" "}
+          {picked.scope === "rw-embed" ? "embedded recorder" : "page"}.
+        </Typography>
+      )}
+    </Box>
   );
 };
 
