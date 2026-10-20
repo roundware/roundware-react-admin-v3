@@ -172,7 +172,7 @@ const PublishPage: React.FC = () => {
       <ParadigmWarning project={selectedProject} />
 
       <DeployCard projectId={projectId} onChange={handleDeployChange} />
-      {/* Its own address, once published (server docs/028). */}
+      {/* Its custom URL, once published (server docs/028). */}
       {live?.published && (
         <CustomDomainCard key={deployKey} projectId={projectId} onChange={reloadLive} />
       )}

@@ -87,7 +87,7 @@ export function planFeatures(p: PlanData): string[] {
       ? "Unlimited contributions"
       : `${plural(p.max_contributions, "contribution")}, across all projects`,
     p.max_members === UNLIMITED ? "Unlimited team members" : plural(p.max_members, "team member"),
-    ...(p.allows_custom_domain ? ["Your own web address"] : []),
+    ...(p.allows_custom_domain ? ["A custom URL for each project"] : []),
   ];
 }
 

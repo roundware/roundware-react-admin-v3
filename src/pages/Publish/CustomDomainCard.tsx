@@ -68,7 +68,9 @@ const CustomDomainCard: React.FC<Props> = ({ projectId, onChange }) => {
       const next = await call();
       const wasVerified = state?.verified;
       if (next) setState(next);
-      setCheckedNow(what !== "remove");
+      // Only "Check now" can say it doesn't point here yet: just after
+      // setting it, it can't — the record hasn't been added.
+      setCheckedNow(what === "check");
       setEditing(false);
       if ((next?.verified ?? false) !== !!wasVerified || what === "remove") onChange?.();
     } catch (e) {
@@ -97,7 +99,7 @@ const CustomDomainCard: React.FC<Props> = ({ projectId, onChange }) => {
       <CardContent>
         <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
           <LanguageIcon color="primary" />
-          <Typography variant="h6">Your own address</Typography>
+          <Typography variant="h6">Custom URL</Typography>
           {!state.allowed ? (
             <Chip label="Paid plans" size="small" />
           ) : state.hostname ? (
@@ -138,16 +140,19 @@ const CustomDomainCard: React.FC<Props> = ({ projectId, onChange }) => {
                     made.
                   </Alert>
                 ) : (
-                  <Alert severity={checkedNow ? "warning" : "info"}>
-                    {checkedNow
-                      ? `${state.hostname} doesn't point here yet. DNS changes can take a few minutes — sometimes a few hours — to reach everywhere.`
-                      : `Add the record below at your domain's DNS provider, then check.`}
-                  </Alert>
+                  checkedNow && (
+                    <Alert severity="warning">
+                      {state.hostname} doesn't point here yet. Check the record below; DNS changes
+                      can take a few minutes — sometimes a few hours — to reach everywhere.
+                    </Alert>
+                  )
                 )}
 
                 <Box>
                   <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                    The DNS record
+                    {state.verified
+                      ? "The DNS record"
+                      : `Add the following custom DNS record at your domain's DNS provider, then press Check now:`}
                   </Typography>
                   <Table size="small" sx={{ maxWidth: 560 }}>
                     <TableHead>
