@@ -12,7 +12,11 @@ import {
   WizardTemplate,
   WizardUIGroup,
   TempId,
+  WizardEmbed,
+  WizardStepId,
 } from "./types";
+import { shownStep, visibleSteps } from "./wizardSteps";
+import type { EmbedOptions } from "../Publish/RecorderOptions";
 
 // ---- Default values -------------------------------------------------------
 
@@ -84,8 +88,10 @@ export const BLANK_SPEAKER: Omit<WizardSpeaker, "tempId"> = {
   border_color: "",
 };
 
+export const NO_EMBED: WizardEmbed = { include: false, sites: [], options: null };
+
 export const INITIAL_STATE: WizardState = {
-  activeStep: 0,
+  activeStep: "template",
   templateKey: null,
   project: { ...DEFAULT_PROJECT },
   audiotrack: { ...DEFAULT_AUDIOTRACK },
@@ -94,12 +100,13 @@ export const INITIAL_STATE: WizardState = {
   uiGroups: [],
   speakers: [],
   skipSpeakers: false,
+  embed: NO_EMBED,
 };
 
 // ---- Actions --------------------------------------------------------------
 
 export type WizardAction =
-  | { type: "SET_STEP"; step: number }
+  | { type: "SET_STEP"; step: WizardStepId }
   | { type: "NEXT_STEP" }
   | { type: "PREV_STEP" }
   | { type: "APPLY_TEMPLATE"; template: WizardTemplate }
@@ -122,6 +129,9 @@ export type WizardAction =
   | { type: "UPDATE_SPEAKER"; tempId: TempId; patch: Partial<WizardSpeaker> }
   | { type: "REMOVE_SPEAKER"; tempId: TempId }
   | { type: "SET_SKIP_SPEAKERS"; skip: boolean }
+  // Embed
+  | { type: "UPDATE_EMBED"; patch: Partial<Omit<WizardEmbed, "options">> }
+  | { type: "UPDATE_EMBED_OPTIONS"; options: EmbedOptions }
   // Reset
   | { type: "RESET" };
 
@@ -130,12 +140,16 @@ export type WizardAction =
 export function wizardReducer(state: WizardState, action: WizardAction): WizardState {
   switch (action.type) {
     // -- Navigation --
+    // Through the steps this project has (wizardSteps.ts).
     case "SET_STEP":
       return { ...state, activeStep: action.step };
     case "NEXT_STEP":
-      return { ...state, activeStep: Math.min(state.activeStep + 1, 5) };
-    case "PREV_STEP":
-      return { ...state, activeStep: Math.max(state.activeStep - 1, 0) };
+    case "PREV_STEP": {
+      const steps = visibleSteps(state);
+      const at = steps.indexOf(shownStep(state));
+      const to = action.type === "NEXT_STEP" ? Math.min(at + 1, steps.length - 1) : Math.max(at - 1, 0);
+      return { ...state, activeStep: steps[to] };
+    }
 
     // -- Template --
     case "APPLY_TEMPLATE": {
@@ -176,7 +190,9 @@ export function wizardReducer(state: WizardState, action: WizardAction): WizardS
       return {
         ...state,
         templateKey: t.key,
-        activeStep: 1, // advance to project basics
+        // Stays on the first screen, where what people do (Listen, Speak)
+        // is set next, from the template's.
+        activeStep: "template",
         project: { ...DEFAULT_PROJECT, ...t.project },
         audiotrack: { ...DEFAULT_AUDIOTRACK, ...t.audiotrack },
         categories,
@@ -184,6 +200,7 @@ export function wizardReducer(state: WizardState, action: WizardAction): WizardS
         uiGroups,
         speakers,
         skipSpeakers: t.skipSpeakers ?? false,
+        embed: { ...NO_EMBED, include: t.optionalSteps?.embed ?? false },
       };
     }
     // -- Project --
@@ -300,6 +317,12 @@ export function wizardReducer(state: WizardState, action: WizardAction): WizardS
       };
     case "SET_SKIP_SPEAKERS":
       return { ...state, skipSpeakers: action.skip };
+
+    // -- Embed --
+    case "UPDATE_EMBED":
+      return { ...state, embed: { ...state.embed, ...action.patch } };
+    case "UPDATE_EMBED_OPTIONS":
+      return { ...state, embed: { ...state.embed, options: action.options } };
 
     // -- Reset --
     case "RESET":

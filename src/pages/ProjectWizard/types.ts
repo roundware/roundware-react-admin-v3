@@ -2,6 +2,7 @@
 // Project Setup Wizard — Type Definitions
 // ---------------------------------------------------------------------------
 import type { MultiPolygon } from "@turf/helpers";
+import type { EmbedOptions } from "../Publish/RecorderOptions";
 
 /** Temporary IDs used for local state before API creation */
 export type TempId = string;
@@ -13,6 +14,8 @@ export function makeTempId(prefix = "tmp"): TempId {
 
 // ---- Wizard-level types ---------------------------------------------------
 
+/** Every step, in order. Which of them a project gets depends on what
+ *  people do in it (Listen, Speak) and its template — see wizardSteps.ts. */
 export const WIZARD_STEPS = [
   "template",
   "project",
@@ -20,6 +23,7 @@ export const WIZARD_STEPS = [
   "tags",
   "uibuilder",
   "speakers",
+  "embed",
 ] as const;
 
 export type WizardStepId = (typeof WIZARD_STEPS)[number];
@@ -31,6 +35,7 @@ export const STEP_LABELS: Record<WizardStepId, string> = {
   tags: "Content Tags",
   uibuilder: "Filters & Menus",
   speakers: "Speakers",
+  embed: "Recording Embed",
 };
 
 // ---- Per-resource wizard data ---------------------------------------------
@@ -151,11 +156,23 @@ export interface WizardSpeaker {
   border_color: string;
 }
 
+/** The optional embed step (server docs/023): the recorder on the author's
+ *  own site. Only its first setup — the code comes once the project is live. */
+export interface WizardEmbed {
+  /** Whether to set it up now. */
+  include: boolean;
+  sites: string[];
+  /** Null until changed: the recorder then starts from the project's own
+   *  settings (embedOptionsFor). */
+  options: EmbedOptions | null;
+}
+
 // ---- Top-level wizard state -----------------------------------------------
 
 export interface WizardState {
-  /** Currently active step index (0-based) */
-  activeStep: number;
+  /** The step on screen. By name, not position: which steps there are
+   *  changes with Listen and Speak, and the author stays where they are. */
+  activeStep: WizardStepId;
   /** Selected template key. Null only before a choice is made — the template
    *  step requires one before the wizard can proceed. */
   templateKey: string | null;
@@ -167,6 +184,7 @@ export interface WizardState {
   uiGroups: WizardUIGroup[];
   speakers: WizardSpeaker[];
   skipSpeakers: boolean;
+  embed: WizardEmbed;
 }
 
 // ---- Template type --------------------------------------------------------
@@ -242,6 +260,12 @@ export interface WizardTemplate {
   speakers: Omit<WizardSpeaker, "tempId">[];
   /** Start the Speakers step with "Add speakers later" checked. */
   skipSpeakers?: boolean;
+  /**
+   * Optional steps this template offers, each with whether it starts
+   * switched on. Left out: not offered. Only `embed` so far — the recorder
+   * on the author's own site, for templates about collecting recordings.
+   */
+  optionalSteps?: { embed?: boolean };
 }
 
 // ---- Creation progress ----------------------------------------------------

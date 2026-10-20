@@ -6,6 +6,7 @@ import soundmap from "./soundmap";
 import artinstallation from "./artinstallation";
 import podcast from "./podcast";
 import collectiveloops from "./collectiveloops";
+import userfeedback from "./userfeedback";
 
 /**
  * Every template that exists, including retired ones.
@@ -28,6 +29,7 @@ export const TEMPLATES: WizardTemplate[] = [
   soundmap,
   storycollection,
   podcast,
+  userfeedback,
   artinstallation,
   collectiveloops,
 ];

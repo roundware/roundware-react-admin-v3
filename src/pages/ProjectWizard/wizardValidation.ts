@@ -1,7 +1,8 @@
 // ---------------------------------------------------------------------------
 // Project Setup Wizard — Per-step validation
 // ---------------------------------------------------------------------------
-import { WizardState, WizardStepId, WIZARD_STEPS } from "./types";
+import { WizardState, WizardStepId } from "./types";
+import { isLooping, listens, menuModes, speaks, visibleSteps } from "./wizardSteps";
 
 export interface ValidationResult {
   valid: boolean;
@@ -24,6 +25,13 @@ function validateTemplate(state: WizardState): ValidationResult {
   if (state.templateKey === null) {
     return fail("Choose a template to continue.");
   }
+  if (!listens(state) && !speaks(state)) {
+    return fail("Turn on Listen, Speak or both: what will people do here?");
+  }
+  // The server refuses it too (docs/025).
+  if (isLooping(state) && !listens(state)) {
+    return fail("A looping project needs Listen on: contributors record over what they hear.");
+  }
   return ok;
 }
 
@@ -40,8 +48,9 @@ function validateProject(state: WizardState): ValidationResult {
   if (project.language_ids.length === 0) {
     errors.push("Select at least one language.");
   }
-  if (project.recording_radius === null || project.recording_radius <= 0) {
-    errors.push("Recording radius is required (must be greater than 0).");
+  // Only listening uses it (Project Basics shows it then).
+  if (listens(state) && (project.recording_radius === null || project.recording_radius <= 0)) {
+    errors.push("Listening radius is required (must be greater than 0).");
   }
 
   return errors.length ? fail(...errors) : ok;
@@ -102,13 +111,18 @@ function validateUIBuilder(state: WizardState): ValidationResult {
   for (const cat of state.categories) {
     const group = state.uiGroups.find((g) => g.categoryTempId === cat.tempId);
     if (!group) {
+      const tabs = menuModes(state).map((m) => (m === "listen" ? "Listen" : "Speak"));
       errors.push(
-        `Category "${cat.name}" is not used in either tab. Add it to Listen or Speak.`
+        tabs.length > 1
+          ? `Category "${cat.name}" is not used in either tab. Add it to Listen or Speak.`
+          : `Category "${cat.name}" is not used. Add it to ${tabs[0] ?? "a tab"}, or remove it in Content Tags.`
       );
     }
   }
 
-  for (const group of state.uiGroups) {
+  // Only the tabs this project has: a hidden one's menus aren't created.
+  const modes = menuModes(state) as string[];
+  for (const group of state.uiGroups.filter((g) => modes.includes(g.ui_mode))) {
     if (!group.name.trim()) {
       errors.push("All UI groups must have a name.");
       break;
@@ -170,6 +184,8 @@ const validators: Record<WizardStepId, (s: WizardState) => ValidationResult> =
     tags: validateTags,
     uibuilder: validateUIBuilder,
     speakers: validateSpeakers,
+    // Optional, and the sites can be added later; the server checks them.
+    embed: () => ok,
   };
 
 /** Validate a specific step */
@@ -180,15 +196,7 @@ export function validateStep(
   return validators[stepId](state);
 }
 
-/** Validate all steps up to (and including) the given step index */
-export function validateUpTo(
-  stepIndex: number,
-  state: WizardState
-): ValidationResult {
-  const allErrors: string[] = [];
-  for (let i = 0; i <= stepIndex; i++) {
-    const result = validators[WIZARD_STEPS[i]](state);
-    allErrors.push(...result.errors);
-  }
-  return allErrors.length ? fail(...allErrors) : ok;
+/** Every step this project has, for the Create button. */
+export function validateAll(state: WizardState): boolean {
+  return visibleSteps(state).every((id) => validators[id](state).valid);
 }

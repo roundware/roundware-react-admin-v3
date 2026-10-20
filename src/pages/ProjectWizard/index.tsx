@@ -26,9 +26,10 @@ import { Title } from "react-admin";
 import { Link as RouterLink } from "react-router-dom";
 import { fetchUsage, UNLIMITED, Usage } from "../../utilities/plans";
 
-import { WIZARD_STEPS, STEP_LABELS, WizardStepId } from "./types";
+import { STEP_LABELS, WizardStepId } from "./types";
 import { wizardReducer, INITIAL_STATE, WizardAction } from "./wizardReducer";
-import { validateStep } from "./wizardValidation";
+import { validateAll, validateStep } from "./wizardValidation";
+import { shownStep, visibleSteps } from "./wizardSteps";
 import { useCallbackPrompt } from "../../hooks/useCallbackPrompt";
 import TemplateStep from "./steps/TemplateStep";
 import ProjectStep from "./steps/ProjectStep";
@@ -36,6 +37,7 @@ import AudiotrackStep from "./steps/AudiotrackStep";
 import ContentTagsStep from "./steps/ContentTagsStep";
 import UIBuilderStep from "./steps/UIBuilderStep";
 import SpeakersStep from "./steps/SpeakersStep";
+import EmbedStep from "./steps/EmbedStep";
 import CreationProgress from "./components/CreationProgress";
 import WizardErrorBoundary from "./components/WizardErrorBoundary";
 import {
@@ -71,8 +73,13 @@ const ProjectWizardPage: React.FC = () => {
     saveWizardState(state);
   }, [state]);
 
+  // The steps this project has: they follow Listen and Speak (wizardSteps.ts).
+  const steps = visibleSteps(state);
+  const currentStepId: WizardStepId = shownStep(state);
+  const stepIndex = steps.indexOf(currentStepId);
+
   // Determine if the wizard has unsaved work (user has moved past template step)
-  const hasUnsavedWork = state.activeStep > 0 && !creationDone;
+  const hasUnsavedWork = currentStepId !== "template" && !creationDone;
 
   // Block in-app navigation (React Router) when there's unsaved work
   const [showNavPrompt, confirmNavigation, cancelNavigation] =
@@ -88,7 +95,6 @@ const ProjectWizardPage: React.FC = () => {
     return () => window.removeEventListener("beforeunload", handler);
   }, [hasUnsavedWork]);
 
-  const currentStepId: WizardStepId = WIZARD_STEPS[state.activeStep];
   const validation = validateStep(currentStepId, state);
 
   const handleNext = useCallback(() => {
@@ -99,8 +105,8 @@ const ProjectWizardPage: React.FC = () => {
     dispatch({ type: "PREV_STEP" });
   }, []);
 
-  const handleStepClick = useCallback((index: number) => {
-    dispatch({ type: "SET_STEP", step: index });
+  const handleStepClick = useCallback((step: WizardStepId) => {
+    dispatch({ type: "SET_STEP", step });
   }, []);
 
   const handleCreate = useCallback(() => {
@@ -125,12 +131,10 @@ const ProjectWizardPage: React.FC = () => {
     []
   );
 
-  const isLastStep = state.activeStep === WIZARD_STEPS.length - 1;
+  const isLastStep = stepIndex === steps.length - 1;
 
   // Check if all steps are valid for the Create button
-  const allValid = WIZARD_STEPS.every(
-    (stepId) => validateStep(stepId, state).valid
-  );
+  const allValid = validateAll(state);
 
   return (
     <Container maxWidth="md" sx={{ py: 3 }}>
@@ -146,18 +150,27 @@ const ProjectWizardPage: React.FC = () => {
 
       {/* ---- Stepper ---- */}
       <Stepper
-        activeStep={state.activeStep}
+        activeStep={stepIndex}
         nonLinear
         sx={{ mb: 4 }}
       >
-        {WIZARD_STEPS.map((stepId, index) => {
+        {steps.map((stepId, index) => {
           const stepValidation = validateStep(stepId, state);
           // Mark completed if user has been past this step and it's valid
           const completed =
-            index < state.activeStep && stepValidation.valid;
+            index < stepIndex && stepValidation.valid;
           return (
             <Step key={stepId} completed={completed}>
-              <StepButton onClick={() => handleStepClick(index)}>
+              <StepButton
+                onClick={() => handleStepClick(stepId)}
+                optional={
+                  stepId === "embed" ? (
+                    <Typography variant="caption" color="text.secondary">
+                      Optional
+                    </Typography>
+                  ) : undefined
+                }
+              >
                 {STEP_LABELS[stepId]}
               </StepButton>
             </Step>
@@ -177,7 +190,8 @@ const ProjectWizardPage: React.FC = () => {
       </Card>
 
       {/* ---- Validation Errors ---- */}
-      {!validation.valid && state.activeStep > 0 && (
+      {/* On the first screen, once a template is chosen: what people do. */}
+      {!validation.valid && (currentStepId !== "template" || state.templateKey !== null) && (
         <Box sx={{ mb: 2 }}>
           {validation.errors.map((err, i) => (
             <Typography key={i} color="error" variant="body2">
@@ -193,7 +207,7 @@ const ProjectWizardPage: React.FC = () => {
           variant="outlined"
           startIcon={<ArrowBackIcon />}
           onClick={handleBack}
-          disabled={state.activeStep === 0}
+          disabled={stepIndex === 0}
         >
           Back
         </Button>
@@ -336,6 +350,8 @@ const StepContent: React.FC<StepContentProps> = ({ stepId, state, dispatch }) =>
       return <UIBuilderStep state={state} dispatch={dispatch} />;
     case "speakers":
       return <SpeakersStep state={state} dispatch={dispatch} />;
+    case "embed":
+      return <EmbedStep state={state} dispatch={dispatch} />;
     default:
       return null;
   }

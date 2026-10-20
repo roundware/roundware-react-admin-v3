@@ -4,6 +4,8 @@
 import { apiFetcher } from "../../roundwareDataProvider/tokenAuthProvider";
 import { CreationStep, TempId, WizardState } from "./types";
 import { getTemplate } from "./templates";
+import { stepApplies } from "./wizardSteps";
+import { embedOptionsFor } from "../Publish/RecorderOptions";
 
 type ProgressCallback = (steps: CreationStep[]) => void;
 
@@ -28,6 +30,16 @@ export async function executeCreation(
   state: WizardState,
   onProgress: ProgressCallback
 ): Promise<number> {
+  // What hidden steps leave out (wizardSteps.ts). Playback is made either
+  // way, from its defaults, so turning Listen on later just works.
+  const makeSpeakers = stepApplies("speakers", state) && !state.skipSpeakers && state.speakers.length > 0;
+  const makeEmbed = stepApplies("embed", state) && state.embed.include;
+  // Menus for what people do here: a Listen-only project gets no Speak
+  // questions, a Speak-only one no Listen filters.
+  const uiGroups = state.uiGroups.filter((g) =>
+    g.ui_mode === "listen" ? state.project.listen_enabled : state.project.speak_enabled
+  );
+
   const steps: CreationStep[] = [
     { label: "Creating project...", status: "pending" },
     { label: "Setting up playback...", status: "pending" },
@@ -37,7 +49,7 @@ export async function executeCreation(
     { label: "Creating UI items...", status: "pending" },
   ];
 
-  if (!state.skipSpeakers && state.speakers.length > 0) {
+  if (makeSpeakers) {
     steps.push({ label: "Creating speakers...", status: "pending" });
   }
 
@@ -66,9 +78,10 @@ export async function executeCreation(
       max_recording_length_sec: state.project.max_recording_length_sec,
       auto_submit: state.project.auto_submit,
       listen_enabled: state.project.listen_enabled,
-      geo_listen_enabled: state.project.geo_listen_enabled,
+      // A location setting under a mode that's off is off.
+      geo_listen_enabled: state.project.listen_enabled && state.project.geo_listen_enabled,
       speak_enabled: state.project.speak_enabled,
-      geo_speak_enabled: state.project.geo_speak_enabled,
+      geo_speak_enabled: state.project.speak_enabled && state.project.geo_speak_enabled,
       allow_speak_tags: state.project.allow_speak_tags,
       allow_photos: state.project.allow_photos,
       allow_text: state.project.allow_text,
@@ -82,6 +95,10 @@ export async function executeCreation(
     };
     if (state.project.localizations) {
       projectBody.localizations = state.project.localizations;
+    }
+    if (makeEmbed) {
+      projectBody.embed_allowed_sites = state.embed.sites;
+      projectBody.embed_options = state.embed.options ?? embedOptionsFor(state.project);
     }
     // Seed ui_config_json from the chosen template. Read from the template
     // rather than wizard state because the wizard has no config step — the
@@ -176,8 +193,8 @@ export async function executeCreation(
   stepIdx++;
   update(stepIdx, { status: "in_progress" });
   try {
-    for (let i = 0; i < state.uiGroups.length; i++) {
-      const group = state.uiGroups[i];
+    for (let i = 0; i < uiGroups.length; i++) {
+      const group = uiGroups[i];
       const { json } = await post("/uigroups/", {
         project_id: projectId,
         name: group.name,
@@ -200,7 +217,7 @@ export async function executeCreation(
   stepIdx++;
   update(stepIdx, { status: "in_progress" });
   try {
-    for (const group of state.uiGroups) {
+    for (const group of uiGroups) {
       const realGroupId = groupIdMap[group.tempId];
       for (let i = 0; i < group.tagTempIds.length; i++) {
         const tagTempId: TempId = group.tagTempIds[i];
@@ -223,7 +240,7 @@ export async function executeCreation(
   }
 
   // 7. Create speakers (if not skipped)
-  if (!state.skipSpeakers && state.speakers.length > 0) {
+  if (makeSpeakers) {
     stepIdx++;
     update(stepIdx, { status: "in_progress" });
     try {

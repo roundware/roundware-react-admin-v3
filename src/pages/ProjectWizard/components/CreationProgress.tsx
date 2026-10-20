@@ -23,6 +23,7 @@ import ErrorIcon from "@mui/icons-material/Error";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 
 import { CreationStep, WizardState } from "../types";
+import { stepApplies } from "../wizardSteps";
 import { executeCreation } from "../createProject";
 
 interface CreationProgressProps {
@@ -89,9 +90,24 @@ const CreationProgress: React.FC<CreationProgressProps> = ({
   // project a contribution becomes a *speaker*, not an asset, so there is
   // nothing to add there — its equivalent prompt is the base-loop warning on
   // the Publish page.
-  const collectsAssets = state.project.recording_method !== "looping";
+  // Nor a project nobody listens to: what it collects is its point.
+  const collectsAssets =
+    state.project.recording_method !== "looping" && state.project.listen_enabled;
+  // The embed step set it up; its code comes from Publish once live.
+  const embedSetUp = stepApplies("embed", state) && state.embed.include;
 
   const nextSteps: { label: string; text: string; onClick: () => void }[] = [
+    ...(embedSetUp
+      ? [
+          {
+            label: "Get embed code",
+            text:
+              "Your recording embed is set up. Choose a web address and put the project online, " +
+              "then copy the code from Publish's Recording embed card into your page.",
+            onClick: goTo("/publish"),
+          },
+        ]
+      : []),
     ...(collectsAssets
       ? [
           {
@@ -108,11 +124,16 @@ const CreationProgress: React.FC<CreationProgressProps> = ({
       text: "Set your project's colors, font, logo, images and copy. The preview shows exactly what participants will see.",
       onClick: goTo("/customize"),
     },
-    {
-      label: "Publish",
-      text: "Choose a web address and put your project online when you're ready.",
-      onClick: goTo("/publish"),
-    },
+    // Where the embed code is too, so said once.
+    ...(embedSetUp
+      ? []
+      : [
+          {
+            label: "Publish",
+            text: "Choose a web address and put your project online when you're ready.",
+            onClick: goTo("/publish"),
+          },
+        ]),
     {
       label: "Project dashboard",
       text: "Your project's activity and usage. Everything else is in the menu on the left.",

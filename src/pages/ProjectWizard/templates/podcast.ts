@@ -109,6 +109,8 @@ const podcast: WizardTemplate = {
   speakers: [],
   // A show rarely has speaker audio at the start.
   skipSpeakers: true,
+  // A show's contact page is the recorder's natural home (docs/023).
+  optionalSteps: { embed: false },
 };
 
 export default podcast;

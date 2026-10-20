@@ -1,22 +1,14 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
-  Autocomplete,
   Box,
   Button,
   Card,
   CardContent,
-  Checkbox,
-  Chip,
   Dialog,
   DialogContent,
   DialogTitle,
-  FormControl,
-  FormControlLabel,
   IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
   Stack,
   TextField,
   Typography,
@@ -27,6 +19,14 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { apiFetcher } from "../../roundwareDataProvider/tokenAuthProvider";
 import { errMessage } from "./api";
 import EmbedPreview from "./EmbedPreview";
+import {
+  EmbedLanguage,
+  EmbedOptions,
+  EmbedSitesField,
+  RecorderOptionsFields,
+  embedOptionsFor,
+  embedQuery,
+} from "./RecorderOptions";
 
 interface Props {
   projectId: number;
@@ -42,12 +42,7 @@ interface ProjectBits {
   allow_text: boolean;
   language_ids: number[];
   embed_allowed_sites: string[];
-}
-
-interface Lang {
-  id: number;
-  language_code: string;
-  name: string;
+  embed_options?: Partial<EmbedOptions> | null;
 }
 
 /**
@@ -57,36 +52,44 @@ interface Lang {
  */
 const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
   const [project, setProject] = useState<ProjectBits | null>(null);
-  const [languages, setLanguages] = useState<Lang[]>([]);
+  const [languages, setLanguages] = useState<EmbedLanguage[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [trying, setTrying] = useState(false);
   const [copied, setCopied] = useState(false);
-  // The recorder's steps. They start as the project's own settings.
-  const [questions, setQuestions] = useState(false);
-  const [location, setLocation] = useState(true);
-  const [photo, setPhoto] = useState(false);
-  const [text, setText] = useState(false);
-  const [upload, setUpload] = useState<"auto" | "always" | "never">("auto");
-  const [contact, setContact] = useState(false);
-  const [lang, setLang] = useState("");
-  const [layout, setLayout] = useState<"auto" | "horizontal" | "vertical">("auto");
-  const [size, setSize] = useState<"compact" | "comfortable">("compact");
-  // Light or dark: "" for the project's own setting (Customize).
-  const [appearance, setAppearance] = useState<"" | "light" | "dark" | "auto">("");
+  // The recorder's choices: the project's saved ones (the wizard's embed
+  // step, or earlier visits here), else its own settings.
+  const [options, setOptions] = useState<EmbedOptions | null>(null);
 
   useEffect(() => {
     Promise.all([apiFetcher(`/projects/${projectId}/`), apiFetcher(`/languages/`)])
       .then(([p, l]) => {
         const bits = p.json as ProjectBits;
         setProject({ ...bits, embed_allowed_sites: bits.embed_allowed_sites ?? [] });
-        setQuestions(!!bits.allow_speak_tags);
-        setPhoto(!!bits.allow_photos);
-        setText(!!bits.allow_text);
-        const all = (Array.isArray(l.json) ? l.json : (l.json as { results?: Lang[] })?.results ?? []) as Lang[];
+        setOptions(embedOptionsFor(bits, bits.embed_options));
+        const all = (Array.isArray(l.json) ? l.json : (l.json as { results?: EmbedLanguage[] })?.results ?? []) as EmbedLanguage[];
         setLanguages(all.filter((x) => (bits.language_ids ?? []).includes(x.id)));
       })
       .catch((e) => setError(errMessage(e)));
   }, [projectId]);
+
+  // Kept as they change, a moment after the last one, so the code is the
+  // same next time.
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => {
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+  }, []);
+  const changeOptions = (patch: Partial<EmbedOptions>) => {
+    if (!options) return;
+    const next = { ...options, ...patch };
+    setOptions(next);
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      apiFetcher(`/projects/${projectId}/`, {
+        method: "PATCH",
+        body: JSON.stringify({ embed_options: next }),
+      }).catch((e) => setError(errMessage(e)));
+    }, 600);
+  };
 
   const saveSites = async (typed: string[]) => {
     setError(null);
@@ -102,26 +105,14 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
     }
   };
 
-  const query = useMemo(() => {
-    const q = new URLSearchParams();
-    q.set("questions", questions ? "1" : "0");
-    q.set("location", location ? "1" : "0");
-    q.set("photo", photo ? "1" : "0");
-    q.set("text", text ? "1" : "0");
-    if (contact) q.set("contact", "1");
-    if (upload !== "auto") q.set("upload", upload);
-    if (layout !== "auto") q.set("layout", layout);
-    if (size !== "compact") q.set("size", size);
-    if (appearance) q.set("appearance", appearance);
-    if (lang) q.set("lang", lang);
-    return q.toString();
-  }, [questions, location, photo, text, contact, upload, layout, size, appearance, lang]);
+  const query = useMemo(() => (options ? embedQuery(options) : ""), [options]);
 
   // The frame starts at a sensible height; the script then fits it to the
   // recorder as it changes (its 'resize' messages). Without the script — a
   // site builder that strips it — the starting height stays, and the
   // recorder scrolls inside it.
   const frameId = `roundware-recorder-${projectId}`;
+  const layout = options?.layout ?? "auto";
   const startHeight = layout === "horizontal" ? 220 : 360;
   const maxWidth = layout === "vertical" ? 420 : 720;
   const code = (base: string) =>
@@ -151,7 +142,7 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
         <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
           <CodeIcon color="primary" />
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Embed a recorder
+            Recording embed
           </Typography>
           <Button variant="outlined" size="small" onClick={() => setTrying(true)}>
             Try it
@@ -169,126 +160,10 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
           </Alert>
         )}
 
-        {project && (
+        {project && options && (
           <Stack spacing={2.5}>
-            <Box>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                Sites allowed to show it
-              </Typography>
-              <Autocomplete
-                multiple
-                freeSolo
-                options={[]}
-                value={sites}
-                onChange={(_e, value) => saveSites(value as string[])}
-                renderTags={(value, getTagProps) =>
-                  value.map((site, index) => <Chip size="small" label={site} {...getTagProps({ index })} key={site} />)
-                }
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    size="small"
-                    placeholder={sites.length ? "Add another" : "mypodcast.com"}
-                    helperText="Type a site and press Enter. Any page on it works, and its subdomains (www., shop. …)."
-                  />
-                )}
-              />
-              {sites.length === 0 && (
-                <Alert severity="warning" sx={{ mt: 1 }}>
-                  No sites yet: browsers won't show the recorder anywhere until you add the site
-                  your page is on.
-                </Alert>
-              )}
-            </Box>
-
-            <Box>
-              <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                What it asks
-              </Typography>
-              <Stack direction="row" flexWrap="wrap" useFlexGap columnGap={1}>
-                <FormControlLabel
-                  control={<Checkbox checked={questions} onChange={(e) => setQuestions(e.target.checked)} />}
-                  label="Questions (Filters & Menus)"
-                />
-                <FormControlLabel
-                  control={<Checkbox checked={location} onChange={(e) => setLocation(e.target.checked)} />}
-                  label="Location"
-                />
-                <FormControlLabel
-                  control={<Checkbox checked={photo} onChange={(e) => setPhoto(e.target.checked)} />}
-                  label="Add a photo"
-                />
-                <FormControlLabel
-                  control={<Checkbox checked={text} onChange={(e) => setText(e.target.checked)} />}
-                  label="Add text"
-                />
-                <FormControlLabel
-                  control={<Checkbox checked={contact} onChange={(e) => setContact(e.target.checked)} />}
-                  label="Name and email"
-                />
-              </Stack>
-              <Typography variant="caption" color="text.secondary" display="block">
-                Recordings are placed at the project's location
-                {location ? " unless the contributor changes it" : ""}. Name and email are optional
-                for contributors, and only your team sees them.
-              </Typography>
-            </Box>
-
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={2} useFlexGap flexWrap="wrap">
-              <FormControl size="small" sx={{ minWidth: 220 }}>
-                <InputLabel>Uploading an audio file</InputLabel>
-                <Select
-                  label="Uploading an audio file"
-                  value={upload}
-                  onChange={(e) => setUpload(e.target.value as typeof upload)}
-                >
-                  <MenuItem value="auto">On wide screens (as in the app)</MenuItem>
-                  <MenuItem value="always">Always offered</MenuItem>
-                  <MenuItem value="never">Never</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl size="small" sx={{ minWidth: 200 }}>
-                <InputLabel shrink>Language</InputLabel>
-                <Select label="Language" notched displayEmpty value={lang} onChange={(e) => setLang(e.target.value)}>
-                  <MenuItem value="">The visitor's own</MenuItem>
-                  {languages.map((l) => (
-                    <MenuItem key={l.id} value={l.language_code}>
-                      {l.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl size="small" sx={{ minWidth: 170 }}>
-                <InputLabel>Layout</InputLabel>
-                <Select label="Layout" value={layout} onChange={(e) => setLayout(e.target.value as typeof layout)}>
-                  <MenuItem value="auto">By its width</MenuItem>
-                  <MenuItem value="horizontal">Horizontal</MenuItem>
-                  <MenuItem value="vertical">Vertical</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl size="small" sx={{ minWidth: 150 }}>
-                <InputLabel>Size</InputLabel>
-                <Select label="Size" value={size} onChange={(e) => setSize(e.target.value as typeof size)}>
-                  <MenuItem value="compact">Compact</MenuItem>
-                  <MenuItem value="comfortable">Comfortable</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl size="small" sx={{ minWidth: 220 }}>
-                <InputLabel shrink>Light or dark</InputLabel>
-                <Select
-                  label="Light or dark"
-                  notched
-                  displayEmpty
-                  value={appearance}
-                  onChange={(e) => setAppearance(e.target.value as typeof appearance)}
-                >
-                  <MenuItem value="">The project's setting</MenuItem>
-                  <MenuItem value="light">Light</MenuItem>
-                  <MenuItem value="dark">Dark</MenuItem>
-                  <MenuItem value="auto">Follow the visitor's device</MenuItem>
-                </Select>
-              </FormControl>
-            </Stack>
+            <EmbedSitesField sites={sites} onChange={saveSites} />
+            <RecorderOptionsFields value={options} onChange={changeOptions} languages={languages} />
 
             {liveUrl ? (
               <Box>

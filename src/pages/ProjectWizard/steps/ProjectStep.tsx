@@ -17,6 +17,7 @@ import {
 
 import { WizardState } from "../types";
 import { WizardAction } from "../wizardReducer";
+import { listens, speaks } from "../wizardSteps";
 import StepInstruction from "../components/StepInstruction";
 import WizardLocationSelector from "../components/WizardLocationSelector";
 import WizardTranslatableField from "../components/WizardTranslatableField";
@@ -54,6 +55,13 @@ const ProjectStep: React.FC<ProjectStepProps> = ({ state, dispatch }) => {
 
   const update = (patch: Partial<typeof project>) =>
     dispatch({ type: "UPDATE_PROJECT", patch });
+  // Only what applies to what people do here (set on the first screen).
+  const listening = listens(state);
+  const speaking = speaks(state);
+  // A location setting under a mode that's off is off (as created).
+  const listensByLocation = listening && project.geo_listen_enabled;
+  const recordsLocation = speaking && project.geo_speak_enabled;
+  const usesLocation = listensByLocation || recordsLocation;
 
   // Preserve user selection order: map from language_ids (not filter from API order)
   const selectedLangs = useMemo(
@@ -160,130 +168,83 @@ const ProjectStep: React.FC<ProjectStepProps> = ({ state, dispatch }) => {
           />
         </Grid>
 
-        {/* Key Settings */}
+        {/* Key Settings — each only where it applies */}
         <Grid size={{ xs: 12 }}>
           <Typography variant="subtitle2" gutterBottom>
             Key Settings
           </Typography>
-          <Grid container spacing={1}>
-            <Grid size={{ xs: 6, sm: 3 }}>
-              <WizardNumberField
-                label="Max Recording (sec)"
-                integer
-                value={project.max_recording_length_sec}
-                onChange={(n) => update({ max_recording_length_sec: n })}
-                fullWidth
-                size="small"
-              />
-            </Grid>
-            <Grid size={{ xs: 6, sm: 3 }}>
-              <TextField
-                label="Recording Radius (m)"
-                type="number"
-                value={project.recording_radius ?? ""}
-                onChange={(e) =>
-                  update({
-                    recording_radius: e.target.value
-                      ? parseInt(e.target.value)
-                      : null,
-                  })
-                }
-                fullWidth
-                size="small"
-                required
-                helperText="Meters around listener for audio playback"
-              />
-            </Grid>
-            <Grid size={{ xs: 6, sm: 3 }}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={project.auto_submit}
-                    onChange={(e) =>
-                      update({ auto_submit: e.target.checked })
-                    }
-                  />
-                }
-                label="Auto-submit recordings"
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        {/* Toggles */}
-        <Grid size={{ xs: 12 }}>
-          <Grid container spacing={1}>
-            <Grid size={{ xs: 6, sm: 3 }}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={project.listen_enabled}
-                    onChange={(e) =>
-                      update({ listen_enabled: e.target.checked })
-                    }
-                  />
-                }
-                label="Listen"
-              />
-            </Grid>
-            <Grid size={{ xs: 6, sm: 3 }}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={project.geo_listen_enabled}
-                    onChange={(e) =>
-                      update({ geo_listen_enabled: e.target.checked })
-                    }
-                  />
-                }
-                label="Geo Listen"
-              />
-            </Grid>
-            <Grid size={{ xs: 6, sm: 3 }}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={project.speak_enabled}
-                    onChange={(e) =>
-                      update({ speak_enabled: e.target.checked })
-                    }
-                  />
-                }
-                label="Speak"
-              />
-            </Grid>
-            <Grid size={{ xs: 6, sm: 3 }}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={project.geo_speak_enabled}
-                    onChange={(e) =>
-                      update({ geo_speak_enabled: e.target.checked })
-                    }
-                  />
-                }
-                label="Geo Speak"
-              />
-            </Grid>
+          <Grid container spacing={2}>
+            {speaking && (
+              <Grid size={{ xs: 6, sm: 3 }}>
+                <WizardNumberField
+                  label="Max Recording (sec)"
+                  integer
+                  value={project.max_recording_length_sec}
+                  onChange={(n) => update({ max_recording_length_sec: n })}
+                  fullWidth
+                  size="small"
+                />
+              </Grid>
+            )}
+            {listening && (
+              <Grid size={{ xs: 6, sm: 3 }}>
+                <TextField
+                  label="Listening Radius (m)"
+                  type="number"
+                  value={project.recording_radius ?? ""}
+                  onChange={(e) =>
+                    update({
+                      recording_radius: e.target.value
+                        ? parseInt(e.target.value)
+                        : null,
+                    })
+                  }
+                  fullWidth
+                  size="small"
+                  required
+                  helperText="How far from a recording a listener can hear it"
+                />
+              </Grid>
+            )}
+            {speaking && (
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={project.auto_submit}
+                      onChange={(e) =>
+                        update({ auto_submit: e.target.checked })
+                      }
+                    />
+                  }
+                  label="Publish new recordings at once"
+                />
+                <Typography variant="caption" color="text.secondary" display="block" sx={{ ml: 4, mt: -0.5 }}>
+                  Off, each waits for your review before anyone hears it.
+                </Typography>
+              </Grid>
+            )}
           </Grid>
         </Grid>
 
         {/* Legal Agreement — with language tabs when multiple languages selected */}
-        <Grid size={{ xs: 12 }}>
-          <WizardTranslatableField
-            label="Legal Agreement"
-            defaultValue={project.legal_agreement}
-            onDefaultChange={(val) => update({ legal_agreement: val })}
-            localizations={project.localizations}
-            onLocalizationsChange={(loc) => update({ localizations: loc })}
-            fieldName="legal_agreement"
-            languages={selectedLangs}
-            onReorderLanguages={handleReorderLanguages}
-            multiline
-            rows={2}
-            helperText="Agreement text shown to participants before they contribute."
-          />
-        </Grid>
+        {speaking && (
+          <Grid size={{ xs: 12 }}>
+            <WizardTranslatableField
+              label="Legal Agreement"
+              defaultValue={project.legal_agreement}
+              onDefaultChange={(val) => update({ legal_agreement: val })}
+              localizations={project.localizations}
+              onLocalizationsChange={(loc) => update({ localizations: loc })}
+              fieldName="legal_agreement"
+              languages={selectedLangs}
+              onReorderLanguages={handleReorderLanguages}
+              multiline
+              rows={2}
+              helperText="Agreement text shown to participants before they contribute."
+            />
+          </Grid>
+        )}
 
         {/* Advanced toggle */}
         <Grid size={{ xs: 12 }}>
@@ -300,6 +261,7 @@ const ProjectStep: React.FC<ProjectStepProps> = ({ state, dispatch }) => {
 
         {showAdvanced && (
           <>
+            {listening && (
             <Grid size={{ xs: 6, sm: 3 }}>
               <TextField
                 label="Ordering"
@@ -314,6 +276,8 @@ const ProjectStep: React.FC<ProjectStepProps> = ({ state, dispatch }) => {
                 <MenuItem value="by_weight">By Weight</MenuItem>
               </TextField>
             </Grid>
+            )}
+            {listening && (
             <Grid size={{ xs: 6, sm: 3 }}>
               <TextField
                 label="Repeat Mode"
@@ -327,15 +291,25 @@ const ProjectStep: React.FC<ProjectStepProps> = ({ state, dispatch }) => {
                 <MenuItem value="continuous">Continuous</MenuItem>
               </TextField>
             </Grid>
-            <Grid size={{ xs: 6, sm: 3 }}>
-              <WizardNumberField
-                label="Out of Range Distance"
-                value={project.out_of_range_distance}
-                onChange={(n) => update({ out_of_range_distance: n })}
-                fullWidth
-                size="small"
-              />
-            </Grid>
+            )}
+            {usesLocation && (
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <WizardNumberField
+                  label="Out of Range Distance (m)"
+                  value={project.out_of_range_distance}
+                  onChange={(n) => update({ out_of_range_distance: n })}
+                  fullWidth
+                  size="small"
+                  helperText={[
+                    "How far outside the speakers' areas still counts as in range.",
+                    listensByLocation && "Farther, listeners are told they're out of range.",
+                    recordsLocation && "Recordings made farther away wait for your review.",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                />
+              </Grid>
+            )}
             <Grid size={{ xs: 12 }}>
               <TextField
                 label="Sharing URL"

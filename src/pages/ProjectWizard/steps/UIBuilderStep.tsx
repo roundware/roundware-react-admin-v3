@@ -21,6 +21,7 @@ import {
 
 import { WizardState, TempId } from "../types";
 import { WizardAction } from "../wizardReducer";
+import { menuModes } from "../wizardSteps";
 import StepInstruction from "../components/StepInstruction";
 
 interface UIBuilderStepProps {
@@ -41,7 +42,11 @@ const SELECT_TYPES = [
 
 const UIBuilderStep: React.FC<UIBuilderStepProps> = ({ state, dispatch }) => {
   const { categories, tags, uiGroups } = state;
-  const [mode, setMode] = useState<"listen" | "speak">("listen");
+  // Only the tabs for what people do here: Listen's filters when they
+  // listen, Speak's questions when contributors are asked to tag.
+  const modes = menuModes(state);
+  const [chosenMode, setMode] = useState<"listen" | "speak">(modes[0] ?? "listen");
+  const mode = modes.includes(chosenMode) ? chosenMode : modes[0] ?? "listen";
 
   // Auto-create groups for a category the author added themselves — one for
   // each mode, since a new category is usually worth both tagging and
@@ -58,7 +63,8 @@ const UIBuilderStep: React.FC<UIBuilderStepProps> = ({ state, dispatch }) => {
       if (anyGroup) continue;
 
       const categoryTags = tags.filter((t) => t.categoryTempId === cat.tempId);
-      for (const mode of ["speak", "listen"]) {
+      // Only for the tabs this project has; a hidden one's menus aren't made.
+      for (const mode of modes) {
         dispatch({
           type: "ADD_UI_GROUP",
           group: {
@@ -75,7 +81,7 @@ const UIBuilderStep: React.FC<UIBuilderStepProps> = ({ state, dispatch }) => {
         });
       }
     }
-  }, [categories, tags, uiGroups, dispatch]);
+  }, [categories, tags, uiGroups, dispatch, modes.join()]);
 
   const toggleTag = (groupTempId: TempId, tagTempId: TempId) => {
     const group = uiGroups.find((g) => g.tempId === groupTempId);
@@ -109,21 +115,34 @@ const UIBuilderStep: React.FC<UIBuilderStepProps> = ({ state, dispatch }) => {
   return (
     <Box>
       <StepInstruction title="Filters & Menus">
-        Choose which categories and tags to present to your participants, both
-        when they submit a recording (<strong>Speak</strong>) and when they
-        listen to the audio stream (<strong>Listen</strong>).
-        <br />
-        Usually you want both, but not always — a project might collect more
-        about a contribution than is worth exposing as a filter, and some
-        projects only ever do one or the other.
+        {modes.length > 1 ? (
+          <>
+            Choose which categories and tags to present to your participants, both
+            when they submit a recording (<strong>Speak</strong>) and when they
+            listen to the audio stream (<strong>Listen</strong>).
+            <br />
+            Usually you want both, but not always — a project might collect more
+            about a contribution than is worth exposing as a filter.
+          </>
+        ) : mode === "listen" ? (
+          <>
+            Choose which categories and tags listeners can filter what they hear by.
+          </>
+        ) : (
+          <>
+            Choose the questions contributors answer about their recording: which
+            categories, and which tags they choose from.
+          </>
+        )}
       </StepInstruction>
 
+      {modes.length > 1 && (
       <Tabs
         value={mode}
         onChange={(_e, v) => setMode(v)}
         sx={{ mb: 2, borderBottom: 1, borderColor: "divider" }}
       >
-        {UI_MODES.map((m) => {
+        {UI_MODES.filter((m) => modes.includes(m.value as "listen" | "speak")).map((m) => {
           const count = uiGroups.filter(
             (g) => g.ui_mode === m.value && g.is_active
           ).length;
@@ -141,6 +160,7 @@ const UIBuilderStep: React.FC<UIBuilderStepProps> = ({ state, dispatch }) => {
           );
         })}
       </Tabs>
+      )}
 
       {categories.map((cat) => {
         const group = uiGroups.find(

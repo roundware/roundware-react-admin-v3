@@ -10,8 +10,15 @@
 // Persisting is not a substitute for not crashing, but it changes a crash from
 // "start again" into "carry on".
 
-import { INITIAL_STATE } from "./wizardReducer";
-import { WizardState } from "./types";
+import { INITIAL_STATE, NO_EMBED } from "./wizardReducer";
+import { WIZARD_STEPS, WizardState, WizardStepId } from "./types";
+
+/** The saved step: by name, or — in drafts from before steps came and went
+ *  with Listen and Speak — by position. */
+const savedStep = (raw: unknown): WizardStepId => {
+  if (typeof raw === "number") return WIZARD_STEPS[raw] ?? "template";
+  return WIZARD_STEPS.includes(raw as WizardStepId) ? (raw as WizardStepId) : "template";
+};
 
 const PREFIX = "roundware.wizard.v1";
 
@@ -100,6 +107,8 @@ export function loadWizardState(): WizardState {
     return {
       ...INITIAL_STATE,
       ...saved,
+      activeStep: savedStep(saved.activeStep),
+      embed: { ...NO_EMBED, ...(saved.embed ?? {}) },
       project: { ...INITIAL_STATE.project, ...(saved.project ?? {}) },
       audiotrack: { ...INITIAL_STATE.audiotrack, ...(saved.audiotrack ?? {}) },
       categories: saved.categories ?? [],
@@ -123,7 +132,7 @@ export function hasSavedDraft(): boolean {
     const raw = s.getItem(key());
     if (!raw) return false;
     const saved = JSON.parse(raw) as Partial<WizardState>;
-    return Boolean(saved?.templateKey) && (saved?.activeStep ?? 0) > 0;
+    return Boolean(saved?.templateKey) && savedStep(saved?.activeStep) !== "template";
   } catch {
     return false;
   }
