@@ -76,37 +76,48 @@ export const ListenEventsList = (): JSX.Element => {
   );
 };
 
+// v3's names (server listening_history): started_at, duration_sec,
+// session_id, asset_id or speaker_id. The forms used v2's (starttime,
+// duration_in_seconds, session, asset), which the server doesn't know.
+
+/** Only the duration can change after the fact; the rest is shown. */
 export const ListenEventsEdit = (): JSX.Element => {
   return (
     <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" disabled />
-        <NumberInput source="duration_in_seconds" />
-        <DateTimeInput source="starttime" label="Start Time" />
-        <ReferenceInput source="session" reference="sessions">
-          <SelectInput optionText="id" />
+        <DateTimeInput source="started_at" label="Started" disabled />
+        <NumberInput source="duration_sec" label="Seconds" />
+        <ReferenceInput source="session_id" reference="sessions">
+          <SelectInput optionText="id" disabled />
         </ReferenceInput>
-        <ReferenceInput source="asset" reference="assets">
-          <SelectInput optionText="id" />
+        <ReferenceInput source="asset_id" reference="assets">
+          <SelectInput optionText="id" label="Contribution" disabled />
+        </ReferenceInput>
+        <ReferenceInput source="speaker_id" reference="speakers">
+          <SelectInput optionText="code" label="Speaker" disabled />
         </ReferenceInput>
       </SimpleForm>
     </Edit>
   );
 };
 
+/** What was heard — a contribution or a speaker, one of them — and when. */
 export const ListenEventsCreate = (): JSX.Element => {
   return (
     <Create redirect="list">
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
-        <TextInput source="id" disabled />
-        <NumberInput source="duration_in_seconds" required />
-        <DateTimeInput source="starttime" label="Start Time" required />
-        <ReferenceInput source="session" reference="sessions">
+        <ReferenceInput source="session_id" reference="sessions">
           <SelectInput optionText="id" required />
         </ReferenceInput>
-        <ReferenceInput source="asset" reference="assets">
-          <SelectInput optionText="id" required />
+        <ReferenceInput source="asset_id" reference="assets">
+          <SelectInput optionText="id" label="Contribution" helperText="Or a speaker below — one of them." />
         </ReferenceInput>
+        <ReferenceInput source="speaker_id" reference="speakers">
+          <SelectInput optionText="code" label="Speaker" />
+        </ReferenceInput>
+        <DateTimeInput source="started_at" label="Started" required />
+        <NumberInput source="duration_sec" label="Seconds" />
       </SimpleForm>
     </Create>
   );

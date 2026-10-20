@@ -168,9 +168,8 @@ const GROUPS: Group[] = [
     openByDefault: () => true,
     items: [
       { key: "tenants", label: "Tenants", path: "/tenants", inProject: false, min: "superuser", icon: <Business /> },
-      // Every project in the current tenant, as tiles. Across all tenants is
-      // backlogged (010).
-      { key: "all-projects", label: "All Projects", path: "/projects", inProject: false, min: "superuser", icon: <CategoryOutlined /> },
+      // Every organization's projects in one list.
+      { key: "all-projects", label: "All Projects", path: "/platform-projects", inProject: false, min: "superuser", icon: <CategoryOutlined /> },
       // Sign-ups at once, the rest in a digest (server docs/026).
       { key: "platform-notifications", label: "Notifications", path: "/platform-notifications", inProject: false, min: "superuser", icon: <NotificationsNone /> },
     ],

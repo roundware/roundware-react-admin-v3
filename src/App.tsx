@@ -85,6 +85,7 @@ import AppCopyPage from "./pages/AppCopy";
 import FiltersMenusPage from "./pages/FiltersMenus";
 import NotificationsPage from "./pages/Notifications";
 import PlatformNotificationsPage from "./pages/PlatformNotifications";
+import AllProjectsPage from "./pages/AllProjectsPage";
 import AudioLabPage from "./pages/AudioLab";
 import PlanPage from "./pages/PlanPage";
 import adminTheme from "./styles";
@@ -165,6 +166,7 @@ function App({ basename }: { basename: string }): JSX.Element {
           <Route path="/app-copy" element={<AppCopyPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/platform-notifications" element={<PlatformNotificationsPage />} />
+          <Route path="/platform-projects" element={<AllProjectsPage />} />
           {/* The previous Filters & Menus page: conditional answers (UI items
               with a parent) are still edited here. */}
           <Route
