@@ -53,6 +53,7 @@ const LOOPING_ONLY_SETTINGS = [
   "listen.speaker.maxVariantLoops",
   "listen.speaker.variantCrossfadeDurationMs",
   "listen.speaker.newSpeakerFadeInDurationMs",
+  "listen.speaker.prefetchDistanceMeters",
   "listen.speaker.alwaysOnWhenAvailable",
   "listen.speaker.prioritizeNewlySubmitted",
   "listen.speaker.newlySubmittedPriorityDurationMs",

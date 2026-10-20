@@ -81,6 +81,7 @@ const LOOPING: SliderDef[] = [
   { key: "maxVariantLoops", label: "Variant: most loops", min: 1, max: 20, step: 1, appOnly: true },
   { key: "variantCrossfadeDurationMs", label: "Variant crossfade", min: 0, max: 5000, step: 100, unit: "ms", appOnly: true },
   { key: "newSpeakerFadeInDurationMs", label: "New voice fade-in", min: 0, max: 10000, step: 100, unit: "ms", appOnly: true },
+  { key: "prefetchDistanceMeters", label: "Preload distance", min: 10, max: 500, step: 5, unit: "m", appOnly: true, help: "How near a listener comes to a voice's shape before its recording is loaded; farther ones are let go. Only memory and data — what's heard is set by each speaker's shape. Larger if voices start late on a fast walk." },
 ];
 
 const LOOP_KEYS = ["loopFractions", ...LOOPING.map((d) => d.key)];
