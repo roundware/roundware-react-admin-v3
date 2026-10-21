@@ -197,7 +197,7 @@ const LookAndFeelPanel: React.FC<Props> = ({ projectId, onSaved }) => {
   return (
     <Stack spacing={2}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <Typography variant="subtitle2">Look &amp; feel</Typography>
+        <Typography variant="h6">Colors &amp; fonts</Typography>
         {saving && <CircularProgress size={16} />}
       </Stack>
 

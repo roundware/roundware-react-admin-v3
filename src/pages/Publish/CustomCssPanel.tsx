@@ -26,6 +26,8 @@ import { errMessage, FileSlot, getBranding, getBrandingSchema, patchBranding, we
 interface Props {
   projectId: number;
   onSaved?: () => void;
+  /** False while another Look & Feel tab is showing: picking stops. */
+  active?: boolean;
 }
 
 interface Hook {
@@ -88,7 +90,7 @@ html.rw-embed .rw-recording { border-radius: 0; }`;
  * checks it — no @import, no @font-face, url() only for the project's own
  * files — and the preview shows it as soon as it's saved.
  */
-const CustomCssPanel: React.FC<Props> = ({ projectId, onSaved }) => {
+const CustomCssPanel: React.FC<Props> = ({ projectId, onSaved, active = true }) => {
   const [allowed, setAllowed] = useState<boolean | null>(null);
   const [saved, setSaved] = useState("");
   const [css, setCss] = useState("");
@@ -127,8 +129,14 @@ const CustomCssPanel: React.FC<Props> = ({ projectId, onSaved }) => {
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
   }, [previewOrigin, toPreview]);
-  // Leaving the section (or the page) stops it.
+  // Leaving the tab (or the page) stops it.
   useEffect(() => () => toPreview(false), [toPreview]);
+  useEffect(() => {
+    if (!active && pickingRef.current) {
+      setPicking(false);
+      toPreview(false);
+    }
+  }, [active, toPreview]);
 
   const startPicking = () => {
     setPicked(null);
@@ -188,23 +196,21 @@ const CustomCssPanel: React.FC<Props> = ({ projectId, onSaved }) => {
   const status = allowed === false ? "Paid plans" : saved.trim() ? "On" : "None";
 
   return (
-    <Accordion disableGutters elevation={0} sx={{ "&:before": { display: "none" } }}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ px: 0 }}>
-        <Stack direction="row" spacing={1} alignItems="center">
-          <Typography variant="h6">Custom CSS</Typography>
-          <Typography variant="caption" color="text.secondary">
-            {status}
-          </Typography>
-        </Stack>
-      </AccordionSummary>
-      <AccordionDetails sx={{ px: 0 }}>
+    <Stack spacing={2}>
+      <Stack direction="row" spacing={1} alignItems="center">
+        <Typography variant="h6">Custom CSS</Typography>
+        <Typography variant="caption" color="text.secondary">
+          {status}
+        </Typography>
+      </Stack>
+      <Box>
         {allowed === null && !error ? (
           <CircularProgress size={20} />
         ) : allowed === false ? (
           <Stack spacing={1.5} alignItems="flex-start">
             <Typography variant="body2" color="text.secondary">
               Style the app and the embedded recorder with CSS of your own, beyond the colors,
-              font and style choices above. Comes with a paid plan.
+              font and style choices in Colors &amp; Fonts. Comes with a paid plan.
             </Typography>
             <Button variant="outlined" component={RouterLink} to="/plan">
               See plans
@@ -216,8 +222,8 @@ const CustomCssPanel: React.FC<Props> = ({ projectId, onSaved }) => {
               CSS of your own, over the app and the embedded recorder. Use the{" "}
               <code>rw-</code> classes below: they stay the same from update to update, where the
               app&apos;s other class names change. It shows in the preview when saved, and on the
-              live site when you update it. Fonts are the ones above; images, the project&apos;s
-              own (below) — nothing can be loaded from elsewhere. The legal agreement and the
+              live site when you update it. Fonts are the ones in Colors &amp; Fonts; images, the
+              project&apos;s own (below) — nothing can be loaded from elsewhere. The legal agreement and the
               test site&apos;s banner can be restyled but stay visible.
             </Typography>
 
@@ -308,7 +314,7 @@ const CustomCssPanel: React.FC<Props> = ({ projectId, onSaved }) => {
               </Typography>
               {images.length === 0 ? (
                 <Typography variant="body2" color="text.secondary">
-                  None yet: upload them in Images &amp; audio, above.
+                  None yet: upload them in Images &amp; Audio.
                 </Typography>
               ) : (
                 <Table size="small">
@@ -354,8 +360,8 @@ const CustomCssPanel: React.FC<Props> = ({ projectId, onSaved }) => {
             </Accordion>
           </Stack>
         )}
-      </AccordionDetails>
-    </Accordion>
+      </Box>
+    </Stack>
   );
 };
 

@@ -8,10 +8,13 @@ import {
   CardContent,
   Container,
   Grid,
+  Tab,
+  Tabs,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Title } from "react-admin";
+import { useSearchParams } from "react-router-dom";
 import { useProjects } from "../../context/ProjectsContext";
 import DeployCard from "./DeployCard";
 import CustomDomainCard from "./CustomDomainCard";
@@ -20,10 +23,9 @@ import VersionsCard from "./VersionsCard";
 import TimeMachineCard from "./TimeMachineCard";
 import EmbedCard from "./EmbedCard";
 import { LiveSiteState } from "./api";
-import BrandingPanel from "./BrandingPanel";
+import BrandingPanel, { LOOK_TABS, LookTab } from "./BrandingPanel";
 import PreviewPanel from "./PreviewPanel";
 import ParadigmWarning from "./ParadigmWarning";
-import MapAppearanceEditor from "./MapAppearanceEditor";
 
 // Customize and Publish were one page, "Customize & Publish". They are two
 // now: how the app looks and reads, and where it lives. Both show the live
@@ -38,7 +40,16 @@ const NoProject = ({ title, what }: { title: string; what: string }) => (
   </Container>
 );
 
-/** How the app looks and reads: branding, look & feel, files, info panel, map. */
+const TAB_KEY = "rw-look-tab";
+const isTab = (t: string | null): t is LookTab => LOOK_TABS.some((x) => x.key === t);
+
+/**
+ * How the app looks and reads, in tabs (App Start Flow, Copy, Colors & Fonts,
+ * Images & Audio, Map, Custom CSS) beside one preview. The tab is in the
+ * address (?tab=map), so a reload or a link opens it; without one, the last
+ * tab used. Map has the page's width — placing an overlay needs a map large
+ * enough to see what it lines up with — and its own map instead of the preview.
+ */
 export const CustomizePage: React.FC = () => {
   const { selectedProject } = useProjects();
   // Bumped whenever branding is saved → reloads the preview iframe.
@@ -46,9 +57,39 @@ export const CustomizePage: React.FC = () => {
   const handleSaved = useCallback(() => setRefreshKey((k) => k + 1), []);
   // The preview opens on the screen being worked on (App start: "/", "/home").
   const [previewPath, setPreviewPath] = useState("/");
+  const [params, setParams] = useSearchParams();
+  const fromUrl = params.get("tab");
+  const tab: LookTab = isTab(fromUrl)
+    ? fromUrl
+    : (() => {
+        try {
+          const last = localStorage.getItem(TAB_KEY);
+          return isTab(last) ? last : "start";
+        } catch {
+          return "start";
+        }
+      })();
+  const chooseTab = (next: LookTab) => {
+    setParams(
+      (p) => {
+        const q = new URLSearchParams(p);
+        q.set("tab", next);
+        return q;
+      },
+      { replace: true }
+    );
+    try {
+      localStorage.setItem(TAB_KEY, next);
+    } catch {
+      /* a convenience only */
+    }
+    // Copy is mostly the splash's text.
+    if (next === "copy") setPreviewPath("/");
+  };
 
   if (!selectedProject) return <NoProject title="Look & Feel" what="change how it looks" />;
   const projectId = selectedProject.id;
+  const wide = tab === "map";
 
   return (
     <Container maxWidth="xl" sx={{ py: 3 }}>
@@ -56,37 +97,42 @@ export const CustomizePage: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         Look &amp; Feel
       </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+      <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
         How the app looks and reads. The preview shows the app with your latest changes; once published, participants see them when you update the live site (Publish).
       </Typography>
 
+      <Tabs
+        value={tab}
+        onChange={(_e, v: LookTab) => chooseTab(v)}
+        variant="scrollable"
+        scrollButtons="auto"
+        allowScrollButtonsMobile
+        sx={{ mb: 2, borderBottom: 1, borderColor: "divider" }}
+      >
+        {LOOK_TABS.map((t) => (
+          <Tab key={t.key} value={t.key} label={t.label} />
+        ))}
+      </Tabs>
+
       <Grid container spacing={3}>
-        <Grid size={{ xs: 12, md: 5 }}>
+        <Grid size={{ xs: 12, md: wide ? 12 : 5 }}>
           <Card>
             <CardContent>
-              <BrandingPanel projectId={projectId} onSaved={handleSaved} onPreview={setPreviewPath} />
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={{ xs: 12, md: 7 }}>
-          <Card sx={{ position: { md: "sticky" }, top: { md: 80 } }}>
-            <CardContent>
-              <Box>
-                <PreviewPanel projectId={projectId} refreshKey={refreshKey} path={previewPath} />
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        {/* Full width: placing an overlay needs a map large enough to see
-            what it lines up with. */}
-        <Grid size={{ xs: 12 }}>
-          <Card>
-            <CardContent>
-              <MapAppearanceEditor
+              <BrandingPanel
                 projectId={projectId}
+                tab={tab}
                 onSaved={handleSaved}
+                onPreview={setPreviewPath}
                 brandingVersion={refreshKey}
               />
+            </CardContent>
+          </Card>
+        </Grid>
+        {/* Hidden on Map rather than removed, so coming back doesn't reload it. */}
+        <Grid size={{ xs: 12, md: 7 }} sx={{ display: wide ? "none" : undefined }}>
+          <Card sx={{ position: { md: "sticky" }, top: { md: 80 } }}>
+            <CardContent>
+              <PreviewPanel projectId={projectId} refreshKey={refreshKey} path={previewPath} />
             </CardContent>
           </Card>
         </Grid>

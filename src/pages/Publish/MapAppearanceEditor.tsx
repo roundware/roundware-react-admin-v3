@@ -567,7 +567,7 @@ const MapAppearanceEditor: React.FC<Props> = ({ projectId, onSaved, brandingVers
                 </Stack>
               ) : (
                 <Alert severity="info">
-                  Upload a <strong>Map overlay</strong> image under Images &amp; audio to place one here.
+                  Upload a <strong>Map overlay</strong> image in the Images &amp; Audio tab to place one here.
                 </Alert>
               )
             )}
