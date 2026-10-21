@@ -26,6 +26,8 @@ import {
   planFeatures,
   PlanData,
 } from "../utilities/plans";
+import { BRAND_BACKGROUND } from "./brandBackground";
+import PhoneScreens from "./PhoneScreens";
 
 // ---------------------------------------------------------------------------
 // Data
@@ -69,6 +71,15 @@ const LandingPage: React.FC = () => {
   // The plans as the server has them (the Plan page's list), so prices and
   // limits here can't drift from the real ones. None: no pricing section.
   const [plans, setPlans] = useState<PlanData[]>([]);
+  // The tab's title here, for visitors and search engines (link previews
+  // read index.html's og: tags); the admin's own pages keep "Roundware Admin".
+  useEffect(() => {
+    const before = document.title;
+    document.title = "Roundware: Build Location-Based Audio Experiences";
+    return () => {
+      document.title = before;
+    };
+  }, []);
   useEffect(() => {
     fetchPlans()
       .then(setPlans)
@@ -104,7 +115,11 @@ const LandingPage: React.FC = () => {
                 display: "block",
               }}
             />
-            <Stack direction="row" spacing={{ xs: 1, sm: 2 }} sx={{ flexShrink: 0 }}>
+            <Stack
+              direction="row"
+              spacing={{ xs: 1, sm: 2 }}
+              sx={{ flexShrink: 0 }}
+            >
               <Button
                 variant="text"
                 sx={{ color: "#fff", whiteSpace: "nowrap" }}
@@ -128,10 +143,7 @@ const LandingPage: React.FC = () => {
       <Box
         sx={{
           // The map underneath, darkened so the text reads on it.
-          backgroundImage:
-            "linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(22, 33, 62, 0.82) 50%, rgba(15, 52, 96, 0.78) 100%), url(/brand/map-background.webp)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          background: BRAND_BACKGROUND,
           color: "#fff",
           py: { xs: 7, md: 11 },
           textAlign: "center",
@@ -206,6 +218,8 @@ const LandingPage: React.FC = () => {
           </Stack>
         </Container>
       </Box>
+
+      <PhoneScreens />
 
       {/* ---- Features Section ---- */}
       <Box id="features" sx={{ py: { xs: 6, md: 10 }, bgcolor: "#f8f9fa" }}>

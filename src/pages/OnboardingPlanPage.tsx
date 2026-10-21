@@ -23,6 +23,7 @@ import {
   planFeatures,
   switchPlan,
 } from "../utilities/plans";
+import { BRAND_BACKGROUND } from "./brandBackground";
 
 // ---------------------------------------------------------------------------
 // Component
@@ -90,8 +91,7 @@ const OnboardingPlanPage: React.FC = () => {
           justifyContent: "center",
           alignItems: "center",
           minHeight: "100vh",
-          background:
-            "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          background: BRAND_BACKGROUND,
         }}
       >
         <CircularProgress sx={{ color: "#fff" }} size={48} />
@@ -103,16 +103,16 @@ const OnboardingPlanPage: React.FC = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        background: BRAND_BACKGROUND,
         py: { xs: 4, md: 8 },
       }}
     >
       <Container maxWidth="lg">
         <Box sx={{ textAlign: "center", mb: 6 }}>
           <img
-            src="/logo.png"
+            src="/brand/roundware-logo.png"
             alt="Roundware"
-            style={{ width: 64, marginBottom: 16 }}
+            style={{ width: 220, maxWidth: "70%", marginBottom: 24 }}
           />
           <Typography
             variant="h4"
@@ -227,7 +227,6 @@ const OnboardingPlanPage: React.FC = () => {
           </Button>
         </Box>
       </Container>
-
     </Box>
   );
 };

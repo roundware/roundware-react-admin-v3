@@ -13,7 +13,7 @@ const SplashScreen = () => {
         flexDirection: `column`,
       })}
     >
-      <img src={`/logo.png`} width="200px" />
+      <img src="/brand/roundware-logo-dark.png" alt="Roundware" width="200" />
       <LinearProgress sx={{ width: "200px", my: 2 }} />
     </Box>
   );

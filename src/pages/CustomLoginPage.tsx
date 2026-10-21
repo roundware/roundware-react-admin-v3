@@ -12,6 +12,7 @@ import {
 import React, { useState } from "react";
 import { useLogin, useNotify } from "react-admin";
 import { useNavigate } from "react-router-dom";
+import { BRAND_BACKGROUND } from "./brandBackground";
 
 const CustomLoginPage = () => {
   const login = useLogin();
@@ -33,7 +34,9 @@ const CustomLoginPage = () => {
       await login({ username: email, password });
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : "Login failed. Check your credentials.";
+        err instanceof Error
+          ? err.message
+          : "Login failed. Check your credentials.";
       setError(message);
       notify(message, { type: "error" });
     } finally {
@@ -48,7 +51,7 @@ const CustomLoginPage = () => {
         justifyContent: "center",
         alignItems: "center",
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        background: BRAND_BACKGROUND,
       }}
     >
       <Card
@@ -61,9 +64,9 @@ const CustomLoginPage = () => {
         <CardContent sx={{ p: 4 }}>
           <Box sx={{ textAlign: "center", mb: 3 }}>
             <img
-              src="/logo.png"
+              src="/brand/roundware-logo-dark.png"
               alt="Roundware"
-              style={{ width: 80, marginBottom: 8 }}
+              style={{ width: 200, maxWidth: "70%", marginBottom: 16 }}
             />
             <Typography variant="h5" fontWeight="bold">
               Sign In

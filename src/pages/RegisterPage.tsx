@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { BRAND_BACKGROUND } from "./brandBackground";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || "";
 
@@ -34,12 +35,11 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (field: keyof RegisterForm) => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setForm((prev) => ({ ...prev, [field]: e.target.value }));
-    if (error) setError(null);
-  };
+  const handleChange =
+    (field: keyof RegisterForm) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setForm((prev) => ({ ...prev, [field]: e.target.value }));
+      if (error) setError(null);
+    };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,7 +60,7 @@ const RegisterPage = () => {
           if (Array.isArray(data.detail)) {
             const messages = data.detail.map(
               (err: { msg?: string; loc?: string[] }) =>
-                err.msg || JSON.stringify(err)
+                err.msg || JSON.stringify(err),
             );
             throw new Error(messages.join(". "));
           }
@@ -98,7 +98,7 @@ const RegisterPage = () => {
         justifyContent: "center",
         alignItems: "center",
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        background: BRAND_BACKGROUND,
       }}
     >
       <Card
@@ -111,9 +111,9 @@ const RegisterPage = () => {
         <CardContent sx={{ p: 4 }}>
           <Box sx={{ textAlign: "center", mb: 3 }}>
             <img
-              src="/logo.png"
+              src="/brand/roundware-logo-dark.png"
               alt="Roundware"
-              style={{ width: 80, marginBottom: 8 }}
+              style={{ width: 200, maxWidth: "70%", marginBottom: 16 }}
             />
             <Typography variant="h5" fontWeight="bold">
               Create Account
