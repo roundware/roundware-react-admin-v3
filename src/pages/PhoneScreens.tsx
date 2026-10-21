@@ -14,7 +14,7 @@ const SCREENS = [
   {
     file: "/brand/screens/start.webp",
     title: "Start",
-    caption: "A project's own look, logo and words.",
+    caption: "Customize with your project's logo and copy.",
   },
   {
     file: "/brand/screens/listen.webp",
@@ -24,7 +24,7 @@ const SCREENS = [
   {
     file: "/brand/screens/record.webp",
     title: "Contribute",
-    caption: "Record a voice and pin it to the place.",
+    caption: "Record your voice and pin it to the place.",
   },
 ];
 
@@ -89,7 +89,7 @@ const PhoneScreens: React.FC = () => {
           textAlign="center"
           gutterBottom
         >
-          What participants see
+          Web app for all devices
         </Typography>
         <Typography
           variant="body1"
@@ -97,8 +97,8 @@ const PhoneScreens: React.FC = () => {
           color="text.secondary"
           sx={{ mb: 6, maxWidth: 600, mx: "auto" }}
         >
-          Every project is a web app on its own address: nothing to install, on
-          any phone.
+          Every project gets its own address with nothing to install; accessible on
+          iOS, Android and laptop.
         </Typography>
         <Stack
           direction={{ xs: "column", md: "row" }}

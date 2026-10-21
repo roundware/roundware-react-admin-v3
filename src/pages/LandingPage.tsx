@@ -50,7 +50,7 @@ const FEATURES = [
     icon: <Explore fontSize="large" color="primary" />,
     title: "Flexible Experiences",
     description:
-      "Build sound walks, story maps, interactive installations, and more with customizable tags, speakers, and playback.",
+      "Build educational sound walks, interactive art installations, and more with customizable tags and playback.",
   },
   {
     icon: <Language fontSize="large" color="primary" />,
@@ -313,7 +313,7 @@ const LandingPage: React.FC = () => {
               textAlign="center"
               gutterBottom
             >
-              Simple, Transparent Pricing
+              Flexible Pricing Plans
             </Typography>
             <Typography
               variant="body1"
@@ -321,7 +321,7 @@ const LandingPage: React.FC = () => {
               color="text.secondary"
               sx={{ mb: 6, maxWidth: 500, mx: "auto" }}
             >
-              Start free and scale as your projects grow. No hidden fees.
+              Start free and scale as your projects grow.
             </Typography>
             <Grid container spacing={4} justifyContent="center">
               {plans.map((plan, i) => {
