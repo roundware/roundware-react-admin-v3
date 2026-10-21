@@ -1,13 +1,12 @@
 // ---------------------------------------------------------------------------
 // Landing page — public marketing page for unauthenticated visitors
 // ---------------------------------------------------------------------------
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
   Card,
   CardContent,
-  Chip,
   Container,
   Grid,
   Stack,
@@ -15,11 +14,18 @@ import {
 } from "@mui/material";
 import {
   Explore,
+  GitHub,
   GraphicEq,
   Language,
   RecordVoiceOver,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import {
+  fetchPlans,
+  formatPrice,
+  planFeatures,
+  PlanData,
+} from "../utilities/plans";
 
 // ---------------------------------------------------------------------------
 // Data
@@ -52,50 +58,7 @@ const FEATURES = [
   },
 ];
 
-const PLANS = [
-  {
-    name: "Free",
-    price: "$0",
-    period: "forever",
-    features: [
-      "1 project",
-      "100 assets",
-      "500 MB storage",
-      "2 team members",
-      "60s max recording",
-    ],
-    cta: "Get Started Free",
-    highlighted: false,
-  },
-  {
-    name: "Pro",
-    price: "$29",
-    period: "/month",
-    features: [
-      "5 projects",
-      "2,000 assets",
-      "10 GB storage",
-      "5 team members",
-      "3 min recordings",
-    ],
-    cta: "Coming Soon",
-    highlighted: true,
-  },
-  {
-    name: "Ultra",
-    price: "$99",
-    period: "/month",
-    features: [
-      "Unlimited projects",
-      "50,000 assets",
-      "100 GB storage",
-      "20 team members",
-      "10 min recordings",
-    ],
-    cta: "Coming Soon",
-    highlighted: false,
-  },
-];
+const GITHUB = "https://github.com/roundware";
 
 // ---------------------------------------------------------------------------
 // Component
@@ -103,6 +66,14 @@ const PLANS = [
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
+  // The plans as the server has them (the Plan page's list), so prices and
+  // limits here can't drift from the real ones. None: no pricing section.
+  const [plans, setPlans] = useState<PlanData[]>([]);
+  useEffect(() => {
+    fetchPlans()
+      .then(setPlans)
+      .catch(() => setPlans([]));
+  }, []);
 
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
@@ -110,8 +81,8 @@ const LandingPage: React.FC = () => {
       <Box
         sx={{
           bgcolor: "#1a1a2e",
-          py: 2,
-          px: 3,
+          py: { xs: 1.5, sm: 2 },
+          px: { xs: 0, sm: 3 },
           position: "sticky",
           top: 0,
           zIndex: 10,
@@ -123,30 +94,27 @@ const LandingPage: React.FC = () => {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Stack direction="row" spacing={1} alignItems="center">
-              <img
-                src="/logo.png"
-                alt="Roundware"
-                style={{ width: 36, height: 36 }}
-              />
-              <Typography
-                variant="h6"
-                fontWeight="bold"
-                sx={{ color: "#fff" }}
-              >
-                Roundware
-              </Typography>
-            </Stack>
-            <Stack direction="row" spacing={2}>
+            <Box
+              component="img"
+              src="/brand/roundware-logo.png"
+              alt="Roundware"
+              sx={{
+                height: { xs: 30, sm: 46 },
+                width: "auto",
+                display: "block",
+              }}
+            />
+            <Stack direction="row" spacing={{ xs: 1, sm: 2 }} sx={{ flexShrink: 0 }}>
               <Button
                 variant="text"
-                sx={{ color: "#fff" }}
+                sx={{ color: "#fff", whiteSpace: "nowrap" }}
                 onClick={() => navigate("/login")}
               >
                 Sign In
               </Button>
               <Button
                 variant="contained"
+                sx={{ whiteSpace: "nowrap" }}
                 onClick={() => navigate("/register")}
               >
                 Sign Up
@@ -159,14 +127,30 @@ const LandingPage: React.FC = () => {
       {/* ---- Hero Section ---- */}
       <Box
         sx={{
-          background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+          // The map underneath, darkened so the text reads on it.
+          backgroundImage:
+            "linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(22, 33, 62, 0.82) 50%, rgba(15, 52, 96, 0.78) 100%), url(/brand/map-background.webp)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
           color: "#fff",
-          py: { xs: 8, md: 12 },
+          py: { xs: 7, md: 11 },
           textAlign: "center",
         }}
       >
         <Container maxWidth="md">
+          <Box
+            component="img"
+            src="/brand/roundware-logo-icons.png"
+            alt=""
+            sx={{
+              width: "100%",
+              maxWidth: { xs: 280, md: 400 },
+              height: "auto",
+              mb: { xs: 4, md: 6 },
+            }}
+          />
           <Typography
+            component="h1"
             variant="h2"
             fontWeight="bold"
             gutterBottom
@@ -184,9 +168,9 @@ const LandingPage: React.FC = () => {
               fontSize: { xs: "1rem", md: "1.25rem" },
             }}
           >
-            Roundware is a flexible platform for creating participatory sound
-            art, storytelling, and interactive listening experiences tied to
-            real-world locations.
+            Roundware is a flexible open-source platform for creating
+            participatory sound art, storytelling, and interactive listening
+            experiences tied to real-world locations.
           </Typography>
           <Stack
             direction={{ xs: "column", sm: "row" }}
@@ -272,92 +256,128 @@ const LandingPage: React.FC = () => {
         </Container>
       </Box>
 
-      {/* ---- Pricing Section ---- */}
-      <Box id="pricing" sx={{ py: { xs: 6, md: 10 } }}>
-        <Container maxWidth="lg">
-          <Typography
-            variant="h4"
-            fontWeight="bold"
-            textAlign="center"
-            gutterBottom
-          >
-            Simple, Transparent Pricing
+      {/* ---- Open Source ---- */}
+      <Box sx={{ py: { xs: 6, md: 8 }, bgcolor: "#16213e", color: "#fff" }}>
+        <Container maxWidth="md" sx={{ textAlign: "center" }}>
+          <GitHub sx={{ fontSize: 44, mb: 1.5, opacity: 0.9 }} />
+          <Typography variant="h4" fontWeight="bold" gutterBottom>
+            Open source at its core
           </Typography>
           <Typography
             variant="body1"
-            textAlign="center"
-            color="text.secondary"
-            sx={{ mb: 6, maxWidth: 500, mx: "auto" }}
+            sx={{ opacity: 0.85, mb: 3, maxWidth: 620, mx: "auto" }}
           >
-            Start free and scale as your projects grow. No hidden fees.
+            The Roundware server and framework are open source under the AGPL,
+            developed in the open. Run them on your own servers, or start here
+            and have a project online in minutes.
           </Typography>
-          <Grid container spacing={4} justifyContent="center">
-            {PLANS.map((p) => (
-              <Grid key={p.name} size={{ xs: 12, sm: 6, md: 4 }}>
-                <Card
-                  sx={{
-                    height: "100%",
-                    textAlign: "center",
-                    border: p.highlighted ? "2px solid" : "1px solid",
-                    borderColor: p.highlighted ? "primary.main" : "divider",
-                    position: "relative",
-                    boxShadow: p.highlighted ? 4 : 1,
-                  }}
-                >
-                  {p.highlighted && (
-                    <Chip
-                      label="Most Popular"
-                      color="primary"
-                      size="small"
-                      sx={{
-                        position: "absolute",
-                        top: -12,
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                      }}
-                    />
-                  )}
-                  <CardContent sx={{ p: 4 }}>
-                    <Typography variant="h5" fontWeight="bold" gutterBottom>
-                      {p.name}
-                    </Typography>
-                    <Stack
-                      direction="row"
-                      justifyContent="center"
-                      alignItems="baseline"
-                      spacing={0.5}
-                      sx={{ mb: 3 }}
-                    >
-                      <Typography variant="h3" fontWeight="bold">
-                        {p.price}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {p.period}
-                      </Typography>
-                    </Stack>
-                    <Stack spacing={1.5} sx={{ mb: 3, textAlign: "left" }}>
-                      {p.features.map((feat) => (
-                        <Typography key={feat} variant="body2">
-                          ✓ {feat}
-                        </Typography>
-                      ))}
-                    </Stack>
-                    <Button
-                      variant={p.highlighted ? "contained" : "outlined"}
-                      fullWidth
-                      size="large"
-                      onClick={() => navigate("/register")}
-                      disabled={p.cta === "Coming Soon"}
-                    >
-                      {p.cta}
-                    </Button>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+          <Button
+            variant="outlined"
+            size="large"
+            href={GITHUB}
+            target="_blank"
+            rel="noopener"
+            startIcon={<GitHub />}
+            sx={{
+              color: "#fff",
+              borderColor: "rgba(255,255,255,0.5)",
+              "&:hover": { borderColor: "#fff" },
+            }}
+          >
+            Roundware on GitHub
+          </Button>
         </Container>
       </Box>
+
+      {/* ---- Pricing Section ---- */}
+      {plans.length > 0 && (
+        <Box id="pricing" sx={{ py: { xs: 6, md: 10 } }}>
+          <Container maxWidth="lg">
+            <Typography
+              variant="h4"
+              fontWeight="bold"
+              textAlign="center"
+              gutterBottom
+            >
+              Simple, Transparent Pricing
+            </Typography>
+            <Typography
+              variant="body1"
+              textAlign="center"
+              color="text.secondary"
+              sx={{ mb: 6, maxWidth: 500, mx: "auto" }}
+            >
+              Start free and scale as your projects grow. No hidden fees.
+            </Typography>
+            <Grid container spacing={4} justifyContent="center">
+              {plans.map((plan, i) => {
+                const price = formatPrice(plan.price_cents_monthly);
+                const p = {
+                  name: plan.name,
+                  price: price.amount,
+                  period: price.period,
+                  features: planFeatures(plan),
+                  free: plan.price_cents_monthly === 0,
+                  // The first paid plan, set off a little.
+                  highlighted:
+                    plan.price_cents_monthly > 0 &&
+                    plans.findIndex((x) => x.price_cents_monthly > 0) === i,
+                };
+                return (
+                  <Grid key={plan.id} size={{ xs: 12, sm: 6, md: 4 }}>
+                    <Card
+                      sx={{
+                        height: "100%",
+                        textAlign: "center",
+                        border: p.highlighted ? "2px solid" : "1px solid",
+                        borderColor: p.highlighted ? "primary.main" : "divider",
+                        position: "relative",
+                        boxShadow: p.highlighted ? 4 : 1,
+                      }}
+                    >
+                      <CardContent sx={{ p: 4 }}>
+                        <Typography variant="h5" fontWeight="bold" gutterBottom>
+                          {p.name}
+                        </Typography>
+                        <Stack
+                          direction="row"
+                          justifyContent="center"
+                          alignItems="baseline"
+                          spacing={0.5}
+                          sx={{ mb: 3 }}
+                        >
+                          <Typography variant="h3" fontWeight="bold">
+                            {p.price}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {p.period}
+                          </Typography>
+                        </Stack>
+                        <Stack spacing={1.5} sx={{ mb: 3, textAlign: "left" }}>
+                          {p.features.map((feat) => (
+                            <Typography key={feat} variant="body2">
+                              ✓ {feat}
+                            </Typography>
+                          ))}
+                        </Stack>
+                        <Button
+                          variant={p.highlighted ? "contained" : "outlined"}
+                          fullWidth
+                          size="large"
+                          onClick={() => navigate("/register")}
+                          disabled={!p.free}
+                        >
+                          {p.free ? "Get Started Free" : "Coming Soon"}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                );
+              })}
+            </Grid>
+          </Container>
+        </Box>
+      )}
 
       {/* ---- Footer ---- */}
       <Box sx={{ bgcolor: "#1a1a2e", color: "#fff", py: 4 }}>
@@ -369,7 +389,8 @@ const LandingPage: React.FC = () => {
             spacing={2}
           >
             <Typography variant="body2" sx={{ opacity: 0.7 }}>
-              &copy; {new Date().getFullYear()} Roundware. All rights reserved.
+              &copy; {new Date().getFullYear()} Roundware. The server and
+              framework are open source (AGPL-3.0).
             </Typography>
             <Stack direction="row" spacing={3}>
               <Button
@@ -378,6 +399,7 @@ const LandingPage: React.FC = () => {
                 sx={{ color: "#fff", opacity: 0.7 }}
                 href="https://roundware.org"
                 target="_blank"
+                rel="noopener"
               >
                 About
               </Button>
@@ -385,8 +407,9 @@ const LandingPage: React.FC = () => {
                 variant="text"
                 size="small"
                 sx={{ color: "#fff", opacity: 0.7 }}
-                href="https://github.com/roundware"
+                href={GITHUB}
                 target="_blank"
+                rel="noopener"
               >
                 GitHub
               </Button>
