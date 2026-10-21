@@ -3,10 +3,11 @@ import React, { useState } from "react";
 
 /**
  * The app as a participant sees it, on the landing page: screenshots in
- * phone frames. Each file is a phone screenshot (portrait, any iPhone or
- * Android size) in public/brand/screens/. A screenshot that isn't there yet
- * is left out, and with none the section doesn't show at all, so this can
- * ship before the pictures do.
+ * phone frames. Each file in public/brand/screens/ is a phone screenshot
+ * cropped to the app itself — no status bar, no browser toolbar — at 720
+ * wide; the frame takes the screenshot's shape, so nothing is cut off. A
+ * screenshot that isn't there is left out, and with none the section
+ * doesn't show at all.
  */
 const SCREENS = [
   {
@@ -35,7 +36,6 @@ const Phone: React.FC<{ src: string; alt: string; onMissing: () => void }> = ({
     sx={{
       position: "relative",
       width: { xs: 220, md: 240 },
-      aspectRatio: "9 / 19.5",
       borderRadius: "38px",
       border: "10px solid #111",
       bgcolor: "#111",
@@ -49,16 +49,17 @@ const Phone: React.FC<{ src: string; alt: string; onMissing: () => void }> = ({
       src={src}
       alt={alt}
       onError={onMissing}
+      // The screenshots' size, so the frame has its shape before they load.
+      width={720}
+      height={1291}
       sx={{
         width: "100%",
-        height: "100%",
-        objectFit: "cover",
-        objectPosition: "top",
+        height: "auto",
         display: "block",
         borderRadius: "28px",
       }}
     />
-    {/* The camera island, drawn over the screenshot's own status bar. */}
+    {/* The camera island, over the top of the app. */}
     <Box
       sx={{
         position: "absolute",
