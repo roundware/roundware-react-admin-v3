@@ -176,6 +176,10 @@
 			"where": "One tag."
 		},
 		{
+			"name": "rw-speak-close",
+			"where": "The × that leaves the recording steps, top left."
+		},
+		{
 			"name": "rw-legal",
 			"where": "The legal agreement (it stays visible)."
 		},
