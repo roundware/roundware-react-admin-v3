@@ -59,6 +59,13 @@ const EXAMPLES: { title: string; css: (image?: string) => string }[] = [
     css: () => `html.rw-page-listen .rw-sound-button {\n  transform: scale(1.2);\n}`,
   },
   {
+    // A border needs its style (solid); the buttons share Home's height as
+    // flex items, so their size is flex-basis, with the height cap lifted.
+    title: "Taller Home buttons with a white border",
+    css: () =>
+      `html.rw-page-home .rw-home-listen,\nhtml.rw-page-home .rw-home-speak {\n  border: 10px solid white;\n  flex-basis: 300px;\n  max-height: none;\n}`,
+  },
+  {
     title: "One of your images behind Home",
     css: (image) =>
       `.rw-home {\n  background-image: url("${image ?? "…an image's address, from the list below…"}");\n  background-size: cover;\n}`,
