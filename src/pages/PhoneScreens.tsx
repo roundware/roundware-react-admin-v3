@@ -3,9 +3,10 @@ import React, { useState } from "react";
 
 /**
  * The app as a participant sees it, on the landing page: screenshots in
- * phone frames. Each file in public/brand/screens/ is a phone screenshot
- * cropped to the app itself — no status bar, no browser toolbar — at 720
- * wide; the frame takes the screenshot's shape, so nothing is cut off. A
+ * phone frames. Each file in public/brand/screens/ is an iPhone screenshot
+ * from the status bar (in the project's Backdrop color) down to the app's
+ * bottom edge — Safari's toolbar cropped off — at 720 wide; the frame takes
+ * the screenshot's shape, so nothing is cut off. A
  * screenshot that isn't there is left out, and with none the section
  * doesn't show at all.
  */
@@ -51,7 +52,7 @@ const Phone: React.FC<{ src: string; alt: string; onMissing: () => void }> = ({
       onError={onMissing}
       // The screenshots' size, so the frame has its shape before they load.
       width={720}
-      height={1291}
+      height={1378}
       sx={{
         width: "100%",
         height: "auto",
@@ -59,7 +60,7 @@ const Phone: React.FC<{ src: string; alt: string; onMissing: () => void }> = ({
         borderRadius: "28px",
       }}
     />
-    {/* The camera island, over the top of the app. */}
+    {/* The camera island, in the middle of the status bar. */}
     <Box
       sx={{
         position: "absolute",
