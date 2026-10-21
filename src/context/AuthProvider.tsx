@@ -1,6 +1,6 @@
 import { AuthProvider } from "react-admin";
 import { dataProvider } from "./DataProviderContext";
-import { accessTokenExpired } from "../roundwareDataProvider/tokenAuthProvider";
+import { accessTokenExpired, sessionEnded } from "../roundwareDataProvider/tokenAuthProvider";
 import { clearAllWizardDrafts } from "../pages/ProjectWizard/wizardPersistence";
 
 /**
@@ -81,24 +81,23 @@ const tokenAuthProvider: AuthProvider = {
     return Promise.resolve();
   },
 
-  // A stored sign-in that has run out counts as none (accessTokenExpired).
-  checkAuth: () =>
-    localStorage.getItem("access_token") && !accessTokenExpired()
-      ? Promise.resolve()
-      : Promise.reject(),
+  // A sign-in that runs out while the admin is open asks for the password
+  // again over the page (SessionExpiredDialog) instead of leaving it; one
+  // that had already run out when the admin opened is dropped at start
+  // (index.tsx), so it goes to Sign In.
+  checkAuth: () => {
+    if (!localStorage.getItem("access_token")) return Promise.reject();
+    if (accessTokenExpired()) sessionEnded();
+    return Promise.resolve();
+  },
 
+  // A 401 for a stored sign-in has been seen to already (tokenAuthProvider's
+  // endExpiredSession, which knows the sign-in it was sent with). Signing out
+  // here, as this did, left the page up with no sign-in and no way back.
   checkError: (error) => {
-    const status = error.status;
-    if (status === 401) {
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("tenant_slug");
-      localStorage.removeItem("tenants");
-      localStorage.removeItem("user");
-      // Clear data provider cache so stale data doesn't bleed into re-login
-      dataProvider.cachedProjectData.clear();
-      dataProvider.currentProjectId = 0;
-      dataProvider.revalidatingResources = [];
-      return Promise.reject();
+    if (error.status === 401) {
+      if (!localStorage.getItem("access_token")) return Promise.reject();
+      if (accessTokenExpired()) sessionEnded();
     }
     // 403 = authenticated but insufficient role — don't log out
     return Promise.resolve();

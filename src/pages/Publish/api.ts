@@ -1,5 +1,5 @@
 // API helpers for the Publish (deploy + branding + preview) page.
-import { apiFetcher } from "../../roundwareDataProvider/tokenAuthProvider";
+import { apiFetcher, sessionEnded } from "../../roundwareDataProvider/tokenAuthProvider";
 
 export interface DeploymentState {
   deployed: boolean;
@@ -271,6 +271,7 @@ export async function uploadBrandingFile(
     { method: "POST", headers, body: form }
   );
   if (!resp.ok) {
+    if (resp.status === 401 && token && localStorage.getItem("access_token") === token) sessionEnded();
     const detail = await resp.json().catch(() => null);
     throw new Error(detail?.detail || `Upload failed (${resp.status})`);
   }

@@ -24,9 +24,22 @@ import ResetPasswordPage from "./pages/public/ResetPasswordPage";
 import VerifyEmailPage from "./pages/public/VerifyEmailPage";
 import ProjectRoute from "./ProjectRoute";
 import { startErrorReporting } from "./monitoring";
+import { ThemeProvider } from "@mui/material/styles";
+import SessionExpiredDialog from "./components/SessionExpiredDialog";
+import adminTheme from "./styles";
+import { accessTokenExpired, AUTH_KEYS } from "./roundwareDataProvider/tokenAuthProvider";
 
 // Before anything renders (off without VITE_SENTRY_DSN).
 startErrorReporting();
+
+// A sign-in that had already run out when the admin opened goes to Sign In,
+// as if signed out; one that runs out while it's open asks again over the
+// page (SessionExpiredDialog).
+try {
+  if (accessTokenExpired()) AUTH_KEYS.forEach((k) => localStorage.removeItem(k));
+} catch {
+  // Without storage there's no sign-in to drop.
+}
 
 const AppProviders = ({ children }: { children: React.ReactNode }) => (
   <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -35,6 +48,9 @@ const AppProviders = ({ children }: { children: React.ReactNode }) => (
         <SpeakersProvider>
           <BuildUIContextProvider>
             {children}
+            <ThemeProvider theme={adminTheme}>
+              <SessionExpiredDialog />
+            </ThemeProvider>
           </BuildUIContextProvider>
         </SpeakersProvider>
       </ProjectsProvider>

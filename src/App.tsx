@@ -119,6 +119,9 @@ function App({ basename }: { basename: string }): JSX.Element {
       title="Roundware Admin"
       dataProvider={dataProvider}
       authProvider={authProvider}
+      // Every page, custom ones too (Look & Feel, Publish…), goes to Sign In
+      // without a sign-in; they used to open empty, as "Unknown" (2026-10-21).
+      requireAuth
       // @ts-expect-error legacy history prop
       history={history}
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -27,6 +27,24 @@ function serverMessage(body: unknown): string | null {
 /** The keys a sign-in keeps (AuthProvider's login and logout). */
 export const AUTH_KEYS = ["access_token", "tenant_slug", "tenants", "user"];
 
+/** The stored sign-in's JWT claims, or null. */
+function tokenClaims(): { exp?: number; iat?: number } | null {
+  const token = localStorage.getItem("access_token");
+  if (!token) return null;
+  try {
+    return JSON.parse(atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
+  } catch {
+    return null;
+  }
+}
+
+/** When the stored sign-in runs out (ms), and how long it lasts (ms). */
+export function tokenTimes(): { expiresAt: number; lasts: number | null } | null {
+  const c = tokenClaims();
+  if (typeof c?.exp !== "number") return null;
+  return { expiresAt: c.exp * 1000, lasts: typeof c.iat === "number" ? (c.exp - c.iat) * 1000 : null };
+}
+
 /**
  * True when the stored sign-in has run out (its JWT's `exp`, 8 hours by
  * default). Signing in is the only renewal — there's no refresh — so an
@@ -35,27 +53,42 @@ export const AUTH_KEYS = ["access_token", "tenant_slug", "tenants", "user"];
  * preview" instead of asking to sign in again (2026-10-15).
  */
 export function accessTokenExpired(): boolean {
-  const token = localStorage.getItem("access_token");
-  if (!token) return false;
-  try {
-    const payload = JSON.parse(atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
-    return typeof payload.exp === "number" && payload.exp * 1000 <= Date.now();
-  } catch {
-    return false;
-  }
+  const t = tokenTimes();
+  return !!t && t.expiresAt <= Date.now();
 }
 
-/** The server refused the sign-in: drop it and reload, which lands on Sign
- *  In (index.tsx). Only for a stored sign-in — a wrong password is a 401 too.
- *  And only when the refused request carried that sign-in: one sent before
- *  signing in (the Sign In page asks for lists too) could be refused just
- *  after, and it signed the new session straight out (2026-10-19). */
+// ---------------------------------------------------------------------------
+// A sign-in that runs out mid-session (2026-10-21). It used to be dropped
+// quietly by whichever request noticed first, and the page stayed as it was,
+// signed out, refusing every save with nothing saying why. Now the page is
+// kept and SessionExpiredDialog asks for the password again over it, so
+// nothing unsaved is lost. The sign-in stays stored until then: what's on
+// the page keeps its project, organization and name.
+// ---------------------------------------------------------------------------
+let sessionHasEnded = false;
+export const SESSION_ENDED = "roundware-session-ended";
+
+/** The stored sign-in has run out or was refused: ask for it again. */
+export function sessionEnded(): void {
+  if (sessionHasEnded || !localStorage.getItem("access_token")) return;
+  sessionHasEnded = true;
+  window.dispatchEvent(new Event(SESSION_ENDED));
+}
+export const isSessionEnded = () => sessionHasEnded;
+/** Signed in again (SessionExpiredDialog). */
+export function sessionRenewed(): void {
+  sessionHasEnded = false;
+}
+
+/** The server refused the sign-in. Only for a stored sign-in — a wrong
+ *  password is a 401 too. And only when the refused request carried that
+ *  sign-in: one sent before signing in (the Sign In page asks for lists too)
+ *  could be refused just after, and it signed the new session straight out
+ *  (2026-10-19); one sent before signing in again, likewise. */
 function endExpiredSession(e: unknown, sentWith: string | null): void {
   if (!(e instanceof HttpError) || e.status !== 401) return;
   if (!sentWith || localStorage.getItem("access_token") !== sentWith) return;
-  AUTH_KEYS.forEach((k) => localStorage.removeItem(k));
-  window.dispatchEvent(new Event("roundware-auth-change"));
-  window.location.reload();
+  sessionEnded();
 }
 
 /** The handler for a request's failure, knowing the sign-in it was sent with. */
@@ -117,6 +150,7 @@ export function XMLHttpRequestWithAuthToken(
 }> {
   options = { ...options, ...createOptionsFromToken() };
   const slug = localStorage.getItem("tenant_slug");
+  const sentWith = localStorage.getItem("access_token");
 
   return new Promise((resolve, reject) => {
     const request = new XMLHttpRequest();
@@ -150,6 +184,9 @@ export function XMLHttpRequestWithAuthToken(
       // A refusal used to resolve like a success, so a refused upload
       // looked as if it had worked.
       if (request.status >= 400) {
+        if (request.status === 401 && sentWith && localStorage.getItem("access_token") === sentWith) {
+          sessionEnded();
+        }
         reject(
           new HttpError(
             serverMessage(json) || request.statusText || `Upload failed (${request.status})`,
