@@ -219,8 +219,6 @@ const LandingPage: React.FC = () => {
         </Container>
       </Box>
 
-      <PhoneScreens />
-
       {/* ---- Features Section ---- */}
       <Box id="features" sx={{ py: { xs: 6, md: 10 }, bgcolor: "#f8f9fa" }}>
         <Container maxWidth="lg">
@@ -269,6 +267,8 @@ const LandingPage: React.FC = () => {
           </Grid>
         </Container>
       </Box>
+
+      <PhoneScreens />
 
       {/* ---- Open Source ---- */}
       <Box sx={{ py: { xs: 6, md: 8 }, bgcolor: "#16213e", color: "#fff" }}>
