@@ -62,6 +62,7 @@ export const AssetList = (): JSX.Element => {
         />,
         <BooleanInput key="submitted" source="submitted" label="Submitted" />,
         <BooleanInput key="is_test" source="is_test" label="Made on the test site" />,
+        <BooleanInput key="moving" source="moving" label="Moving" />,
         <BooleanInput key="has_contact" source="has_contact" label="Has contact details" />,
         <TextInput
           label="Description / Filename"

@@ -36,6 +36,7 @@ export const AssetDatagrid = (): JSX.Element => {
       <Datagrid optimized bulkActionButtons={<DeleteWithBinary isBulk />} rowClick={false}>
         <TextField source='id' />
         <BooleanField source='submitted' />
+        <BooleanField source='moving' label='Moving' />
         {/* Made on the project's test site: shown only there (server docs/021). */}
         <FunctionField
           label='Test'

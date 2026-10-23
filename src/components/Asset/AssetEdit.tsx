@@ -30,6 +30,7 @@ import { buildLocalizationsPayload } from '../../utils';
 import DeleteWithBinary from 'components/common/DeleteWithBinary';
 import AssetBundleField from './AssetBundleField';
 import AssetShape, { shapeCache } from './AssetShape';
+import { AssetPathLine, AssetPathPanel } from './AssetPath';
 
 const AssetEdit = (): JSX.Element => {
   const redirect = useRedirect();
@@ -58,6 +59,16 @@ const AssetEdit = (): JSX.Element => {
 
     // Shape is saved independently via the map controls — exclude from form PATCH
     delete (data as Record<string, unknown>).shape;
+
+    // A moving asset's position is its mover's to set (server docs/030): the
+    // form's copy is from when the page opened, and saving it would pull the
+    // asset back. Its path is edited in the Path panel.
+    if (data.moving) {
+      delete (data as Record<string, unknown>).latitude;
+      delete (data as Record<string, unknown>).longitude;
+    }
+    delete (data as Record<string, unknown>).moving;
+    delete (data as Record<string, unknown>).path;
 
     // Ensure tag IDs are numbers
     if (Array.isArray(data.tag_ids)) {
@@ -136,6 +147,7 @@ const AssetEdit = (): JSX.Element => {
         <FileDownloadButton source='file' />
 
         <AssetLocationWithShape />
+        <AssetPathPanel />
 
         <NumberInput source='session_id' fullWidth />
         <ReferenceInput label='User' source='user_id' reference='users'>
@@ -217,12 +229,20 @@ const AssetLocationWithShape = () => {
 
   return (
     <LocationSelector
+      // Remount when the asset stops/starts moving or is trimmed back: the
+      // card keeps its own copy of the coordinates from when it mounted.
+      key={`${record?.id}-${record?.moving}-${record?.latitude}-${record?.longitude}`}
       fieldNames={{
         latitude: 'latitude',
         longitude: 'longitude',
       }}
+      readOnlyNote={
+        record?.moving
+          ? 'Set by its mover while it moves (as of when this page opened). To change it, stop moving below.'
+          : undefined
+      }
       headerAction={
-        !hasShape && !isDrawingMode ? (
+        !hasShape && !isDrawingMode && !record?.moving ? (
           <Button
             startIcon={<AddIcon />}
             onClick={() => setIsDrawingMode(true)}
@@ -240,6 +260,7 @@ const AssetLocationWithShape = () => {
         setIsDrawingMode={setIsDrawingMode}
         onShapeChange={setHasShape}
       />
+      <AssetPathLine />
     </LocationSelector>
   );
 };

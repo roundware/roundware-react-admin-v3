@@ -5,8 +5,10 @@ interface Props {
   onChange: (lat: number, lng: number) => void;
   lat: number;
   lng: number;
+  /** false: shown, but can't be dragged (a moving asset's position is set by its mover). */
+  draggable?: boolean;
 }
-const SelectorPin = ({ onChange, lat, lng }: Props): JSX.Element => {
+const SelectorPin = ({ onChange, lat, lng, draggable = true }: Props): JSX.Element => {
   const map = useGoogleMap();
 
   useEffect(() => {
@@ -20,7 +22,7 @@ const SelectorPin = ({ onChange, lat, lng }: Props): JSX.Element => {
 
   return (
     <MarkerF
-      draggable={true}
+      draggable={draggable}
       position={{
         lat,
         lng,

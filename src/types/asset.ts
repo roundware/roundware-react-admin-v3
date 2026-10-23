@@ -50,4 +50,17 @@ export interface IAsset
   };
   loc_description_admin?: LocalizedString[];
   loc_alt_text_admin?: LocalizedString[];
+  /** Moved by an outside mover, such as the balloon simulator (server docs/030). */
+  moving?: boolean;
+  /** Summary of its path, when it has one (kept after it stops moving). */
+  path?: IAssetPathSummary | null;
+}
+
+export interface IAssetPathSummary {
+  kind: string;
+  status: 'moving' | 'landed' | 'arrived' | 'captured' | 'ended';
+  latest_at: string | null;
+  latest_u: number | null;
+  latest_v: number | null;
+  latest_altitude_m: number | null;
 }

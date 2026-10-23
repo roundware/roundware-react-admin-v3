@@ -21,6 +21,9 @@ interface Props {
   };
   /** Optional element rendered inline to the right of the lat/lon fields. */
   headerAction?: React.ReactNode;
+  /** Shown but not editable, with this note under the fields: a moving
+   *  asset's position is set by its mover (server docs/030). */
+  readOnlyNote?: string;
 }
 
 const containerStyle = {
@@ -93,22 +96,31 @@ const LocationSelector = (props: PropsWithChildren<Props>): JSX.Element => {
                 value={latStr}
                 label="Latitude"
                 onChange={(e) => setLatStr(e.target.value)}
+                disabled={!!props.readOnlyNote}
               />
               <TextField
                 value={lngStr}
                 label="Longitude"
                 onChange={(e) => setLngStr(e.target.value)}
+                disabled={!!props.readOnlyNote}
               />
               {props.headerAction}
             </Stack>
+            {props.readOnlyNote && (
+              <Typography variant="caption" color="text.secondary">
+                {props.readOnlyNote}
+              </Typography>
+            )}
           </Grid>
           <Grid>
             {isLoaded ? (
               <>
                 <Grid container spacing={2} direction="column">
-                  <Grid>
-                    <PlacesAutoComplete onSelect={handleOnLocationChange} />
-                  </Grid>
+                  {!props.readOnlyNote && (
+                    <Grid>
+                      <PlacesAutoComplete onSelect={handleOnLocationChange} />
+                    </Grid>
+                  )}
                   <Grid>
                     <GoogleMap
                       mapContainerStyle={containerStyle}
@@ -123,6 +135,7 @@ const LocationSelector = (props: PropsWithChildren<Props>): JSX.Element => {
                         onChange={handleOnLocationChange}
                         lat={lat || 0}
                         lng={lng || 0}
+                        draggable={!props.readOnlyNote}
                       />
                       {props.children || null}
                     </GoogleMap>
