@@ -2,7 +2,7 @@ import { Tab, Tabs } from "@mui/material";
 import ListActions from "components/common/ListActions";
 import TagIdSelector from "components/common/TagIdSelector";
 import useBoolean from "hooks/useBoolean";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BooleanInput,
   DateTimeInput,
@@ -10,14 +10,17 @@ import {
   NumberInput,
   SelectInput,
   TextInput,
+  useListContext,
 } from "react-admin";
 import { Navigate } from "react-router-dom";
 import { useProjects } from "../../context/ProjectsContext";
 import AssetDatagrid from "./AssetDatagrid";
+import { useProjectHasMovingAssets } from "./AssetPath";
 
 export const AssetList = (): JSX.Element => {
   const { selectedProject } = useProjects();
   const mapViewEnabled = useBoolean(false);
+  const hasMoving = useProjectHasMovingAssets();
 
   return (
     <List
@@ -62,7 +65,8 @@ export const AssetList = (): JSX.Element => {
         />,
         <BooleanInput key="submitted" source="submitted" label="Submitted" />,
         <BooleanInput key="is_test" source="is_test" label="Made on the test site" />,
-        <BooleanInput key="moving" source="moving" label="Moving" />,
+        // Only in projects that have moving assets (server docs/030).
+        ...(hasMoving ? [<BooleanInput key="moving" source="moving" label="Moving" />] : []),
         <BooleanInput key="has_contact" source="has_contact" label="Has contact details" />,
         <TextInput
           label="Description / Filename"
@@ -86,10 +90,26 @@ export const AssetList = (): JSX.Element => {
         {mapViewEnabled.value && (
           <Navigate to={`/project/${selectedProject?.id}/assets/map`} />
         )}
+        <DropHiddenMovingFilter hasMoving={hasMoving} />
         <AssetDatagrid />
       </>
     </List>
   );
+};
+
+/** A Moving filter remembered from a project that has moving assets would
+ *  still apply here, hidden, and could empty the list with no way to clear
+ *  it: drop it once this project is known to have none. */
+const DropHiddenMovingFilter = ({ hasMoving }: { hasMoving: boolean | undefined }): null => {
+  const { filterValues, displayedFilters, setFilters } = useListContext();
+  useEffect(() => {
+    if (hasMoving === false && filterValues && "moving" in filterValues) {
+      const { moving: _, ...rest } = filterValues;
+      const { moving: __, ...shown } = displayedFilters ?? {};
+      setFilters(rest, shown);
+    }
+  }, [hasMoving, filterValues]);
+  return null;
 };
 
 export default AssetList;

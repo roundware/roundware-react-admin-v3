@@ -21,8 +21,9 @@ import {
 import { MarkerF, PolylineF, useGoogleMap } from '@react-google-maps/api';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect, useRef, useState } from 'react';
-import { Confirm, useNotify, useRecordContext, useRefresh } from 'react-admin';
+import { Confirm, useGetList, useNotify, useRecordContext, useRefresh } from 'react-admin';
 import { useRoundwareDataProvider } from 'context/DataProviderContext';
+import { useProjects } from 'context/ProjectsContext';
 import { apiFetcher } from 'roundwareDataProvider/tokenAuthProvider';
 import { IAsset } from '../../types/asset';
 
@@ -54,6 +55,27 @@ interface PathDetail {
 }
 
 const pathKey = (id: unknown) => ['asset-path', id];
+
+/** Whether any of the project's assets moves, or has moved (it has a path).
+ *  Moving assets are specialized: the admin mentions them only where a
+ *  project has some. Reads the data provider's cached list of the
+ *  project's assets (page 0 = all of them), so it costs no extra request. */
+export function useProjectHasMovingAssets(): boolean | undefined {
+  const projectId = useProjects().selectedProject?.id;
+  // The project in the filter keeps each project's answer apart in the query
+  // cache (every asset in the list matches it).
+  const { data } = useGetList<IAsset>(
+    'assets',
+    {
+      pagination: { page: 0, perPage: 0 },
+      sort: { field: 'id', order: 'ASC' },
+      filter: { project_id: projectId },
+    },
+    { enabled: projectId != null },
+  );
+  // undefined until known: callers mustn't act on "none" while loading.
+  return data ? data.some((a) => a.moving || a.path) : undefined;
+}
 
 /** The path and (thinned) points of the asset in context; nothing for an asset without one. */
 function useAssetPath() {
@@ -225,7 +247,7 @@ export const AssetPathPanel = (): JSX.Element | null => {
   };
 
   return (
-    <Card variant="outlined" sx={{ width: '100%', mt: 2 }}>
+    <Card variant="outlined" sx={{ width: '100%', mt: 2, mb: 2 }}>
       <CardContent>
         <Stack spacing={2}>
           <Stack direction="row" spacing={1} alignItems="center">
@@ -311,11 +333,11 @@ export const AssetPathPanel = (): JSX.Element | null => {
               {/* Stop or resume */}
               <Stack direction="row" spacing={1} alignItems="center">
                 {record.moving ? (
-                  <Button variant="outlined" size="small" disabled={busy} onClick={() => patch('Stopped: a fixed asset now', { moving: false })}>
+                  <Button variant="outlined" size="small" disabled={busy} sx={{ whiteSpace: 'nowrap', flexShrink: 0 }} onClick={() => patch('Stopped: a fixed asset now', { moving: false })}>
                     Stop moving
                   </Button>
                 ) : (
-                  <Button variant="outlined" size="small" disabled={busy} onClick={() => patch('Moving again', { status: 'moving' })}>
+                  <Button variant="outlined" size="small" disabled={busy} sx={{ whiteSpace: 'nowrap', flexShrink: 0 }} onClick={() => patch('Moving again', { status: 'moving' })}>
                     Resume moving
                   </Button>
                 )}

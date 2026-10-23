@@ -19,6 +19,7 @@ import {
 } from 'react-admin';
 import AudioPlayerField from '../common/AudioPlayerField';
 import TextDisplayField from './TextDisplayField';
+import { useProjectHasMovingAssets } from './AssetPath';
 
 const assetCopyTransform = (data: Record<string, unknown>) => {
   const { created_at, updated_at, file, file_key, ...rest } = data;
@@ -27,6 +28,7 @@ const assetCopyTransform = (data: Record<string, unknown>) => {
 
 export const AssetDatagrid = (): JSX.Element => {
   const { setPerPage, refetch } = useListController();
+  const hasMoving = useProjectHasMovingAssets();
   useLayoutEffect(() => {
     setPerPage(10);
     refetch();
@@ -36,7 +38,8 @@ export const AssetDatagrid = (): JSX.Element => {
       <Datagrid optimized bulkActionButtons={<DeleteWithBinary isBulk />} rowClick={false}>
         <TextField source='id' />
         <BooleanField source='submitted' />
-        <BooleanField source='moving' label='Moving' />
+        {/* Only in projects that have moving assets (server docs/030). */}
+        {hasMoving && <BooleanField source='moving' label='Moving' />}
         {/* Made on the project's test site: shown only there (server docs/021). */}
         <FunctionField
           label='Test'
