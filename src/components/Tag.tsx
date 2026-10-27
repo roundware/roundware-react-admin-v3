@@ -9,9 +9,8 @@ import {
     EditButton,
     List,
     RaRecord,
-    ReferenceField,
-    ReferenceInput,
     SelectInput,
+    ReferenceField,
     SimpleForm,
     TextField,
     TextInput,
@@ -23,21 +22,14 @@ import { buildLocalizationsPayload } from "../utils";
 import CopyResourceButton from "./common/CopyResource";
 import FormToolbar from "./common/FormToolbar";
 import TranslatableField from "./common/TranslatableField";
+import ProjectTagCategoryInput from "./common/ProjectTagCategoryInput";
 
 export const TagList = (): JSX.Element => {
   return (
     <Box pt={3}>
       <List
         filters={[
-          <ReferenceInput
-            source="tag_category_id"
-            reference="tagcategories"
-            label="Tag Category "
-            key="tagcategories"
-            alwaysOn
-          >
-            <SelectInput optionText="name" fullWidth />
-          </ReferenceInput>,
+          <ProjectTagCategoryInput source="tag_category_id" key="tagcategories" filter alwaysOn />,
         ]}
       >
         <Datagrid rowClick="edit" optimized>
@@ -92,15 +84,7 @@ export const TagEdit = (): JSX.Element => {
     >
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
-        <ReferenceInput
-          source="tag_category_id"
-          reference="tagcategories"
-          label="Tag Category"
-          required
-          key="tagcategories"
-        >
-          <SelectInput optionText="name" fullWidth />
-        </ReferenceInput>
+        <ProjectTagCategoryInput source="tag_category_id" required />
         {/* One field per text, a tab per language: the default language's
             tab is the tag itself (server docs/017). There were separate
             "value"/"description" inputs too, editing the same text twice. */}
@@ -150,15 +134,7 @@ export const TagCreate = (): JSX.Element => {
       redirect="list"
     >
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
-        <ReferenceInput
-          source="tag_category_id"
-          reference="tagcategories"
-          label="Tag Category"
-          required
-          key="tagcategories"
-        >
-          <SelectInput optionText="name" fullWidth />
-        </ReferenceInput>
+        <ProjectTagCategoryInput source="tag_category_id" required />
         {/* One field per text, a tab per language: the default language's
             tab is the tag itself (server docs/017). There were separate
             "value"/"description" inputs too, editing the same text twice. */}
