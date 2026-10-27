@@ -14,6 +14,7 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { usePermissions, Title } from "react-admin";
 import { apiFetcher } from "../roundwareDataProvider/tokenAuthProvider";
+import { CloseAccountCard, DeleteMyAccountCard, ExportCard, ImportCard } from "./OrganizationData";
 
 interface TenantInfo {
   id: number;
@@ -29,6 +30,8 @@ interface TenantInfo {
 const TenantSettingsPage = (): JSX.Element => {
   const { permissions } = usePermissions();
   const canEdit = permissions?.role === "owner" || permissions?.role === "superuser";
+  // Export, import and the account's closing: owners and admins see them.
+  const canManageData = canEdit || permissions?.role === "admin";
 
   const [tenant, setTenant] = useState<TenantInfo | null>(null);
   const [name, setName] = useState("");
@@ -156,6 +159,15 @@ const TenantSettingsPage = (): JSX.Element => {
           </Stack>
         </CardContent>
       </Card>
+
+      {canManageData && tenant && (
+        <>
+          <ExportCard />
+          <ImportCard />
+          <CloseAccountCard orgName={tenant.name} isOwner={canEdit} />
+        </>
+      )}
+      <DeleteMyAccountCard />
     </Box>
   );
 };
