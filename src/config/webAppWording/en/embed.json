@@ -24,7 +24,7 @@
 	"addPhoto": "Add a photo",
 	"addText": "Add text",
 	"textPlaceholder": "Write something…",
-	"addContact": "Add your name",
+	"addContact": "Add your name or email",
 	"contactHint": "Optional. Only the project's team sees these.",
 	"name": "Name",
 	"email": "Email",
@@ -44,5 +44,9 @@
 	"micDenied": "Allow the microphone to record: your browser's address bar or settings can turn it on.",
 	"micUnavailable": "This browser can't record here.",
 	"paused": "Contributions are paused right now.",
-	"testSite": "Test"
+	"testSite": "Test",
+	"optional": "Optional:",
+	"photo": "Photo",
+	"text": "Text",
+	"contactInfo": "Contact info"
 }

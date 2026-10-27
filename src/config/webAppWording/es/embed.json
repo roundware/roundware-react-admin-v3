@@ -24,7 +24,7 @@
 	"addPhoto": "Añadir una foto",
 	"addText": "Añadir texto",
 	"textPlaceholder": "Escribe algo…",
-	"addContact": "Añadir tu nombre",
+	"addContact": "Añadir tu nombre o correo",
 	"contactHint": "Opcional. Solo el equipo del proyecto lo ve.",
 	"name": "Nombre",
 	"email": "Correo electrónico",
@@ -44,5 +44,9 @@
 	"micDenied": "Permite el micrófono para grabar: puedes activarlo en la barra de direcciones o en la configuración del navegador.",
 	"micUnavailable": "Este navegador no puede grabar aquí.",
 	"paused": "Las contribuciones están en pausa por ahora.",
-	"testSite": "Prueba"
+	"testSite": "Prueba",
+	"optional": "Opcional:",
+	"photo": "Foto",
+	"text": "Texto",
+	"contactInfo": "Datos de contacto"
 }

@@ -24,7 +24,7 @@
 	"addPhoto": "添加照片",
 	"addText": "添加文字",
 	"textPlaceholder": "写点什么…",
-	"addContact": "添加你的名字",
+	"addContact": "添加你的名字或电子邮件",
 	"contactHint": "选填。只有项目团队能看到。",
 	"name": "名字",
 	"email": "电子邮箱",
@@ -44,5 +44,9 @@
 	"micDenied": "请允许使用麦克风才能录音：可在浏览器地址栏或设置中开启。",
 	"micUnavailable": "此浏览器无法在这里录音。",
 	"paused": "目前暂停接受投稿。",
-	"testSite": "测试"
+	"testSite": "测试",
+	"optional": "可选：",
+	"photo": "照片",
+	"text": "文字",
+	"contactInfo": "联系方式"
 }

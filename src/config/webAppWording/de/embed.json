@@ -24,7 +24,7 @@
 	"addPhoto": "Foto hinzufügen",
 	"addText": "Text hinzufügen",
 	"textPlaceholder": "Schreib etwas…",
-	"addContact": "Deinen Namen hinzufügen",
+	"addContact": "Deinen Namen oder deine E-Mail hinzufügen",
 	"contactHint": "Freiwillig. Nur das Team des Projekts sieht das.",
 	"name": "Name",
 	"email": "E-Mail",
@@ -44,5 +44,9 @@
 	"micDenied": "Erlaube das Mikrofon zum Aufnehmen: Das geht in der Adressleiste oder den Browser-Einstellungen.",
 	"micUnavailable": "Dieser Browser kann hier nicht aufnehmen.",
 	"paused": "Beiträge sind gerade pausiert.",
-	"testSite": "Test"
+	"testSite": "Test",
+	"optional": "Optional:",
+	"photo": "Foto",
+	"text": "Text",
+	"contactInfo": "Kontaktdaten"
 }

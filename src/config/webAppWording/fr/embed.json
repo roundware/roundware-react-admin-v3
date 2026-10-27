@@ -24,7 +24,7 @@
 	"addPhoto": "Ajouter une photo",
 	"addText": "Ajouter du texte",
 	"textPlaceholder": "Écris quelque chose…",
-	"addContact": "Ajouter ton nom",
+	"addContact": "Ajouter ton nom ou ton e-mail",
 	"contactHint": "Facultatif. Seule l’équipe du projet les voit.",
 	"name": "Nom",
 	"email": "E-mail",
@@ -44,5 +44,9 @@
 	"micDenied": "Autorise le micro pour enregistrer : la barre d’adresse ou les réglages du navigateur permettent de l’activer.",
 	"micUnavailable": "Ce navigateur ne peut pas enregistrer ici.",
 	"paused": "Les contributions sont en pause pour le moment.",
-	"testSite": "Test"
+	"testSite": "Test",
+	"optional": "Facultatif :",
+	"photo": "Photo",
+	"text": "Texte",
+	"contactInfo": "Coordonnées"
 }
