@@ -105,11 +105,11 @@ const DefaultLanguageInput = () => {
   );
 };
 
-/** A looping project always listens: contributors record over what they
+/** A looping project always listens: participants record over what they
  *  hear, and the server refuses Listen off with looping (docs/025). */
 const loopingNeedsListen = (value: unknown, all: Record<string, unknown>) =>
   value === "looping" && all?.listen_enabled === false
-    ? "Looping needs Listen on: contributors record over what they hear."
+    ? "Looping needs Listen on: participants record over what they hear."
     : undefined;
 
 const ListenEnabledInput = () => {
@@ -120,7 +120,7 @@ const ListenEnabledInput = () => {
       source="listen_enabled"
       defaultChecked
       disabled={looping}
-      helperText={looping ? "Always on for looping: contributors record over what they hear." : undefined}
+      helperText={looping ? "Always on for looping: participants record over what they hear." : undefined}
     />
   );
 };
@@ -247,7 +247,7 @@ const ProjectEdit = (): JSX.Element => {
         <CardBox title="Modes">
           <BooleanInput
             source="allow_speak_tags"
-            helperText="Whether contributors are ASKED to tag their upload. Default speak tags are applied either way, and a project with no Speak groups skips the step automatically — so turn this off only to tag silently without asking."
+            helperText="Whether participants are ASKED to tag their upload. Default speak tags are applied either way, and a project with no Speak groups skips the step automatically — so turn this off only to tag silently without asking."
           />
           <BooleanInput source="allow_photos" />
           <BooleanInput source="allow_text" />

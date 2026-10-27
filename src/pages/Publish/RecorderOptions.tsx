@@ -158,8 +158,8 @@ export const RecorderOptionsFields: React.FC<{
       </Stack>
       <Typography variant="caption" color="text.secondary" display="block">
         Recordings are placed at the project's location
-        {o.location ? " unless the contributor changes it" : ""}. Name and email are optional for
-        contributors, and only your team sees them.
+        {o.location ? " unless the participant changes it" : ""}. Name and email are optional for
+        participants, and only your team sees them.
       </Typography>
     </Box>
 

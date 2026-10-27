@@ -9,7 +9,7 @@ import { WizardTemplate } from "../types";
  * irrelevant, so the map is stripped back as far as the app allows and the
  * tags are about the show rather than about place.
  *
- * Listening stays on so contributors can hear what others sent — for a show
+ * Listening stays on so participants can hear what others sent — for a show
  * that is part of the draw. A submission-only variant is one config edit away
  * (`listen_enabled: false`).
  */

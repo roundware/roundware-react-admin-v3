@@ -53,7 +53,7 @@ export interface WizardProject {
   speak_enabled: boolean;
   geo_speak_enabled: boolean;
   /**
-   * Whether contributors are asked to tag their recording.
+   * Whether participants are asked to tag their recording.
    *
    * Defaults true here, unlike the server column which defaults false. With it
    * off, TagSelectForm skips straight past the tag step, so every Speak group

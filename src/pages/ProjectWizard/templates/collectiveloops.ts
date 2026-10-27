@@ -53,7 +53,7 @@ const collectiveloops: WizardTemplate = {
       // The paradigm itself comes from recording_method: "looping" above —
       // uploads become speakers because that is the only way synchronized
       // looping works. Nothing to declare here.
-      // A contributor should hear their own take enter the mix.
+      // A participant should hear their own take enter the mix.
       baseRecordingLoopSelectionMethod: "all",
     },
     listen: {
@@ -61,7 +61,7 @@ const collectiveloops: WizardTemplate = {
       geoListenMode: ["map"],
       autoplay: false,
       speaker: {
-        // Newly submitted loops get picked up sooner, so contributors hear
+        // Newly submitted loops get picked up sooner, so participants hear
         // themselves join rather than waiting for a random rotation.
         prioritizeNewlySubmitted: true,
       },

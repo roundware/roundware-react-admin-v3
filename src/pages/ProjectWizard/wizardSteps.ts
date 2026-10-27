@@ -13,11 +13,11 @@ import { getTemplate } from "./templates";
 export const listens = (s: WizardState): boolean => s.project.listen_enabled;
 export const speaks = (s: WizardState): boolean => s.project.speak_enabled;
 export const isLooping = (s: WizardState): boolean => s.project.recording_method === "looping";
-/** Contributors are asked to tag their recordings: the Speak menus show. */
+/** Participants are asked to tag their recordings: the Speak menus show. */
 export const asksForTags = (s: WizardState): boolean => speaks(s) && s.project.allow_speak_tags;
 
 /** The Filters & Menus tabs this project has: Listen's filters, Speak's
- *  questions. Speak's only when contributors are asked to tag. */
+ *  questions. Speak's only when participants are asked to tag. */
 export function menuModes(s: WizardState): ("listen" | "speak")[] {
   const modes: ("listen" | "speak")[] = [];
   if (listens(s)) modes.push("listen");

@@ -40,7 +40,7 @@ function validateProject(state: WizardState): ValidationResult {
   }
   // The server refuses it too (docs/025).
   if (isLooping(state) && !listens(state)) {
-    errors.push("A looping project needs Listen on: contributors record over what they hear.");
+    errors.push("A looping project needs Listen on: participants record over what they hear.");
   }
   if (project.latitude === 0 && project.longitude === 0) {
     errors.push("Please set a project location (latitude and longitude).");

@@ -50,9 +50,9 @@ export const AssetDatagrid = (): JSX.Element => {
         />
 
         <AssetPreview source='file' label='Media' />
-        {/* The name and email a contributor chose to give (server docs/023). */}
+        {/* The name and email a participant chose to give (server docs/023). */}
         <FunctionField
-          label='Contributor'
+          label='Participant'
           sortBy='contributor_name'
           render={(r: { contributor_name?: string; contributor_email?: string | null }) =>
             r?.contributor_name || r?.contributor_email ? (

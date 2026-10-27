@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Filters & Menus — the questions contributors answer when they record
+// Filters & Menus — the questions participants answer when they record
 // (Speak) and the filters listeners can narrow by (Listen), with the app
 // beside them showing the result.
 //
@@ -105,9 +105,9 @@ interface Lang {
 const MODE_TEXT: Record<Mode, { intro: string; field: string; empty: string }> = {
   speak: {
     intro:
-      "The questions contributors answer before they record — one screen each, in this order, picking one response per question (or several, where a question allows it).",
+      "The questions participants answer before they record — one screen each, in this order, picking one response per question (or several, where a question allows it).",
     field: "Question",
-    empty: "Contributors aren’t asked anything before recording.",
+    empty: "Participants aren’t asked anything before recording.",
   },
   listen: {
     intro:
@@ -482,13 +482,13 @@ const FiltersMenusPage: React.FC = () => {
   const focusedIndex = Math.max(0, activeSpeak.findIndex((g) => g.id === focusedId));
   // A question whose responses all depend on earlier answers has nothing to
   // show on its own, so the preview starts from the first question: answer
-  // your way to it, as a contributor would.
+  // your way to it, as a participant would.
   const focusedConditional = (activeSpeak[focusedIndex]?.ui_items ?? [])
     .filter((i) => i.is_active)
     .every((i) => i.parent_id != null);
   const startsEarlier = focusedIndex > 0 && focusedConditional;
   const focusedSpeak = startsEarlier ? 0 : focusedIndex;
-  // With the questions switched off, the preview shows what contributors
+  // With the questions switched off, the preview shows what participants
   // get — recording skips past them — so it isn't held to them.
   const asking = mode === "speak" && askSpeak !== false && activeSpeak.length > 0;
   const previewPath = mode === "speak" ? (asking ? `/speak/tags/${focusedSpeak}` : "/speak") : "/listen";
@@ -520,7 +520,7 @@ const FiltersMenusPage: React.FC = () => {
         {saving > 0 && <CircularProgress size={18} />}
       </Stack>
       <Typography variant="body1" color="text.secondary" sx={{ mt: 1, mb: 2 }}>
-        What contributors are asked about their recordings, and what listeners can filter by — both
+        What participants are asked about their recordings, and what listeners can filter by — both
         made from your tags. Changes save as you go; the preview shows them a moment later.
       </Typography>
 
@@ -576,13 +576,13 @@ const FiltersMenusPage: React.FC = () => {
                 <Switch
                   checked={askSpeak}
                   onChange={(_e, on) => setAsking(on)}
-                  slotProps={{ input: { "aria-label": "Ask contributors these questions" } }}
+                  slotProps={{ input: { "aria-label": "Ask participants these questions" } }}
                 />
               }
             >
               {askSpeak
-                ? "Contributors are asked these questions before they record."
-                : "Contributors aren’t asked these questions — recording skips straight past them. Switch on to ask them."}
+                ? "Participants are asked these questions before they record."
+                : "Participants aren’t asked these questions — recording skips straight past them. Switch on to ask them."}
             </Alert>
           )}
 
@@ -712,8 +712,8 @@ const FiltersMenusPage: React.FC = () => {
               <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1 }}>
                 {mode === "speak"
                   ? startsEarlier
-                    ? "That question’s responses all depend on earlier answers, so the preview starts from the first question: answer your way to it, as a contributor would."
-                    : "Shows the question you last worked on. Answering moves to the next question, as it would for a contributor; the preview stays on the questions."
+                    ? "That question’s responses all depend on earlier answers, so the preview starts from the first question: answer your way to it, as a participant would."
+                    : "Shows the question you last worked on. Answering moves to the next question, as it would for a participant; the preview stays on the questions."
                   : "Opens with the Filters panel showing, as listeners see it after pressing Filters."}
               </Typography>
             </CardContent>
@@ -828,7 +828,7 @@ const GroupCard: React.FC<CardProps> = (p) => {
               ? "Not translated: participants see the default language’s, shown in grey."
               : !p.text
               ? p.mode === "speak"
-                ? "Empty: contributors see no question."
+                ? "Empty: participants see no question."
                 : "Empty: the filter has no label."
               : undefined
           }
@@ -852,15 +852,15 @@ const GroupCard: React.FC<CardProps> = (p) => {
         <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
           {p.mode === "speak"
             ? g.select_type === "multi"
-              ? "Contributors choose one or more, then press Next. Starred responses start chosen."
-              : "Contributors choose one and move on. A starred response starts chosen; they can press Next to keep it."
+              ? "Participants choose one or more, then press Next. Starred responses start chosen."
+              : "Participants choose one and move on. A starred response starts chosen; they can press Next to keep it."
             : "Starred choices start selected, so they’re what plays before listeners choose anything."}
           {p.firstListen &&
             " With none starred in any filter, what plays first is recordings with at least one of this filter’s choices — untick one, and recordings with only that tag won’t play."}
         </Typography>
         {allConditional && (
           <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
-            Every response here depends on an earlier one: contributors whose earlier answers match none of
+            Every response here depends on an earlier one: participants whose earlier answers match none of
             them skip this question.
           </Typography>
         )}

@@ -183,7 +183,7 @@ const AssetEdit = (): JSX.Element => {
 };
 
 /**
- * What the contributor chose to give (server docs/023): kept on their
+ * What the participant chose to give (server docs/023): kept on their
  * participant, so it shows with each of their contributions. Labeled like the
  * dates above it, and absent when they gave nothing.
  */
@@ -194,7 +194,7 @@ const ContributorField = () => {
   if (!contact && !(can && r?.participant_id)) return null;
   return (
     // A Box, not a span: Labeled leaves out its label for plain elements.
-    <Labeled label='Contributor' fullWidth>
+    <Labeled label='Participant' fullWidth>
       <Box component='span' sx={{ fontSize: 14 }}>
         {r?.contributor_name}
         {r?.contributor_name && r?.contributor_email ? ' · ' : ''}

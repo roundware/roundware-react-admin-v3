@@ -75,7 +75,7 @@ const ActivitiesPanel: React.FC<{
             />
             <Typography variant="body2" color="text.secondary" sx={{ ml: 6, mb: 1 }}>
               {looping
-                ? "Always on in a looping project: contributors record over what they hear."
+                ? "Always on in a looping project: participants record over what they hear."
                 : "Hear recordings, on the map or out walking."}
             </Typography>
             <Detail
@@ -98,13 +98,13 @@ const ActivitiesPanel: React.FC<{
             </Typography>
             <Detail
               label="Record where each contribution was made"
-              help="Each recording is placed where the contributor is, when their device allows."
+              help="Each recording is placed where the participant is, when their device allows."
               checked={project.geo_speak_enabled}
               disabled={!project.speak_enabled}
               onChange={(c) => update({ geo_speak_enabled: c })}
             />
             <Detail
-              label="Ask contributors to tag their recording"
+              label="Ask participants to tag their recording"
               help="With the questions you set in Filters & Menus."
               checked={project.allow_speak_tags}
               disabled={!project.speak_enabled}

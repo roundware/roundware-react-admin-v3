@@ -43,7 +43,7 @@ const SELECT_TYPES = [
 const UIBuilderStep: React.FC<UIBuilderStepProps> = ({ state, dispatch }) => {
   const { categories, tags, uiGroups } = state;
   // Only the tabs for what people do here: Listen's filters when they
-  // listen, Speak's questions when contributors are asked to tag.
+  // listen, Speak's questions when participants are asked to tag.
   const modes = menuModes(state);
   const [chosenMode, setMode] = useState<"listen" | "speak">(modes[0] ?? "listen");
   const mode = modes.includes(chosenMode) ? chosenMode : modes[0] ?? "listen";
@@ -130,7 +130,7 @@ const UIBuilderStep: React.FC<UIBuilderStepProps> = ({ state, dispatch }) => {
           </>
         ) : (
           <>
-            Choose the questions contributors answer about their recording: which
+            Choose the questions participants answer about their recording: which
             categories, and which tags they choose from.
           </>
         )}
@@ -191,7 +191,7 @@ const UIBuilderStep: React.FC<UIBuilderStepProps> = ({ state, dispatch }) => {
                     <Typography variant="body2" color="text.secondary">
                       {mode === "listen"
                         ? "Not offered as a listening filter."
-                        : "Contributors are not asked to tag with this."}
+                        : "Participants are not asked to tag with this."}
                     </Typography>
                   </Box>
                   <Button

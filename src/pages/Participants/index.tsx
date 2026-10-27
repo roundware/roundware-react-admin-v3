@@ -7,7 +7,7 @@
 // and shown with each of its contributions. They can be corrected or
 // cleared here (a typo, a privacy request) — for every project of the
 // organization, since they're the participant's. Later, a participant can
-// claim an account (server docs/018, "Contributor accounts").
+// claim an account (server docs/018, "Participant accounts").
 // ---------------------------------------------------------------------------
 import {
   Alert,
