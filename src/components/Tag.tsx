@@ -1,5 +1,4 @@
 import { Box } from "@mui/material";
-import { useBuildUI } from "../context/BuildUIContext";
 
 import React from "react";
 import {
@@ -76,7 +75,6 @@ export const TagEdit = (): JSX.Element => {
     return data;
   };
 
-  const { refetchData } = useBuildUI();
 
   const refresh = useRefresh();
   const redirect = useRedirect();
@@ -86,7 +84,6 @@ export const TagEdit = (): JSX.Element => {
       mutationOptions={{
         onSuccess: () => {
           refresh();
-          refetchData();
           redirect(`list`, `/tags`);
         },
       }}
@@ -140,7 +137,6 @@ export const TagCreate = (): JSX.Element => {
     return data;
   };
   const refresh = useRefresh();
-  const { refetchData } = useBuildUI();
   const redirect = useRedirect();
   return (
     <Create
@@ -148,7 +144,6 @@ export const TagCreate = (): JSX.Element => {
       mutationOptions={{
         onSuccess: async () => {
           refresh();
-          refetchData();
           redirect(`list`, `/tags`);
         },
       }}

@@ -17,7 +17,7 @@ import {
 } from "@mui/icons-material";
 import { createBrowserHistory } from "history";
 import React from "react";
-import { Admin, CustomRoutes, Resource, ResourceContextProvider } from "react-admin";
+import { Admin, CustomRoutes, Resource } from "react-admin";
 import { Route } from "react-router-dom";
 import AssetCreate from "./components/Asset/AssetCreate";
 import AssetEdit from "./components/Asset/AssetEdit";
@@ -71,8 +71,6 @@ import {
     TimedAssetEdit,
     TimedAssetList,
 } from "./components/TimedAsset";
-import { UiGroupCreate, UiGroupEdit } from "./components/UIGroup/index";
-import { UiGroupList } from "./components/UIGroup/UIGroupsList";
 import { UserCreate, UserEdit, UserList } from "./components/User";
 import authProvider from "./context/AuthProvider";
 import { useRoundwareDataProvider } from "./context/DataProviderContext";
@@ -170,16 +168,6 @@ function App({ basename }: { basename: string }): JSX.Element {
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/platform-notifications" element={<PlatformNotificationsPage />} />
           <Route path="/platform-projects" element={<AllProjectsPage />} />
-          {/* The previous Filters & Menus page: conditional answers (UI items
-              with a parent) are still edited here. */}
-          <Route
-            path="/uigroups-advanced"
-            element={
-              <ResourceContextProvider value="uigroups">
-                <UiGroupList />
-              </ResourceContextProvider>
-            }
-          />
           <Route path="/team" element={<TeamMembersPage />} />
           <Route path="/settings" element={<TenantSettingsPage />} />
           <Route path="/plan" element={<PlanPage />} />
@@ -213,7 +201,6 @@ function buildResourceLookup(canEdit: boolean): { [index: string]: React.ReactNo
     ),
     uigroups: (
       <Resource name="uigroups" key="uigroups" list={FiltersMenusPage}
-        edit={e ? UiGroupEdit : undefined} create={e ? UiGroupCreate : undefined}
         icon={Build} options={{ label: "Filters & Menus" }} />
     ),
     audiotracks: (

@@ -9,7 +9,6 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider, useLocation } from "react-router-dom";
-import { BuildUIContextProvider } from "./context/BuildUIContext";
 import { RoundwareDataProviderContextProvider } from "./context/DataProviderContext";
 import { ProjectsProvider } from "./context/ProjectsContext";
 import { SpeakersProvider } from "./context/SpeakersContext";
@@ -46,12 +45,10 @@ const AppProviders = ({ children }: { children: React.ReactNode }) => (
     <RoundwareDataProviderContextProvider>
       <ProjectsProvider>
         <SpeakersProvider>
-          <BuildUIContextProvider>
-            {children}
-            <ThemeProvider theme={adminTheme}>
-              <SessionExpiredDialog />
-            </ThemeProvider>
-          </BuildUIContextProvider>
+          {children}
+          <ThemeProvider theme={adminTheme}>
+            <SessionExpiredDialog />
+          </ThemeProvider>
         </SpeakersProvider>
       </ProjectsProvider>
     </RoundwareDataProviderContextProvider>

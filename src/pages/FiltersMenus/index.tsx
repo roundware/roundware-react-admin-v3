@@ -11,9 +11,9 @@
 // A Speak response can depend on an earlier answer (a UI item's parent_id):
 // it shows only once that answer is chosen — Age range "Child", then only the
 // kids' questions. Set with the button beside each response ("Show only
-// after…"); the app's question steps and the embedded recorder honor it. The
-// advanced editor (/uigroups-advanced) used to be the only place for this,
-// and its tree no longer renders (MUI moved TreeView out of @mui/lab).
+// after…"); the app's question steps and the embedded recorder honor it. It
+// replaced the old "advanced editor" (removed 2026-10-27), whose tree had
+// stopped rendering when MUI moved TreeView out of @mui/lab.
 // ---------------------------------------------------------------------------
 import { DragDropContext, Draggable, Droppable, DropResult } from "@hello-pangea/dnd";
 import DeleteIcon from "@mui/icons-material/DeleteOutline";
