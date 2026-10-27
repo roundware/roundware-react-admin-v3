@@ -8,6 +8,8 @@
 // cleared here (a typo, a privacy request) — for every project of the
 // organization, since they're the participant's. Later, a participant can
 // claim an account (server docs/018, "Participant accounts").
+// A participant who withdraws can be deleted for good (2026-10-27): what they
+// made here, its files, and their sessions — the privacy policy's promise.
 // ---------------------------------------------------------------------------
 import {
   Alert,
@@ -15,9 +17,14 @@ import {
   Button,
   Card,
   CardContent,
+  Checkbox,
   Chip,
   CircularProgress,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   FormControlLabel,
   Grid,
   Link,
@@ -32,8 +39,8 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
-import { Labeled, Title, usePermissions, useRecordContext } from "react-admin";
-import { Link as RouterLink, useParams } from "react-router-dom";
+import { Labeled, Title, useNotify, usePermissions, useRecordContext } from "react-admin";
+import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
 import { useProjects } from "../../context/ProjectsContext";
 import { apiFetcher } from "../../roundwareDataProvider/tokenAuthProvider";
 import { errMessage } from "../Publish/api";
@@ -59,6 +66,7 @@ interface Detail extends Summary {
   listens: number;
   votes: number;
   events: number;
+  other_projects: { id: number; name: string }[];
 }
 
 const PAGE = 100;
@@ -466,9 +474,116 @@ export const ParticipantPage: React.FC = () => {
               </Typography>
             )}
           </Section>
+
+          <DeleteForGood p={p} projectId={selectedProject.id} />
         </>
       )}
     </Container>
+  );
+};
+
+const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
+
+/** For a participant who withdraws: what they made here, its files, and
+ *  their sessions, deleted for good (server participants routes, DELETE). */
+const DeleteForGood: React.FC<{ p: Detail; projectId: number }> = ({ p, projectId }) => {
+  const notify = useNotify();
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [everywhere, setEverywhere] = useState(false);
+  const [understood, setUnderstood] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const others = p.other_projects ?? [];
+
+  const close = () => {
+    if (busy) return;
+    setOpen(false);
+    setUnderstood(false);
+    setEverywhere(false);
+    setError(null);
+  };
+  const run = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      const { json } = await apiFetcher(`/participants/${p.id}/?project_id=${projectId}&everywhere=${everywhere}`, { method: "DELETE" });
+      const d = json.deleted as Record<string, number>;
+      notify(
+        `Deleted ${plural(d.contributions, "contribution")}, ${plural(d.loops, "loop")} and ${plural(d.sessions, "session")}` +
+          (json.participant_deleted ? ", and the participant." : "."),
+        { type: "success" }
+      );
+      navigate(`/project/${projectId}/participants`);
+    } catch (e) {
+      setError(errMessage(e));
+      setBusy(false);
+    }
+  };
+
+  return (
+    <Card variant="outlined" sx={{ mb: 2, borderColor: "error.light" }}>
+      <CardContent>
+        <Typography variant="h6" gutterBottom>
+          Delete for good
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+          When a participant asks to withdraw: everything they made in this project, with its audio files and photos, and
+          their sessions here, with what they listened to and voted on. It can't be undone.
+        </Typography>
+        <Button variant="outlined" color="error" size="small" onClick={() => setOpen(true)}>
+          Delete this participant…
+        </Button>
+      </CardContent>
+      <Dialog open={open} onClose={close} maxWidth="sm" fullWidth>
+        <DialogTitle>Delete participant #{p.id} for good?</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            In this project, this deletes:
+          </Typography>
+          <Box component="ul" sx={{ mt: 0, mb: 2, pl: 3, "& li": { typography: "body2" } }}>
+            <li>{plural(p.contribution_list.length, "contribution")}, with their audio files, photos and attachments</li>
+            {p.loop_list.length > 0 && <li>{plural(p.loop_list.length, "loop")}, with their audio</li>}
+            <li>
+              {plural(p.sessions, "session")}, with {plural(p.listens, "listen")} and {plural(p.votes, "vote")}
+            </li>
+          </Box>
+          {others.length > 0 && (
+            <FormControlLabel
+              sx={{ mb: 1, alignItems: "flex-start" }}
+              control={<Checkbox checked={everywhere} onChange={(e) => setEverywhere(e.target.checked)} sx={{ pt: 0.25 }} />}
+              label={
+                <Typography variant="body2">
+                  Also in their other {others.length === 1 ? "project" : "projects"}: {others.map((o) => o.name).join(", ")}
+                </Typography>
+              }
+            />
+          )}
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            {others.length > 0 && !everywhere
+              ? "Their contact details stay, for their other projects. Clear them above if they asked for that too."
+              : "Their contact details are deleted too."}
+          </Typography>
+          <FormControlLabel
+            control={<Checkbox checked={understood} onChange={(e) => setUnderstood(e.target.checked)} />}
+            label={<Typography variant="body2">I understand the files are deleted too and can't be recovered.</Typography>}
+          />
+          {error && (
+            <Alert severity="error" sx={{ mt: 1 }}>
+              {error}
+            </Alert>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={close} disabled={busy}>
+            Cancel
+          </Button>
+          <Button variant="contained" color="error" disabled={!understood || busy} onClick={run}>
+            {busy ? "Deleting…" : "Delete for good"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Card>
   );
 };
 
