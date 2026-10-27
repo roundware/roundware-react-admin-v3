@@ -8,14 +8,18 @@
 // as they are made and the preview reloads a moment later, opened on the
 // screen being edited.
 //
-// Options that depend on an earlier answer (UI items with a parent) are
-// edited in the advanced editor — the previous version of this page, kept at
-// /uigroups-advanced. A card that has any shows its tags read-only, so editing
-// them here can't break that structure.
+// A Speak response can depend on an earlier answer (a UI item's parent_id):
+// it shows only once that answer is chosen — Age range "Child", then only the
+// kids' questions. Set with the button beside each response ("Show only
+// after…"); the app's question steps and the embedded recorder honor it. The
+// advanced editor (/uigroups-advanced) used to be the only place for this,
+// and its tree no longer renders (MUI moved TreeView out of @mui/lab).
 // ---------------------------------------------------------------------------
 import { DragDropContext, Draggable, Droppable, DropResult } from "@hello-pangea/dnd";
 import DeleteIcon from "@mui/icons-material/DeleteOutline";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
+import CheckIcon from "@mui/icons-material/Check";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import {
@@ -27,12 +31,16 @@ import {
   Checkbox,
   Chip,
   CircularProgress,
-  Collapse,
   Container,
   Grid,
   FormControlLabel,
   IconButton,
   Link,
+  ListItemIcon,
+  ListItemText,
+  ListSubheader,
+  Menu,
+  MenuItem,
   Stack,
   Switch,
   Tab,
@@ -372,9 +380,52 @@ const FiltersMenusPage: React.FC = () => {
     save(() => patchGroup(g.id, { select_type: several ? "multi" : "single" }));
   };
 
+  // ---- conditional responses (Speak) ----------------------------------------
+
+  const allItems = groups.flatMap((g) => g.ui_items.map((i) => ({ group: g, item: i })));
+  /** Responses that show only once one of these is chosen. Deleting their
+   *  parent would delete them too (the database cascades), so they're
+   *  released first: shown to everyone. */
+  const dependentsOf = (ids: number[]) =>
+    allItems.filter(({ item }) => item.parent_id != null && ids.includes(item.parent_id));
+  const release = (deps: { group: Group; item: Item }[]) => {
+    if (!deps.length) return Promise.resolve();
+    setGroups((gs) =>
+      gs.map((x) => ({
+        ...x,
+        ui_items: x.ui_items.map((i) => (deps.some((d) => d.item.id === i.id) ? { ...i, parent_id: null } : i)),
+      }))
+    );
+    return Promise.all(deps.map((d) => patchItem(d.item.id, { parent_id: null })));
+  };
+  const dependentsNote = (deps: { group: Group; item: Item }[]) => {
+    if (!deps.length) return "";
+    const names = deps.map((d) => `“${tags.find((t) => t.id === d.item.tag_id)?.value ?? "?"}”`).join(", ");
+    const one = deps.length === 1;
+    return `\n\n${one ? "One response depends" : `${deps.length} responses depend`} on it (${names}); ${
+      one ? "it" : "they"
+    } will show to everyone.`;
+  };
+
+  const setParent = (g: Group, item: Item, parentId: number | null) => {
+    updateGroup(g.id, (x) => ({
+      ...x,
+      ui_items: x.ui_items.map((i) => (i.id === item.id ? { ...i, parent_id: parentId } : i)),
+    }));
+    save(() => patchItem(item.id, { parent_id: parentId }));
+  };
+
   const hideTag = (g: Group, item: Item) => {
+    const deps = dependentsOf([item.id]);
+    if (deps.length) {
+      const name = tags.find((t) => t.id === item.tag_id)?.value ?? "this response";
+      if (!window.confirm(`Untick “${name}”?${dependentsNote(deps)}`)) return;
+    }
     updateGroup(g.id, (x) => ({ ...x, ui_items: x.ui_items.filter((i) => i.id !== item.id) }));
-    save(() => apiFetcher(`/uiitems/${item.id}/`, { method: "DELETE" }));
+    save(async () => {
+      await release(deps);
+      await apiFetcher(`/uiitems/${item.id}/`, { method: "DELETE" });
+    });
   };
 
   const addGroup = (category: Category) =>
@@ -408,9 +459,14 @@ const FiltersMenusPage: React.FC = () => {
 
   const removeGroup = (g: Group) => {
     const what = mode === "speak" ? "question" : "filter";
-    if (!window.confirm(`Remove the “${categoryName(g.tag_category_id)}” ${what}? Its tags are kept.`)) return;
+    const deps = dependentsOf(g.ui_items.map((i) => i.id)).filter((d) => d.group.id !== g.id);
+    const ask = `Remove the “${categoryName(g.tag_category_id)}” ${what}? Its tags are kept.${dependentsNote(deps)}`;
+    if (!window.confirm(ask)) return;
     setGroups((gs) => gs.filter((x) => x.id !== g.id));
-    save(() => apiFetcher(`/uigroups/${g.id}/`, { method: "DELETE" }));
+    save(async () => {
+      await release(deps);
+      await apiFetcher(`/uigroups/${g.id}/`, { method: "DELETE" });
+    });
   };
 
   const onDragEnd = (r: DropResult) => {
@@ -423,7 +479,15 @@ const FiltersMenusPage: React.FC = () => {
   // ---- the preview opens where the author is working ------------------------
 
   const activeSpeak = groups.filter((g) => g.ui_mode === "speak" && g.is_active).sort(byIndex);
-  const focusedSpeak = Math.max(0, activeSpeak.findIndex((g) => g.id === focusedId));
+  const focusedIndex = Math.max(0, activeSpeak.findIndex((g) => g.id === focusedId));
+  // A question whose responses all depend on earlier answers has nothing to
+  // show on its own, so the preview starts from the first question: answer
+  // your way to it, as a contributor would.
+  const focusedConditional = (activeSpeak[focusedIndex]?.ui_items ?? [])
+    .filter((i) => i.is_active)
+    .every((i) => i.parent_id != null);
+  const startsEarlier = focusedIndex > 0 && focusedConditional;
+  const focusedSpeak = startsEarlier ? 0 : focusedIndex;
   // With the questions switched off, the preview shows what contributors
   // get — recording skips past them — so it isn't held to them.
   const asking = mode === "speak" && askSpeak !== false && activeSpeak.length > 0;
@@ -563,7 +627,11 @@ const FiltersMenusPage: React.FC = () => {
                           <Box ref={drag.innerRef} {...drag.draggableProps}>
                             <GroupCard
                               group={g}
-                              advancedUrl={`/project/${projectId}/uigroups-advanced`}
+                              earlier={mode === "speak" ? modeGroups.slice(0, index) : []}
+                              later={mode === "speak" ? modeGroups.slice(index + 1) : []}
+                              tagName={(id) => tags.find((t) => t.id === id)?.value ?? `Tag ${id}`}
+                              categoryName={categoryName}
+                              onParent={(i, parentId) => setParent(g, i, parentId)}
                               firstListen={mode === "listen" && g.id === modeGroups.find((x) => x.is_active)?.id}
                               mode={mode}
                               category={categoryName(g.tag_category_id)}
@@ -621,14 +689,14 @@ const FiltersMenusPage: React.FC = () => {
             </Box>
           )}
 
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 4 }}>
-            Need responses that only appear after a particular earlier response — say, “Which episode?”
-            only for someone responding to an episode? Use the{" "}
-            <Link component={RouterLink} to={`/project/${projectId}/uigroups-advanced`}>
-              advanced editor
-            </Link>
-            .
-          </Typography>
+          {mode === "speak" && (
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 4 }}>
+              A response can appear only after a particular earlier response — say, the kids’ questions only
+              for someone who answered “Child”. Use the{" "}
+              <AccountTreeOutlinedIcon sx={{ fontSize: 16, verticalAlign: "text-bottom" }} /> button beside a
+              response, from the second question on.
+            </Typography>
+          )}
         </Grid>
 
         <Grid size={{ xs: 12, md: 5 }}>
@@ -643,7 +711,9 @@ const FiltersMenusPage: React.FC = () => {
               />
               <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1 }}>
                 {mode === "speak"
-                  ? "Shows the question you last worked on. Answering moves to the next question, as it would for a contributor; the preview stays on the questions."
+                  ? startsEarlier
+                    ? "That question’s responses all depend on earlier answers, so the preview starts from the first question: answer your way to it, as a contributor would."
+                    : "Shows the question you last worked on. Answering moves to the next question, as it would for a contributor; the preview stays on the questions."
                   : "Opens with the Filters panel showing, as listeners see it after pressing Filters."}
               </Typography>
             </CardContent>
@@ -656,8 +726,14 @@ const FiltersMenusPage: React.FC = () => {
 
 interface CardProps {
   group: Group;
-  /** The advanced editor's link, for conditional responses. */
-  advancedUrl: string;
+  /** The Speak questions before this one, in order: what a response can
+   *  depend on. Empty for Listen, whose filters don't. */
+  earlier: Group[];
+  /** And after it: a response depending on one of theirs never shows. */
+  later: Group[];
+  tagName: (tagId: number) => string;
+  categoryName: (categoryId: number) => string;
+  onParent: (i: Item, parentId: number | null) => void;
   /** The first Listen filter that's on: its choices also set what plays at the start. */
   firstListen: boolean;
   mode: Mode;
@@ -680,13 +756,32 @@ interface CardProps {
 
 const GroupCard: React.FC<CardProps> = (p) => {
   const { group: g } = p;
-  const [advanced, setAdvanced] = useState(false);
   const shown = g.ui_items.filter((i) => i.is_active).sort(byIndex);
   const shownTagIds = new Set(shown.map((i) => i.tag_id));
   const notShown = p.tags.filter((t) => !shownTagIds.has(t.id));
-  const tagName = (id: number) => p.tags.find((t) => t.id === id)?.value ?? `Tag ${id}`;
-  // Answers that depend on earlier ones: read-only here.
-  const conditional = g.ui_items.some((i) => i.parent_id != null);
+  const tagName = p.tagName;
+  // "Show only after…": which response's menu is open.
+  const [menu, setMenu] = useState<{ item: Item; anchor: HTMLElement } | null>(null);
+  const findParent = (id: number) => {
+    for (const q of [...p.earlier, ...p.later]) {
+      const it = q.ui_items.find((i) => i.id === id);
+      if (it) return { group: q, item: it, before: p.earlier.includes(q) };
+    }
+    return null;
+  };
+  /** Under a conditional response: what it waits for, or why it can't show. */
+  const condition = (item: Item): { text: string; problem: boolean } | null => {
+    if (item.parent_id == null) return null;
+    const found = findParent(item.parent_id);
+    if (!found) return null;
+    const what = `“${tagName(found.item.tag_id)}” (${p.categoryName(found.group.tag_category_id)})`;
+    if (!found.before)
+      return { text: `Only after ${what} — but that’s asked later. Move it above this question.`, problem: true };
+    if (!found.group.is_active || !found.item.is_active)
+      return { text: `Only after ${what}, which isn’t shown, so this never shows.`, problem: true };
+    return { text: `Only after ${what}`, problem: false };
+  };
+  const allConditional = shown.length > 0 && shown.every((i) => i.parent_id != null);
 
   return (
     <Card
@@ -763,16 +858,13 @@ const GroupCard: React.FC<CardProps> = (p) => {
           {p.firstListen &&
             " With none starred in any filter, what plays first is recordings with at least one of this filter’s choices — untick one, and recordings with only that tag won’t play."}
         </Typography>
-        {conditional ? (
-          <Alert severity="info" sx={{ mb: 1 }}>
-            Some of these only appear after a particular earlier response, so they’re edited in the{" "}
-            <Link component={RouterLink} to={p.advancedUrl}>
-              advanced editor
-            </Link>
-            : {shown.map((i) => tagName(i.tag_id)).join(", ")}.
-          </Alert>
-        ) : (
-          <>
+        {allConditional && (
+          <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
+            Every response here depends on an earlier one: contributors whose earlier answers match none of
+            them skip this question.
+          </Typography>
+        )}
+        <>
             <Droppable droppableId={`items-${g.id}`} type={`items-${g.id}`}>
               {(drop) => (
                 <Box ref={drop.innerRef} {...drop.droppableProps}>
@@ -795,9 +887,35 @@ const GroupCard: React.FC<CardProps> = (p) => {
                             onChange={() => p.onHideTag(item)}
                             slotProps={{ input: { "aria-label": tagName(item.tag_id) } }}
                           />
-                          <Typography variant="body2" sx={{ flex: 1 }}>
-                            {tagName(item.tag_id)}
-                          </Typography>
+                          <Box sx={{ flex: 1, minWidth: 0 }}>
+                            <Typography variant="body2">{tagName(item.tag_id)}</Typography>
+                            {condition(item) && (
+                              <Typography
+                                variant="caption"
+                                color={condition(item)!.problem ? "error" : "primary"}
+                                sx={{ display: "block" }}
+                              >
+                                {condition(item)!.text}
+                              </Typography>
+                            )}
+                          </Box>
+                          {p.earlier.length > 0 && (
+                            <Tooltip
+                              title={item.parent_id != null ? "Shown only after an earlier response" : "Show only after…"}
+                            >
+                              <IconButton
+                                size="small"
+                                onClick={(e) => setMenu({ item, anchor: e.currentTarget })}
+                                aria-label={`${tagName(item.tag_id)}: show only after an earlier response`}
+                                aria-haspopup="menu"
+                              >
+                                <AccountTreeOutlinedIcon
+                                  fontSize="small"
+                                  sx={{ color: item.parent_id != null ? "primary.main" : "text.disabled" }}
+                                />
+                              </IconButton>
+                            </Tooltip>
+                          )}
                           <Tooltip title={item.is_default ? "Selected by default" : "Select by default"}>
                             <IconButton
                               size="small"
@@ -839,23 +957,41 @@ const GroupCard: React.FC<CardProps> = (p) => {
                 {p.mode === "speak" ? "question" : "filter"}.
               </Typography>
             )}
-            <Box sx={{ mt: 1 }}>
-              <Button size="small" onClick={() => setAdvanced((a) => !a)} sx={{ px: 0 }}>
-                Advanced: conditional {p.mode === "speak" ? "responses" : "choices"}
-              </Button>
-              <Collapse in={advanced}>
-                <Typography variant="body2" color="text.secondary">
-                  A response can be made to appear only after a particular response to an earlier
-                  question. That’s set up in the{" "}
-                  <Link component={RouterLink} to={p.advancedUrl}>
-                    advanced editor
-                  </Link>
-                  ; once it is, this card shows its responses read-only.
-                </Typography>
-              </Collapse>
-            </Box>
-          </>
-        )}
+        </>
+        <Menu anchorEl={menu?.anchor} open={!!menu} onClose={() => setMenu(null)}>
+          <MenuItem
+            selected={menu?.item.parent_id == null}
+            onClick={() => {
+              if (menu) p.onParent(menu.item, null);
+              setMenu(null);
+            }}
+          >
+            <ListItemIcon>{menu?.item.parent_id == null && <CheckIcon fontSize="small" />}</ListItemIcon>
+            <ListItemText primary="Always" secondary="Whatever was answered before" />
+          </MenuItem>
+          {p.earlier.flatMap((q) => {
+            const answers = q.ui_items.filter((i) => i.is_active).sort(byIndex);
+            if (!answers.length) return [];
+            return [
+              <ListSubheader key={`h-${q.id}`} sx={{ lineHeight: "32px" }}>
+                Only after this answer to {p.categoryName(q.tag_category_id)}
+              </ListSubheader>,
+              ...answers.map((a) => (
+                <MenuItem
+                  key={a.id}
+                  selected={menu?.item.parent_id === a.id}
+                  onClick={() => {
+                    if (menu) p.onParent(menu.item, a.id);
+                    setMenu(null);
+                  }}
+                >
+                  <ListItemIcon>{menu?.item.parent_id === a.id && <CheckIcon fontSize="small" />}</ListItemIcon>
+                  <ListItemText primary={tagName(a.tag_id)} />
+                </MenuItem>
+              )),
+            ];
+          })}
+        </Menu>
       </CardContent>
     </Card>
   );
