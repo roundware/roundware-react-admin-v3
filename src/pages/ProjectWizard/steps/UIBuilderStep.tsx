@@ -346,6 +346,15 @@ const UIBuilderStep: React.FC<UIBuilderStepProps> = ({ state, dispatch }) => {
           </Card>
         );
       })}
+
+      {/* Conditional responses are left to Filters & Menus: the wizard
+          sets up the basics. */}
+      {mode === "speak" && (
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 3 }}>
+          Responses that depend on an earlier answer (say, the kids’ questions only for someone who
+          answered “Child”) can be set up afterward in Filters &amp; Menus.
+        </Typography>
+      )}
     </Box>
   );
 };
