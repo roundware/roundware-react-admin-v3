@@ -55,9 +55,9 @@ const standard: WizardTemplate = {
   },
   categories: [{ name: "Topic", data: "" }],
   tags: [
-    { value: "General", description: "Anything that does not fit the others", filter: "", data: "", categoryIndex: 0 },
-    { value: "Story", description: "A personal account", filter: "", data: "", categoryIndex: 0 },
-    { value: "Sound", description: "A sound or field recording", filter: "", data: "", categoryIndex: 0 },
+    { value: "General", description: "Something else", filter: "", data: "", categoryIndex: 0 },
+    { value: "Story", description: "A story", filter: "", data: "", categoryIndex: 0 },
+    { value: "Sound", description: "A sound", filter: "", data: "", categoryIndex: 0 },
   ],
   uiGroups: [
     {

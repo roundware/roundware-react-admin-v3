@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import React from "react";
 import {
@@ -9,7 +9,6 @@ import {
     EditButton,
     List,
     RaRecord,
-    SelectInput,
     ReferenceField,
     SimpleForm,
     TextField,
@@ -24,6 +23,31 @@ import FormToolbar from "./common/FormToolbar";
 import TranslatableField from "./common/TranslatableField";
 import ProjectTagCategoryInput from "./common/ProjectTagCategoryInput";
 
+/**
+ * A tag's two texts (2026-10-27). Participants see the participant text (the
+ * description), translated, a tab per language — the default language's tab
+ * is the tag itself (server docs/017). The short name (the value) is the
+ * admin's: in its lists, Filters & Menus, exports and the contributions
+ * table; one language. data and filter did nothing in v3 and left the form
+ * (still stored, for imported v2 projects); v2's "message" became the value.
+ */
+const TagTextFields = (): JSX.Element => (
+  <>
+    <TranslatableField source="loc_description_admin" label="Participant text" multiline />
+    <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: -1, mb: 2 }}>
+      What participants see: the response on a recording question, a listening filter, the tags
+      on a contribution. It shows wherever the tag does, so keep it as short as reads well.
+    </Typography>
+    <TextInput
+      source="value"
+      label="Short name"
+      required
+      fullWidth
+      helperText="For you, not participants: how the tag is listed here, in Filters & Menus and in exports."
+    />
+  </>
+);
+
 export const TagList = (): JSX.Element => {
   return (
     <Box pt={3}>
@@ -34,9 +58,8 @@ export const TagList = (): JSX.Element => {
       >
         <Datagrid rowClick="edit" optimized>
           <TextField source="id" />
-          <TextField source="value" />
-          <TextField source="description" />
-          <TextField source="msg_loc" label="Message" />
+          <TextField source="value" label="Short name" />
+          <TextField source="description" label="Participant text" />
           <ReferenceField
             source="tag_category_id"
             reference="tagcategories"
@@ -56,8 +79,10 @@ export const TagList = (): JSX.Element => {
 export const TagEdit = (): JSX.Element => {
   const transform = (record: RaRecord): RaRecord => {
     const data = { ...record };
+    // Only the participant text is translated. The value's old translations
+    // (still on the record) aren't sent: in the default language they'd
+    // overwrite an edited short name with the old text.
     data.localizations = buildLocalizationsPayload(data, {
-      loc_msg_admin: "value",
       loc_description_admin: "description",
     });
     delete data.loc_msg_admin;
@@ -85,23 +110,7 @@ export const TagEdit = (): JSX.Element => {
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" required />
         <ProjectTagCategoryInput source="tag_category_id" required />
-        {/* One field per text, a tab per language: the default language's
-            tab is the tag itself (server docs/017). There were separate
-            "value"/"description" inputs too, editing the same text twice. */}
-        <TranslatableField source="loc_msg_admin" label="Tag text" />
-        <TranslatableField source="loc_description_admin" label="Description" multiline />
-        <SelectInput
-          source="filter"
-          choices={[
-            { id: "", name: "No Filter" },
-            { id: "_within_10km", name: "Contributions within 10 km" },
-            {
-              id: "_ten_most_recent_days",
-              name: "Contributions from the last 10 days",
-            },
-          ]}
-        />
-        <TextInput source="data" />
+        <TagTextFields />
       </SimpleForm>
     </Edit>
   );
@@ -110,8 +119,10 @@ export const TagEdit = (): JSX.Element => {
 export const TagCreate = (): JSX.Element => {
   const transform = (record: RaRecord): RaRecord => {
     const data = { ...record };
+    // Only the participant text is translated. The value's old translations
+    // (still on the record) aren't sent: in the default language they'd
+    // overwrite an edited short name with the old text.
     data.localizations = buildLocalizationsPayload(data, {
-      loc_msg_admin: "value",
       loc_description_admin: "description",
     });
     delete data.loc_msg_admin;
@@ -135,23 +146,7 @@ export const TagCreate = (): JSX.Element => {
     >
       <SimpleForm warnWhenUnsavedChanges toolbar={<FormToolbar />}>
         <ProjectTagCategoryInput source="tag_category_id" required />
-        {/* One field per text, a tab per language: the default language's
-            tab is the tag itself (server docs/017). There were separate
-            "value"/"description" inputs too, editing the same text twice. */}
-        <TranslatableField source="loc_msg_admin" label="Tag text" />
-        <TranslatableField source="loc_description_admin" label="Description" multiline />
-        <SelectInput
-          source="filter"
-          choices={[
-            { id: "", name: "No Filter" },
-            { id: "_within_10km", name: "Contributions within 10 km" },
-            {
-              id: "_ten_most_recent_days",
-              name: "Contributions from the last 10 days",
-            },
-          ]}
-        />
-        <TextInput source="data" />
+        <TagTextFields />
       </SimpleForm>
     </Create>
   );

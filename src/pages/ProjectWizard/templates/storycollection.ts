@@ -54,16 +54,16 @@ const storycollection: WizardTemplate = {
   ],
   tags: [
     // Topic tags (categoryIndex 0)
-    { value: "Childhood", description: "Early memories and growing up", filter: "", data: "", categoryIndex: 0 },
-    { value: "Work", description: "Career, jobs, professional life", filter: "", data: "", categoryIndex: 0 },
-    { value: "Family", description: "Relatives, home life, traditions", filter: "", data: "", categoryIndex: 0 },
-    { value: "Community", description: "Neighborhood, belonging, civic life", filter: "", data: "", categoryIndex: 0 },
-    { value: "Change", description: "Transitions, turning points", filter: "", data: "", categoryIndex: 0 },
+    { value: "Childhood", description: "Growing up", filter: "", data: "", categoryIndex: 0 },
+    { value: "Work", description: "Work", filter: "", data: "", categoryIndex: 0 },
+    { value: "Family", description: "Family", filter: "", data: "", categoryIndex: 0 },
+    { value: "Community", description: "Community", filter: "", data: "", categoryIndex: 0 },
+    { value: "Change", description: "A turning point", filter: "", data: "", categoryIndex: 0 },
     // Emotion tags (categoryIndex 1)
-    { value: "Joyful", description: "", filter: "", data: "", categoryIndex: 1 },
-    { value: "Reflective", description: "", filter: "", data: "", categoryIndex: 1 },
-    { value: "Bittersweet", description: "", filter: "", data: "", categoryIndex: 1 },
-    { value: "Hopeful", description: "", filter: "", data: "", categoryIndex: 1 },
+    { value: "Joyful", description: "Joyful", filter: "", data: "", categoryIndex: 1 },
+    { value: "Reflective", description: "Reflective", filter: "", data: "", categoryIndex: 1 },
+    { value: "Bittersweet", description: "Bittersweet", filter: "", data: "", categoryIndex: 1 },
+    { value: "Hopeful", description: "Hopeful", filter: "", data: "", categoryIndex: 1 },
   ],
   uiGroups: [
     {

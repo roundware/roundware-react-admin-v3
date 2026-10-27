@@ -43,11 +43,11 @@ const userfeedback: WizardTemplate = {
   },
   categories: [{ name: "Feedback Type", data: "" }],
   tags: [
-    { value: "Praise", description: "Something you liked", filter: "", data: "", categoryIndex: 0 },
-    { value: "Suggestion", description: "An idea to make things better", filter: "", data: "", categoryIndex: 0 },
-    { value: "Problem", description: "Something that went wrong", filter: "", data: "", categoryIndex: 0 },
-    { value: "Question", description: "Something you'd like answered", filter: "", data: "", categoryIndex: 0 },
-    { value: "Other", description: "Anything else on your mind", filter: "", data: "", categoryIndex: 0 },
+    { value: "Praise", description: "Something I liked", filter: "", data: "", categoryIndex: 0 },
+    { value: "Suggestion", description: "An idea to make it better", filter: "", data: "", categoryIndex: 0 },
+    { value: "Problem", description: "Something went wrong", filter: "", data: "", categoryIndex: 0 },
+    { value: "Question", description: "A question", filter: "", data: "", categoryIndex: 0 },
+    { value: "Other", description: "Something else", filter: "", data: "", categoryIndex: 0 },
   ],
   uiGroups: [
     {

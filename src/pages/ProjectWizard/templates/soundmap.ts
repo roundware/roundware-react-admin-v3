@@ -53,17 +53,17 @@ const soundmap: WizardTemplate = {
   ],
   tags: [
     // Sound Type tags (categoryIndex 0)
-    { value: "Nature", description: "Natural environment sounds", filter: "", data: "", categoryIndex: 0 },
-    { value: "Human", description: "Voices, footsteps, activities", filter: "", data: "", categoryIndex: 0 },
-    { value: "Mechanical", description: "Machines, vehicles, construction", filter: "", data: "", categoryIndex: 0 },
-    { value: "Music", description: "Performances, busking, instruments", filter: "", data: "", categoryIndex: 0 },
-    { value: "Silence", description: "Quiet, ambient, stillness", filter: "", data: "", categoryIndex: 0 },
+    { value: "Nature", description: "Nature", filter: "", data: "", categoryIndex: 0 },
+    { value: "Human", description: "People", filter: "", data: "", categoryIndex: 0 },
+    { value: "Mechanical", description: "Machines", filter: "", data: "", categoryIndex: 0 },
+    { value: "Music", description: "Music", filter: "", data: "", categoryIndex: 0 },
+    { value: "Silence", description: "Quiet", filter: "", data: "", categoryIndex: 0 },
     // Location Type tags (categoryIndex 1)
-    { value: "Park", description: "", filter: "", data: "", categoryIndex: 1 },
-    { value: "Street", description: "", filter: "", data: "", categoryIndex: 1 },
-    { value: "Indoor", description: "", filter: "", data: "", categoryIndex: 1 },
-    { value: "Waterfront", description: "", filter: "", data: "", categoryIndex: 1 },
-    { value: "Transit", description: "", filter: "", data: "", categoryIndex: 1 },
+    { value: "Park", description: "Park", filter: "", data: "", categoryIndex: 1 },
+    { value: "Street", description: "Street", filter: "", data: "", categoryIndex: 1 },
+    { value: "Indoor", description: "Indoors", filter: "", data: "", categoryIndex: 1 },
+    { value: "Waterfront", description: "Waterfront", filter: "", data: "", categoryIndex: 1 },
+    { value: "Transit", description: "Transit", filter: "", data: "", categoryIndex: 1 },
   ],
   uiGroups: [
     {

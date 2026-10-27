@@ -58,15 +58,15 @@ const artinstallation: WizardTemplate = {
   ],
   tags: [
     // Theme tags (categoryIndex 0)
-    { value: "Memory", description: "Personal or collective memory", filter: "", data: "", categoryIndex: 0 },
-    { value: "Identity", description: "Self, culture, belonging", filter: "", data: "", categoryIndex: 0 },
-    { value: "Place", description: "Sense of location, environment", filter: "", data: "", categoryIndex: 0 },
-    { value: "Time", description: "Temporality, change, duration", filter: "", data: "", categoryIndex: 0 },
+    { value: "Memory", description: "Memory", filter: "", data: "", categoryIndex: 0 },
+    { value: "Identity", description: "Identity", filter: "", data: "", categoryIndex: 0 },
+    { value: "Place", description: "Place", filter: "", data: "", categoryIndex: 0 },
+    { value: "Time", description: "Time", filter: "", data: "", categoryIndex: 0 },
     // Medium tags (categoryIndex 1)
-    { value: "Voice", description: "Spoken word, narration", filter: "", data: "", categoryIndex: 1 },
-    { value: "Sound Effect", description: "Found sounds, foley", filter: "", data: "", categoryIndex: 1 },
-    { value: "Music", description: "Musical performance or composition", filter: "", data: "", categoryIndex: 1 },
-    { value: "Ambient", description: "Environmental, atmospheric", filter: "", data: "", categoryIndex: 1 },
+    { value: "Voice", description: "Spoken word", filter: "", data: "", categoryIndex: 1 },
+    { value: "Sound Effect", description: "Found sound", filter: "", data: "", categoryIndex: 1 },
+    { value: "Music", description: "Music", filter: "", data: "", categoryIndex: 1 },
+    { value: "Ambient", description: "Ambient sound", filter: "", data: "", categoryIndex: 1 },
   ],
   uiGroups: [
     {

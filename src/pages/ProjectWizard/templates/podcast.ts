@@ -77,14 +77,14 @@ const podcast: WizardTemplate = {
   ],
   tags: [
     // Segment tags (categoryIndex 0)
-    { value: "Listener Question", description: "Something to ask the hosts", filter: "", data: "", categoryIndex: 0 },
-    { value: "Story", description: "A personal story for the show", filter: "", data: "", categoryIndex: 0 },
+    { value: "Listener Question", description: "A question for the hosts", filter: "", data: "", categoryIndex: 0 },
+    { value: "Story", description: "A story for the show", filter: "", data: "", categoryIndex: 0 },
     { value: "Correction", description: "Something we got wrong", filter: "", data: "", categoryIndex: 0 },
-    { value: "Response to Episode", description: "Reacting to something we aired", filter: "", data: "", categoryIndex: 0 },
+    { value: "Response to Episode", description: "A response to an episode", filter: "", data: "", categoryIndex: 0 },
     { value: "Voicemail", description: "Anything else on your mind", filter: "", data: "", categoryIndex: 0 },
     // Format tags (categoryIndex 1)
-    { value: "Short", description: "Under a minute", filter: "", data: "", categoryIndex: 1 },
-    { value: "Full Length", description: "Take your time", filter: "", data: "", categoryIndex: 1 },
+    { value: "Short", description: "Short: under a minute", filter: "", data: "", categoryIndex: 1 },
+    { value: "Full Length", description: "Longer: take your time", filter: "", data: "", categoryIndex: 1 },
   ],
   uiGroups: [
     {

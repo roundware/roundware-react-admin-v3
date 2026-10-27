@@ -49,15 +49,15 @@ const soundwalk: WizardTemplate = {
   ],
   tags: [
     // Sound Type tags (categoryIndex 0)
-    { value: "Nature", description: "Birds, wind, water, etc.", filter: "", data: "", categoryIndex: 0 },
-    { value: "Urban", description: "Traffic, construction, crowds", filter: "", data: "", categoryIndex: 0 },
-    { value: "Music", description: "Street musicians, singing, instruments", filter: "", data: "", categoryIndex: 0 },
-    { value: "Voice", description: "Narration, conversation, storytelling", filter: "", data: "", categoryIndex: 0 },
+    { value: "Nature", description: "Nature", filter: "", data: "", categoryIndex: 0 },
+    { value: "Urban", description: "City", filter: "", data: "", categoryIndex: 0 },
+    { value: "Music", description: "Music", filter: "", data: "", categoryIndex: 0 },
+    { value: "Voice", description: "Voices", filter: "", data: "", categoryIndex: 0 },
     // Mood tags (categoryIndex 1)
-    { value: "Peaceful", description: "", filter: "", data: "", categoryIndex: 1 },
-    { value: "Energetic", description: "", filter: "", data: "", categoryIndex: 1 },
-    { value: "Mysterious", description: "", filter: "", data: "", categoryIndex: 1 },
-    { value: "Nostalgic", description: "", filter: "", data: "", categoryIndex: 1 },
+    { value: "Peaceful", description: "Peaceful", filter: "", data: "", categoryIndex: 1 },
+    { value: "Energetic", description: "Energetic", filter: "", data: "", categoryIndex: 1 },
+    { value: "Mysterious", description: "Mysterious", filter: "", data: "", categoryIndex: 1 },
+    { value: "Nostalgic", description: "Nostalgic", filter: "", data: "", categoryIndex: 1 },
   ],
   uiGroups: [
     {

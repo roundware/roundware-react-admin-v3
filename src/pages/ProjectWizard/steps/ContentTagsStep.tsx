@@ -64,8 +64,12 @@ const ContentTagsStep: React.FC<ContentTagsStepProps> = ({ state, dispatch }) =>
         recordings, and can be used to filter what participants hear — for
         example, &quot;I only want to hear recordings made by children&quot;.
         <br />
+        Each tag has a <strong>participant text</strong>, what participants see
+        when they choose it or filter by it, and a <strong>short name</strong>{" "}
+        for you, used in the admin&apos;s lists.
+        <br />
         <strong>Note:</strong> Tag categories are shared across all projects in
-        your tenant. Tags themselves are project-scoped.
+        your organization. Tags themselves belong to this project.
       </StepInstruction>
 
       {categories.length === 0 && (
@@ -147,8 +151,23 @@ const ContentTagsStep: React.FC<ContentTagsStepProps> = ({ state, dispatch }) =>
                   mb: 1,
                 }}
               >
+                {/* What participants see is the description (2026-10-27);
+                    the value is the admin's short name. */}
                 <TextField
-                  label="Tag Name"
+                  label="Participant text"
+                  value={tag.description}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "UPDATE_TAG",
+                      tempId: tag.tempId,
+                      patch: { description: e.target.value },
+                    })
+                  }
+                  size="small"
+                  sx={{ flex: 3 }}
+                />
+                <TextField
+                  label="Short name"
                   value={tag.value}
                   onChange={(e) =>
                     dispatch({
@@ -160,19 +179,6 @@ const ContentTagsStep: React.FC<ContentTagsStepProps> = ({ state, dispatch }) =>
                   size="small"
                   required
                   sx={{ flex: 2 }}
-                />
-                <TextField
-                  label="Description"
-                  value={tag.description}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "UPDATE_TAG",
-                      tempId: tag.tempId,
-                      patch: { description: e.target.value },
-                    })
-                  }
-                  size="small"
-                  sx={{ flex: 3 }}
                 />
                 <IconButton
                   color="error"

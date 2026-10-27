@@ -89,10 +89,10 @@ const collectiveloops: WizardTemplate = {
   },
   categories: [{ name: "Part", data: "" }],
   tags: [
-    { value: "Low", description: "Bass and low harmony", filter: "", data: "", categoryIndex: 0 },
-    { value: "Middle", description: "Mid-range harmony", filter: "", data: "", categoryIndex: 0 },
-    { value: "High", description: "Upper harmony and melody", filter: "", data: "", categoryIndex: 0 },
-    { value: "Rhythm", description: "Percussive or rhythmic parts", filter: "", data: "", categoryIndex: 0 },
+    { value: "Low", description: "Low part", filter: "", data: "", categoryIndex: 0 },
+    { value: "Middle", description: "Middle part", filter: "", data: "", categoryIndex: 0 },
+    { value: "High", description: "High part", filter: "", data: "", categoryIndex: 0 },
+    { value: "Rhythm", description: "Rhythm", filter: "", data: "", categoryIndex: 0 },
   ],
   uiGroups: [
     {
