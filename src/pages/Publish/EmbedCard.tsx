@@ -107,30 +107,45 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
 
   const query = useMemo(() => (options ? embedQuery(options) : ""), [options]);
 
-  // The frame starts at a sensible height; the script then fits it to the
-  // recorder as it changes (its 'resize' messages). Without the script — a
-  // site builder that strips it — the starting height stays, and the
-  // recorder scrolls inside it.
+  // The page gives the recorder its space — a box of the height chosen here,
+  // which the host can change like any other element — and the recorder
+  // fills it, never resizing it (Halsey, 2026-10-27). While a panel is open
+  // (an answer to choose, the terms, a place), the script lets the frame
+  // grow over the page below, moving nothing; without the script — a site
+  // builder that strips it — the panel scrolls inside the box.
   const frameId = `roundware-recorder-${projectId}`;
   const layout = options?.layout ?? "auto";
-  const startHeight = layout === "horizontal" ? 220 : 360;
+  const height = options?.height ?? (layout === "vertical" ? 380 : 260);
   const maxWidth = layout === "vertical" ? 420 : 720;
+  const [heightText, setHeightText] = useState<string | null>(null);
+  const setHeight = (h: number) => {
+    setHeightText(null);
+    changeOptions({ height: Math.min(1200, Math.max(120, Math.round(h))) });
+  };
   const code = (base: string) =>
     [
-      `<iframe`,
-      `  id="${frameId}"`,
-      `  src="${base}/embed?${query}"`,
-      `  allow="microphone; camera; geolocation"`,
-      `  style="width: 100%; max-width: ${maxWidth}px; height: ${startHeight}px; border: 0;"`,
-      `  title="Record a message">`,
-      `</iframe>`,
+      `<div id="${frameId}" style="position: relative; width: 100%; max-width: ${maxWidth}px; height: ${height}px;">`,
+      `  <iframe`,
+      `    src="${base}/embed?${query}"`,
+      `    allow="microphone; camera; geolocation"`,
+      `    title="Record a message"`,
+      `    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;">`,
+      `  </iframe>`,
+      `</div>`,
       `<script>`,
-      `  window.addEventListener("message", function (e) {`,
-      `    var frame = document.getElementById("${frameId}");`,
-      `    if (frame && e.source === frame.contentWindow && e.data && e.data.source === "roundware" && e.data.type === "resize") {`,
-      `      frame.style.height = e.data.height + "px";`,
-      `    }`,
-      `  });`,
+      `  (function () {`,
+      `    var box = document.getElementById("${frameId}");`,
+      `    var frame = box && box.querySelector("iframe");`,
+      `    window.addEventListener("message", function (e) {`,
+      `      if (!frame || e.source !== frame.contentWindow || !e.data || e.data.source !== "roundware" || e.data.type !== "overlay") return;`,
+      `      // A panel is open: the recorder grows over the page below it, moving nothing.`,
+      `      var tall = e.data.height > box.clientHeight;`,
+      `      frame.style.height = tall ? e.data.height + "px" : "100%";`,
+      `      frame.style.zIndex = tall ? "1000" : "";`,
+      `      var r = frame.getBoundingClientRect();`,
+      `      if (tall && r.bottom > window.innerHeight) window.scrollBy({ top: Math.min(r.bottom - window.innerHeight + 16, r.top - 16), behavior: "smooth" });`,
+      `    });`,
+      `  })();`,
       `</script>`,
     ].join("\n");
 
@@ -165,6 +180,28 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
             <EmbedSitesField sites={sites} onChange={saveSites} />
             <RecorderOptionsFields value={options} onChange={changeOptions} languages={languages} />
 
+            <Stack direction="row" spacing={2} alignItems="flex-start">
+              <TextField
+                label="Height on your page"
+                type="number"
+                size="small"
+                value={heightText ?? String(height)}
+                onChange={(e) => setHeightText(e.target.value)}
+                onBlur={() => {
+                  const n = Number(heightText);
+                  if (heightText !== null && Number.isFinite(n) && n > 0) setHeight(n);
+                  else setHeightText(null);
+                }}
+                InputProps={{ endAdornment: <Typography variant="body2" color="text.secondary">px</Typography> }}
+                sx={{ width: 180, flexShrink: 0 }}
+              />
+              <Typography variant="body2" color="text.secondary" sx={{ pt: 0.5 }}>
+                The space it takes on your page; the recorder fills it and never changes it. Choosing
+                an answer or adding details opens over your page below, then closes back. Try it to
+                see how much height it needs; you can also change the height in the code.
+              </Typography>
+            </Stack>
+
             {liveUrl ? (
               <Box>
                 <Typography variant="subtitle2" sx={{ mb: 1 }}>
@@ -191,8 +228,8 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
                   </Button>
                   <Typography variant="caption" color="text.secondary">
                     Keep <code>allow="microphone; camera"</code>: without it, browsers won't let it
-                    record or take photos. The script fits the frame to the recorder; your page must
-                    be https.
+                    record or take photos. The script lets it open over your page; your page must be
+                    https.
                   </Typography>
                 </Stack>
                 {testUrl && (
@@ -216,7 +253,9 @@ const EmbedCard: React.FC<Props> = ({ projectId, liveUrl, testUrl }) => {
             </IconButton>
           </DialogTitle>
           <DialogContent>
-            {trying && <EmbedPreview projectId={projectId} query={query} startHeight={startHeight} />}
+            {trying && (
+              <EmbedPreview projectId={projectId} query={query} height={height} maxWidth={maxWidth} onUseHeight={setHeight} />
+            )}
           </DialogContent>
         </Dialog>
       </CardContent>

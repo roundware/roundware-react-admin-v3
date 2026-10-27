@@ -34,6 +34,9 @@ export interface EmbedOptions {
   appearance: "" | "light" | "dark" | "auto";
   /** "" for the visitor's own language. */
   lang: string;
+  /** The space it's given on the host's page, in px: in the code, not the
+   *  link. The recorder fills it; panels open over the page below. */
+  height?: number;
 }
 
 export interface EmbedLanguage {
