@@ -11,6 +11,7 @@ import {
   DeleteButton,
   Edit,
   EditButton,
+  FunctionField,
   List,
   NumberField,
   ReferenceInput,
@@ -23,15 +24,24 @@ import {
 import { Link } from "react-router-dom";
 import { useProjects } from "../../context/ProjectsContext";
 import FormToolbar from "../common/FormToolbar";
+import { ParticipantLink, RecordParticipant, useCanSeeParticipants } from "../../pages/Participants";
 
 export const SessionList = (): JSX.Element => {
   const { selectedProject } = useProjects();
+  const can = useCanSeeParticipants();
   return (
     <List filter={{ project_id: selectedProject?.id }}>
       <Datagrid>
         <SessionMapLink />
         <NumberField source="id" />
         <TextField source="device_id" />
+        {can && (
+          <FunctionField
+            label="Participant"
+            sortBy="participant_id"
+            render={(r: { participant_id?: number | null }) => <ParticipantLink id={r?.participant_id} />}
+          />
+        )}
         <DateField source="started_at" showTime />
         <DateField source="stopped_at" showTime />
         <TextField source="client_type" />
@@ -62,6 +72,7 @@ export const SessionEdit = (): JSX.Element => {
     <Edit>
       <SimpleForm warnWhenUnsavedChanges>
         <TextInput source="id" disabled />
+        <RecordParticipant />
         <TextInput source="device_id" />
         <DateTimeInput source="started_at" />
         <DateTimeInput source="stopped_at" />

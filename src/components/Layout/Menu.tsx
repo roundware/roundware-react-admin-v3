@@ -16,6 +16,7 @@ import {
   Tune,
 } from "@mui/icons-material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import PeopleOutline from "@mui/icons-material/PeopleOutline";
 import NotificationsNone from "@mui/icons-material/NotificationsNone";
 import GraphicEq from "@mui/icons-material/GraphicEq";
 import DefaultIcon from "@mui/icons-material/ViewList";
@@ -132,7 +133,11 @@ const GROUPS: Group[] = [
     label: "Activity",
     icon: <Insights />,
     openByDefault: () => false,
-    items: [resource("sessions", "Sessions", "admin"), resource("listeninghistoryitems", "Listen Events", "admin")],
+    items: [
+      page("participants", "Participants", "participants", "admin", <PeopleOutline />),
+      resource("sessions", "Sessions", "admin"),
+      resource("listeninghistoryitems", "Listen Events", "admin"),
+    ],
   },
   {
     key: "advanced",

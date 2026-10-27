@@ -28,6 +28,7 @@ import {
     useRefresh,
     useUpdate,
 } from 'react-admin';
+import { RecordParticipant } from '../../pages/Participants';
 import { Navigate, useParams } from 'react-router-dom';
 import { useWatch } from 'react-hook-form';
 import { apiFetcher } from 'roundwareDataProvider/tokenAuthProvider';
@@ -176,6 +177,8 @@ export const SpeakerEdit = (): JSX.Element => {
         onSubmit={save}
       >
         <TextInput source='id' fullWidth InputProps={{ readOnly: true }} />
+        {/* A loop: the participant who recorded it (looping mode). */}
+        <RecordParticipant label='Recorded by' />
         <BooleanInput source='is_active' fullWidth />
         <GlobalInput />
         <TextInput source='code' fullWidth validate={maxLength(10)} />

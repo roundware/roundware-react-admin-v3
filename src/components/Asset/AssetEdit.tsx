@@ -31,6 +31,7 @@ import DeleteWithBinary from 'components/common/DeleteWithBinary';
 import AssetBundleField from './AssetBundleField';
 import AssetShape, { shapeCache } from './AssetShape';
 import { AssetPathLine, AssetPathPanel } from './AssetPath';
+import { ParticipantLink, useCanSeeParticipants } from '../../pages/Participants';
 
 const AssetEdit = (): JSX.Element => {
   const redirect = useRedirect();
@@ -187,15 +188,24 @@ const AssetEdit = (): JSX.Element => {
  * dates above it, and absent when they gave nothing.
  */
 const ContributorField = () => {
-  const r = useRecordContext<{ id: number; contributor_name?: string; contributor_email?: string | null }>();
-  if (!r?.contributor_name && !r?.contributor_email) return null;
+  const r = useRecordContext<{ id: number; contributor_name?: string; contributor_email?: string | null; participant_id?: number | null }>();
+  const can = useCanSeeParticipants();
+  const contact = !!(r?.contributor_name || r?.contributor_email);
+  if (!contact && !(can && r?.participant_id)) return null;
   return (
     // A Box, not a span: Labeled leaves out its label for plain elements.
     <Labeled label='Contributor' fullWidth>
       <Box component='span' sx={{ fontSize: 14 }}>
-        {r.contributor_name}
-        {r.contributor_name && r.contributor_email ? ' · ' : ''}
-        {r.contributor_email && <a href={`mailto:${r.contributor_email}`}>{r.contributor_email}</a>}
+        {r?.contributor_name}
+        {r?.contributor_name && r?.contributor_email ? ' · ' : ''}
+        {r?.contributor_email && <a href={`mailto:${r.contributor_email}`}>{r.contributor_email}</a>}
+        {/* Who they are to Roundware, and everything else they did (owners, admins). */}
+        {can && r?.participant_id ? (
+          <>
+            {contact ? ' · ' : ''}
+            <ParticipantLink id={r.participant_id} />
+          </>
+        ) : null}
       </Box>
     </Labeled>
   );

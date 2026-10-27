@@ -77,6 +77,7 @@ import { useRoundwareDataProvider } from "./context/DataProviderContext";
 import { useProjects } from "./context/ProjectsContext";
 import CustomLoginPage from "./pages/CustomLoginPage";
 import ProjectWizardPage from "./pages/ProjectWizard";
+import { ParticipantPage, ParticipantsPage } from "./pages/Participants";
 import TeamMembersPage from "./pages/TeamMembersPage";
 import TenantSettingsPage from "./pages/TenantSettingsPage";
 import AppCopyPage from "./pages/AppCopy";
@@ -168,6 +169,8 @@ function App({ basename }: { basename: string }): JSX.Element {
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/platform-notifications" element={<PlatformNotificationsPage />} />
           <Route path="/platform-projects" element={<AllProjectsPage />} />
+          <Route path="/participants" element={<ParticipantsPage />} />
+          <Route path="/participants/:participantId" element={<ParticipantPage />} />
           <Route path="/team" element={<TeamMembersPage />} />
           <Route path="/settings" element={<TenantSettingsPage />} />
           <Route path="/plan" element={<PlanPage />} />
