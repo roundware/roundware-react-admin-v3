@@ -6,9 +6,9 @@
 // is matched by name and file instead.
 // ---------------------------------------------------------------------------
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import CloseIcon from "@mui/icons-material/Close";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { Box, Checkbox, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Tooltip } from "@mui/material";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { Column, Row, looksLikeHeaders, parseDelimited, splitTags } from "./model";
 
 export type CellProblems = Record<string, Record<string, { message: string; error: boolean }>>;
@@ -52,6 +52,51 @@ const focusCell = (r: number, c: number) => {
   el?.select();
 };
 
+/** Today, as the calendar writes it: nothing later can be picked. */
+const today = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+};
+
+/** A calendar for a date cell. Picking a day writes it as 2024-06-03,
+ *  keeping a time already typed after it. The cell can still be typed in or
+ *  pasted into; the review step checks what's there. */
+const DatePick: React.FC<{ value: string; label: string; onPick: (v: string) => void }> = ({ value, label, onPick }) => {
+  const ref = useRef<HTMLInputElement>(null);
+  const m = value.trim().match(/^(\d{4}-\d{2}-\d{2})(.*)$/);
+  return (
+    <>
+      <input
+        ref={ref}
+        type="date"
+        tabIndex={-1}
+        aria-hidden
+        max={today()}
+        value={m ? m[1] : ""}
+        onChange={(e) => e.target.value && onPick(e.target.value + (m ? m[2] : ""))}
+        style={{ position: "absolute", left: 0, bottom: 0, width: "100%", height: 0, padding: 0, border: 0, opacity: 0, pointerEvents: "none" }}
+      />
+      <IconButton
+        size="small"
+        tabIndex={-1}
+        sx={{ p: 0.25 }}
+        aria-label={`Pick ${label} from a calendar`}
+        onClick={() => {
+          const el = ref.current;
+          if (!el) return;
+          try {
+            el.showPicker();
+          } catch {
+            el.focus();
+          }
+        }}
+      >
+        <CalendarMonthIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
+};
+
 interface RowProps {
   row: Row;
   index: number;
@@ -62,13 +107,12 @@ interface RowProps {
   highlight: boolean;
   onCell: (rowId: string, key: string, value: string) => void;
   onToggle: (rowId: string) => void;
-  onRemove: (rowId: string) => void;
   onMenu: (rowId: string, col: Column, anchor: HTMLElement) => void;
   onPaste: (rowIndex: number, colIndex: number, e: React.ClipboardEvent<HTMLInputElement>) => void;
 }
 
 const TableRow = React.memo(
-  ({ row, index, columns, problems, selected, highlight, onCell, onToggle, onRemove, onMenu, onPaste }: RowProps) => (
+  ({ row, index, columns, problems, selected, highlight, onCell, onToggle, onMenu, onPaste }: RowProps) => (
     <Box
       component="tr"
       id={`bulk-row-${row.id}`}
@@ -115,6 +159,13 @@ const TableRow = React.memo(
                     }
                   }}
                 />
+                {col.type === "date" && (
+                  <DatePick
+                    value={row.cells[col.key] ?? ""}
+                    label={`${col.header}, row ${index + 1}`}
+                    onPick={(v) => onCell(row.id, col.key, v)}
+                  />
+                )}
                 {menu && (
                   <IconButton
                     size="small"
@@ -131,11 +182,6 @@ const TableRow = React.memo(
           </Box>
         );
       })}
-      <Box component="td" sx={{ ...cellSx, px: 0.25 }}>
-        <IconButton size="small" aria-label={`Remove row ${index + 1}`} onClick={() => onRemove(row.id)}>
-          <CloseIcon fontSize="small" />
-        </IconButton>
-      </Box>
     </Box>
   ),
   (a, b) =>
@@ -178,7 +224,6 @@ export const DetailsTable: React.FC<Props> = ({
     },
     [setSelected]
   );
-  const onRemove = useCallback((rowId: string) => setRows((rs) => rs.filter((r) => r.id !== rowId)), [setRows]);
   const onMenu = useCallback((rowId: string, col: Column, anchor: HTMLElement) => setMenu({ rowId, col, anchor }), []);
 
   const onPaste = useCallback(
@@ -258,7 +303,6 @@ export const DetailsTable: React.FC<Props> = ({
                 </Tooltip>
               </Box>
             ))}
-            <Box component="th" sx={cellSx} />
           </tr>
         </Box>
         <tbody>
@@ -276,7 +320,6 @@ export const DetailsTable: React.FC<Props> = ({
                 highlight={highlight === r.id}
                 onCell={onCell}
                 onToggle={onToggle}
-                onRemove={onRemove}
                 onMenu={onMenu}
                 onPaste={onPaste}
               />

@@ -43,6 +43,30 @@ export interface Row {
   cells: Record<string, string>;
 }
 
+/** A list response, paginated or not. */
+export const asList = <T,>(json: unknown): T[] =>
+  (Array.isArray(json) ? json : (json as { results?: T[] })?.results ?? []) as T[];
+
+/** A menu from Filters & Menus: a contributing question ("speak") or a
+ *  listening filter ("listen"), with its items. */
+export interface MenuGroup {
+  ui_mode: string;
+  is_active: boolean;
+  ui_items?: { tag_id: number; is_active: boolean }[];
+}
+
+/** The tags the project's menus offer now: on in a menu that's on, as a
+ *  contributing question or a listening filter. Null when no menu offers
+ *  any (a project not set up with menus), and then every tag stays. */
+export function menuTagIds(groups: MenuGroup[]): Set<number> | null {
+  const ids = new Set<number>();
+  for (const g of groups) {
+    if (!g.is_active || (g.ui_mode !== "speak" && g.ui_mode !== "listen")) continue;
+    for (const item of g.ui_items ?? []) if (item.is_active) ids.add(item.tag_id);
+  }
+  return ids.size ? ids : null;
+}
+
 export const LIVE = "Live";
 export const HELD = "Held for review";
 
@@ -89,7 +113,7 @@ export function buildColumns(tags: Tag[], categories: Category[], languages: Lan
       header: "Date recorded",
       type: "date",
       width: 150,
-      help: "2024-06-03, or 2024-06-03 14:30. Empty: when it's uploaded",
+      help: "Pick a day from the calendar, or type 2024-06-03 (or 2024-06-03 14:30). Empty: when it's uploaded",
     },
     {
       key: "language",

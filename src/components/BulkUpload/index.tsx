@@ -49,14 +49,17 @@ import { PickOnMap, ReviewMap } from "./Maps";
 import {
   Category,
   Language,
+  MenuGroup,
   Row,
   Tag,
+  asList,
   attachByName,
   buildColumns,
   check,
   download,
   isSpreadsheet,
   kindOf,
+  menuTagIds,
   mergeTable,
   nameKey,
   newRow,
@@ -137,12 +140,16 @@ const BulkUpload: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       apiFetcher(`/tags/?project_id=${project.id}`),
       apiFetcher(`/tagcategories/`),
       apiFetcher(`/languages/`),
+      apiFetcher(`/uigroups/?project_id=${project.id}&admin=1`),
     ])
-      .then(([t, c, l]) => {
+      .then(([t, c, l, g]) => {
         const langs = (l.json as Language[]).filter(
           (x) => !project.language_ids?.length || project.language_ids.includes(x.id)
         );
-        setMeta({ tags: t.json as Tag[], categories: c.json as Category[], languages: langs });
+        // Only the tags the project's menus offer now (Filters & Menus).
+        const offered = menuTagIds(asList<MenuGroup>(g.json));
+        const tags = (t.json as Tag[]).filter((x) => !offered || offered.has(x.id));
+        setMeta({ tags, categories: c.json as Category[], languages: langs });
       })
       .catch((e) => setMetaError(e instanceof Error ? e.message : String(e)));
   }, [project?.id]);
