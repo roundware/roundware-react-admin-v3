@@ -70,6 +70,7 @@ const AssetCreate = (): JSX.Element => {
         />
         <AudioOptions />
         <LocationSelector
+      allowEmpty
           fieldNames={{ latitude: `latitude`, longitude: `longitude` }}
         >
           {/* @ts-expect-error AssetShape used as display-only */}

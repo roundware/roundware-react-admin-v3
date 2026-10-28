@@ -252,6 +252,7 @@ const AssetLocationWithShape = () => {
 
   return (
     <LocationSelector
+      allowEmpty
       // Remount when the asset stops/starts moving or is trimmed back: the
       // card keeps its own copy of the coordinates from when it mounted.
       key={`${record?.id}-${record?.moving}-${record?.latitude}-${record?.longitude}`}
