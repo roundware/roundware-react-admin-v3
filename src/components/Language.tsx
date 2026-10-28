@@ -15,7 +15,7 @@ import FormToolbar from './common/FormToolbar';
 
 export const LanguageList = (): JSX.Element => {
   return (
-    <List>
+    <List exporter={false}>
       <Datagrid rowClick='edit'>
         <NumberField source='id' />
         <TextField source='name' />
