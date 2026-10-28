@@ -32,6 +32,7 @@ import { RecordParticipant } from '../../pages/Participants';
 import { Navigate, useParams } from 'react-router-dom';
 import { useWatch } from 'react-hook-form';
 import { apiFetcher } from 'roundwareDataProvider/tokenAuthProvider';
+import AgreementField from 'components/common/AgreementField';
 import SpeakerAudioControls from './SpeakerAudioControls';
 import SpeakerShapeInput from './SpeakerShapeInput';
 import VariantAudioControls from './VariantAudioControls';
@@ -179,6 +180,7 @@ export const SpeakerEdit = (): JSX.Element => {
         <TextInput source='id' fullWidth InputProps={{ readOnly: true }} />
         {/* A loop: the participant who recorded it (looping mode). */}
         <RecordParticipant label='Recorded by' />
+        <AgreementField resource='speakers' />
         <BooleanInput source='is_active' fullWidth />
         <GlobalInput />
         <TextInput source='code' fullWidth validate={maxLength(10)} />

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import AddIcon from '@mui/icons-material/Add';
 import { Box, Button } from '@mui/material';
+import AgreementField from 'components/common/AgreementField';
 import AudioOptions from 'components/common/AudioOptions';
 import FileDownloadButton from 'components/common/FileDownloadButton';
 import LocationSelector from 'components/common/LocationSelector';
@@ -135,6 +136,7 @@ const AssetEdit = (): JSX.Element => {
           <DateField source='updated_at' showTime />
         </Labeled>
         <ContributorField />
+        <AgreementField resource='assets' />
 
         <ReferenceInput
           label='Project'
