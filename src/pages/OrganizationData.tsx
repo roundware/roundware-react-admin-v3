@@ -160,6 +160,147 @@ export const ImportCard: React.FC = () => {
   );
 };
 
+interface Activity {
+  events: number;
+  listening: number;
+  visits: number;
+  oldest: string | null;
+}
+
+const AGES = [
+  { value: "all", label: "All of it", days: null },
+  { value: "30", label: "Older than 30 days", days: 30 },
+  { value: "90", label: "Older than 90 days", days: 90 },
+  { value: "365", label: "Older than a year", days: 365 },
+] as const;
+
+/** Clear a project's listening activity (the Privacy Policy, section 8):
+ *  its events, listening history and visits that left nothing else.
+ *  Contributions, likes and participants stay. */
+export const ActivityCard: React.FC = () => {
+  const { projectsList } = useProjects();
+  const [project, setProject] = useState<string>("");
+  const [age, setAge] = useState<string>("all");
+  const [summary, setSummary] = useState<Activity | null>(null);
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [done, setDone] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!project && projectsList?.length) setProject(String(projectsList[0].id));
+  }, [project, projectsList]);
+
+  const load = useCallback(() => {
+    if (!project) return;
+    setSummary(null);
+    apiFetcher(`/projects/${project}/activity/`)
+      .then(({ json }) => setSummary(json as Activity))
+      .catch((e) => setError(errMessage(e)));
+  }, [project]);
+  useEffect(load, [load]);
+
+  const days = AGES.find((a) => a.value === age)?.days ?? null;
+  const name = projectsList?.find((p) => String(p.id) === project)?.name ?? "this project";
+  const n = (x: number) => x.toLocaleString();
+
+  const clear = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      const before = days === null ? null : new Date(Date.now() - days * 86_400_000).toISOString();
+      const { json } = await apiFetcher(`/projects/${project}/activity/clear/`, {
+        method: "POST",
+        body: JSON.stringify({ before }),
+      });
+      const r = json as { events: number; listening: number; visits: number };
+      setDone(`Cleared from ${name}: ${n(r.listening)} listening records, ${n(r.events)} events and ${n(r.visits)} visits.`);
+      setOpen(false);
+      load();
+    } catch (e) {
+      setError(errMessage(e));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (!projectsList?.length) return null;
+  const empty = summary && summary.events + summary.listening === 0;
+
+  return (
+    <Card sx={{ mt: 2 }}>
+      <CardHeader title="Listening activity" subheader="What visitors did and heard, and where they were" />
+      <CardContent>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          Each project keeps a record of its visits: what people listened to and for how long, what they did, and,
+          when they shared their location, where they were. You can clear it, all of it or only what's older than a
+          date. Contributions, likes and participants aren't touched.
+        </Typography>
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} alignItems={{ sm: "center" }}>
+          <TextField select size="small" label="Project" value={project} onChange={(e) => setProject(e.target.value)} sx={{ minWidth: 240 }}>
+            {projectsList.map((p) => (
+              <MenuItem key={p.id} value={String(p.id)}>
+                {p.name}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField select size="small" label="What to clear" value={age} onChange={(e) => setAge(e.target.value)} sx={{ minWidth: 200 }}>
+            {AGES.map((a) => (
+              <MenuItem key={a.value} value={a.value}>
+                {a.label}
+              </MenuItem>
+            ))}
+          </TextField>
+          <Button variant="outlined" color="error" disabled={!summary || !!empty} onClick={() => { setDone(null); setOpen(true); }}>
+            Clear…
+          </Button>
+        </Stack>
+        {summary && (
+          <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 1 }}>
+            {empty
+              ? "Nothing kept for this project."
+              : `Kept now: ${n(summary.listening)} listening records and ${n(summary.events)} events${summary.oldest ? `, since ${day(summary.oldest)}` : ""}.`}
+          </Typography>
+        )}
+        {done && (
+          <Alert severity="success" sx={{ mt: 2 }}>
+            {done}
+          </Alert>
+        )}
+        {error && !open && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            {error}
+          </Alert>
+        )}
+      </CardContent>
+      <Dialog open={open} onClose={() => !busy && setOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Clear listening activity for {name}?</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2">
+            {days === null
+              ? "All of the project's listening history and events are deleted for good, with the visits that left nothing else."
+              : `The project's listening history and events ${AGES.find((a) => a.value === age)?.label.toLowerCase()} are deleted for good, with the visits from then that left nothing else.`}{" "}
+            This can't be undone. Export the project first if you want a copy.
+          </Typography>
+          {error && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {error}
+            </Alert>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)} disabled={busy}>
+            Cancel
+          </Button>
+          <Button variant="contained" color="error" onClick={clear} disabled={busy}>
+            {busy ? "Clearing…" : "Clear for good"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Card>
+  );
+};
+
 interface Closure {
   closing: boolean;
   closed: boolean;

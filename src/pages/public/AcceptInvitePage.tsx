@@ -5,6 +5,7 @@
 // organization that invited them.
 import { Alert, Button, CircularProgress, Stack, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import AgreeToTerms from "../../components/common/AgreeToTerms";
 import PublicCard, { postPublic, SERVER_URL, tokenFromLink } from "./PublicCard";
 
 interface Lookup {
@@ -45,6 +46,7 @@ const AcceptInvitePage: React.FC = () => {
   const [first, setFirst] = useState("");
   const [last, setLast] = useState("");
   const [password, setPassword] = useState("");
+  const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -66,7 +68,7 @@ const AcceptInvitePage: React.FC = () => {
     try {
       const body = lookup?.has_account
         ? { token }
-        : { token, first_name: first.trim(), last_name: last.trim(), password };
+        : { token, first_name: first.trim(), last_name: last.trim(), password, accept_terms: agreed };
       signIn(await postPublic<Accepted>("/invitations/accept/", body));
     } catch (err) {
       setError((err as Error).message);
@@ -131,6 +133,7 @@ const AcceptInvitePage: React.FC = () => {
               size="small"
               fullWidth
             />
+            <AgreeToTerms checked={agreed} onChange={setAgreed} />
           </Stack>
         )}
         <Button
@@ -138,7 +141,7 @@ const AcceptInvitePage: React.FC = () => {
           variant="contained"
           fullWidth
           size="large"
-          disabled={loading || (!lookup.has_account && (!first.trim() || password.length < 8))}
+          disabled={loading || (!lookup.has_account && (!first.trim() || password.length < 8 || !agreed))}
           sx={{ mt: 2 }}
         >
           {loading ? <CircularProgress size={24} color="inherit" /> : `Join ${lookup.organization ?? "the team"}`}

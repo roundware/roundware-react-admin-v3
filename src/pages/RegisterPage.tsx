@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AgreeToTerms from "../components/common/AgreeToTerms";
 import { BRAND_BACKGROUND } from "./brandBackground";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || "";
@@ -32,6 +33,7 @@ const RegisterPage = () => {
     last_name: "",
     organization_name: "",
   });
+  const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -50,7 +52,7 @@ const RegisterPage = () => {
       const response = await fetch(`${SERVER_URL}/api/3/auth/register/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, accept_terms: agreed }),
       });
 
       if (!response.ok) {
@@ -181,13 +183,14 @@ const RegisterPage = () => {
               helperText="At least 8 characters"
               slotProps={{ htmlInput: { minLength: 8 } }}
             />
+            <AgreeToTerms checked={agreed} onChange={setAgreed} />
 
             <Button
               type="submit"
               variant="contained"
               fullWidth
               size="large"
-              disabled={loading}
+              disabled={loading || !agreed}
               sx={{ mt: 2, mb: 2, py: 1.2 }}
             >
               {loading ? (

@@ -13,6 +13,7 @@ import React, { useState } from "react";
 import { useLogin, useNotify } from "react-admin";
 import { useNavigate } from "react-router-dom";
 import { BRAND_BACKGROUND } from "./brandBackground";
+import { PRIVACY_URL, TERMS_URL } from "../components/common/AgreeToTerms";
 
 const CustomLoginPage = () => {
   const login = useLogin();
@@ -146,6 +147,15 @@ const CustomLoginPage = () => {
                 sx={{ fontWeight: "bold" }}
               >
                 Sign Up
+              </Link>
+            </Typography>
+            <Typography variant="caption" color="text.secondary" align="center" component="p" sx={{ mt: 2 }}>
+              <Link href={TERMS_URL} target="_blank" rel="noopener" color="inherit">
+                Terms of Service
+              </Link>
+              {" · "}
+              <Link href={PRIVACY_URL} target="_blank" rel="noopener" color="inherit">
+                Privacy Policy
               </Link>
             </Typography>
           </Box>

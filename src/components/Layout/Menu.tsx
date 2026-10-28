@@ -21,7 +21,7 @@ import NotificationsNone from "@mui/icons-material/NotificationsNone";
 import GraphicEq from "@mui/icons-material/GraphicEq";
 import DefaultIcon from "@mui/icons-material/ViewList";
 import PublicIcon from "@mui/icons-material/Public";
-import { useMediaQuery } from "@mui/material";
+import { Box, Link, useMediaQuery } from "@mui/material";
 import * as React from "react";
 import {
   Menu as RAMenu,
@@ -33,6 +33,7 @@ import {
 } from "react-admin";
 import { useProjects } from "../../context/ProjectsContext";
 import SubMenu from "./SubMenu";
+import { PRIVACY_URL, TERMS_URL } from "../common/AgreeToTerms";
 
 // ---------------------------------------------------------------------------
 // The sidebar, grouped by what people come to do rather than by how the data
@@ -202,7 +203,7 @@ const writeOpen = (open: Record<string, boolean>) => {
 export const Menu = (props: MenuProps) => {
   const resources = useResourceDefinitions();
   const { selectedProject } = useProjects();
-  const [, setSidebarOpen] = useSidebarState();
+  const [sidebarOpen, setSidebarOpen] = useSidebarState();
   const { permissions } = usePermissions();
   const role: Role = permissions?.isSuperuser
     ? "superuser"
@@ -270,6 +271,17 @@ export const Menu = (props: MenuProps) => {
           );
         })}
       </div>
+      {/* The documents everyone using the admin agreed to (roundware.app). */}
+      {sidebarOpen && (
+        <Box sx={{ px: 2, py: 2, mt: 1, fontSize: 12, color: "text.secondary", display: "flex", gap: 1.5 }}>
+          <Link href={TERMS_URL} target="_blank" rel="noopener" color="inherit" underline="hover">
+            Terms
+          </Link>
+          <Link href={PRIVACY_URL} target="_blank" rel="noopener" color="inherit" underline="hover">
+            Privacy
+          </Link>
+        </Box>
+      )}
     </RAMenu>
   );
 };
