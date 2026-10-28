@@ -24,6 +24,7 @@ import WizardLocationSelector from "../components/WizardLocationSelector";
 import WizardTranslatableField from "../components/WizardTranslatableField";
 import { apiFetcher } from "../../../roundwareDataProvider/tokenAuthProvider";
 import WizardNumberField from "../components/WizardNumberField";
+import TermsTemplate from "components/common/TermsTemplate";
 
 interface ProjectStepProps {
   state: WizardState;
@@ -248,6 +249,10 @@ const ProjectStep: React.FC<ProjectStepProps> = ({ state, dispatch }) => {
               multiline
               rows={2}
               helperText="Agreement text shown to participants before they contribute."
+            />
+            <TermsTemplate
+              projectName={project.name}
+              onUse={project.legal_agreement?.trim() ? undefined : (text) => update({ legal_agreement: text })}
             />
           </Grid>
         )}

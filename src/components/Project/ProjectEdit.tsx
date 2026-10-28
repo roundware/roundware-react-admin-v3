@@ -29,6 +29,7 @@ import { useNavigate } from "react-router-dom";
 import { buildLocalizationsPayload } from "../../utils";
 import AdvancedConfigInput from "./AdvancedConfigInput";
 import DeleteProjectDialog from "./DeleteProjectDialog";
+import TermsTemplate from "components/common/TermsTemplate";
 
 const PROJECT_LOC_FIELD_MAP: Record<string, string> = {
   description_loc_admin: "description",
@@ -339,6 +340,7 @@ const ProjectEdit = (): JSX.Element => {
           fromProject
           label="Legal Agreement"
         />
+        <ProjectTermsTemplate />
         <Grid container spacing={2} style={{ width: "100%" }}>
           <Grid size={{ xs: 12, md: 6 }}>
             <CardBox title="Sharing">
@@ -407,3 +409,14 @@ const ProjectEdit = (): JSX.Element => {
 };
 
 export default ProjectEdit;
+
+/** The participant terms template, named for this project (copy and paste
+ *  it into the Legal Agreement above). */
+const ProjectTermsTemplate = () => {
+  const record = useRecordContext<{ name?: string }>();
+  return (
+    <Box sx={{ mt: -1, mb: 2 }}>
+      <TermsTemplate projectName={record?.name ?? ""} />
+    </Box>
+  );
+};
