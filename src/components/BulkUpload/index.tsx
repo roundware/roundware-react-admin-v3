@@ -11,6 +11,7 @@
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CloseIcon from "@mui/icons-material/Close";
 import DownloadIcon from "@mui/icons-material/Download";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import MapIcon from "@mui/icons-material/Map";
 import PlaceIcon from "@mui/icons-material/Place";
@@ -35,6 +36,7 @@ import {
   StepLabel,
   Stepper,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useProjects } from "context/ProjectsContext";
@@ -49,6 +51,7 @@ import {
   Language,
   Row,
   Tag,
+  attachByName,
   buildColumns,
   check,
   download,
@@ -503,6 +506,30 @@ const BulkUpload: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               <Button size="small" startIcon={<MapIcon />} disabled={!rows.length} onClick={() => setPicking(true)}>
                 Pick on the map…
               </Button>
+              <Tooltip title="Each photo or text goes with the recording of the same name: walk-01.jpg and walk-01.txt with walk-01.wav">
+                <span>
+                  <Button
+                    size="small"
+                    startIcon={<AttachFileIcon />}
+                    disabled={!rows.length}
+                    onClick={() => {
+                      const m = attachByName(rowsRef.current, selected.size ? selected : undefined);
+                      setRows(() => m.rows);
+                      notify(
+                        (m.attached
+                          ? `Attached ${plural(m.attached, "photo or text", "photos and texts")} to the recording with the same name.`
+                          : "No photos or texts share a name with a recording.") +
+                          (m.unsure.length
+                            ? ` Not sure about ${m.unsure.join(", ")}: more than one recording has that name.`
+                            : ""),
+                        { type: m.attached ? "info" : "warning", autoHideDuration: 8000 }
+                      );
+                    }}
+                  >
+                    Attach by matching names
+                  </Button>
+                </span>
+              </Tooltip>
               <TextField
                 select
                 size="small"

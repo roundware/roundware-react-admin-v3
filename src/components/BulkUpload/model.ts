@@ -503,6 +503,41 @@ export function check(
   return { ready: kept, problems };
 }
 
+// -- attaching by name ----------------------------------------------------------
+
+const stem = (name: string) => nameKey(name).replace(/\.[^.]+$/, "");
+
+export interface AttachByName {
+  rows: Row[];
+  attached: number;
+  /** Photos or texts whose name matches more than one recording. */
+  unsure: string[];
+}
+
+/** Attach each photo or text to the recording with the same name, minus its
+ *  ending: walk-01.jpg and walk-01.txt go with walk-01.wav. Only rows in
+ *  `only` (all, without it) that aren't attached to anything yet. */
+export function attachByName(rows: Row[], only?: Set<string>): AttachByName {
+  const recordings = new Map<string, string[]>();
+  for (const r of rows) {
+    const f = r.cells.file ?? "";
+    if (kindOf({ name: f }) === "audio") recordings.set(stem(f), [...(recordings.get(stem(f)) ?? []), f]);
+  }
+  let attached = 0;
+  const unsure: string[] = [];
+  const out = rows.map((r) => {
+    const f = r.cells.file ?? "";
+    const k = kindOf({ name: f });
+    if ((only && !only.has(r.id)) || (k !== "photo" && k !== "text") || (r.cells.attach ?? "").trim()) return r;
+    const match = recordings.get(stem(f)) ?? [];
+    if (match.length > 1) unsure.push(f);
+    if (match.length !== 1) return r;
+    attached++;
+    return { ...r, cells: { ...r.cells, attach: match[0] } };
+  });
+  return { rows: out, attached, unsure };
+}
+
 // -- writing a results file ---------------------------------------------------
 
 export function toCsv(rows: (string | number | null | undefined)[][]): string {
