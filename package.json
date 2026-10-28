@@ -35,6 +35,8 @@
         "lodash": "^4.17.21",
         "patch-package": "^6.4.7",
         "ra-data-simple-rest": "^5.12.0",
+        "ra-i18n-polyglot": "^5.12.0",
+        "ra-language-english": "^5.12.0",
         "random-material-color": "^1.0.5",
         "react": "^18.3.1",
         "react-admin": "^5.12.0",

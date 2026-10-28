@@ -23,7 +23,7 @@ const ImportButton = () => {
         size="small"
         startIcon={<UploadIcon />}
       >
-        Import
+        Bulk upload…
       </Button>
       {open && (
         <Dialog open={open} fullScreen={fullScreen.value}>
@@ -33,7 +33,7 @@ const ImportButton = () => {
               alignItems="center"
               justifyContent="space-between"
             >
-              <span>Import</span>
+              <span>Bulk upload</span>
               <Stack direction="row" spacing={1}>
                 <IconButton title="Full Screen" onClick={fullScreen.toggle}>
                   <FullScreenIcon />

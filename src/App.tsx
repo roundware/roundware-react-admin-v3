@@ -79,6 +79,7 @@ import CustomLoginPage from "./pages/CustomLoginPage";
 import ProjectWizardPage from "./pages/ProjectWizard";
 import { ParticipantPage, ParticipantsPage } from "./pages/Participants";
 import TeamMembersPage from "./pages/TeamMembersPage";
+import { i18nProvider } from "./i18n";
 import TenantSettingsPage from "./pages/TenantSettingsPage";
 import AppCopyPage from "./pages/AppCopy";
 import FiltersMenusPage from "./pages/FiltersMenus";
@@ -118,6 +119,7 @@ function App({ basename }: { basename: string }): JSX.Element {
       title="Roundware Admin"
       dataProvider={dataProvider}
       authProvider={authProvider}
+      i18nProvider={i18nProvider}
       // Every page, custom ones too (Look & Feel, Publish…), goes to Sign In
       // without a sign-in; they used to open empty, as "Unknown" (2026-10-21).
       requireAuth
