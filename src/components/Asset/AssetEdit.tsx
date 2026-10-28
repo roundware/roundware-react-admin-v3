@@ -8,6 +8,7 @@ import TagIdSelector from 'components/common/TagIdSelector';
 import TranslatableField from 'components/common/TranslatableField';
 import React, { useEffect, useState } from 'react';
 import {
+  DateTimeInput,
     AutocompleteInput,
     BooleanInput,
     DateField,
@@ -117,7 +118,17 @@ const AssetEdit = (): JSX.Element => {
           <TextField source='id' />
         </Labeled>
 
-        <Labeled label='Created' fullWidth>
+        {/* When it was recorded (server docs/032): the listening site shows,
+            filters and sorts by it. Cleared, it goes back to when it was added. */}
+        <DateTimeInput
+          source='recorded_at'
+          label='Date recorded'
+          helperText='Shown on the listening site. Empty: when it was added.'
+          // The browser's local time, sent with its zone (without one the
+          // server takes UTC).
+          parse={(v: string) => (v ? new Date(v).toISOString() : null)}
+        />
+        <Labeled label='Added' fullWidth>
           <DateField source='created_at' showTime />
         </Labeled>
         <Labeled label='Updated' fullWidth>

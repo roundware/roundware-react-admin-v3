@@ -1,51 +1,26 @@
-import CloseIcon from "@mui/icons-material/Close";
-import FullScreenIcon from "@mui/icons-material/Fullscreen";
 import UploadIcon from "@mui/icons-material/Upload";
-import {
-  Button,
-  Dialog,
-  DialogTitle,
-  Divider,
-  IconButton,
-  Stack,
-} from "@mui/material";
-import useBoolean from "hooks/useBoolean";
+import { Button, Dialog } from "@mui/material";
+import BulkUpload from "components/BulkUpload";
 import React, { useState } from "react";
-import ImportView from "./ImportView";
+import { useRefresh } from "react-admin";
 
+/** Contributions' "Bulk upload…" (server docs/032). */
 const ImportButton = () => {
   const [open, setOpen] = useState(false);
-  const fullScreen = useBoolean(true);
+  const refresh = useRefresh();
   return (
     <>
-      <Button
-        onClick={() => setOpen(true)}
-        size="small"
-        startIcon={<UploadIcon />}
-      >
+      <Button onClick={() => setOpen(true)} size="small" startIcon={<UploadIcon />}>
         Bulk upload…
       </Button>
       {open && (
-        <Dialog open={open} fullScreen={fullScreen.value}>
-          <DialogTitle>
-            <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <span>Bulk upload</span>
-              <Stack direction="row" spacing={1}>
-                <IconButton title="Full Screen" onClick={fullScreen.toggle}>
-                  <FullScreenIcon />
-                </IconButton>
-                <IconButton title="Close" onClick={() => setOpen(false)}>
-                  <CloseIcon />
-                </IconButton>
-              </Stack>
-            </Stack>
-          </DialogTitle>
-          <Divider />
-          <ImportView handleClose={() => setOpen(false)} />
+        <Dialog open fullScreen>
+          <BulkUpload
+            onClose={() => {
+              setOpen(false);
+              refresh();
+            }}
+          />
         </Dialog>
       )}
     </>

@@ -1,5 +1,5 @@
 import { Tab, Tabs } from "@mui/material";
-import ListActions from "components/common/ListActions";
+import ListActions, { NoContributions } from "components/common/ListActions";
 import TagIdSelector from "components/common/TagIdSelector";
 import useBoolean from "hooks/useBoolean";
 import React from "react";
@@ -69,6 +69,7 @@ export const AssetMapPage = (): JSX.Element => {
           order: "DESC",
         }}
         actions={<ListActions />}
+        empty={<NoContributions />}
       >
         <>
           <Tabs value={`map`} onChange={mapViewEnabled.toggle}>

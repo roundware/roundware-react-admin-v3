@@ -1,5 +1,5 @@
 import { Tab, Tabs } from "@mui/material";
-import ListActions from "components/common/ListActions";
+import ListActions, { NoContributions } from "components/common/ListActions";
 import TagIdSelector from "components/common/TagIdSelector";
 import useBoolean from "hooks/useBoolean";
 import React, { useEffect } from "react";
@@ -79,6 +79,7 @@ export const AssetList = (): JSX.Element => {
         order: "DESC",
       }}
       actions={<ListActions />}
+      empty={<NoContributions />}
     >
       <>
         <Tabs value={`datagrid`} onChange={mapViewEnabled.toggle}>
