@@ -397,7 +397,13 @@ const ProjectEdit = (): JSX.Element => {
             placeholder="G-XXXXXXXXXX"
             fullWidth
             parse={(v: string) => v ?? ""}
-            helperText="Your own Google Analytics 4 property, from its data stream (Admin › Data streams). Counts visits to the live site only. Leave empty for no analytics. Where visitors' consent is required (the EU, the UK), asking for it is yours to arrange."
+            helperText="Your own Google Analytics 4 property, from its data stream (Admin › Data streams). Counts visits to the live site only. Leave empty for no analytics."
+          />
+          {/* Off: the web app asks visitors first (Privacy Policy §7). */}
+          <BooleanInput
+            source="analytics_consent_by_org"
+            label="We ask visitors for consent ourselves"
+            helperText="Off (recommended): the site asks each visitor first, and Google Analytics loads only if they allow it. On: the site doesn't ask, and getting visitors' consent where the law requires it (the EU, the UK and elsewhere) is up to you, for example through your own website's cookie notice."
           />
         </CardBox>
 
