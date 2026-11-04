@@ -3,6 +3,7 @@ import { Layout, LayoutProps, Sidebar, SidebarProps } from "react-admin";
 import { useProjects } from "../../context/ProjectsContext";
 import Appbar from "./Appbar";
 import AutoRefresh from "./AutoRefresh";
+import ConfirmEmailBanner from "./ConfirmEmailBanner";
 import { Menu } from "./Menu";
 
 const CustomSidebar = (props: SidebarProps) => {
@@ -23,7 +24,10 @@ const CustomLayout = (props: LayoutProps): JSX.Element => {
       // @ts-ignore
       sidebar={CustomSidebar}
       menu={Menu}
-    />
+    >
+      <ConfirmEmailBanner />
+      {props.children}
+    </Layout>
     </>
   );
 };

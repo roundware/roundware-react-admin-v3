@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AgreeToTerms from "../components/common/AgreeToTerms";
 import { BRAND_BACKGROUND } from "./brandBackground";
@@ -34,6 +34,10 @@ const RegisterPage = () => {
     organization_name: "",
   });
   const [agreed, setAgreed] = useState(false);
+  // Checks against bots (server core/verification.py): a field people never
+  // see, which bots fill in, and how long the form was open before sending.
+  const [website, setWebsite] = useState("");
+  const shownAt = useRef(Date.now());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -52,7 +56,12 @@ const RegisterPage = () => {
       const response = await fetch(`${SERVER_URL}/api/3/auth/register/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, accept_terms: agreed }),
+        body: JSON.stringify({
+          ...form,
+          accept_terms: agreed,
+          website,
+          form_ms: Date.now() - shownAt.current,
+        }),
       });
 
       if (!response.ok) {
@@ -183,6 +192,23 @@ const RegisterPage = () => {
               helperText="At least 8 characters"
               slotProps={{ htmlInput: { minLength: 8 } }}
             />
+            {/* Off-screen, so people never see it; bots fill in every field. */}
+            <Box
+              aria-hidden="true"
+              sx={{ position: "absolute", left: "-10000px", width: 1, height: 1, overflow: "hidden" }}
+            >
+              <label>
+                Leave this empty
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                />
+              </label>
+            </Box>
             <AgreeToTerms checked={agreed} onChange={setAgreed} />
 
             <Button
