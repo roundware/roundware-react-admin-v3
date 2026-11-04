@@ -21,6 +21,7 @@ import AcceptInvitePage from "./pages/public/AcceptInvitePage";
 import ForgotPasswordPage from "./pages/public/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/public/ResetPasswordPage";
 import VerifyEmailPage from "./pages/public/VerifyEmailPage";
+import ConfirmEmailChangePage from "./pages/public/ConfirmEmailChangePage";
 import ProjectRoute from "./ProjectRoute";
 import { startErrorReporting } from "./monitoring";
 import { ThemeProvider } from "@mui/material/styles";
@@ -119,6 +120,7 @@ const router = createBrowserRouter([
     element: <UnsubscribePage />,
   },
   { path: "/verify-email", element: <VerifyEmailPage /> },
+  { path: "/confirm-email-change", element: <ConfirmEmailChangePage /> },
   { path: "/accept-invite", element: <AcceptInvitePage /> },
   { path: "/reset-password", element: <ResetPasswordPage /> },
   { path: "/forgot-password", element: <ForgotPasswordPage /> },

@@ -7,7 +7,8 @@
 // query parameters (Sentry 11's dataCollection, which collects all of those
 // by default), no session replay or performance tracing, every address
 // without its query string — the admin's email links carry a token
-// (/reset-password, /verify-email, /accept-invite, /unsubscribe) — and no
+// (/reset-password, /verify-email, /confirm-email-change, /accept-invite,
+// /unsubscribe) — and no
 // console breadcrumbs. The same rules as the web app's src/monitoring.ts,
 // checked there with a capture server (2026-10-19). The Sentry project's
 // "Prevent Storing of IP Addresses" covers the address it connects from.

@@ -2,8 +2,8 @@
 // Your data, on the Organization settings page (2026-10-27): what the terms
 // promise. Export everything (the organization or one project) in open
 // formats; import an export back in as new projects; close the account
-// (owners); delete your own account. Server: exports, imports, closure and
-// users/me routes.
+// (owners); change your email address; delete your own account. Server:
+// exports, imports, closure, auth/change-email and users/me routes.
 // ---------------------------------------------------------------------------
 import { Download, Upload } from "@mui/icons-material";
 import {
@@ -422,6 +422,109 @@ export const CloseAccountCard: React.FC<{ orgName: string; isOwner: boolean }> =
             onClick={() => act("close/", { confirm_name: typed })}
           >
             Close the account
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Card>
+  );
+};
+
+/** Change the address you sign in with (server docs/037): a link goes to
+ * the new address, and the change happens when it's clicked. */
+export const ChangeEmailCard: React.FC = () => {
+  const [email, setEmail] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [sent, setSent] = useState<string | null>(null);
+
+  useEffect(() => {
+    apiFetcher("/users/me/")
+      .then(({ json }) => setEmail(json.email))
+      .catch(() => setEmail(null));
+  }, []);
+
+  const close = () => {
+    if (busy) return;
+    setOpen(false);
+    setNewEmail("");
+    setPassword("");
+    setError(null);
+  };
+
+  const run = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      const { json } = await apiFetcher("/auth/change-email/", {
+        method: "POST",
+        body: JSON.stringify({ new_email: newEmail.trim(), password }),
+      });
+      setSent(json.message);
+      setBusy(false);
+      setOpen(false);
+      setNewEmail("");
+      setPassword("");
+    } catch (e) {
+      setError(errMessage(e));
+      setBusy(false);
+    }
+  };
+
+  return (
+    <Card sx={{ mt: 2 }} variant="outlined">
+      <CardHeader title="Your email address" />
+      <CardContent>
+        <Typography variant="body2" sx={{ mb: 2 }}>
+          You sign in with <strong>{email ?? "…"}</strong>. To change it, we send a link to the new address; your
+          address changes when you click it.
+        </Typography>
+        {sent && (
+          <Alert severity="info" sx={{ mb: 2 }}>
+            {sent}
+          </Alert>
+        )}
+        <Button variant="outlined" onClick={() => setOpen(true)}>
+          Change my email address…
+        </Button>
+      </CardContent>
+      <Dialog open={open} onClose={close} maxWidth="sm" fullWidth>
+        <DialogTitle>Change your email address</DialogTitle>
+        <DialogContent>
+          <Stack spacing={2} sx={{ mt: 1 }}>
+            <TextField
+              fullWidth
+              size="small"
+              type="email"
+              label="New email address"
+              autoComplete="email"
+              value={newEmail}
+              onChange={(e) => setNewEmail(e.target.value)}
+            />
+            <TextField
+              fullWidth
+              size="small"
+              type="password"
+              label="Your current password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Stack>
+          {error && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {error}
+            </Alert>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={close} disabled={busy}>
+            Cancel
+          </Button>
+          <Button variant="contained" disabled={busy || !newEmail.trim() || !password} onClick={run}>
+            Send the link
           </Button>
         </DialogActions>
       </Dialog>

@@ -14,7 +14,14 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { usePermissions, Title } from "react-admin";
 import { apiFetcher } from "../roundwareDataProvider/tokenAuthProvider";
-import { ActivityCard, CloseAccountCard, DeleteMyAccountCard, ExportCard, ImportCard } from "./OrganizationData";
+import {
+  ActivityCard,
+  ChangeEmailCard,
+  CloseAccountCard,
+  DeleteMyAccountCard,
+  ExportCard,
+  ImportCard,
+} from "./OrganizationData";
 
 interface TenantInfo {
   id: number;
@@ -168,6 +175,7 @@ const TenantSettingsPage = (): JSX.Element => {
           <CloseAccountCard orgName={tenant.name} isOwner={canEdit} />
         </>
       )}
+      <ChangeEmailCard />
       <DeleteMyAccountCard />
     </Box>
   );
