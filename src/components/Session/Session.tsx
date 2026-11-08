@@ -99,7 +99,7 @@ export const SessionCreate = (): JSX.Element => {
         <TextInput source="client_type" />
         <TextInput source="client_system" />
         <BooleanInput source="geo_listen_enabled" defaultValue={true} />
-        <TextInput source="timezone" defaultValue="0000" />
+        <TextInput source="timezone" defaultValue="UTC" helperText="A time zone name, e.g. America/New_York" />
       </SimpleForm>
     </Create>
   );
