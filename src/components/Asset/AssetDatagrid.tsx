@@ -106,6 +106,13 @@ export const AssetPreview: FC<FieldProps> = () => {
     case 'text':
       return <TextDisplayField />;
 
+    case 'data':
+      return (
+        <a href={record.file} target='_blank' rel='noopener noreferrer'>
+          JSON
+        </a>
+      );
+
     default:
       return <span>{record.media_type} not supported</span>;
   }

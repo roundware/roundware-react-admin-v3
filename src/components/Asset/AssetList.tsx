@@ -59,6 +59,7 @@ export const AssetList = (): JSX.Element => {
             { id: "audio", name: "audio" },
             { id: "photo", name: "photo" },
             { id: "text", name: "text" },
+            { id: "data", name: "data" },
             // { id: "video", name: "video" },
           ]}
           fullWidth

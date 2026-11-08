@@ -139,7 +139,7 @@ export const FileEdit = (): JSX.Element => {
             </>
           )}
 
-          {mediaType === 'text' && value && (
+          {(mediaType === 'text' || mediaType === 'data') && value && (
             <Stack>
               <TextDisplay
                 file={typeof value == 'string' ? value : value?.src}
@@ -169,6 +169,8 @@ export const getFileExtensions = (mediaType: string): string[] => {
       return [`jpg`, `jpeg`, `png`, `gif`, `webp`];
     case `text`:
       return [`txt`];
+    case `data`:
+      return [`json`];
     default:
       return [];
   }
