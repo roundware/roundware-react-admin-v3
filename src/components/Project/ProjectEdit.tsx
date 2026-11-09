@@ -269,6 +269,7 @@ const ProjectEdit = (): JSX.Element => {
             label="Hold contributions made out of range"
             helperText="When publishing automatically: a contribution made farther than the Out of Range Distance from every active speaker waits for review."
           />
+          <OpenAttachmentTagInput />
           <SelectInput
             source="ordering"
             label="Playback Ordering"
@@ -426,3 +427,35 @@ const ProjectTermsTemplate = () => {
     </Box>
   );
 };
+
+/**
+ * One of the project's tags that opens a contribution to attachments from
+ * anyone (server docs/014): a participant may attach to another session's
+ * live contribution carrying it. BeatVox uses its revox-allowed tag, so a
+ * reVox can join the voice it's made from. None: only the contribution's own
+ * session may attach to it.
+ */
+function OpenAttachmentTagInput() {
+  const record = useRecordContext();
+  const { data: tags = [], isPending } = useGetList("tags", {
+    filter: { project_id: record?.id },
+    pagination: { page: 1, perPage: 1000 },
+    sort: { field: "value", order: "ASC" },
+  });
+  const choices = tags.map((t) => ({
+    id: Number(t.id),
+    name: t.description ? `${t.value} (${t.description})` : String(t.value),
+  }));
+  return (
+    <SelectInput
+      source="open_attachment_tag_id"
+      label="Open to attachments from anyone"
+      choices={choices}
+      isPending={isPending}
+      emptyText="None: only their own session"
+      emptyValue={null}
+      parse={(v) => (v === "" || v === null || v === undefined ? null : Number(v))}
+      helperText="A published contribution with this tag lets anyone attach to it (for example, BeatVox's reVoxes join the voice they're made from when its maker allowed it). Others keep attachments to the contributor's own session."
+    />
+  );
+}
