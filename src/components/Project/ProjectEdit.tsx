@@ -453,7 +453,9 @@ function OpenAttachmentTagInput() {
       choices={choices}
       isPending={isPending}
       emptyText="None: only their own session"
-      emptyValue={null}
+      // the menu's "none" is an empty string (react-admin refuses a null
+      // emptyValue and crashes the page); the API wants null
+      format={(v) => (v === null || v === undefined ? "" : v)}
       parse={(v) => (v === "" || v === null || v === undefined ? null : Number(v))}
       helperText="A published contribution with this tag lets anyone attach to it (for example, BeatVox's reVoxes join the voice they're made from when its maker allowed it). Others keep attachments to the contributor's own session."
     />
