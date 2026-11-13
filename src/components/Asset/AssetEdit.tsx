@@ -23,6 +23,7 @@ import {
     TextField,
     Toolbar,
     TextInput,
+    useNotify,
     useRecordContext,
     useRedirect,
 } from 'react-admin';
@@ -38,24 +39,44 @@ import { ParticipantLink, useCanSeeParticipants } from '../../pages/Participants
 
 const AssetEdit = (): JSX.Element => {
   const redirect = useRedirect();
+  const notify = useNotify();
 
   const transform = async (data: Partial<IAsset>) => {
     const id = data.id;
 
-    // File uploads can't go through JSON PATCH — use the dedicated endpoint
+    // File uploads can't go through JSON PATCH — use the dedicated endpoint.
+    // upload-file/ takes any media type, as the form now says (server,
+    // 2026-11-13): every file used to go to upload-audio/, so a photo, text
+    // or data file couldn't be replaced.
     // @ts-ignore
     const rawFile = data.file?.rawFile ?? (data.file instanceof File ? data.file : null);
     if (rawFile instanceof File || rawFile instanceof Blob) {
       const formData = new FormData();
       formData.append('file', rawFile);
+      if (data.media_type) formData.append('media_type', data.media_type);
       try {
-        await apiFetcher(`/assets/${id}/upload-audio/`, {
+        await apiFetcher(`/assets/${id}/upload-file/`, {
           method: 'POST',
           body: formData,
         });
       } catch (e) {
-        console.error('Audio upload failed', e);
-        throw new Error('Audio upload failed — asset metadata not saved.');
+        console.error('File upload failed', e);
+        // The server says why: the wrong kind of file, too big, JSON that
+        // doesn't parse.
+        // Shown here: react-admin shows nothing for an error thrown in
+        // transform, so this used to fail without a word.
+        const why = e instanceof Error && e.message ? ` ${e.message}` : '';
+        const message = `The file wasn't saved, nor anything else.${why}`;
+        notify(message, { type: 'error' });
+        throw new Error(message);
+      }
+      // Only a recording has a length and trim; the server has set them for
+      // the new file (cleared for anything else), and the form's are the
+      // old file's.
+      if (data.media_type !== 'audio') {
+        for (const key of ['start_time', 'end_time', 'audio_length_sec']) {
+          delete (data as Record<string, unknown>)[key];
+        }
       }
     }
     // Remove file from PATCH body regardless (PATCH is JSON metadata only)

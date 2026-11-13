@@ -82,10 +82,7 @@ export const FileEdit = (): JSX.Element => {
                 (acc, el) => (acc += el + ', '),
                 ''
               )}`}
-              accept={getFileExtensions(mediaType).reduce(
-                (acc, el) => (acc += acc + ',.' + el),
-                ''
-              ) as any}
+              accept={fileAccept(mediaType)}
             >
               <FileField source='src' title='title' fullWidth />
             </FileInput>
@@ -113,10 +110,7 @@ export const FileEdit = (): JSX.Element => {
                       (acc, el) => (acc += el + ', '),
                       ''
                     )}`}
-                    accept={getFileExtensions(mediaType).reduce(
-                      (acc, el) => (acc += acc + ',.' + el),
-                      ''
-                    ) as any}
+                    accept={fileAccept(mediaType)}
                   >
                     <FileField source='src' title='title' fullWidth />
                   </FileInput>
@@ -160,6 +154,20 @@ export const FileEdit = (): JSX.Element => {
     </div>
   );
 };
+
+/** The file picker's choices for a media type, as react-dropzone 14 takes
+ *  them: {MIME type: [extensions]}; a file matching either is offered. (It
+ *  was given a string, which it ignores, so any file could be chosen.) */
+const MIME_TYPES: Record<string, string> = {
+  audio: 'audio/*',
+  photo: 'image/*',
+  text: 'text/plain',
+  data: 'application/json',
+};
+export const fileAccept = (mediaType: string): Record<string, string[]> | undefined =>
+  MIME_TYPES[mediaType]
+    ? { [MIME_TYPES[mediaType]]: getFileExtensions(mediaType).map((e) => `.${e}`) }
+    : undefined;
 
 export const getFileExtensions = (mediaType: string): string[] => {
   switch (mediaType) {
