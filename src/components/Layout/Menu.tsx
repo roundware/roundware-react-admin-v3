@@ -137,7 +137,7 @@ const GROUPS: Group[] = [
     items: [
       page("participants", "Participants", "participants", "admin", <PeopleOutline />),
       resource("sessions", "Sessions", "admin"),
-      resource("listeninghistoryitems", "Listen Events", "admin"),
+      resource("listeninghistoryitems", "Listen History", "admin"),
       resource("events", "Events", "admin"),
     ],
   },

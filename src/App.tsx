@@ -226,7 +226,7 @@ function buildResourceLookup(canEdit: boolean): { [index: string]: React.ReactNo
     listeninghistoryitems: (
       <Resource name="listeninghistoryitems" key="listeninghistoryitems" list={ListenEventsList}
         edit={e ? ListenEventsEdit : undefined} create={e ? ListenEventsCreate : undefined}
-        icon={Hearing} options={{ label: "Listen Events" }} />
+        icon={Hearing} options={{ label: "Listen History" }} />
     ),
     sessions: (
       <Resource name="sessions" key="sessions" list={SessionList}
