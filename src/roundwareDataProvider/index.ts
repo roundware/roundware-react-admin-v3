@@ -363,6 +363,9 @@ export class RoundwareDataProvider implements DataProvider {
           json = json.filter(
             (d) => !!(d.contributor_name || d.contributor_email) === !!filters[filter]
           );
+        } else if (filter === 'flagged') {
+          // Flagged by anyone in the app (server, 2026-11-13).
+          json = json.filter((d) => (d.flags ?? 0) > 0 === !!filters[filter]);
         } else if (filter.startsWith(`contains_`)) {
           const keysToCheck = filter.slice(9).split(`+`);
           const filterValue = String(filters[filter] ?? '').toLowerCase();

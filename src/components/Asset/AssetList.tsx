@@ -69,6 +69,7 @@ export const AssetList = (): JSX.Element => {
         // Only in projects that have moving assets (server docs/030).
         ...(hasMoving ? [<BooleanInput key="moving" source="moving" label="Moving" />] : []),
         <BooleanInput key="has_contact" source="has_contact" label="Has contact details" />,
+        <BooleanInput key="flagged" source="flagged" label="Flagged" />,
         <TextInput
           label="Description / Filename"
           key="contains_description|filename"

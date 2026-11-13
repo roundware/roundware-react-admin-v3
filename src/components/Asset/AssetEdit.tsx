@@ -31,6 +31,7 @@ import { IAsset } from '../../types/asset';
 import { buildLocalizationsPayload } from '../../utils';
 import DeleteWithBinary from 'components/common/DeleteWithBinary';
 import AssetBundleField from './AssetBundleField';
+import ResponsesField from './ResponsesField';
 import AssetShape, { shapeCache } from './AssetShape';
 import { AssetPathLine, AssetPathPanel } from './AssetPath';
 import { ParticipantLink, useCanSeeParticipants } from '../../pages/Participants';
@@ -137,6 +138,7 @@ const AssetEdit = (): JSX.Element => {
         </Labeled>
         <ContributorField />
         <AgreementField resource='assets' />
+        <ResponsesField />
 
         <ReferenceInput
           label='Project'

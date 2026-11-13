@@ -60,6 +60,16 @@ export const AssetDatagrid = (): JSX.Element => {
             ) : null
           }
         />
+        {/* Sessions that liked or flagged it (server, 2026-11-13); each vote,
+            with when and who, is on the contribution's page. */}
+        <NumberField source='likes' label='Likes' />
+        <FunctionField
+          label='Flags'
+          sortBy='flags'
+          render={(r: { flags?: number }) =>
+            r?.flags ? <Chip label={r.flags} size='small' color='error' /> : 0
+          }
+        />
         <DateField source='created_at' label='Created' />
         <NumberField source='latitude' options={{ maximumFractionDigits: 8 }} />
         <NumberField
