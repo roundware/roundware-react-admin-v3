@@ -25,6 +25,7 @@ export const EventsList = (): JSX.Element => {
       <Datagrid bulkActionButtons={false}>
         <NumberField source='id' />
         <TextField source='event_type' />
+        <TextField source='data' sortable={false} />
         <ReferenceField source='session_id' reference='sessions'>
           <TextField source='id' />
         </ReferenceField>
