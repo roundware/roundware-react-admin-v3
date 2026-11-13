@@ -46,6 +46,35 @@ const getFilterQuery = (filter: FilterPayload) => {
   };
 };
 
+/** A record's text for a `contains_` filter. `filename` is the stored
+ *  file's name, from its address (v3 has `file`, not v2's `filename`; a v2
+ *  project's own file names are kept in it). A field a record lacks is ''. */
+const searchable = (d: RaRecord, key: string): string => {
+  if (key === 'filename') {
+    const file = typeof d.file === 'string' ? d.file : '';
+    const name = file.split(/[?#]/)[0].split('/').pop() ?? '';
+    try {
+      return decodeURIComponent(name);
+    } catch {
+      return name;
+    }
+  }
+  const value = d[key];
+  return value == null ? '' : String(value);
+};
+
+/** A record's value for a `__gte`/`__lte` filter. `created`, `updated`
+ *  and `recorded` are v2's names, which the server still takes; v3's
+ *  records have `created_at`, `updated_at` and `recorded_at`. */
+const fieldValue = (d: RaRecord, field: string): any =>
+  field in d || !['created', 'updated', 'recorded'].includes(field) ? d[field] : d[`${field}_at`];
+
+/** Dates compared as moments, not as text: the date picker's
+ *  `…T10:00:00.000Z` and the server's `…T10:00:00.123+00:00` sort wrong as
+ *  strings. */
+const comparable = (value: unknown): any =>
+  typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(value) ? new Date(value).getTime() : value;
+
 export const getOrderingQuery = (sort: SortPayload) => {
   const { field, order } = sort;
   return {
@@ -336,23 +365,23 @@ export class RoundwareDataProvider implements DataProvider {
           );
         } else if (filter.startsWith(`contains_`)) {
           const keysToCheck = filter.slice(9).split(`+`);
-          const filterValue = filters[filter].toLowerCase();
+          const filterValue = String(filters[filter] ?? '').toLowerCase();
           json = json.filter((d) => {
             return keysToCheck.some((key) =>
-              d[key].toLowerCase().includes(filterValue)
+              searchable(d, key).toLowerCase().includes(filterValue)
             );
           });
         } else {
           // default
           if (filter.slice(-5) == '__gte') {
-            json = json.filter((d) => {
-              const res = d[filter.slice(0, -5)] >= filters[filter];
-
-              return res;
-            });
+            json = json.filter(
+              (d) =>
+                comparable(fieldValue(d, filter.slice(0, -5))) >= comparable(filters[filter])
+            );
           } else if (filter.slice(-5) == '__lte') {
             json = json.filter(
-              (d) => d[filter.slice(0, -5)] <= filters[filter]
+              (d) =>
+                comparable(fieldValue(d, filter.slice(0, -5))) <= comparable(filters[filter])
             );
           } else {
             json = json.filter((d) => d[filter] == filters[filter]);

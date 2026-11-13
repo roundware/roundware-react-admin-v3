@@ -38,12 +38,12 @@ export const AssetList = (): JSX.Element => {
         <NumberInput
           key="audiolengthgte"
           label="Audio Length Greater Than"
-          source="audio_length_in_seconds__gte"
+          source="audio_length_sec__gte"
         />,
         <NumberInput
           key="audiolengthlte"
           label="Audio Length Lesser Than"
-          source="audio_length_in_seconds__lte"
+          source="audio_length_sec__lte"
         />,
         <TagIdSelector
           multiple
